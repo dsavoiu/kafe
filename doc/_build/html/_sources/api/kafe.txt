@@ -1,0 +1,75 @@
+kafe Package
+============
+
+:mod:`kafe` Package
+-------------------
+
+.. automodule:: kafe.__init__
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`constants` Module
+-----------------------
+
+.. automodule:: kafe.constants
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`dataset` Module
+---------------------
+
+.. automodule:: kafe.dataset
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`file_tools` Module
+------------------------
+
+.. automodule:: kafe.file_tools
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`fit` Module
+-----------------
+
+.. automodule:: kafe.fit
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`function_tools` Module
+----------------------------
+
+.. automodule:: kafe.function_tools
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`minuit` Module
+--------------------
+
+.. automodule:: kafe.minuit
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`numeric_tools` Module
+---------------------------
+
+.. automodule:: kafe.numeric_tools
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`plot` Module
+------------------
+
+.. automodule:: kafe.plot
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

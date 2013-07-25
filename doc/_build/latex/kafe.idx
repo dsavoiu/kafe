@@ -1,0 +1,104 @@
+\indexentry{kafe.\_\_init\_\_ (module)|hyperpage}{3}
+\indexentry{kafe.constants (module)|hyperpage}{3}
+\indexentry{constants (module)|hyperpage}{3}
+\indexentry{F\_SIGNIFICANCE (in module kafe.constants)|hyperpage}{3}
+\indexentry{G\_PADDING\_FACTOR\_X (in module kafe.constants)|hyperpage}{3}
+\indexentry{G\_PADDING\_FACTOR\_Y (in module kafe.constants)|hyperpage}{3}
+\indexentry{G\_PLOT\_POINTS (in module kafe.constants)|hyperpage}{3}
+\indexentry{M\_CONFIDENCE\_LEVEL (in module kafe.constants)|hyperpage}{3}
+\indexentry{M\_MAX\_ITERATIONS (in module kafe.constants)|hyperpage}{3}
+\indexentry{M\_MAX\_X\_FIT\_ITERATIONS (in module kafe.constants)|hyperpage}{3}
+\indexentry{M\_TOLERANCE (in module kafe.constants)|hyperpage}{3}
+\indexentry{kafe.dataset (module)|hyperpage}{4}
+\indexentry{dataset (module)|hyperpage}{4}
+\indexentry{Dataset (class in kafe.dataset)|hyperpage}{4}
+\indexentry{axis\_labels (kafe.dataset.Dataset attribute)|hyperpage}{5}
+\indexentry{axis\_units (kafe.dataset.Dataset attribute)|hyperpage}{5}
+\indexentry{cov\_mat\_is\_regular() (kafe.dataset.Dataset method)|hyperpage}{5}
+\indexentry{cov\_mats (kafe.dataset.Dataset attribute)|hyperpage}{5}
+\indexentry{data (kafe.dataset.Dataset attribute)|hyperpage}{5}
+\indexentry{get\_axis() (kafe.dataset.Dataset method)|hyperpage}{5}
+\indexentry{get\_cov\_mat() (kafe.dataset.Dataset method)|hyperpage}{5}
+\indexentry{get\_data() (kafe.dataset.Dataset method)|hyperpage}{5}
+\indexentry{get\_data\_span() (kafe.dataset.Dataset method)|hyperpage}{5}
+\indexentry{get\_formatted() (kafe.dataset.Dataset method)|hyperpage}{5}
+\indexentry{get\_size() (kafe.dataset.Dataset method)|hyperpage}{6}
+\indexentry{has\_correlations() (kafe.dataset.Dataset method)|hyperpage}{6}
+\indexentry{has\_errors() (kafe.dataset.Dataset method)|hyperpage}{6}
+\indexentry{n\_axes (kafe.dataset.Dataset attribute)|hyperpage}{6}
+\indexentry{n\_datapoints (kafe.dataset.Dataset attribute)|hyperpage}{6}
+\indexentry{read\_from\_file() (kafe.dataset.Dataset method)|hyperpage}{6}
+\indexentry{set\_cov\_mat() (kafe.dataset.Dataset method)|hyperpage}{6}
+\indexentry{set\_data() (kafe.dataset.Dataset method)|hyperpage}{6}
+\indexentry{write\_formatted() (kafe.dataset.Dataset method)|hyperpage}{6}
+\indexentry{build\_dataset() (in module kafe.dataset)|hyperpage}{7}
+\indexentry{debug\_print() (in module kafe.dataset)|hyperpage}{7}
+\indexentry{kafe.file\_tools (module)|hyperpage}{7}
+\indexentry{file\_tools (module)|hyperpage}{7}
+\indexentry{parse\_column\_data() (in module kafe.file\_tools)|hyperpage}{7}
+\indexentry{kafe.fit (module)|hyperpage}{7}
+\indexentry{fit (module)|hyperpage}{7}
+\indexentry{Fit (class in kafe.fit)|hyperpage}{7}
+\indexentry{call\_external\_fcn() (kafe.fit.Fit method)|hyperpage}{8}
+\indexentry{do\_fit() (kafe.fit.Fit method)|hyperpage}{8}
+\indexentry{fit\_one\_iteration() (kafe.fit.Fit method)|hyperpage}{8}
+\indexentry{get\_current\_fit\_function() (kafe.fit.Fit method)|hyperpage}{8}
+\indexentry{get\_error\_matrix() (kafe.fit.Fit method)|hyperpage}{8}
+\indexentry{get\_parameter\_errors() (kafe.fit.Fit method)|hyperpage}{9}
+\indexentry{get\_parameter\_values() (kafe.fit.Fit method)|hyperpage}{9}
+\indexentry{print\_fit\_details() (kafe.fit.Fit method)|hyperpage}{9}
+\indexentry{print\_fit\_results() (kafe.fit.Fit method)|hyperpage}{9}
+\indexentry{print\_rounded\_fit\_parameters() (kafe.fit.Fit method)|hyperpage}{9}
+\indexentry{project\_x\_covariance\_matrix() (kafe.fit.Fit method)|hyperpage}{9}
+\indexentry{chi2() (in module kafe.fit)|hyperpage}{9}
+\indexentry{round\_to\_significance() (in module kafe.fit)|hyperpage}{9}
+\indexentry{kafe.function\_tools (module)|hyperpage}{9}
+\indexentry{function\_tools (module)|hyperpage}{9}
+\indexentry{derivative() (in module kafe.function\_tools)|hyperpage}{9}
+\indexentry{derive\_by\_parameters() (in module kafe.function\_tools)|hyperpage}{9}
+\indexentry{derive\_by\_x() (in module kafe.function\_tools)|hyperpage}{10}
+\indexentry{get\_function\_property() (in module kafe.function\_tools)|hyperpage}{10}
+\indexentry{outer\_product() (in module kafe.function\_tools)|hyperpage}{10}
+\indexentry{kafe.minuit (module)|hyperpage}{10}
+\indexentry{minuit (module)|hyperpage}{10}
+\indexentry{Minuit (class in kafe.minuit)|hyperpage}{10}
+\indexentry{FCN\_wrapper() (kafe.minuit.Minuit method)|hyperpage}{10}
+\indexentry{get\_chi2\_probability() (kafe.minuit.Minuit method)|hyperpage}{10}
+\indexentry{get\_error\_matrix() (kafe.minuit.Minuit method)|hyperpage}{10}
+\indexentry{get\_fit\_info() (kafe.minuit.Minuit method)|hyperpage}{10}
+\indexentry{get\_parameter\_errors() (kafe.minuit.Minuit method)|hyperpage}{11}
+\indexentry{get\_parameter\_info() (kafe.minuit.Minuit method)|hyperpage}{11}
+\indexentry{get\_parameter\_name() (kafe.minuit.Minuit method)|hyperpage}{11}
+\indexentry{get\_parameter\_values() (kafe.minuit.Minuit method)|hyperpage}{11}
+\indexentry{minimize() (kafe.minuit.Minuit method)|hyperpage}{11}
+\indexentry{reset() (kafe.minuit.Minuit method)|hyperpage}{11}
+\indexentry{set\_err() (kafe.minuit.Minuit method)|hyperpage}{11}
+\indexentry{set\_parameter\_errors() (kafe.minuit.Minuit method)|hyperpage}{11}
+\indexentry{set\_parameter\_names() (kafe.minuit.Minuit method)|hyperpage}{11}
+\indexentry{set\_parameter\_values() (kafe.minuit.Minuit method)|hyperpage}{11}
+\indexentry{set\_print\_level() (kafe.minuit.Minuit method)|hyperpage}{11}
+\indexentry{set\_strategy() (kafe.minuit.Minuit method)|hyperpage}{11}
+\indexentry{kafe.numeric\_tools (module)|hyperpage}{11}
+\indexentry{numeric\_tools (module)|hyperpage}{11}
+\indexentry{cor\_to\_cov() (in module kafe.numeric\_tools)|hyperpage}{11}
+\indexentry{cov\_to\_cor() (in module kafe.numeric\_tools)|hyperpage}{11}
+\indexentry{extract\_statistical\_errors() (in module kafe.numeric\_tools)|hyperpage}{11}
+\indexentry{make\_symmetric\_lower() (in module kafe.numeric\_tools)|hyperpage}{12}
+\indexentry{zero\_pad\_lower\_triangle() (in module kafe.numeric\_tools)|hyperpage}{12}
+\indexentry{kafe.plot (module)|hyperpage}{12}
+\indexentry{plot (module)|hyperpage}{12}
+\indexentry{Plot (class in kafe.plot)|hyperpage}{12}
+\indexentry{compute\_plot\_range() (kafe.plot.Plot method)|hyperpage}{12}
+\indexentry{extend\_span() (kafe.plot.Plot method)|hyperpage}{12}
+\indexentry{init\_plots() (kafe.plot.Plot method)|hyperpage}{12}
+\indexentry{plot() (kafe.plot.Plot method)|hyperpage}{12}
+\indexentry{plot\_all() (kafe.plot.Plot method)|hyperpage}{12}
+\indexentry{save() (kafe.plot.Plot method)|hyperpage}{12}
+\indexentry{show() (kafe.plot.Plot method)|hyperpage}{12}
+\indexentry{PlotStyle (class in kafe.plot)|hyperpage}{12}
+\indexentry{get\_line() (kafe.plot.PlotStyle method)|hyperpage}{12}
+\indexentry{get\_linecolor() (kafe.plot.PlotStyle method)|hyperpage}{12}
+\indexentry{get\_marker() (kafe.plot.PlotStyle method)|hyperpage}{13}
+\indexentry{get\_markercolor() (kafe.plot.PlotStyle method)|hyperpage}{13}
+\indexentry{get\_pointsize() (kafe.plot.PlotStyle method)|hyperpage}{13}
+\indexentry{pad\_span() (in module kafe.plot)|hyperpage}{13}

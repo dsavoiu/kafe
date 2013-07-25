@@ -1,0 +1,1027 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso8859_1" />
+    
+    <title>kafe Package</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="top" title="kafe 3.1alpha1 documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">kafe 3.1alpha1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="kafe-package">
+<h1>kafe Package</h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> Package</h2>
+<span class="target" id="module-kafe.__init__"></span><p>A Python package for fitting and plotting for use in physics lab courses.</p>
+<p>This Python package allows fitting of user-defined functions to data. A dataset is
+represented by a <cite>Dataset</cite> object which stores measurement data as <cite>NumPy</cite> arrays.
+The uncertainties of the data are also stored in the <cite>Dataset</cite> as an <cite>error matrix</cite>,
+allowing for both correlated and uncorrelated errors to be accurately represented.</p>
+<p>The constructor of a <cite>Dataset</cite> object accepts several keyword arguments and can be used
+to construct a <cite>Dataset</cite> out of data which has been loaded into <cite>Python</cite> as <cite>NumPy</cite> arrays.
+Alternatively, a plain-text representation of a <cite>Dataset</cite> can be read from a file.</p>
+<p>Also provided are helper functions which construct a <cite>Dataset</cite> object from a
+file containing column data (one measurement per row, column order can be specified).</p>
+</div>
+<div class="section" id="module-kafe.constants">
+<span id="constants-module"></span><h2><a class="reference internal" href="#module-constants" title="constants: A submodule defining some constants used by the fit package. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">constants</span></tt></a> Module</h2>
+<span class="target" id="module-constants"></span><dl class="data">
+<dt id="kafe.constants.F_SIGNIFICANCE">
+<tt class="descclassname">kafe.constants.</tt><tt class="descname">F_SIGNIFICANCE</tt><em class="property"> = 2</em></dt>
+<dd><p>Set significance for returning results and errors
+N = rounding error to N significant digits and value
+to the same order of magnitude as the error.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="kafe.constants.G_PADDING_FACTOR_X">
+<tt class="descclassname">kafe.constants.</tt><tt class="descname">G_PADDING_FACTOR_X</tt><em class="property"> = 1.2</em></dt>
+<dd><p>factor by which to expand <cite>x</cite> data range</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="kafe.constants.G_PADDING_FACTOR_Y">
+<tt class="descclassname">kafe.constants.</tt><tt class="descname">G_PADDING_FACTOR_Y</tt><em class="property"> = 1.2</em></dt>
+<dd><p>factor by which to expand <cite>y</cite> data range</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="kafe.constants.G_PLOT_POINTS">
+<tt class="descclassname">kafe.constants.</tt><tt class="descname">G_PLOT_POINTS</tt><em class="property"> = 200</em></dt>
+<dd><p>number of plot points for plotting the function</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="kafe.constants.M_CONFIDENCE_LEVEL">
+<tt class="descclassname">kafe.constants.</tt><tt class="descname">M_CONFIDENCE_LEVEL</tt><em class="property"> = 0.05</em></dt>
+<dd><p>Confidence level for hypythesis test. A fit is rejected it <span class="math">\(\chi^2_\text{prob}\)</span> is smaller than this constant</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="kafe.constants.M_MAX_ITERATIONS">
+<tt class="descclassname">kafe.constants.</tt><tt class="descname">M_MAX_ITERATIONS</tt><em class="property"> = 6000</em></dt>
+<dd><p>Maximum <cite>Minuit</cite> iterations until aborting the process</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="kafe.constants.M_MAX_X_FIT_ITERATIONS">
+<tt class="descclassname">kafe.constants.</tt><tt class="descname">M_MAX_X_FIT_ITERATIONS</tt><em class="property"> = 2</em></dt>
+<dd><p>Number of maximal additional iterations for <cite>x</cite> fit (0 disregards <cite>x</cite> errors)</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="kafe.constants.M_TOLERANCE">
+<tt class="descclassname">kafe.constants.</tt><tt class="descname">M_TOLERANCE</tt><em class="property"> = 0.1</em></dt>
+<dd><p><cite>Minuit</cite> tolerance level</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-kafe.dataset">
+<span id="dataset-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">dataset</span></tt> Module</h2>
+<p>This submodule defines a <cite>Dataset</cite> object, a container class for storing measurement data
+and error data.</p>
+<dl class="class">
+<dt id="kafe.dataset.Dataset">
+<em class="property">class </em><tt class="descclassname">kafe.dataset.</tt><tt class="descname">Dataset</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>The <cite>Dataset</cite> object is a data structure for storing measurement and error data. In this implementation,
+the <cite>Dataset</cite> has the compulsory field <cite>data</cite>, which is used for storing the measurement data,
+and another field <cite>cov_mats</cite>, used for storing the covariance matrix for each axis.</p>
+<p>There are several ways a <cite>Dataset</cite> can be constructed. The most straightforward way is to specify an
+input file containing a plain-text representation of the dataset:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">input_file</span><span class="o">=</span><span class="s">&#39;/path/to/file&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">input_file</span><span class="o">=</span><span class="n">my_file_object</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If an <cite>input_file</cite> keyword is provided, all other input is ignored. The <cite>Dataset</cite> plain-text representation
+format is as follows:</p>
+<div class="highlight-python"><pre># x data
+x_1  sigma_x_1  
+x_2  sigma_x_2  cor_x_12
+...  ...        ...       ...
+x_N  sigma_x_N  cor_x_1N  ...  cor_x_NN
+
+# y data
+y_1  sigma_y_1  
+y_2  sigma_y_2  cor_y_12
+...  ...        ...       ...
+y_N  sigma_y_N  cor_y_1N  ...  cor_y_NN</pre>
+</div>
+<p>Here, the <cite>sigma_...</cite> represents the statistical error of the data point and <cite>cor_..._ij</cite> is the
+correlation coefficient between the <em>i</em>-th and <em>j</em>-th data point.</p>
+<p>Alternatively, field data can be set by passing iterables as keyword arguments. Available keywords
+for this purpose are:</p>
+<p><strong>data</strong></p>
+<blockquote>
+<div><p>a tuple/list of measurement data. Each element of the tuple/list must be iterable and 
+be of the same length. The first element of the <strong>data</strong> tuple/list is assumed to be
+the <cite>x</cite> data, and the second to be the <cite>y</cite> data:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.23</span><span class="p">,</span> <span class="mf">3.45</span><span class="p">,</span> <span class="mf">5.62</span><span class="p">,</span> <span class="mf">7.88</span><span class="p">,</span> <span class="mf">9.64</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>Alternatively, x-y value pairs can also be passed as <strong>data</strong>. The following is equivalent to the above:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.23</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.45</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">5.62</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">7.88</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">9.64</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>In case the <cite>Dataset</cite> contains two data points, the ordering is ambiguous. In this case, the
+first ordering (<cite>x</cite> data first, then <cite>y</cite> data) is assumed.</p>
+</div></blockquote>
+<p><strong>cov_mats</strong></p>
+<blockquote>
+<div><p>a tuple/list of two-dimensional iterables containing the covariance matrices for <cite>x</cite> and <cite>y</cite>, in that
+order. Covariance matrices can be any sort of two-dimensional NxN iterables, assuming N is the number
+of data points.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.23</span><span class="p">,</span> <span class="mf">3.45</span><span class="p">,</span> <span class="mf">5.62</span><span class="p">]),</span> <span class="n">cov_mats</span><span class="o">=</span><span class="p">(</span><span class="n">my_cov_mat_x</span><span class="p">,</span> <span class="n">my_cov_mat_y</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>This keyword argument can be omitted, in which case covariance matrices of zero are assumed.
+To specify a covariance matrix for a single axis, replace the other with <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.23</span><span class="p">,</span> <span class="mf">3.45</span><span class="p">,</span> <span class="mf">5.62</span><span class="p">]),</span> <span class="n">cov_mats</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">my_cov_mat_y</span><span class="p">))</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><strong>title</strong></p>
+<blockquote>
+<div>the name of the <cite>Dataset</cite>. If omitted, the <cite>Dataset</cite> will be given the generic name &#8216;Untitled Dataset&#8217;.</div></blockquote>
+<dl class="attribute">
+<dt id="kafe.dataset.Dataset.axis_labels">
+<tt class="descname">axis_labels</tt><em class="property"> = None</em></dt>
+<dd><p>axis labels</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.dataset.Dataset.axis_units">
+<tt class="descname">axis_units</tt><em class="property"> = None</em></dt>
+<dd><p>units to assume for axis</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.dataset.Dataset.cov_mat_is_regular">
+<tt class="descname">cov_mat_is_regular</tt><big>(</big><em>axis</em><big>)</big></dt>
+<dd><p>Returns <cite>True</cite> if the covariance matrix for an axis is regular and <tt class="docutils literal"><span class="pre">False</span></tt> if it is
+singular.</p>
+<dl class="docutils">
+<dt><strong>axis</strong></dt>
+<dd>Axis for which to check for regularity of the covariance matrix. Can be <tt class="docutils literal"><span class="pre">'x'``or</span> <span class="pre">``'y'</span></tt>.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.dataset.Dataset.cov_mats">
+<tt class="descname">cov_mats</tt><em class="property"> = None</em></dt>
+<dd><p>list of covariance matrices</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.dataset.Dataset.data">
+<tt class="descname">data</tt><em class="property"> = None</em></dt>
+<dd><p>list containing measurement data (axis-ordering)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.dataset.Dataset.get_axis">
+<tt class="descname">get_axis</tt><big>(</big><em>axis_alias</em><big>)</big></dt>
+<dd><p>Get axis id from an alias.</p>
+<dl class="docutils">
+<dt><strong>axis_alias</strong></dt>
+<dd>Alias of the axis whose id should be returned. This is for example either <tt class="docutils literal"><span class="pre">'0'</span></tt> or <tt class="docutils literal"><span class="pre">'x'</span></tt> for the <cite>x</cite>-axis (id 0).</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.dataset.Dataset.get_cov_mat">
+<tt class="descname">get_cov_mat</tt><big>(</big><em>axis</em>, <em>fallback_on_singular=None</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.get_cov_mat"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Get the error matrix for an axis.</p>
+<dl class="docutils">
+<dt><strong>axis</strong></dt>
+<dd>Axis for which to load the error matrix. Can be <tt class="docutils literal"><span class="pre">'x'``or</span> <span class="pre">``'y'</span></tt>. Type: string</dd>
+<dt>[<em>fallback_on_singular</em>]</dt>
+<dd>What to return if the matrix is singular. If this in <tt class="docutils literal"><span class="pre">None</span></tt> (default), the matrix is returned anyway.
+If this is a <cite>numpy.matrix</cite> object or similar, that is returned istead. Alternatively, the shortcuts
+<tt class="docutils literal"><span class="pre">'identity'</span></tt> or <tt class="docutils literal"><span class="pre">1</span></tt> and <tt class="docutils literal"><span class="pre">'zero'</span></tt> or <tt class="docutils literal"><span class="pre">0</span></tt> can be used to return the identity and zero matrix
+respectively.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.dataset.Dataset.get_data">
+<tt class="descname">get_data</tt><big>(</big><em>axis</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.get_data"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Get the measurement data for an axis.</p>
+<dl class="docutils">
+<dt><strong>axis</strong></dt>
+<dd>Axis for which to get the measurement data. Can be <tt class="docutils literal"><span class="pre">'x'``or</span> <span class="pre">``'y'</span></tt>. Type: string</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.dataset.Dataset.get_data_span">
+<tt class="descname">get_data_span</tt><big>(</big><em>axis</em>, <em>include_error_bars=False</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.get_data_span"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Get the data span for an axis. The data span is a tuple (<cite>min</cite>, <cite>max</cite>) containing
+the smallest and highest coordinates for an axis.</p>
+<dl class="docutils">
+<dt><strong>axis</strong></dt>
+<dd>Axis for which to get the data span. Can be <tt class="docutils literal"><span class="pre">'x'``or</span> <span class="pre">``'y'</span></tt>. Type: string</dd>
+<dt>include_error_bars</dt>
+<dd><tt class="docutils literal"><span class="pre">True</span></tt> if the returned span should be enlarged to
+contain the error bars of the smallest and largest datapoints (default: <tt class="docutils literal"><span class="pre">False</span></tt>) Type: boolean</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.dataset.Dataset.get_formatted">
+<tt class="descname">get_formatted</tt><big>(</big><em>format_string='.06e'</em>, <em>delimiter='t'</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.get_formatted"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Returns the dataset in a plain-text format which is human-readable and
+can later be used as an input file for the creation of a new <cite>Dataset</cite>.</p>
+<p>The format is as follows:</p>
+<div class="highlight-python"><pre># x data
+x_1  sigma_x_1  
+x_2  sigma_x_2  cor_x_12
+...  ...        ...       ...
+x_N  sigma_x_N  cor_x_1N  ...  cor_x_NN
+
+# y data
+y_1  sigma_y_1  
+y_2  sigma_y_2  cor_y_12
+...  ...        ...       ...
+y_N  sigma_y_N  cor_y_1N  ...  cor_y_NN</pre>
+</div>
+<p>Here, the <tt class="docutils literal"><span class="pre">x_i</span></tt> and <tt class="docutils literal"><span class="pre">y_i</span></tt> represent the measurement data, the <tt class="docutils literal"><span class="pre">sigma_?_i</span></tt> are the
+statistical uncertainties of each data point, and the <tt class="docutils literal"><span class="pre">cor_?_ij</span></tt> are the correlation
+coefficients between the <em>i</em>-th and <em>j</em>-th data point.</p>
+<p>If the <tt class="docutils literal"><span class="pre">x</span></tt> or <tt class="docutils literal"><span class="pre">y</span></tt> errors are not correlated, then the entire correlation coefficient matrix
+can be omitted. If there are no statistical uncertainties for an axis, the second
+column can also be omitted. A blank line is required at the end of each data block!</p>
+<dl class="docutils">
+<dt>format_string</dt>
+<dd>A format string with which each entry will be rendered. Default is <cite>.06e</cite>, which means
+the numbers are represented in scientific notation with six significant digits. Type: string</dd>
+<dt>delimiter</dt>
+<dd>A delimiter used to separate columns in the output Type: string</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.dataset.Dataset.get_size">
+<tt class="descname">get_size</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.get_size"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Get the size of the <cite>Dataset</cite>. This is equivalent to the length of the <cite>x</cite>-axis data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.dataset.Dataset.has_correlations">
+<tt class="descname">has_correlations</tt><big>(</big><em>axis</em><big>)</big></dt>
+<dd><p>Returns <cite>True</cite> if the covariance matrix for an axis is regular and <tt class="docutils literal"><span class="pre">False</span></tt> if it is
+singular.</p>
+<dl class="docutils">
+<dt><strong>axis</strong></dt>
+<dd>Axis for which to check for regularity of the covariance matrix. Can be <tt class="docutils literal"><span class="pre">'x'``or</span> <span class="pre">``'y'</span></tt>.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.dataset.Dataset.has_errors">
+<tt class="descname">has_errors</tt><big>(</big><em>axis</em><big>)</big></dt>
+<dd><p>Returns <cite>True</cite> if the covariance matrix for an axis is regular and <tt class="docutils literal"><span class="pre">False</span></tt> if it is
+singular.</p>
+<dl class="docutils">
+<dt><strong>axis</strong></dt>
+<dd>Axis for which to check for regularity of the covariance matrix. Can be <tt class="docutils literal"><span class="pre">'x'``or</span> <span class="pre">``'y'</span></tt>.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.dataset.Dataset.n_axes">
+<tt class="descname">n_axes</tt><em class="property"> = None</em></dt>
+<dd><p>dimensionality of the <cite>Dataset</cite>. Currently, only 2D <cite>Datasets</cite> are supported</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.dataset.Dataset.n_datapoints">
+<tt class="descname">n_datapoints</tt><em class="property"> = None</em></dt>
+<dd><p>number of data points in the <cite>Dataset</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.dataset.Dataset.read_from_file">
+<tt class="descname">read_from_file</tt><big>(</big><em>input_file</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.read_from_file"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Reads the <cite>Dataset</cite> object from a file.</p>
+<p>&#64;return: True if the read succeeded, False if not</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.dataset.Dataset.set_cov_mat">
+<tt class="descname">set_cov_mat</tt><big>(</big><em>axis</em>, <em>mat</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.set_cov_mat"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Set the error matrix for an axis.</p>
+<dl class="docutils">
+<dt><strong>axis</strong></dt>
+<dd>Axis for which to load the error matrix. Can be <tt class="docutils literal"><span class="pre">'x'``or</span> <span class="pre">``'y'</span></tt>.</dd>
+<dt>mat</dt>
+<dd>Error matrix for the axis. Passing <cite>None</cite> unsets the error matrix. Type: <cite>numpy.matrix</cite> or <cite>None</cite></dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.dataset.Dataset.set_data">
+<tt class="descname">set_data</tt><big>(</big><em>axis</em>, <em>data</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.set_data"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Set the measurement data for an axis.</p>
+<dl class="docutils">
+<dt><strong>axis</strong></dt>
+<dd>Axis for which to set the measurement data. Can be <tt class="docutils literal"><span class="pre">'x'``or</span> <span class="pre">``'y'</span></tt>. Type: string</dd>
+<dt>data</dt>
+<dd>Measurement data for axis. Type: any iterable</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.dataset.Dataset.write_formatted">
+<tt class="descname">write_formatted</tt><big>(</big><em>file_path</em>, <em>format_string='.06e'</em>, <em>delimiter='t'</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.write_formatted"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Writes the dataset to a plain-text file. For details on the format, see X{get_formatted}.</p>
+<dl class="docutils">
+<dt>file_path: Path of the file object to write. B{WARNING}</dt>
+<dd><em>overwrites existing files</em>! Type: string</dd>
+<dt>format_string</dt>
+<dd>A format string with which each entry will be rendered. Default is <cite>.06e</cite>, which means
+the numbers are represented in scientific notation with six significant digits. Type: string</dd>
+<dt>delimiter</dt>
+<dd>A delimiter used to separate columns in the output Type: string</dd>
+</dl>
+<p>&#64;return: A plain-text representation of the dataset.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="kafe.dataset.build_dataset">
+<tt class="descclassname">kafe.dataset.</tt><tt class="descname">build_dataset</tt><big>(</big><em>xdata</em>, <em>ydata</em>, <em>**kwargs</em><big>)</big></dt>
+<dd><p>This helper function creates a <cite>Dataset</cite> from a series of keyword arguments.</p>
+<p>Valid keyword arguments are:</p>
+<dl class="docutils">
+<dt><strong>xdata</strong> and <strong>ydata</strong></dt>
+<dd>These keyword arguments are mandatory and should be iterables containing the measurement data.</dd>
+<dt><em>error specification keywords</em></dt>
+<dd><p class="first">A valid keyword is composed of an axis (<em>x</em> or <em>y</em>), an error relativity specification (<em>abs</em> or <em>rel</em>)
+and error correlation type (<em>stat</em> or <em>syst</em>). The errors are then set as follows:</p>
+<blockquote>
+<div><ol class="arabic">
+<li><dl class="first docutils">
+<dt>For statistical errors:</dt>
+<dd><ul class="first last simple">
+<li>if keyword argument is a <cite>NumPy</cite> array, the error list is set to that</li>
+<li>if keyword argument is a number, an error list with identical entries is generated</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>For systematic errors:</dt>
+<dd><ul class="first last simple">
+<li>keyword argument <em>must</em> be a single number. The global correlated error for the acis is then set to that.</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+</div></blockquote>
+<p>So, for example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">myDataset</span> <span class="o">=</span> <span class="n">build_dataset</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">yabsstat</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">yrelsyst</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">creates a dataset where the statistical error of each <cite>y</cite> coordinate is set to 0.3 and the overall systematic
+error of <cite>y</cite> is set to 0.1.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kafe.dataset.debug_print">
+<tt class="descclassname">kafe.dataset.</tt><tt class="descname">debug_print</tt><big>(</big><em>message</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#debug_print"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-kafe.file_tools">
+<span id="file-tools-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">file_tools</span></tt> Module</h2>
+<p>This submodule provides a set of helper functions for parsing files</p>
+<dl class="function">
+<dt id="kafe.file_tools.parse_column_data">
+<tt class="descclassname">kafe.file_tools.</tt><tt class="descname">parse_column_data</tt><big>(</big><em>file_to_parse</em>, <em>field_order='x</em>, <em>y'</em>, <em>delimiter=' '</em><big>)</big><a class="reference internal" href="../_modules/kafe/file_tools.html#parse_column_data"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Parses a file which contains measurement data in a one-measurement-per-row format.
+The field (column) order can be specified. It defaults to <cite>x,y&#8217;. Valid field names are
+`x</cite>, <cite>y</cite>, <cite>xabsstat</cite>, <cite>yabsstat</cite>, <cite>xrelstat</cite>, <cite>yrelstat</cite>, <cite>xabssyst</cite>. Another
+valid field name is <cite>ignore</cite> which can be used to skip a field.</p>
+<p>Every valid measurement data file <em>must</em> have an <cite>x</cite> and a <cite>y</cite> field.</p>
+<p>Additionally, a delimiter can be specified. If this is a whitespace character or omitted, any
+sequence of whitespace characters is assumed to separate the data.</p>
+<dl class="docutils">
+<dt><strong>file_to_parse</strong> <span class="classifier-delimiter">:</span> <span class="classifier">file-like object or string containing a file path</span></dt>
+<dd>The file to parse.</dd>
+<dt><em>field_order</em> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional) </span></dt>
+<dd>A string of comma-separated field names giving the order of the columns in the file. Defaults to <tt class="docutils literal"><span class="pre">'x,y'</span></tt>.</dd>
+<dt><em>delimiter</em> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
+<dd>The field delimiter used in the file.</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-kafe.fit">
+<span id="fit-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">fit</span></tt> Module</h2>
+<p>This submodule defines a <cite>Fit</cite> object which performs the actual fitting given a <cite>Dataset</cite> and a fit function.</p>
+<dl class="class">
+<dt id="kafe.fit.Fit">
+<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x22d97d0&gt;</em>, <em>function_label=None</em>, <em>function_equation=None</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Object representing a fit. This object references the fitted <cite>Dataset</cite>, the fit function and the resulting fit parameters.</p>
+<p>Necessary arguments are a <cite>Dataset</cite> object and a fit function (which should be fitted to the <cite>Dataset</cite>).
+Optionally, an external function <cite>FCN</cite> (whose minima should be located to find the best fit) can be specified.
+If not given, the <cite>FCN</cite> function defaults to <span class="math">\(\chi^2\)</span>.</p>
+<dl class="docutils">
+<dt><strong>dataset</strong> &#8221; <cite>Dataset</cite></dt>
+<dd>A <cite>Dataset</cite> object containing all information about the data</dd>
+<dt><strong>fit_function</strong> <span class="classifier-delimiter">:</span> <span class="classifier">function</span></dt>
+<dd><p class="first">A user-defined Python function to be fitted to the data. This function&#8217;s first argument must be the 
+independent variable <cite>x</cite>. All other arguments <em>must</em> be named and have default values given. These
+defaults are used as a starting point for the actual minimization. For example, a simple linear function
+would be defined like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">linear_2par</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y_intercept</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y_intercept</span>
+</pre></div>
+</div>
+<p class="last">Be aware that choosing sensible initial values for the parameters is often crucial for a succesful fit,
+particularly for functions of many parameters.</p>
+</dd>
+<dt><em>external_fcn</em> <span class="classifier-delimiter">:</span> <span class="classifier">function (optional)</span></dt>
+<dd><p class="first">An external <cite>FCN</cite> (function to minimize). This function must have the following call signature:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">FCN</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">cov_mat</span><span class="p">,</span> <span class="n">fit_function</span><span class="p">,</span> <span class="n">param_values</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">It should return a float. If not specified, the default <span class="math">\(\chi^2\)</span> <cite>FCN</cite> is used. This should
+be sufficient for most fits.</p>
+</dd>
+<dt><em>function_label</em> <span class="classifier-delimiter">:</span> <span class="classifier"><span class="math">\(\LaTeX\)</span>-formatted string (optional)</span></dt>
+<dd>A name/label/short description of the fit function. This appears in the legend describing the fitter curve.
+If omitted, this defaults to the function&#8217;s Python name.</dd>
+<dt><em>function_equation</em> <span class="classifier-delimiter">:</span> <span class="classifier"><span class="math">\(\LaTeX\)</span>-formatted string (optional)</span></dt>
+<dd>The fit function&#8217;s equation.</dd>
+</dl>
+<dl class="method">
+<dt id="kafe.fit.Fit.call_external_fcn">
+<tt class="descname">call_external_fcn</tt><big>(</big><em>*param_values</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit.call_external_fcn"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Wrapper for the external <cite>FCN</cite>. Since the actual fit process depends on finding the right parameter
+values and keeping everything else constant, we can use the <cite>Dataset</cite> object to pass known, fixed
+information to the external <cite>FCN</cite>, varying only the parameter values.</p>
+<dl class="docutils">
+<dt><strong>param_values</strong> <span class="classifier-delimiter">:</span> <span class="classifier">sequence of values</span></dt>
+<dd>the parameter values at which <cite>FCN</cite> is to be evaluated</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.fit.Fit.do_fit">
+<tt class="descname">do_fit</tt><big>(</big><em>quiet=False</em>, <em>verbose=False</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit.do_fit"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Runs the fit algorithm for this <cite>Fit</cite> object.</p>
+<p>First, the <cite>Dataset</cite> is fitted considering only uncertainties in the <cite>y</cite> direction.
+If the <cite>Dataset</cite> has no uncertainties in the <cite>y</cite> direction, they are assumed to be 
+equal to 1.0 for this preliminary fit, as there is no better information available.</p>
+<p>Next, the fit errors in the <cite>x</cite> direction (if they exist) are taken into account by
+projecting the covariance matrix for the <cite>x</cite> errors onto the <cite>y</cite> covariance matrix.
+This is done by taking the first derivative of the fit function in each point and
+&#8220;projecting&#8221; the <cite>x</cite> error onto the resulting tangent to the curve.</p>
+<p>This last step is repeater until the change in the error matrix caused by the projection
+becomes negligible.</p>
+<dl class="docutils">
+<dt><em>quiet</em> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
+<dd>Set to <tt class="docutils literal"><span class="pre">True</span></tt> if no output should be printed.</dd>
+<dt><em>verbose</em> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
+<dd>Set to <tt class="docutils literal"><span class="pre">True</span></tt> if more output should be printed.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.fit.Fit.fit_one_iteration">
+<tt class="descname">fit_one_iteration</tt><big>(</big><em>verbose=False</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit.fit_one_iteration"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Instructs the minimizer to do a minimization.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.fit.Fit.get_current_fit_function">
+<tt class="descname">get_current_fit_function</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit.get_current_fit_function"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>This method returns a function object corresponding to the fit function
+for the current parameter values. The returned function is a function of
+a single variable.</p>
+<dl class="docutils">
+<dt>returns <span class="classifier-delimiter">:</span> <span class="classifier">function</span></dt>
+<dd>A function of a single variable corresponding to the fit function at the
+current parameter values.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.fit.Fit.get_error_matrix">
+<tt class="descname">get_error_matrix</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit.get_error_matrix"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>This method returns the covariance matrix of the fit parameters which is obtained
+by querying the minimizer object for this fit</p>
+<dl class="docutils">
+<dt>returns <span class="classifier-delimiter">:</span> <span class="classifier"><cite>numpy.matrix</cite></span></dt>
+<dd>The covariance matrix of the parameters.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.fit.Fit.get_parameter_errors">
+<tt class="descname">get_parameter_errors</tt><big>(</big><em>rounding=False</em><big>)</big></dt>
+<dd><p>Get the current parameter uncertainties from the minimizer.</p>
+<dl class="docutils">
+<dt><em>rounding</em> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
+<dd>Whether or not to round the returned values to significance.</dd>
+<dt>returns <span class="classifier-delimiter">:</span> <span class="classifier">tuple</span></dt>
+<dd>A tuple of the parameter uncertainties</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.fit.Fit.get_parameter_values">
+<tt class="descname">get_parameter_values</tt><big>(</big><em>rounding=False</em><big>)</big></dt>
+<dd><p>Get the current parameter values from the minimizer.</p>
+<dl class="docutils">
+<dt><em>rounding</em> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
+<dd>Whether or not to round the returned values to significance.</dd>
+<dt>returns <span class="classifier-delimiter">:</span> <span class="classifier">tuple</span></dt>
+<dd>A tuple of the parameter values</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.fit.Fit.print_fit_details">
+<tt class="descname">print_fit_details</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit.print_fit_details"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>prints some fit goodness details</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.fit.Fit.print_fit_results">
+<tt class="descname">print_fit_results</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit.print_fit_results"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>prints fit results</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.fit.Fit.print_rounded_fit_parameters">
+<tt class="descname">print_rounded_fit_parameters</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit.print_rounded_fit_parameters"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>prints the fit parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.fit.Fit.project_x_covariance_matrix">
+<tt class="descname">project_x_covariance_matrix</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit.project_x_covariance_matrix"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Project the <cite>x</cite> errors from the <cite>x</cite> covariance matrix onto the total matrix.</p>
+<p>This is done elementwise, according to the formula:</p>
+<div class="math">
+\[C_{\text{tot},ij} = C_{y,ij} + C_{x,ij}  \frac{\partial f}{\partial x_i}  \frac{\partial f}{\partial x_j} \]</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="kafe.fit.chi2">
+<tt class="descclassname">kafe.fit.</tt><tt class="descname">chi2</tt><big>(</big><em>xdata</em>, <em>ydata</em>, <em>cov_mat</em>, <em>fit_function</em>, <em>param_values</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#chi2"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>A simple <span class="math">\(\chi^2\)</span> implementation. Calculates <span class="math">\(\chi^2\)</span> according to the formula:</p>
+<div class="math">
+\[\chi^2 = \lambda^T C^{-1} \lambda\]</div>
+<p>Here, <span class="math">\(\lambda\)</span> is the residual vector <span class="math">\(\lambda = \vec{y} - \vec{f}(\vec{x})\)</span> and
+<span class="math">\(C\)</span> is the covariance matrix.</p>
+<dl class="docutils">
+<dt><strong>xdata</strong> <span class="classifier-delimiter">:</span> <span class="classifier">iterable</span></dt>
+<dd>The <em>x</em> measurement data</dd>
+<dt><strong>ydata</strong> <span class="classifier-delimiter">:</span> <span class="classifier">iterable</span></dt>
+<dd>The <em>y</em> measurement data</dd>
+<dt><strong>cov_mat</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><cite>numpy.matrix</cite></span></dt>
+<dd>The total covariance matrix</dd>
+<dt><strong>fit_function</strong> <span class="classifier-delimiter">:</span> <span class="classifier">function</span></dt>
+<dd>The fit function <span class="math">\(f(x)\)</span></dd>
+<dt><strong>param_values</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list/tuple</span></dt>
+<dd>The values of the parameters at which <span class="math">\(f(x)\)</span> should be evaluated.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kafe.fit.round_to_significance">
+<tt class="descclassname">kafe.fit.</tt><tt class="descname">round_to_significance</tt><big>(</big><em>value</em>, <em>error</em>, <em>significance=2</em><big>)</big></dt>
+<dd><p>Rounds the error to the established number of significant digits, then rounds the value to the same
+order of magnitude as the error.</p>
+<dl class="docutils">
+<dt><strong>value</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>value to round to significance</dd>
+<dt><strong>error</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>uncertainty of the value</dd>
+<dt><em>significance</em> <span class="classifier-delimiter">:</span> <span class="classifier">int (optional)</span></dt>
+<dd>number of significant digits of the error to consider</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-kafe.function_tools">
+<span id="function-tools-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">function_tools</span></tt> Module</h2>
+<p>This submodule contains several useful tools for getting information about a function, including
+the number, names and default values of its parameters and its derivatives with respect to the
+independent variable or the parameters.</p>
+<dl class="function">
+<dt id="kafe.function_tools.derivative">
+<tt class="descclassname">kafe.function_tools.</tt><tt class="descname">derivative</tt><big>(</big><em>func</em>, <em>derive_by_index</em>, <em>variables_tuple</em>, <em>derivative_spacing</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_tools.html#derivative"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Gives <span class="math">\(\frac{\partial f}{\partial x_k}\)</span> for <span class="math">\(f = f(x_0, x_1, \ldots)\)</span>. <cite>func</cite> is <span class="math">\(f\)</span>, <cite>variables_tuple</cite> is {x_i} and <cite>derive_by_index</cite> is <span class="math">\(k\)</span>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_tools.derive_by_parameters">
+<tt class="descclassname">kafe.function_tools.</tt><tt class="descname">derive_by_parameters</tt><big>(</big><em>func</em>, <em>x_0</em>, <em>param_list</em>, <em>derivative_spacing</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_tools.html#derive_by_parameters"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Returns the gradient of <cite>func</cite> with respect to its parameters, i.e. with respect to every variable
+of <cite>func</cite> except the first one.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_tools.derive_by_x">
+<tt class="descclassname">kafe.function_tools.</tt><tt class="descname">derive_by_x</tt><big>(</big><em>func</em>, <em>x_0</em>, <em>param_list</em>, <em>derivative_spacing</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_tools.html#derive_by_x"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>If <cite>x_0</cite> is iterable, gives the array of derivatives of a function <span class="math">\(f(x, par_1, par_2, \ldots)\)</span>
+around <span class="math">\(x = x_i\)</span> at every <span class="math">\(x_i\)</span> in <span class="math">\(\vec{x}\)</span>.
+If <cite>x_0</cite> is not iterable, gives the derivative of a function <span class="math">\(f(x, par_1, par_2, \ldots)\)</span> around <span class="math">\(x = \verb!x_0!\)</span>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_tools.get_function_property">
+<tt class="descclassname">kafe.function_tools.</tt><tt class="descname">get_function_property</tt><big>(</big><em>func</em>, <em>prop</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_tools.html#get_function_property"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Returns a specific property of the function. This assumes that the function is defined as</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">par1</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">par2</span><span class="o">=</span><span class="mf">3.14</span><span class="p">,</span> <span class="n">par3</span><span class="o">=</span><span class="mf">2.71</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span> <span class="o">...</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt><strong>func</strong> <span class="classifier-delimiter">:</span> <span class="classifier">function</span></dt>
+<dd>A function object from which to extract the property.</dd>
+<dt><strong>prop</strong> <span class="classifier-delimiter">:</span> <span class="classifier">any of <tt class="docutils literal"><span class="pre">'name'</span></tt>, <tt class="docutils literal"><span class="pre">'parameter</span> <span class="pre">names'</span></tt>, <tt class="docutils literal"><span class="pre">'parameter</span> <span class="pre">defaults'</span></tt>, <tt class="docutils literal"><span class="pre">'number</span> <span class="pre">of</span> <span class="pre">parameters'</span></tt></span></dt>
+<dd>A string representing a property.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_tools.outer_product">
+<tt class="descclassname">kafe.function_tools.</tt><tt class="descname">outer_product</tt><big>(</big><em>input_array</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_tools.html#outer_product"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Takes a <cite>NumPy</cite> array and returns the outer (dyadic, Kronecker) product with itself.
+If <cite>input_array</cite> is a vector <span class="math">\(\mathbf{x}\)</span>, this returns <span class="math">\(\mathbf{x}\mathbf{x}^T\)</span>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-kafe.minuit">
+<span id="minuit-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">minuit</span></tt> Module</h2>
+<p>A submodule providing the <cite>Minuit</cite> object, which communicates with CERN <em>ROOT</em>&#8216;s function
+minimizer <em>Minuit</em>.</p>
+<dl class="class">
+<dt id="kafe.minuit.Minuit">
+<em class="property">class </em><tt class="descclassname">kafe.minuit.</tt><tt class="descname">Minuit</tt><big>(</big><em>number_of_parameters</em>, <em>function_to_minimize</em>, <em>par_names</em>, <em>start_params</em>, <em>param_errors</em>, <em>quiet=True</em>, <em>verbose=False</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>A class for communicating with ROOT&#8217;s function minimizer tool Minuit.</p>
+<dl class="method">
+<dt id="kafe.minuit.Minuit.FCN_wrapper">
+<tt class="descname">FCN_wrapper</tt><big>(</big><em>number_of_parameters</em>, <em>derivatives</em>, <em>f</em>, <em>parameters</em>, <em>internal_flag</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.FCN_wrapper"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>This is actually a function called in ROOT and acting as a C wrapper 
+for our B{FCN}, which is implemented in Python.</p>
+<p>This function is called by Minuit several times during a fit. It doesn&#8217;t return
+anything but sets modifies one of its arguments (<em>f</em>). This is ugly. Its argument
+structure is fixed and determined by Minuit:</p>
+<p>&#64;param number_of_parameters: The number of parameters of the current fit
+&#64;type number_of_parameters: int</p>
+<p>&#64;param derivatives: computed gradient ??
+&#64;type derivatives: ??</p>
+<p>&#64;param f: A (C-compatible) array. The desired function value is in f[0] after execution.
+&#64;type f: array</p>
+<p>&#64;param parameters: A C array of parameters. Is cast to a Python list
+&#64;type parameters: array</p>
+<p>&#64;param internal_flag: A flag allowing for different behaviour of the function
+&#64;type internal_flag: any int from M{1} (initial run) to M{4} (normal run)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.minuit.Minuit.get_chi2_probability">
+<tt class="descname">get_chi2_probability</tt><big>(</big><em>n_deg_of_freedom</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.get_chi2_probability"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Returns the probability that an observed S{chi}-square exceeds
+the calculated value of S{chi}-square for this fit by chance, even for a correct model.
+In other words, returns the probability that a worse fit of the model to the data exists.
+If this is a small value (typically M{&lt; 5%}), this means the fit is pretty bad. For
+values below this threshold, the model very probably does not fit the data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.minuit.Minuit.get_error_matrix">
+<tt class="descname">get_error_matrix</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.get_error_matrix"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves the parameter error matrix from TMinuit</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.minuit.Minuit.get_fit_info">
+<tt class="descname">get_fit_info</tt><big>(</big><em>info</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.get_fit_info"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves other info from Minuit. The argument <cite>info&#8217; can be any of the following:
+- `fcn</cite>: <cite>FCN</cite> value at minimum,
+- <cite>edm</cite>: estimated distance to minimum
+- <cite>err_def</cite>: <cite>Minuit</cite> error matrix status code
+- <cite>status_code</cite>: <cite>Minuit</cite> general status code</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.minuit.Minuit.get_parameter_errors">
+<tt class="descname">get_parameter_errors</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.get_parameter_errors"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves the parameter errors from TMinuit. Returns a tuple.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.minuit.Minuit.get_parameter_info">
+<tt class="descname">get_parameter_info</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.get_parameter_info"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves parameter information from TMinuit. Returns a list of tuples (param_name, param_val, param_error)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.minuit.Minuit.get_parameter_name">
+<tt class="descname">get_parameter_name</tt><big>(</big><em>param_nr</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.get_parameter_name"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sets the fit parameters. If param_values=`None`, tries to infer defaults from the function_to_minimize.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.minuit.Minuit.get_parameter_values">
+<tt class="descname">get_parameter_values</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.get_parameter_values"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves the parameter values from TMinuit. Returns a tuple.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.minuit.Minuit.minimize">
+<tt class="descname">minimize</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.minimize"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Do the minimization</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.minuit.Minuit.reset">
+<tt class="descname">reset</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.reset"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kafe.minuit.Minuit.set_err">
+<tt class="descname">set_err</tt><big>(</big><em>up_value=1.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.set_err"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sets the UP value for Minuit. Default: 1.0 (good for chi2)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.minuit.Minuit.set_parameter_errors">
+<tt class="descname">set_parameter_errors</tt><big>(</big><em>param_errors=None</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.set_parameter_errors"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sets the fit parameter errors. If param_values=`None`, sets the error to 1% of the parameter value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.minuit.Minuit.set_parameter_names">
+<tt class="descname">set_parameter_names</tt><big>(</big><em>param_names</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.set_parameter_names"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sets the fit parameters. If param_values=`None`, tries to infer defaults from the function_to_minimize.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.minuit.Minuit.set_parameter_values">
+<tt class="descname">set_parameter_values</tt><big>(</big><em>param_values</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.set_parameter_values"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sets the fit parameters. If param_values=`None`, tries to infer defaults from the function_to_minimize.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.minuit.Minuit.set_print_level">
+<tt class="descname">set_print_level</tt><big>(</big><em>print_level=3</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.set_print_level"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sets the print level for Minuit. Default: 0 (suppress all output)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.minuit.Minuit.set_strategy">
+<tt class="descname">set_strategy</tt><big>(</big><em>strategy_id=1</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.set_strategy"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sets the strategy Minuit. Default: 1 (optimized)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-kafe.numeric_tools">
+<span id="numeric-tools-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">numeric_tools</span></tt> Module</h2>
+<p>A submodule containing several numeric algorithms used by the fit package, such as methods for
+converting beween covariance and correlation matrices or extracting the statistical errors
+from a covariance matrix.</p>
+<dl class="function">
+<dt id="kafe.numeric_tools.cor_to_cov">
+<tt class="descclassname">kafe.numeric_tools.</tt><tt class="descname">cor_to_cov</tt><big>(</big><em>cor_mat</em>, <em>error_list</em><big>)</big><a class="reference internal" href="../_modules/kafe/numeric_tools.html#cor_to_cov"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Converts a correlation matrix to a covariance matrix according to the formula</p>
+<div class="math">
+\[\text{Cov}_{ij} = \text{Cor}_{ij}\, \sigma_i \, \sigma_j\]</div>
+<dl class="docutils">
+<dt><strong>cor_mat</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><cite>numpy.matrix</cite></span></dt>
+<dd>The correlation matrix to convert.</dd>
+<dt><strong>error_list</strong> <span class="classifier-delimiter">:</span> <span class="classifier">sequence of floats</span></dt>
+<dd>A sequence of statistical errors. Must be of the same length
+as the diagonal of <cite>cor_mat</cite>.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kafe.numeric_tools.cov_to_cor">
+<tt class="descclassname">kafe.numeric_tools.</tt><tt class="descname">cov_to_cor</tt><big>(</big><em>cov_mat</em><big>)</big><a class="reference internal" href="../_modules/kafe/numeric_tools.html#cov_to_cor"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Converts a covariance matrix to a correlation matrix according to the formula</p>
+<div class="math">
+\[\text{Cor}_{ij} = \frac{\text{Cov}_{ij}}{\sqrt{ \text{Cov}_{ii}\,\text{Cov}_{jj}}}\]</div>
+<dl class="docutils">
+<dt><strong>cov_mat</strong></dt>
+<dd>The covariance matrix to convert. Type: <cite>numpy.matrix</cite></dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kafe.numeric_tools.extract_statistical_errors">
+<tt class="descclassname">kafe.numeric_tools.</tt><tt class="descname">extract_statistical_errors</tt><big>(</big><em>cov_mat</em><big>)</big><a class="reference internal" href="../_modules/kafe/numeric_tools.html#extract_statistical_errors"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Extracts the statistical errors from a covariance matrix. This means
+it returns the (elementwise) square root of the diagonal entries</p>
+<dl class="docutils">
+<dt><strong>cov_mat</strong></dt>
+<dd>The covariance matrix to extract errors from. Type: <cite>numpy.matrix</cite></dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kafe.numeric_tools.make_symmetric_lower">
+<tt class="descclassname">kafe.numeric_tools.</tt><tt class="descname">make_symmetric_lower</tt><big>(</big><em>mat</em><big>)</big><a class="reference internal" href="../_modules/kafe/numeric_tools.html#make_symmetric_lower"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Copies the matrix entries below the main diagonal to the upper triangle half of
+the matrix. Leaves the diagonal unchanged. Returns a <cite>NumPy</cite> matrix object.</p>
+<dl class="docutils">
+<dt><strong>mat</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><cite>numpy.matrix</cite></span></dt>
+<dd>A lower diagonal matrix.</dd>
+<dt>returns <span class="classifier-delimiter">:</span> <span class="classifier"><cite>numpy.matrix</cite></span></dt>
+<dd>The lower triangle matrix.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kafe.numeric_tools.zero_pad_lower_triangle">
+<tt class="descclassname">kafe.numeric_tools.</tt><tt class="descname">zero_pad_lower_triangle</tt><big>(</big><em>triangle_list</em><big>)</big><a class="reference internal" href="../_modules/kafe/numeric_tools.html#zero_pad_lower_triangle"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Converts a list of lists into a lower triangle matrix. The list members should
+be lists of increasing length from 1 to N, N being the dimension of
+the resulting lower triangle matrix. Returns a <cite>NumPy</cite> matrix object.</p>
+<p>For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">zero_pad_lower_triangle</span><span class="p">([</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]</span> <span class="p">])</span>
+<span class="go">matrix([[ 1.  ,  0.  ,  0.  ],</span>
+<span class="go">        [ 0.2 ,  1.  ,  0.  ],</span>
+<span class="go">        [ 0.01,  0.4 ,  3.  ]])</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt><strong>triangle_list</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd>A list containing lists of increasing length.</dd>
+<dt>returns <span class="classifier-delimiter">:</span> <span class="classifier"><cite>numpy.matrix</cite> </span></dt>
+<dd>The lower triangle matrix.</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-kafe.plot">
+<span id="plot-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">plot</span></tt> Module</h2>
+<p>Created on Jul 18, 2013</p>
+<dl class="class">
+<dt id="kafe.plot.Plot">
+<em class="property">class </em><tt class="descclassname">kafe.plot.</tt><tt class="descname">Plot</tt><big>(</big><em>*fits</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#Plot"><span class="viewcode-link">[source]</span></a></dt>
+<dd><dl class="method">
+<dt id="kafe.plot.Plot.compute_plot_range">
+<tt class="descname">compute_plot_range</tt><big>(</big><em>include_error_bars=True</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#Plot.compute_plot_range"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Compute the span of all child datasets and sets the plot range to that</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.plot.Plot.extend_span">
+<tt class="descname">extend_span</tt><big>(</big><em>axis</em>, <em>new_span</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#Plot.extend_span"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Expand the span of the current plot.</p>
+<p>This method extends the current plot span to include <cite>new_span</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.plot.Plot.init_plots">
+<tt class="descname">init_plots</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#Plot.init_plots"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Initialize the plots for each fit.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.plot.Plot.plot">
+<tt class="descname">plot</tt><big>(</big><em>p_id</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#Plot.plot"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Plot the <cite>Fit</cite> object with the number <cite>p_id</cite> to its figure.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.plot.Plot.plot_all">
+<tt class="descname">plot_all</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#Plot.plot_all"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Plot every <cite>Fit</cite> object to its figure.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.plot.Plot.save">
+<tt class="descname">save</tt><big>(</big><em>output_file</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#Plot.save"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Save the <cite>Plot</cite> to a file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.plot.Plot.show">
+<tt class="descname">show</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#Plot.show"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Show the <cite>Plot</cite> in a matplotlib interactive window.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kafe.plot.PlotStyle">
+<em class="property">class </em><tt class="descclassname">kafe.plot.</tt><tt class="descname">PlotStyle</tt><a class="reference internal" href="../_modules/kafe/plot.html#PlotStyle"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Class for specifying a style for a specific plot. This object stores a progression of marker and line types and
+colors, as well as preferences relating to point size and label size. These can be overriden
+by overwriting the instance variables directly. A series of <cite>get_...</cite> methods are provided which
+go through these lists cyclically.</p>
+<dl class="method">
+<dt id="kafe.plot.PlotStyle.get_line">
+<tt class="descname">get_line</tt><big>(</big><em>idm</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#PlotStyle.get_line"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Get a specific line type. This runs cyclically through the defined defaults.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.plot.PlotStyle.get_linecolor">
+<tt class="descname">get_linecolor</tt><big>(</big><em>idm</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#PlotStyle.get_linecolor"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Get a specific line color. This runs cyclically through the defined defaults.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.plot.PlotStyle.get_marker">
+<tt class="descname">get_marker</tt><big>(</big><em>idm</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#PlotStyle.get_marker"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Get a specific marker type. This runs cyclically through the defined defaults.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.plot.PlotStyle.get_markercolor">
+<tt class="descname">get_markercolor</tt><big>(</big><em>idm</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#PlotStyle.get_markercolor"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Get a specific marker color. This runs cyclically through the defined defaults.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.plot.PlotStyle.get_pointsize">
+<tt class="descname">get_pointsize</tt><big>(</big><em>idm</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#PlotStyle.get_pointsize"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Get a specific point size. This runs cyclically through the defined defaults.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="kafe.plot.pad_span">
+<tt class="descclassname">kafe.plot.</tt><tt class="descname">pad_span</tt><big>(</big><em>span</em>, <em>pad_coeff=1</em>, <em>additional_pad=None</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#pad_span"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Enlarges the interval <cite>span</cite> (list of two floats) symmetrically around
+its center to length <cite>pad_coeff</cite>. Optionally, an <cite>additional_pad</cite> argument
+can be specified. The returned span is then additionally enlarged by that amount.</p>
+<p><cite>additional_pad</cite> can also be a list of two floats which specifies an asymmetric
+amount by which to enlarge the span. Note that in this case, positive entries in
+<cite>additional_pad</cite> will enlarge the span (move the interval end away from the
+interval&#8217;s center) and negative amounts will shorten it (move the interval end
+towards the interval&#8217;s center).</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">kafe 3.1alpha1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Daniel Savoiu.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

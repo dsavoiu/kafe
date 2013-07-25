@@ -1,0 +1,166 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso8859_1" />
+    
+    <title>kafe.file_tools</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="top" title="kafe 3.1alpha1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">kafe 3.1alpha1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <h1>Source code for kafe.file_tools</h1><div class="highlight"><pre>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">This submodule provides a set of helper functions for parsing files</span>
+
+<span class="sd">.. moduleauthor:: Daniel Savoiu &lt;daniel.savoiu@ekp.kit.edu&gt;</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">join</span><span class="p">,</span> <span class="n">split</span> 
+<span class="kn">from</span> <span class="nn">dataset</span> <span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="parse_column_data"><a class="viewcode-back" href="../../api/kafe.html#kafe.file_tools.parse_column_data">[docs]</a><span class="k">def</span> <span class="nf">parse_column_data</span><span class="p">(</span><span class="n">file_to_parse</span><span class="p">,</span> <span class="n">field_order</span><span class="o">=</span><span class="s">&#39;x,y&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39; &#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Parses a file which contains measurement data in a one-measurement-per-row format.</span>
+<span class="sd">    The field (column) order can be specified. It defaults to `x,y&#39;. Valid field names are</span>
+<span class="sd">    `x`, `y`, `xabsstat`, `yabsstat`, `xrelstat`, `yrelstat`, `xabssyst`. Another</span>
+<span class="sd">    valid field name is `ignore` which can be used to skip a field.</span>
+<span class="sd">    </span>
+<span class="sd">    Every valid measurement data file I{must} have an &#39;x&#39; and a &#39;y&#39; field.</span>
+<span class="sd">    </span>
+<span class="sd">    Additionally, a delimiter can be specified. If this is a whitespace character or omitted, any</span>
+<span class="sd">    sequence of whitespace characters is assumed to separate the data.</span>
+<span class="sd">    </span>
+<span class="sd">    @param file_to_parse: The file to parse.</span>
+<span class="sd">    @type file_to_parse: file-like object or a file path</span>
+<span class="sd">    </span>
+<span class="sd">    @param field_order: A comma-separated string of field names giving the order of the columns in the file. (optional)</span>
+<span class="sd">    @type field_order: string</span>
+<span class="sd">    </span>
+<span class="sd">    @param delimiter: The field delimiter used in the file. (optional)</span>
+<span class="sd">    @type delimiter: string</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">tmp_lines</span> <span class="o">=</span> <span class="n">file_to_parse</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>   <span class="c"># try to read the lines of the file</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>                      <span class="c"># this will fail if a file path string was passed, so alternatively:</span>
+        <span class="n">tmp_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_to_parse</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>     <span class="c"># open the file pointed to by the path</span>
+        <span class="n">tmp_lines</span> <span class="o">=</span> <span class="n">tmp_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>        <span class="c"># and then read the lines of the file</span>
+        <span class="n">tmp_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+    <span class="c"># define a dictionary of fields (lists) to populate</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:[],</span>
+              <span class="s">&#39;y&#39;</span><span class="p">:[],</span>
+              <span class="s">&#39;xabsstat&#39;</span><span class="p">:[],</span>
+              <span class="s">&#39;yabsstat&#39;</span><span class="p">:[],</span>
+              <span class="s">&#39;xrelstat&#39;</span><span class="p">:[],</span>
+              <span class="s">&#39;yrelstat&#39;</span><span class="p">:[],</span>
+              <span class="s">&#39;ignore&#39;</span><span class="p">:[]</span>
+              <span class="p">}</span>
+    
+    <span class="c"># Error handling in case of invalid field order</span>
+    <span class="k">if</span> <span class="s">&#39;,&#39;</span> <span class="ow">in</span> <span class="n">field_order</span><span class="p">:</span>
+        <span class="n">field_order_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">split</span><span class="p">(</span><span class="n">field_order</span><span class="p">,</span> <span class="s">&#39;,&#39;</span><span class="p">):</span>   <span class="c"># go through the fields</span>
+            <span class="k">if</span> <span class="n">field</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fields</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>      <span class="c"># raise error for invalid fields</span>
+                <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">,</span> <span class="s">&quot;Supplied field order `</span><span class="si">%s</span><span class="s">&#39; contains invalid field `</span><span class="si">%s</span><span class="s">&#39;.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">field_order</span><span class="p">,</span><span class="n">field</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">field_order_list</span><span class="p">:</span>     <span class="c"># raise error for repeated fields</span>
+                <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">,</span> <span class="s">&quot;Supplied field order `</span><span class="si">%s</span><span class="s">&#39; contains repeated field `</span><span class="si">%s</span><span class="s">&#39;.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">field_order</span><span class="p">,</span><span class="n">field</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>                               <span class="c"># validate field</span>
+                <span class="n">field_order_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">,</span><span class="s">&#39;y&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">axis</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">field_order_list</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">,</span> <span class="s">&quot;Supplied field order `</span><span class="si">%s</span><span class="s">&#39; missing mandatory field `</span><span class="si">%s</span><span class="s">&#39;.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">field_order</span><span class="p">,</span><span class="n">axis</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">,</span> <span class="s">&quot;Supplied field order `</span><span class="si">%s</span><span class="s">&#39; is not a comma-separated list of valid fields.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">field_order</span><span class="p">,)</span>
+    
+    <span class="c"># handle delimiter</span>
+    <span class="k">if</span> <span class="n">delimiter</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39; &#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">]:</span> <span class="c"># if delimiter is a whitespace character</span>
+        <span class="n">delimiter</span><span class="o">=</span><span class="bp">None</span>               <span class="c"># set to None</span>
+        
+    <span class="c"># actual file parsing</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">tmp_lines</span><span class="p">:</span>                      <span class="c"># go through the lines of the file</span>
+        
+        <span class="k">if</span> <span class="s">&#39;#&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">split</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="s">&#39;#&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>          <span class="c"># ignore anything after a comment sign (#)</span>
+            
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">line</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">isspace</span><span class="p">()):</span>      <span class="c"># ignore empty lines</span>
+            <span class="k">continue</span>
+        
+        <span class="c"># get field contents by splitting lines</span>
+        <span class="k">if</span> <span class="n">delimiter</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">tmp_fields</span> <span class="o">=</span> <span class="n">split</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>            <span class="c"># split line on whitespace</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tmp_fields</span> <span class="o">=</span> <span class="n">split</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">)</span> <span class="c"># split line on delimiter</span>
+    
+        <span class="c"># append those contents to the right fields</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">field_order_list</span><span class="p">)):</span>
+            <span class="n">fields</span><span class="p">[</span><span class="n">field_order_list</span><span class="p">[</span><span class="n">idx</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="nb">float</span><span class="p">(</span><span class="n">tmp_fields</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span> <span class="p">)</span>
+            
+    <span class="c"># construct Dataset object</span>
+    
+    
+    <span class="n">dataset_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">fields</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">fields</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>           <span class="c"># if the field is not empty</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">):</span> <span class="c"># some syntax translation needed (x -&gt; xdata) for Dataset constructor</span>
+                <span class="n">dataset_kwargs</span><span class="p">[</span><span class="n">key</span><span class="o">+</span><span class="s">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dataset_kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">Dataset</span><span class="p">(</span><span class="o">**</span><span class="n">dataset_kwargs</span><span class="p">)</span>
+</div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">myDataset</span> <span class="o">=</span> <span class="n">parse_column_data</span><span class="p">(</span><span class="s">&#39;../examples/linear_2par/linear_data_xyxerryerr.ssv&#39;</span><span class="p">,</span> <span class="s">&#39;x,y,xabsstat,yabsstat&#39;</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">myDataset</span><span class="o">.</span><span class="n">get_formatted</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">kafe 3.1alpha1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Daniel Savoiu.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

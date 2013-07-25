@@ -1,0 +1,225 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>kafe.numeric_tools &mdash; kafe 3.1alpha1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '3.1alpha1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="kafe 3.1alpha1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">kafe 3.1alpha1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for kafe.numeric_tools</h1><div class="highlight"><pre>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">A submodule containing several numeric algorithms used by the fit package, such as methods for</span>
+<span class="sd">converting beween covariance and correlation matrices or extracting the statistical errors</span>
+<span class="sd">from a covariance matrix.</span>
+
+<span class="sd">.. moduleauthor:: Daniel Savoiu &lt;daniel.savoiu@ekp.kit.edu&gt;</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="cov_to_cor"><a class="viewcode-back" href="../../api/kafe.html#kafe.numeric_tools.cov_to_cor">[docs]</a><span class="k">def</span> <span class="nf">cov_to_cor</span><span class="p">(</span><span class="n">cov_mat</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Converts a covariance matrix to a correlation matrix according to the formula</span>
+<span class="sd">    </span>
+<span class="sd">    M{Cor_ij = Cov_ij / sqrt( Cov_ii * Cov_jj)}</span>
+<span class="sd">    </span>
+<span class="sd">    @param cov_mat: The covariance matrix to convert.</span>
+<span class="sd">    @type cov_mat: `numpy.matrix`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="n">diagonal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov_mat</span><span class="p">)</span> <span class="c"># extract the diagonal entries</span>
+    
+    <span class="c"># a single zero in the diagonal makes the calculation impossible</span>
+    <span class="c"># Note: this can only happen if NO errors are defined for the</span>
+    <span class="c">#       axis in question</span>
+    <span class="k">if</span> <span class="mi">0</span> <span class="ow">in</span> <span class="n">diagonal</span><span class="p">:</span>
+        <span class="c"># return a zero matrix in this case</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">diagonal</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">diagonal</span><span class="p">))</span> <span class="p">)</span> <span class="p">)</span>
+    
+    <span class="c"># construct the outer (dyadic) product between the diagonal</span>
+    <span class="c"># and an equally long array of ones</span>
+    <span class="n">tmp_2darray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">diagonal</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">diagonal</span><span class="p">)))</span>
+    
+    <span class="c"># multiply that elementwise to its transpose</span>
+    <span class="n">tmp_2darray</span> <span class="o">*=</span> <span class="n">tmp_2darray</span><span class="o">.</span><span class="n">T</span>
+    
+    <span class="c"># and get the square root</span>
+    <span class="n">tmp_2darray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tmp_2darray</span><span class="p">)</span>
+    
+    <span class="c"># the correlation matrix is the original matrix divided</span>
+    <span class="c"># elementwise by the calculated matrix. The cast from matrix </span>
+    <span class="c"># to array and back is needed to do elementwise calculations</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">cov_mat</span><span class="p">)</span> <span class="o">/</span> <span class="n">tmp_2darray</span> <span class="p">)</span> 
+</div>
+<div class="viewcode-block" id="cor_to_cov"><a class="viewcode-back" href="../../api/kafe.html#kafe.numeric_tools.cor_to_cov">[docs]</a><span class="k">def</span> <span class="nf">cor_to_cov</span><span class="p">(</span><span class="n">cor_mat</span><span class="p">,</span> <span class="n">error_list</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Converts a correlation matrix to a covariance matrix according to the formula</span>
+<span class="sd">    </span>
+<span class="sd">    M{Cov_ij = Cor_ij * sqrt( err_i * err_j)}</span>
+<span class="sd">    </span>
+<span class="sd">    @param cor_mat: The correlation matrix to convert.</span>
+<span class="sd">    @type cor_mat: `numpy.matrix`</span>
+<span class="sd">    @param error_list: A sequence of statistical errors. Must be of the same length</span>
+<span class="sd">        as the diagonal of `cor_mat`.</span>
+<span class="sd">    @type error_list: sequence of floats</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="n">stat_errs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">error_list</span><span class="p">)</span>    <span class="c"># cast to a numpy array</span>
+    
+    <span class="c"># construct the outer (dyadic) product between the error array</span>
+    <span class="c"># and an equally long array of ones</span>
+    <span class="n">tmp_2darray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">stat_errs</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">stat_errs</span><span class="p">)))</span>
+    
+    <span class="c"># multiply this elementwise to its transpose</span>
+    <span class="n">tmp_2darray</span> <span class="o">*=</span> <span class="n">tmp_2darray</span><span class="o">.</span><span class="n">T</span>
+    
+    <span class="c"># the covariance matrix is the correlation matrix multiplied</span>
+    <span class="c"># elementwise by the calculated matrix. The cast from matrix </span>
+    <span class="c"># to array and back is needed to do elementwise calculations</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">cor_mat</span><span class="p">)</span> <span class="o">*</span> <span class="n">tmp_2darray</span> <span class="p">)</span> 
+</div>
+<div class="viewcode-block" id="extract_statistical_errors"><a class="viewcode-back" href="../../api/kafe.html#kafe.numeric_tools.extract_statistical_errors">[docs]</a><span class="k">def</span> <span class="nf">extract_statistical_errors</span><span class="p">(</span><span class="n">cov_mat</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Extracts the statistical errors from a covariance matrix. This means</span>
+<span class="sd">    it returns the (elementwise) square root of the diagonal entries</span>
+<span class="sd">    </span>
+<span class="sd">    @param cov_mat: The covariance matrix to extract errors from.</span>
+<span class="sd">    @type cov_mat: `numpy.matrix`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="n">diagonal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov_mat</span><span class="p">)</span> <span class="c"># extract the diagonal entries</span>
+        
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="n">diagonal</span> <span class="p">)</span>  <span class="c"># return the array of square roots </span>
+    </div>
+<div class="viewcode-block" id="zero_pad_lower_triangle"><a class="viewcode-back" href="../../api/kafe.html#kafe.numeric_tools.zero_pad_lower_triangle">[docs]</a><span class="k">def</span> <span class="nf">zero_pad_lower_triangle</span><span class="p">(</span><span class="n">triangle_list</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Converts a list of lists into a lower triangle matrix. The list members should</span>
+<span class="sd">    be lists of increasing length from M{1} to M{N}, M{N} being the dimension of</span>
+<span class="sd">    the resulting lower triangle matrix. Returns a `NumPy` matrix object.</span>
+<span class="sd">    </span>
+<span class="sd">    For example: </span>
+<span class="sd">    </span>
+<span class="sd">        &gt;&gt;&gt; zero_pad_lower_triangle([ [1.0], [0.2, 1.0], [0.01, 0.4, 3.0] ])</span>
+<span class="sd">        matrix([[ 1.  ,  0.  ,  0.  ],</span>
+<span class="sd">                [ 0.2 ,  1.  ,  0.  ],</span>
+<span class="sd">                [ 0.01,  0.4 ,  3.  ]])</span>
+<span class="sd">    </span>
+<span class="sd">    @param triangle_list: A list containing lists of increasing length</span>
+<span class="sd">    @type triangle_list: list</span>
+<span class="sd">    </span>
+<span class="sd">    @return: `numpy.matrix`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="n">dimension</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">triangle_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c"># dimension of matrix given by last row</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">triangle_list</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span> <span class="o">+</span> <span class="p">(</span><span class="n">dimension</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">))</span> <span class="o">*</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">])</span>
+        
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="make_symmetric_lower"><a class="viewcode-back" href="../../api/kafe.html#kafe.numeric_tools.make_symmetric_lower">[docs]</a><span class="k">def</span> <span class="nf">make_symmetric_lower</span><span class="p">(</span><span class="n">mat</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Copies the matrix entries below the main diagonal to the upper triangle half of</span>
+<span class="sd">    the matrix. Leaves the diagonal unchanged. Returns a `NumPy` matrix object.</span>
+<span class="sd">    </span>
+<span class="sd">    @param mat: A lower diagonal matrix.</span>
+<span class="sd">    @type mat: `numpy.matrix`</span>
+<span class="sd">    </span>
+<span class="sd">    @return: `numpy.matrix`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="n">tmp_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tril</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span> <span class="c"># extract lower triangle from matrix (including diagonal)</span>
+    
+    <span class="c"># if the matrix given wasn&#39;t a lower triangle matrix, raise an error</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">mat</span> <span class="o">!=</span> <span class="n">tmp_mat</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">,</span> <span class="s">&#39;Matrix to symmetrize not a lower diagonal matrix.&#39;</span>
+    
+    <span class="n">tmp_mat</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">triu</span><span class="p">(</span><span class="n">tmp_mat</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>  <span class="c"># add its transpose to itself, zeroing the diagonal to avoid doubling</span>
+    
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span><span class="n">tmp_mat</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">kafe 3.1alpha1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Daniel Savoiu.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
