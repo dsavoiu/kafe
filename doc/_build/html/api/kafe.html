@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -10,7 +9,7 @@
     
     <title>kafe Package &mdash; kafe 3.1alpha1 documentation</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -471,7 +470,7 @@ sequence of whitespace characters is assumed to separate the data.</p>
 <span id="fit-module"></span><h2><a class="reference internal" href="#module-fit" title="fit: This submodule defines a `Fit` object which performs the actual fitting given a `Dataset` and a fit function. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">fit</span></tt></a> Module<a class="headerlink" href="#module-kafe.fit" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-fit"></span><dl class="class">
 <dt id="kafe.fit.Fit">
-<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x3823de8&gt;</em>, <em>function_label=None</em>, <em>function_equation=None</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x3e69de8&gt;</em>, <em>function_label=None</em>, <em>function_equation=None</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Object representing a fit. This object references the fitted <cite>Dataset</cite>, the fit function and the resulting fit parameters.</p>
 <p>Necessary arguments are a <cite>Dataset</cite> object and a fit function (which should be fitted to the <cite>Dataset</cite>).
 Optionally, an external function <cite>FCN</cite> (whose minima should be located to find the best fit) can be specified.
@@ -710,8 +709,7 @@ If <cite>input_array</cite> is a vector <span class="math">\(\mathbf{x}\)</span>
 <span class="target" id="module-minuit"></span><dl class="class">
 <dt id="kafe.minuit.Minuit">
 <em class="property">class </em><tt class="descclassname">kafe.minuit.</tt><tt class="descname">Minuit</tt><big>(</big><em>number_of_parameters</em>, <em>function_to_minimize</em>, <em>par_names</em>, <em>start_params</em>, <em>param_errors</em>, <em>quiet=True</em>, <em>verbose=False</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.minuit.Minuit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>A class for communicating with ROOT&#8217;s function minimizer tool Minuit.</p>
+<dd><p>A class for communicating with ROOT&#8217;s function minimizer tool Minuit.</p>
 <dl class="method">
 <dt id="kafe.minuit.Minuit.FCN_wrapper">
 <tt class="descname">FCN_wrapper</tt><big>(</big><em>number_of_parameters</em>, <em>derivatives</em>, <em>f</em>, <em>parameters</em>, <em>internal_flag</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.FCN_wrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.minuit.Minuit.FCN_wrapper" title="Permalink to this definition">¶</a></dt>
