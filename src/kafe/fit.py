@@ -124,38 +124,52 @@ class Fit:
         '''
         
         # Initialize instance variables
+        ################################
         
-        self.dataset = dataset
+        self.dataset = dataset  #: this Fit instance's child `Dataset`
         
-        self.fit_function = fit_function    # refer to the fit function
-        self.external_fcn = external_fcn    # refer to the (external) function to me minimized
+        self.fit_function = fit_function    #: the fit function used for this `Fit`
+        self.external_fcn = external_fcn    #: the (external) function to be minimized for this `Fit`
         
-        self.number_of_parameters = get_function_property(self.fit_function, 'number of parameters')    # set param number
-        self.current_param_values = get_function_property(self.fit_function, 'parameter defaults')      # set current params to default
-        self.param_names = get_function_property(self.fit_function, 'parameter names')                  # set parameter names
-        self.param_names_latex = map(lambda tmp_string: r'\verb!'+tmp_string+'!', self.param_names)     # set parameter names
+        self.number_of_parameters = get_function_property(self.fit_function, 'number of parameters')    #: the number of parameters
+        self.current_param_values = get_function_property(self.fit_function, 'parameter defaults')      #: the current values of the parameters
+        self.current_param_errors = get_function_property(self.fit_function, 'parameter defaults')      #: the current uncertainties of the parameters
+        
+        self.param_names = get_function_property(self.fit_function, 'parameter names')                  #: the names of the parameters
+        self.param_names_latex = map(lambda tmp_string: r'\verb!'+tmp_string+'!', self.param_names)     #: :math:`\LaTeX` parameter names
+        
+        if function_equation is not None:
+            #: :math:`\LaTeX` function equation
+            self.function_equation = function_equation # get the function equation from the arguments  
+        else:
+            self.function_label = r'\verb!%s!' % ( get_function_property(self.fit_function, 'name'), )   # get the function name and wrap it in LaTeX
         
         if function_label is not None:
+            #: a label to use in the legend when plotting
             self.function_label = function_label     # get the function name from the arguments
         else:
             self.function_label = r'\verb!%s!' % ( get_function_property(self.fit_function, 'name'), )   # get the function name and wrap it in LaTeX
             
-        self.function_equation = function_equation # get the function equation (if provided)
+        
         
         if self.dataset.has_errors('y'):                                                            # check if the dataset has any y errors at all
             #self.current_cov_mat = self.dataset.get_cov_mat('y', fallback_on_singular='identity')  # set the y cov_mat as starting cov_mat for the fit (use identity matrix if singular)
             self.current_cov_mat = self.dataset.get_cov_mat('y', fallback_on_singular='report')     # set the y cov_mat as starting cov_mat for the fit (report if singular matrix)
+            '''the current covariance matrix used for the `Fit`'''
         else:
             self.current_cov_mat = np.asmatrix( np.eye(self.dataset.get_size()) )                   # set the identity matrix as starting cov_mat for the fit
         
+        #: this `Fit`'s minimizer (`Minuit`)
         self.minimizer = Minuit(self.number_of_parameters, self.call_external_fcn, self.param_names, self.current_param_values, None)   # initialize minimizer for fit
         self.minimizer.set_parameter_values(self.current_param_values)        # set Minuit's start parameters
         self.minimizer.set_parameter_errors()                                 # set Minuit's parameter errors
         
-        
         # Store measurement data locally in Fit object
-        self.xdata = self.dataset.get_data('x')
-        self.ydata = self.dataset.get_data('y')
+        self.xdata = self.dataset.get_data('x') #: the `x` coordinates of the data points used for this `Fit`
+        self.ydata = self.dataset.get_data('y') #: the `y` coordinates of the data points used for this `Fit`
+        
+        # Define a string for storing the output
+        self.output = ''
         
     
     def call_external_fcn(self, *param_values):
@@ -308,21 +322,11 @@ class Fit:
         Instructs the minimizer to do a minimization.
         '''
         
-        
-        # self.minimizer.set_print_level(-1000)
-        ##print self.current_cov_mat
-        
         self.minimizer.minimize()
         self.current_param_values = self.minimizer.get_parameter_values()
-        
-        #self.print_rounded_fit_parameters()
+        self.current_param_errors = self.minimizer.get_parameter_errors()
         
         par_cov_mat = self.get_error_matrix()
-        #par_errs = np.diag(par_cov_mat)
-        #print par_cov_mat
-            
-        
-        # self.minimizer.set_print_level(0)
       
     def project_x_covariance_matrix(self):
         r'''
@@ -342,6 +346,9 @@ class Fit:
         
                 
         ##print self.current_cov_mat
+    
+    # Output functions
+    ###################
     
     def print_rounded_fit_parameters(self):
         '''prints the fit parameters'''
@@ -363,10 +370,10 @@ class Fit:
         '''prints some fit goodness details'''
         
         chi2prob = self.minimizer.get_chi2_probability(self.dataset.get_size() - self.number_of_parameters)
-        if chi2prob < 0.05:
-            hypothesis_status = 'rejected (CL 5%)'
+        if chi2prob < M_CONFIDENCE_LEVEL:
+            hypothesis_status = 'rejected (CL %d%)' % (int(M_CONFIDENCE_LEVEL*100),)
         else:
-            hypothesis_status = 'accepted (CL 5%)'
+            hypothesis_status = 'accepted (CL %d%)' % (int(M_CONFIDENCE_LEVEL*100),)
             
         print '###############'
         print "# Fit details #"
