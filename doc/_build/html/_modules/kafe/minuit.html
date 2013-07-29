@@ -80,7 +80,7 @@
 <span class="c"># dictionary lookup for error codes</span>
 <span class="n">D_MATRIX_ERROR</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span> <span class="p">:</span> <span class="s">&quot;Error matrix not calculated&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">:</span> <span class="s">&quot;Error matrix approximate!&quot;</span><span class="p">,</span> <span class="mi">2</span> <span class="p">:</span> <span class="s">&quot;Error matrix forces positive definite!&quot;</span><span class="p">,</span> <span class="mi">3</span> <span class="p">:</span> <span class="s">&quot;Error matrix accurate&quot;</span> <span class="p">}</span> <span class="c"># Error matrix staus codes</span>
 
-<div class="viewcode-block" id="Minuit"><a class="viewcode-back" href="../../api/kafe.html#kafe.minuit.Minuit">[docs]</a><span class="k">class</span> <span class="nc">Minuit</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Minuit"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit">[docs]</a><span class="k">class</span> <span class="nc">Minuit</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    A class for communicating with ROOT&#39;s function minimizer tool Minuit.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
@@ -132,23 +132,23 @@
     <span class="c"># Set methods</span>
     <span class="c">##############</span>
     
-<div class="viewcode-block" id="Minuit.set_print_level"><a class="viewcode-back" href="../../api/kafe.html#kafe.minuit.Minuit.set_print_level">[docs]</a>    <span class="k">def</span> <span class="nf">set_print_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">print_level</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<div class="viewcode-block" id="Minuit.set_print_level"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.set_print_level">[docs]</a>    <span class="k">def</span> <span class="nf">set_print_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">print_level</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Sets the print level for Minuit. Default: 0 (suppress all output)&#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">SetPrintLevel</span><span class="p">(</span><span class="n">print_level</span><span class="p">)</span> <span class="c"># set Minuit print level</span>
         </div>
-<div class="viewcode-block" id="Minuit.set_strategy"><a class="viewcode-back" href="../../api/kafe.html#kafe.minuit.Minuit.set_strategy">[docs]</a>    <span class="k">def</span> <span class="nf">set_strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strategy_id</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="Minuit.set_strategy"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.set_strategy">[docs]</a>    <span class="k">def</span> <span class="nf">set_strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strategy_id</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Sets the strategy Minuit. Default: 1 (optimized)&#39;&#39;&#39;</span>
         <span class="n">error_code</span> <span class="o">=</span> <span class="n">Long</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnexcm</span><span class="p">(</span><span class="s">&quot;SET STRATEGY&quot;</span><span class="p">,</span> <span class="n">arr</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">strategy_id</span><span class="p">]),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span> <span class="c"># execute SET STRATEGY command</span>
     </div>
-<div class="viewcode-block" id="Minuit.set_err"><a class="viewcode-back" href="../../api/kafe.html#kafe.minuit.Minuit.set_err">[docs]</a>    <span class="k">def</span> <span class="nf">set_err</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">up_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<div class="viewcode-block" id="Minuit.set_err"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.set_err">[docs]</a>    <span class="k">def</span> <span class="nf">set_err</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">up_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Sets the UP value for Minuit. Default: 1.0 (good for chi2)&#39;&#39;&#39;</span>
         <span class="c"># Tell TMinuit to use an up-value of 1.0</span>
         <span class="n">error_code</span> <span class="o">=</span> <span class="n">Long</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnexcm</span><span class="p">(</span><span class="s">&quot;SET ERR&quot;</span><span class="p">,</span> <span class="n">arr</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">up_value</span><span class="p">]),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span> <span class="c"># execute SET ERR command</span>
     
         </div>
-<div class="viewcode-block" id="Minuit.set_parameter_values"><a class="viewcode-back" href="../../api/kafe.html#kafe.minuit.Minuit.set_parameter_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_parameter_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_values</span><span class="p">):</span> <span class="c">#=None):</span>
+<div class="viewcode-block" id="Minuit.set_parameter_values"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.set_parameter_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_parameter_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_values</span><span class="p">):</span> <span class="c">#=None):</span>
         <span class="sd">&#39;&#39;&#39;Sets the fit parameters. If param_values=`None`, tries to infer defaults from the function_to_minimize.&#39;&#39;&#39;</span>
         <span class="c">#if param_values is None: # infer parameters from FCN</span>
         <span class="c">#    if len(self.function_to_minimize.func_defaults) == self.number_of_parameters:    # only if all defaults given</span>
@@ -160,7 +160,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">,</span> <span class="s">&quot;Cannot get default parameter values from the FCN. Not all parameters have default values given.&quot;</span>
         </div>
-<div class="viewcode-block" id="Minuit.set_parameter_names"><a class="viewcode-back" href="../../api/kafe.html#kafe.minuit.Minuit.set_parameter_names">[docs]</a>    <span class="k">def</span> <span class="nf">set_parameter_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_names</span><span class="p">):</span> <span class="c">#=None):</span>
+<div class="viewcode-block" id="Minuit.set_parameter_names"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.set_parameter_names">[docs]</a>    <span class="k">def</span> <span class="nf">set_parameter_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_names</span><span class="p">):</span> <span class="c">#=None):</span>
         <span class="sd">&#39;&#39;&#39;Sets the fit parameters. If param_values=`None`, tries to infer defaults from the function_to_minimize.&#39;&#39;&#39;</span>
         <span class="c">#if param_values is None: # infer parameters from FCN</span>
         <span class="c">#    if len(self.function_to_minimize.func_defaults) == self.number_of_parameters:    # only if all defaults given</span>
@@ -172,7 +172,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">,</span> <span class="s">&quot;Cannot set param names. Tuple length mismatch.&quot;</span>    
     </div>
-<div class="viewcode-block" id="Minuit.set_parameter_errors"><a class="viewcode-back" href="../../api/kafe.html#kafe.minuit.Minuit.set_parameter_errors">[docs]</a>    <span class="k">def</span> <span class="nf">set_parameter_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_errors</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Minuit.set_parameter_errors"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.set_parameter_errors">[docs]</a>    <span class="k">def</span> <span class="nf">set_parameter_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_errors</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Sets the fit parameter errors. If param_values=`None`, sets the error to 1% of the parameter value.&#39;&#39;&#39;</span>
     
         <span class="k">if</span> <span class="n">param_errors</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span> <span class="c"># set to 1% of the parameter value</span>
@@ -189,7 +189,7 @@
     <span class="c"># Get methods</span>
     <span class="c">##############</span>
     </div>
-<div class="viewcode-block" id="Minuit.get_error_matrix"><a class="viewcode-back" href="../../api/kafe.html#kafe.minuit.Minuit.get_error_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_error_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Minuit.get_error_matrix"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.get_error_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_error_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Retrieves the parameter error matrix from TMinuit&#39;&#39;&#39;</span>
         
         <span class="n">tmp_array</span> <span class="o">=</span> <span class="n">arr</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="c"># setup an array of type `double&#39; to pass to TMinuit</span>
@@ -197,7 +197,7 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tmp_array</span><span class="p">,(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">))</span> <span class="p">)</span> <span class="c"># reshape into 2D array</span>
     
     </div>
-<div class="viewcode-block" id="Minuit.get_parameter_values"><a class="viewcode-back" href="../../api/kafe.html#kafe.minuit.Minuit.get_parameter_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameter_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Minuit.get_parameter_values"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.get_parameter_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameter_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Retrieves the parameter values from TMinuit. Returns a tuple.&#39;&#39;&#39;</span>
         
         <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
@@ -212,7 +212,7 @@
         
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
     </div>
-<div class="viewcode-block" id="Minuit.get_parameter_errors"><a class="viewcode-back" href="../../api/kafe.html#kafe.minuit.Minuit.get_parameter_errors">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameter_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Minuit.get_parameter_errors"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.get_parameter_errors">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameter_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Retrieves the parameter errors from TMinuit. Returns a tuple.&#39;&#39;&#39;</span>
         
         <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
@@ -227,7 +227,7 @@
         
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
     </div>
-<div class="viewcode-block" id="Minuit.get_parameter_info"><a class="viewcode-back" href="../../api/kafe.html#kafe.minuit.Minuit.get_parameter_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameter_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Minuit.get_parameter_info"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.get_parameter_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameter_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Retrieves parameter information from TMinuit. Returns a list of tuples (param_name, param_val, param_error)&#39;&#39;&#39;</span>
         
         <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
@@ -242,7 +242,7 @@
         
         <span class="k">return</span> <span class="n">result</span>
 </div>
-<div class="viewcode-block" id="Minuit.get_parameter_name"><a class="viewcode-back" href="../../api/kafe.html#kafe.minuit.Minuit.get_parameter_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameter_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_nr</span><span class="p">):</span> <span class="c">#=None):</span>
+<div class="viewcode-block" id="Minuit.get_parameter_name"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.get_parameter_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameter_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_nr</span><span class="p">):</span> <span class="c">#=None):</span>
         <span class="sd">&#39;&#39;&#39;Sets the fit parameters. If param_values=`None`, tries to infer defaults from the function_to_minimize.&#39;&#39;&#39;</span>
         <span class="c">#if param_values is None: # infer parameters from FCN</span>
         <span class="c">#    if len(self.function_to_minimize.func_defaults) == self.number_of_parameters:    # only if all defaults given</span>
@@ -251,7 +251,7 @@
         <span class="c">#        raise Exception, &quot;Cannot get default parameter values from the FCN. Not all parameters have default values given.&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span><span class="p">[</span><span class="n">param_nr</span><span class="p">]</span>    
 </div>
-<div class="viewcode-block" id="Minuit.get_fit_info"><a class="viewcode-back" href="../../api/kafe.html#kafe.minuit.Minuit.get_fit_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_fit_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
+<div class="viewcode-block" id="Minuit.get_fit_info"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.get_fit_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_fit_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Retrieves other info from Minuit. The argument ``info`&#39; can be any of the following:</span>
 <span class="sd">            - `fcn`: B{FCN} value at minimum,</span>
 <span class="sd">            - `edm`: estimated distance to minimum</span>
@@ -292,7 +292,7 @@
             <span class="k">except</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">status_code</span>
         </div>
-<div class="viewcode-block" id="Minuit.get_chi2_probability"><a class="viewcode-back" href="../../api/kafe.html#kafe.minuit.Minuit.get_chi2_probability">[docs]</a>    <span class="k">def</span> <span class="nf">get_chi2_probability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_deg_of_freedom</span><span class="p">):</span>
+<div class="viewcode-block" id="Minuit.get_chi2_probability"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.get_chi2_probability">[docs]</a>    <span class="k">def</span> <span class="nf">get_chi2_probability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_deg_of_freedom</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns the probability that an observed S{chi}-square exceeds</span>
 <span class="sd">        the calculated value of S{chi}-square for this fit by chance, even for a correct model.</span>
@@ -308,10 +308,10 @@
     <span class="c"># Other methods</span>
     <span class="c">################</span>
     </div>
-<div class="viewcode-block" id="Minuit.reset"><a class="viewcode-back" href="../../api/kafe.html#kafe.minuit.Minuit.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Minuit.reset"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnrset</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c"># reset TMinuit</span>
         </div>
-<div class="viewcode-block" id="Minuit.FCN_wrapper"><a class="viewcode-back" href="../../api/kafe.html#kafe.minuit.Minuit.FCN_wrapper">[docs]</a>    <span class="k">def</span> <span class="nf">FCN_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number_of_parameters</span><span class="p">,</span> <span class="n">derivatives</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">internal_flag</span><span class="p">):</span>
+<div class="viewcode-block" id="Minuit.FCN_wrapper"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.FCN_wrapper">[docs]</a>    <span class="k">def</span> <span class="nf">FCN_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number_of_parameters</span><span class="p">,</span> <span class="n">derivatives</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">internal_flag</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        This is actually a function called in ROOT and acting as a C wrapper </span>
 <span class="sd">        for our B{FCN}, which is implemented in Python.</span>
@@ -350,7 +350,7 @@
         
 <span class="c">#         f[0] = self.function_to_minimize(parameter_list) # call the Python FCN.</span>
 </div>
-<div class="viewcode-block" id="Minuit.minimize"><a class="viewcode-back" href="../../api/kafe.html#kafe.minuit.Minuit.minimize">[docs]</a>    <span class="k">def</span> <span class="nf">minimize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Minuit.minimize"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.minimize">[docs]</a>    <span class="k">def</span> <span class="nf">minimize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Do the minimization&#39;&#39;&#39;</span>
         <span class="c"># Run minimization algorithm (MIGRAD + HESSE)</span>
         <span class="n">error_code</span> <span class="o">=</span> <span class="n">Long</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>

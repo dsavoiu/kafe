@@ -5,13 +5,36 @@
 .. moduleauthor:: Daniel Savoiu <daniel.savoiu@ekp.kit.edu>
 '''
 
+import matplotlib as mpl
+mpl.use('Qt4AGG')    # use the Qt backend for mpl
+
 import matplotlib.pyplot as plt
 from numeric_tools import * # includes importing numpy as np
 from function_tools import *
 from constants import *
 from fit import round_to_significance
 import re # some regular expression stuff
+from string import split, join, lower
 
+def label_to_latex(label):
+    '''
+    Generates a simple LaTeX-formatted label from a plain-text label.
+    This treats isolated characters and words beginning with a backslash
+    as mathematical expressions and surround them with $ signs accordingly.
+    
+    **label** : string
+        Plain-text string to convert to LaTeX.
+    '''
+    
+    tokens = split(label)
+    for token_id in range(len(tokens)):
+        if len(tokens[token_id]) == 1 or tokens[token_id][0]=='\\':
+            if lower(tokens[token_id][-1]) not in "abcdefghijklmnopqrstuvwxyz":
+                tokens[token_id] = '$%s$%s' % (tokens[token_id][:-1],tokens[token_id][-1]) # surround isolated chars with $ (omit last)
+            else: 
+                tokens[token_id] = '$%s$' % (tokens[token_id],) # surround isolated chars with $
+    return join(tokens)
+            
 def pad_span(span, pad_coeff=1, additional_pad=None):
     '''
     Enlarges the interval `span` (list of two floats) symmetrically around
@@ -82,8 +105,7 @@ class PlotStyle:
         self.grid = True        # use a grid per default
         self.usetex = True      # tell matplotlib to use TeX
         
-        self.axis_labels = ('$x$', '$y$')                   # Default axis labels
-        self.axis_label_styles = ('italic', 'italic')             # Default axis label styles
+        self.axis_label_styles = ('italic', 'italic')       # Default axis label styles
         
         self.axis_label_coords = ( (.5, -.1), (-.12, .5) )  # default offset for axes
         
@@ -146,13 +168,28 @@ class Plot:
         arguments will be provided soon...
         '''
         
+        #: list of `Fit`s to plot
         self.fits = list(fits)          # store the child Fit objects in an instance variable
+        
+        #: plot style
         self.plot_style = PlotStyle()   # set the default style as the current plot style
         
         plt.rcParams.update(self.plot_style.rcparams_kw)
         plt.rc('font', **self.plot_style.rcfont_kw)
         
-        self.plot_range = {'x':[0, 1], 'y':[0, 1]}    # default plot range in [0, 1] for each axis
+        self.plot_range = {'x': None, 'y': None}    #: plot range
+        
+        if len(fits)==1:
+            #: axis labels
+            self.axis_labels = map(label_to_latex, self.fits[0].dataset.axis_labels) # inherit axis labels from Fit's Dataset
+            
+            # set unit in brackets (if available)
+            for label_id in range(len(self.axis_labels)):
+                unit = self.fits[0].dataset.axis_units[label_id]
+                if unit != '':
+                    self.axis_labels[label_id] += " [\\textrm{%s}]" % (unit,)
+        else:
+            self.axis_labels = ('$x$', '$y$') # set default axis names
         
         self.init_plots()               # initialize the plots
                 
@@ -178,38 +215,87 @@ class Plot:
 
         self.compute_plot_range()
             
-    def plot_all(self):
+    def plot_all(self, show_info_for='all', show_data_for='all'):
         '''
         Plot every `Fit` object to its figure.
         '''
         for p_id in range(len(self.fits)):
-            self.plot(p_id)
+            if show_data_for != 'all':
+                try:
+                    iter(show_data_for)
+                except:
+                    show_data_for=(show_data_for,) # wrap value in tuple
+                
+                if p_id in show_data_for:
+                    self.plot(p_id, show_data=True)
+                else:
+                    self.plot(p_id, show_data=False)
+            else:
+                self.plot(p_id, show_data=True)
             
+        self.draw_legend()
+        self.draw_fit_parameters_box(show_info_for)
+        
+    def draw_legend(self):
+        '''Draw the plot legend to the canvas'''
         # show plot legend
-        legend = self.axes.legend(**self.plot_style.legendparams_kw)
-        legend.draggable()
+        self.legend = self.axes.legend(**self.plot_style.legendparams_kw)
+        self.legend.draggable()
         
-        plt.draw()
         
-        # get the legend bounding box and extract some dimension info
+    def draw_fit_parameters_box(self, plot_spec=0):        
+        '''Draw the parameter box to the canvas
         
+        *plot_spec* : int, list of ints, string or None (optional, default: 0)
+            Specify the plot id of the plot for which to draw the parameters. Passing 0 will only draw the
+            parameter box for the first plot, and so on. Passing a list of ints will only draw the parameters
+            for plot ids inside the list. Passing ``'all'`` will print parameters for all plots. Passing
+            ``None`` will return immediately doing nothing.
+        '''
+        if plot_spec is None:
+            return
+        
+        self.figure.canvas.draw()
+        
+        # get the offset to subtract for each axes transformation
         offset = self.axes.transAxes.transform((0,0))
         
-        legend_bbox = legend.legendPatch.get_bbox().inverse_transformed(self.axes.transAxes) 
+        # get the legend bounding box and extract some dimension info
+        legend_bbox = self.legend.legendPatch.get_bbox().inverse_transformed(self.axes.transAxes) 
         
+        # size of the legend box. Use this to create the fit parameters text box below it.
         legend_size_px = self.axes.transAxes.transform((legend_bbox.width, legend_bbox.height)) - offset 
         legend_size = (legend_bbox.width, legend_bbox.height)
 
+        # fit parameters box size
         textbox_size = (legend_size[0], legend_size[1] - 0.05)
         textbox_size_px = self.axes.transAxes.transform(textbox_size) - offset
         
+        # pad text in fit parameters box by this amount
         pad_amount = self.plot_style.legendparams_kw['pad']
         pad_amount_px = (self.axes.transAxes.transform((self.plot_style.legendparams_kw['pad'],0)) - offset)[0]
         
         text_content = "\\textbf{Fit Parameters}\n"
         
-        for fit in self.fits:
-            text_content += "~\nFit for " + fit.dataset.data_label + ':\n'
+        try:
+            fit = self.fits[plot_spec]  # try to find the specified plot
+        except:
+            if plot_spec == "all":   # if not found, check for keyword 'all'
+                fits_with_parameter_box = self.fits # go through all fits
+            else:
+                try:
+                    fits_with_parameter_box = []
+                    for p_id in plot_spec:
+                        fits_with_parameter_box.append(self.fits[p_id])
+                except:
+                    raise Exception, "Cannot parse plot specification %r." % (plot_spec,)
+        else:
+            fits_with_parameter_box = [fit]
+                
+                
+        for fit in fits_with_parameter_box:
+            #text_content += "~\nFit for " + fit.dataset.data_label + ':\n'
+            text_content += "~\n" + fit.function_label + ':\n'
             for idx in range(len(fit.param_names)):
                 parname = fit.param_names_latex[idx]
                 parval = fit.get_parameter_values(rounding=True)[idx]
@@ -219,8 +305,7 @@ class Plot:
         # replace scientific notation with power of ten
         text_content = re.sub(r'(-?\d*\.?\d+?)0*e\+?(-?[0-9]*[1-9]?)', r'\1\\times10^{\2}', text_content)
         
-        
-        text = self.axes.text(legend_bbox.xmin+pad_amount/2, 0.00+pad_amount/2,
+        self.textbox = self.axes.text(legend_bbox.xmin+pad_amount/2, 0.00+pad_amount/2,
                        text_content[:-1],
                        transform=self.axes.transAxes,
                        fontsize=self.plot_style.rcparams_kw['legend.fontsize'],
@@ -233,15 +318,14 @@ class Plot:
                              #'pad': 22}
                        )
         
-        plt.draw()
-        
-        #plt.draw()
-        #text.set_width(.5)
+        self.figure.canvas.draw()
     
     def compute_plot_range(self, include_error_bars=True):
         '''
         Compute the span of all child datasets and sets the plot range to that
         '''
+        
+        self.plot_range = {'x': None, 'y': None}    # default plot range None (undefined)
         
         for current_fit in self.fits:
             xspan = current_fit.dataset.get_data_span('x', include_error_bars)  # initialize plot x span
@@ -263,11 +347,16 @@ class Plot:
         if axis not in ('x','y'):
             raise SyntaxError, "Unknown axis `%s'" % (axis,) 
         
-        self.plot_range[axis][0] = min(self.plot_range[axis][0], new_span[0]) # move the minimum down, if necessary
-        self.plot_range[axis][1] = max(self.plot_range[axis][1], new_span[1]) # move the maximum up, if necessary
+        if self.plot_range[axis] is not None:
+            self.plot_range[axis][0] = min(self.plot_range[axis][0], new_span[0]) # move the minimum down, if necessary
+            self.plot_range[axis][1] = max(self.plot_range[axis][1], new_span[1]) # move the maximum up, if necessary
+        else:
+            self.plot_range[axis] = new_span  # if plot range in None (undefined), take the new values directly
+            
+        
         
     
-    def plot(self, p_id):
+    def plot(self, p_id, show_data=True):
         '''
         Plot the `Fit` object with the number `p_id` to its figure.
         '''
@@ -283,13 +372,15 @@ class Plot:
                      'color':self.plot_style.get_markercolor(p_id),
                      'label':current_fit.dataset.data_label,
                      'ms':self.plot_style.get_pointsize(p_id),
-                     'capsize':0}
+                     'capsize':0,
+                     'zorder':1}
         
         # for the fit function 
         _fdata_kw = {'marker':'None',
                      'linestyle':self.plot_style.get_line(p_id),
                      'color':self.plot_style.get_linecolor(p_id),
-                     'label':current_fit.function_label}
+                     'label':current_fit.function_label,
+                     'zorder':2}
         
         # current error bar data defaults to None
         error_bar_data = {'x':None, 'y':None}
@@ -334,8 +425,8 @@ class Plot:
         
         # set some properties inherited from plot_style
         self.axes.grid(self.plot_style.grid)
-        self.axes.set_xlabel(self.plot_style.axis_labels[0], style=self.plot_style.axis_label_styles[0])
-        self.axes.set_ylabel(self.plot_style.axis_labels[1], style=self.plot_style.axis_label_styles[1])
+        self.axes.set_xlabel(self.axis_labels[0], style=self.plot_style.axis_label_styles[0])
+        self.axes.set_ylabel(self.axis_labels[1], style=self.plot_style.axis_label_styles[1])
         
         self.axes.xaxis.set_label_coords(*self.plot_style.axis_label_coords[0])
         self.axes.yaxis.set_label_coords(*self.plot_style.axis_label_coords[1])
@@ -343,8 +434,12 @@ class Plot:
         self.axes.tick_params(axis='x', pad=self.plot_style.axis_label_pad[0])
         self.axes.tick_params(axis='y', pad=self.plot_style.axis_label_pad[1])
         
-        # plot data points
-        pplot = self.axes.errorbar(current_fit.dataset.get_data('x'), current_fit.dataset.get_data('y'), yerr=error_bar_data['y'], xerr=error_bar_data['x'], **_pdata_kw)
+        # plot data points, unless otherwise specified by the caller
+        if show_data:
+            pplot = self.axes.errorbar(current_fit.dataset.get_data('x'),
+                                       current_fit.dataset.get_data('y'),
+                                       yerr=error_bar_data['y'], 
+                                       xerr=error_bar_data['x'], **_pdata_kw)
         
         # shade confidence band
         cband = self.axes.fill_between(fxdata, lower_cb, upper_cb, alpha='0.1', color=_fdata_kw['color'])
@@ -377,38 +472,38 @@ class Plot:
 if __name__ == '__main__':
     from dataset import Dataset, build_dataset
     from fit import Fit
-    
+     
     def linear_2par2(x, slope=1, x_offset=0):
-        
+         
         return slope * (x - x_offset)
-    
+     
     def exp_2par(x, damping=0.01, shift=6, y_intercept=0):
-        
-        return np.exp(damping * x + shift) + y_intercept -np.exp(shift)  
-    
+         
+        return np.exp(damping * x + shift) + y_intercept - np.exp(shift)  
+     
     myXData  = np.asarray([0., .1, .2, .3, .4, .5, .6, .7, .8, .9, 1.])
     myYData  = np.asarray([0.227216,    -0.159875,    0.0924984,    -0.299377,    0.307159,    1.15718,    0.701532,    0.661879,    0.536548,    0.874998,    1.02603])
     myYData2 = np.asarray([-0.254749307136, -0.0983575484803, -0.108455145055, -0.317740870797, 0.112078239069, 0.238810848121, 0.285778651146, 0.498801157207, 0.220837168526, 0.587468379781, 0.517299353294])
-    
+     
     myXData  = np.linspace(0,100,40)
-    
+     
     def tmp(x):
         return exp_2par(x, 0.03, 6.5)
-    
+     
     tstFloat = .1
     myFits = []
-    for slope in range(1,4):
+    for slope in range(1,2):
         myYData  = np.asarray(map(lambda x: linear_2par2(x, slope, 0), myXData))
         myYData += np.random.normal(loc=0.0, scale=tstFloat, size=len(myYData)) 
         myDataset = build_dataset(xdata=myXData, 
                         ydata=myYData,
                         yrelstat=tstFloat)
-    
+        #myDataset.axis_labels=['\lambda', 'U']
+        #myDataset.axis_units=['nm', 'V']
         myFits.append(Fit(myDataset, linear_2par2, function_label='Linear fit for example data'))
         myFits[-1].do_fit()
-    
+     
     myPlot = Plot(*myFits)
-    
+     
     myPlot.plot_all()
     myPlot.show()
-    

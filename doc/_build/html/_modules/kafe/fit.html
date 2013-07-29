@@ -65,7 +65,7 @@
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">floor</span><span class="p">,</span> <span class="n">log</span>
 
 <span class="c"># The default FCN</span>
-<div class="viewcode-block" id="chi2"><a class="viewcode-back" href="../../api/kafe.html#kafe.fit.chi2">[docs]</a><span class="k">def</span> <span class="nf">chi2</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">cov_mat</span><span class="p">,</span> <span class="n">fit_function</span><span class="p">,</span> <span class="n">param_values</span><span class="p">):</span>
+<div class="viewcode-block" id="chi2"><a class="viewcode-back" href="../../index.html#kafe.fit.chi2">[docs]</a><span class="k">def</span> <span class="nf">chi2</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">cov_mat</span><span class="p">,</span> <span class="n">fit_function</span><span class="p">,</span> <span class="n">param_values</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    A simple S{chi}-square implementation. Calculates S{chi}-square according to the formula:</span>
 <span class="sd">    </span>
@@ -100,7 +100,7 @@
 
     <span class="k">return</span> <span class="n">residual</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">cov_mat</span><span class="o">.</span><span class="n">I</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">residual</span><span class="p">)</span>          <span class="c"># return the chi^2</span>
 </div>
-<div class="viewcode-block" id="Fit"><a class="viewcode-back" href="../../api/kafe.html#kafe.fit.Fit">[docs]</a><span class="k">class</span> <span class="nc">Fit</span><span class="p">:</span>
+<div class="viewcode-block" id="Fit"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit">[docs]</a><span class="k">class</span> <span class="nc">Fit</span><span class="p">:</span>
     <span class="sd">&#39;&#39;&#39;Object representing a fit. Has references to the fitted dataset, the fit function and the resulting fit parameters.&#39;&#39;&#39;</span>
     
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">fit_function</span><span class="p">,</span> <span class="n">external_fcn</span><span class="o">=</span><span class="n">chi2</span><span class="p">,</span> <span class="n">function_label</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -154,7 +154,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ydata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">)</span>
         
     
-<div class="viewcode-block" id="Fit.call_external_fcn"><a class="viewcode-back" href="../../api/kafe.html#kafe.fit.Fit.call_external_fcn">[docs]</a>    <span class="k">def</span> <span class="nf">call_external_fcn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">param_values</span><span class="p">):</span>
+<div class="viewcode-block" id="Fit.call_external_fcn"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.call_external_fcn">[docs]</a>    <span class="k">def</span> <span class="nf">call_external_fcn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">param_values</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Wrapper for the external B{FCN}. Since the actual fit process depends on finding the right parameter</span>
 <span class="sd">        values and keeping everything else constant, we can use the `Dataset` object to pass known, fixed</span>
@@ -166,7 +166,7 @@
         
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_fcn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xdata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ydata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_cov_mat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="p">,</span> <span class="n">param_values</span><span class="p">)</span> 
         </div>
-<div class="viewcode-block" id="Fit.get_current_fit_function"><a class="viewcode-back" href="../../api/kafe.html#kafe.fit.Fit.get_current_fit_function">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_fit_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Fit.get_current_fit_function"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.get_current_fit_function">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_fit_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        This method returns a function object corresponding to the fit function</span>
 <span class="sd">        for the current parameter values. The returned function is a function of</span>
@@ -182,7 +182,7 @@
         
         <span class="k">return</span> <span class="n">current_fit_function</span>
     </div>
-<div class="viewcode-block" id="Fit.get_error_matrix"><a class="viewcode-back" href="../../api/kafe.html#kafe.fit.Fit.get_error_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_error_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Fit.get_error_matrix"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.get_error_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_error_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        This method returns the covariance matrix of the fit parameters which is obtained</span>
 <span class="sd">        by querying the minimizer object for this fit</span>
@@ -191,7 +191,7 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_error_matrix</span><span class="p">()</span>
     </div>
-<div class="viewcode-block" id="Fit.do_fit"><a class="viewcode-back" href="../../api/kafe.html#kafe.fit.Fit.do_fit">[docs]</a>    <span class="k">def</span> <span class="nf">do_fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Fit.do_fit"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.do_fit">[docs]</a>    <span class="k">def</span> <span class="nf">do_fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;does a preliminary fit and then iterates for x error&#39;&#39;&#39;</span>
         
         <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
@@ -223,7 +223,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">print_rounded_fit_parameters</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">print_fit_details</span><span class="p">()</span>
         </div>
-<div class="viewcode-block" id="Fit.fit_one_iteration"><a class="viewcode-back" href="../../api/kafe.html#kafe.fit.Fit.fit_one_iteration">[docs]</a>    <span class="k">def</span> <span class="nf">fit_one_iteration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Fit.fit_one_iteration"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.fit_one_iteration">[docs]</a>    <span class="k">def</span> <span class="nf">fit_one_iteration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;does one iteration of Minuit minimization&#39;&#39;&#39;</span>
         
         
@@ -249,7 +249,7 @@
         
         <span class="c"># self.minimizer.set_print_level(0)</span>
       </div>
-<div class="viewcode-block" id="Fit.project_x_covariance_matrix"><a class="viewcode-back" href="../../api/kafe.html#kafe.fit.Fit.project_x_covariance_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">project_x_covariance_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Fit.project_x_covariance_matrix"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.project_x_covariance_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">project_x_covariance_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;projects the x errors from the x-covariance matrix onto the total matrix&#39;&#39;&#39;</span>
         
         <span class="n">derivative_spacing</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_error_matrix</span><span class="p">())))</span>    <span class="c"># use 1/100th of the smallest parameter error as spacing for df/dp</span>
@@ -257,7 +257,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">current_cov_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_cov_mat</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span><span class="n">proj_xcov_mat</span><span class="p">)</span>
         <span class="c">##print self.current_cov_mat</span>
     </div>
-<div class="viewcode-block" id="Fit.print_rounded_fit_parameters"><a class="viewcode-back" href="../../api/kafe.html#kafe.fit.Fit.print_rounded_fit_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">print_rounded_fit_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Fit.print_rounded_fit_parameters"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.print_rounded_fit_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">print_rounded_fit_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;prints the fit parameters&#39;&#39;&#39;</span>
         
         <span class="k">print</span> <span class="s">&quot;########################&quot;</span>
@@ -276,7 +276,7 @@
         
         <span class="k">print</span> <span class="s">&#39;&#39;</span>
     </div>
-<div class="viewcode-block" id="Fit.print_fit_details"><a class="viewcode-back" href="../../api/kafe.html#kafe.fit.Fit.print_fit_details">[docs]</a>    <span class="k">def</span> <span class="nf">print_fit_details</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Fit.print_fit_details"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.print_fit_details">[docs]</a>    <span class="k">def</span> <span class="nf">print_fit_details</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;prints some fit goodness details&#39;&#39;&#39;</span>
         
         <span class="n">chi2prob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_chi2_probability</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">)</span>
@@ -300,7 +300,7 @@
         <span class="k">print</span> <span class="s">&#39;&#39;</span>
         
         </div>
-<div class="viewcode-block" id="Fit.print_fit_results"><a class="viewcode-back" href="../../api/kafe.html#kafe.fit.Fit.print_fit_results">[docs]</a>    <span class="k">def</span> <span class="nf">print_fit_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Fit.print_fit_results"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.print_fit_results">[docs]</a>    <span class="k">def</span> <span class="nf">print_fit_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;prints fit results&#39;&#39;&#39;</span>
         
         <span class="k">print</span> <span class="s">&#39;##############&#39;</span>

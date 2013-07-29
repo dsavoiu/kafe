@@ -61,7 +61,7 @@
 <span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="o">*</span>
 
 
-<div class="viewcode-block" id="pad_span"><a class="viewcode-back" href="../../api/kafe.html#kafe.plot.pad_span">[docs]</a><span class="k">def</span> <span class="nf">pad_span</span><span class="p">(</span><span class="n">span</span><span class="p">,</span> <span class="n">pad_coeff</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">additional_pad</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="pad_span"><a class="viewcode-back" href="../../index.html#kafe.plot.pad_span">[docs]</a><span class="k">def</span> <span class="nf">pad_span</span><span class="p">(</span><span class="n">span</span><span class="p">,</span> <span class="n">pad_coeff</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">additional_pad</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Enlarges the interval `span` (list of two floats) symmetrically around</span>
 <span class="sd">    its center to length `pad_coeff`. Optionally, an `additional_pad` argument</span>
@@ -104,7 +104,7 @@
     
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">span</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">span</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">width</span> <span class="o">*</span> <span class="n">pad_coeff</span><span class="p">)</span> <span class="o">-</span> <span class="n">additional_pad</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">span</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">span</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">width</span> <span class="o">*</span> <span class="n">pad_coeff</span><span class="p">)</span> <span class="o">+</span> <span class="n">additional_pad</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">)</span>    
 </div>
-<div class="viewcode-block" id="PlotStyle"><a class="viewcode-back" href="../../api/kafe.html#kafe.plot.PlotStyle">[docs]</a><span class="k">class</span> <span class="nc">PlotStyle</span><span class="p">:</span>
+<div class="viewcode-block" id="PlotStyle"><a class="viewcode-back" href="../../index.html#kafe.plot.PlotStyle">[docs]</a><span class="k">class</span> <span class="nc">PlotStyle</span><span class="p">:</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Class for specifying a style for a specific plot. This object stores a progression of marker and line types and</span>
 <span class="sd">    colors, as well as preferences relating to point size and label size. These can be overriden</span>
@@ -165,27 +165,27 @@
         
 
     
-<div class="viewcode-block" id="PlotStyle.get_marker"><a class="viewcode-back" href="../../api/kafe.html#kafe.plot.PlotStyle.get_marker">[docs]</a>    <span class="k">def</span> <span class="nf">get_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idm</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotStyle.get_marker"><a class="viewcode-back" href="../../index.html#kafe.plot.PlotStyle.get_marker">[docs]</a>    <span class="k">def</span> <span class="nf">get_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idm</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Get a specific marker type. This runs cyclically through the defined defaults.&#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="n">idm</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">markers</span><span class="p">)]</span>
     </div>
-<div class="viewcode-block" id="PlotStyle.get_line"><a class="viewcode-back" href="../../api/kafe.html#kafe.plot.PlotStyle.get_line">[docs]</a>    <span class="k">def</span> <span class="nf">get_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idm</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotStyle.get_line"><a class="viewcode-back" href="../../index.html#kafe.plot.PlotStyle.get_line">[docs]</a>    <span class="k">def</span> <span class="nf">get_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idm</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Get a specific line type. This runs cyclically through the defined defaults.&#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="n">idm</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="p">)]</span>
     </div>
-<div class="viewcode-block" id="PlotStyle.get_markercolor"><a class="viewcode-back" href="../../api/kafe.html#kafe.plot.PlotStyle.get_markercolor">[docs]</a>    <span class="k">def</span> <span class="nf">get_markercolor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idm</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotStyle.get_markercolor"><a class="viewcode-back" href="../../index.html#kafe.plot.PlotStyle.get_markercolor">[docs]</a>    <span class="k">def</span> <span class="nf">get_markercolor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idm</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Get a specific marker color. This runs cyclically through the defined defaults.&#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">markercolors</span><span class="p">[</span><span class="n">idm</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">markercolors</span><span class="p">)]</span>
     </div>
-<div class="viewcode-block" id="PlotStyle.get_linecolor"><a class="viewcode-back" href="../../api/kafe.html#kafe.plot.PlotStyle.get_linecolor">[docs]</a>    <span class="k">def</span> <span class="nf">get_linecolor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idm</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotStyle.get_linecolor"><a class="viewcode-back" href="../../index.html#kafe.plot.PlotStyle.get_linecolor">[docs]</a>    <span class="k">def</span> <span class="nf">get_linecolor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idm</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Get a specific line color. This runs cyclically through the defined defaults.&#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">linecolors</span><span class="p">[</span><span class="n">idm</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linecolors</span><span class="p">)]</span>
     </div>
-<div class="viewcode-block" id="PlotStyle.get_pointsize"><a class="viewcode-back" href="../../api/kafe.html#kafe.plot.PlotStyle.get_pointsize">[docs]</a>    <span class="k">def</span> <span class="nf">get_pointsize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idm</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotStyle.get_pointsize"><a class="viewcode-back" href="../../index.html#kafe.plot.PlotStyle.get_pointsize">[docs]</a>    <span class="k">def</span> <span class="nf">get_pointsize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idm</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Get a specific point size. This runs cyclically through the defined defaults.&#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pointsizes</span><span class="p">[</span><span class="n">idm</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pointsizes</span><span class="p">)]</span>
 </div></div>
-<div class="viewcode-block" id="Plot"><a class="viewcode-back" href="../../api/kafe.html#kafe.plot.Plot">[docs]</a><span class="k">class</span> <span class="nc">Plot</span><span class="p">:</span>
+<div class="viewcode-block" id="Plot"><a class="viewcode-back" href="../../index.html#kafe.plot.Plot">[docs]</a><span class="k">class</span> <span class="nc">Plot</span><span class="p">:</span>
     
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">fits</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -204,7 +204,7 @@
         
         <span class="bp">self</span><span class="o">.</span><span class="n">init_plots</span><span class="p">()</span>               <span class="c"># initialize the plots</span>
                 
-<div class="viewcode-block" id="Plot.init_plots"><a class="viewcode-back" href="../../api/kafe.html#kafe.plot.Plot.init_plots">[docs]</a>    <span class="k">def</span> <span class="nf">init_plots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Plot.init_plots"><a class="viewcode-back" href="../../index.html#kafe.plot.Plot.init_plots">[docs]</a>    <span class="k">def</span> <span class="nf">init_plots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Initialize the plots for each fit.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -225,14 +225,14 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">compute_plot_range</span><span class="p">()</span>
             </div>
-<div class="viewcode-block" id="Plot.plot_all"><a class="viewcode-back" href="../../api/kafe.html#kafe.plot.Plot.plot_all">[docs]</a>    <span class="k">def</span> <span class="nf">plot_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Plot.plot_all"><a class="viewcode-back" href="../../index.html#kafe.plot.Plot.plot_all">[docs]</a>    <span class="k">def</span> <span class="nf">plot_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Plot every `Fit` object to its figure.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">for</span> <span class="n">p_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fits</span><span class="p">)):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_id</span><span class="p">)</span>
     </div>
-<div class="viewcode-block" id="Plot.compute_plot_range"><a class="viewcode-back" href="../../api/kafe.html#kafe.plot.Plot.compute_plot_range">[docs]</a>    <span class="k">def</span> <span class="nf">compute_plot_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_error_bars</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Plot.compute_plot_range"><a class="viewcode-back" href="../../index.html#kafe.plot.Plot.compute_plot_range">[docs]</a>    <span class="k">def</span> <span class="nf">compute_plot_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_error_bars</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Compute the span of all child datasets and sets the plot range to that</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -246,7 +246,7 @@
             <span class="n">yspan</span> <span class="o">=</span> <span class="n">pad_span</span><span class="p">(</span><span class="n">yspan</span><span class="p">,</span> <span class="n">G_PADDING_FACTOR_Y</span><span class="p">)</span>     <span class="c"># pad the y span by a pre-determined factor</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">extend_span</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">yspan</span><span class="p">)</span>
     </div>
-<div class="viewcode-block" id="Plot.extend_span"><a class="viewcode-back" href="../../api/kafe.html#kafe.plot.Plot.extend_span">[docs]</a>    <span class="k">def</span> <span class="nf">extend_span</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">new_span</span><span class="p">):</span>
+<div class="viewcode-block" id="Plot.extend_span"><a class="viewcode-back" href="../../index.html#kafe.plot.Plot.extend_span">[docs]</a>    <span class="k">def</span> <span class="nf">extend_span</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">new_span</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Expand the span of the current plot.</span>
 <span class="sd">        </span>
@@ -261,7 +261,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">plot_range</span><span class="p">[</span><span class="n">axis</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_range</span><span class="p">[</span><span class="n">axis</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">new_span</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="c"># move the maximum up, if necessary</span>
         
     </div>
-<div class="viewcode-block" id="Plot.plot"><a class="viewcode-back" href="../../api/kafe.html#kafe.plot.Plot.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_id</span><span class="p">):</span>
+<div class="viewcode-block" id="Plot.plot"><a class="viewcode-back" href="../../index.html#kafe.plot.Plot.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_id</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Plot the `Fit` object with the number `p_id` to its figure.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -355,14 +355,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">legendparams_kw</span><span class="p">)</span> <span class="c">##</span>
         
     </div>
-<div class="viewcode-block" id="Plot.show"><a class="viewcode-back" href="../../api/kafe.html#kafe.plot.Plot.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Plot.show"><a class="viewcode-back" href="../../index.html#kafe.plot.Plot.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Show the `Plot` in a matplotlib interactive window.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="p">)</span>
         </div>
-<div class="viewcode-block" id="Plot.save"><a class="viewcode-back" href="../../api/kafe.html#kafe.plot.Plot.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="p">):</span>
+<div class="viewcode-block" id="Plot.save"><a class="viewcode-back" href="../../index.html#kafe.plot.Plot.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Save the `Plot` to a file.</span>
 <span class="sd">        &#39;&#39;&#39;</span>

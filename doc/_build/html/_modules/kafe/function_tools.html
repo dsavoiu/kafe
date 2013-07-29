@@ -63,7 +63,7 @@
 
 <span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="o">*</span>
 
-<div class="viewcode-block" id="derivative"><a class="viewcode-back" href="../../api/kafe.html#kafe.function_tools.derivative">[docs]</a><span class="k">def</span> <span class="nf">derivative</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">derive_by_index</span><span class="p">,</span> <span class="n">variables_tuple</span><span class="p">,</span> <span class="n">derivative_spacing</span><span class="p">):</span><span class="c">#=DERIVATIVE_SPACING):</span>
+<div class="viewcode-block" id="derivative"><a class="viewcode-back" href="../../index.html#kafe.function_tools.derivative">[docs]</a><span class="k">def</span> <span class="nf">derivative</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">derive_by_index</span><span class="p">,</span> <span class="n">variables_tuple</span><span class="p">,</span> <span class="n">derivative_spacing</span><span class="p">):</span><span class="c">#=DERIVATIVE_SPACING):</span>
     <span class="sd">&#39;&#39;&#39;Gives df/dx_k for f = f(x_0, x_1...). func is f, variables_tuple is {x_i} and derive_by_index is k.&#39;&#39;&#39;</span>
     
     <span class="c"># define a dummy function, so that the variable by which f is to be derived is the only variable</span>
@@ -79,7 +79,7 @@
     <span class="c"># return the derivative of that function</span>
     <span class="k">return</span> <span class="n">scipy_der</span><span class="p">(</span><span class="n">tmp_func</span><span class="p">,</span> <span class="n">variables_tuple</span><span class="p">[</span><span class="n">derive_by_index</span><span class="p">],</span> <span class="n">dx</span><span class="o">=</span><span class="n">derivative_spacing</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="get_function_property"><a class="viewcode-back" href="../../api/kafe.html#kafe.function_tools.get_function_property">[docs]</a><span class="k">def</span> <span class="nf">get_function_property</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">prop</span><span class="p">):</span>
+<div class="viewcode-block" id="get_function_property"><a class="viewcode-back" href="../../index.html#kafe.function_tools.get_function_property">[docs]</a><span class="k">def</span> <span class="nf">get_function_property</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">prop</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Returns a specific property of the function. This assumes that the function is defined as</span>
 <span class="sd">    </span>
@@ -116,7 +116,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">,</span> <span class="s">&quot;Error: Unknown function property `</span><span class="si">%s</span><span class="s">&#39;.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">prop</span><span class="p">,)</span>
 </div>
-<div class="viewcode-block" id="derive_by_x"><a class="viewcode-back" href="../../api/kafe.html#kafe.function_tools.derive_by_x">[docs]</a><span class="k">def</span> <span class="nf">derive_by_x</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x_0</span><span class="p">,</span> <span class="n">param_list</span><span class="p">,</span> <span class="n">derivative_spacing</span><span class="p">):</span><span class="c">#=DERIVATIVE_SPACING):</span>
+<div class="viewcode-block" id="derive_by_x"><a class="viewcode-back" href="../../index.html#kafe.function_tools.derive_by_x">[docs]</a><span class="k">def</span> <span class="nf">derive_by_x</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x_0</span><span class="p">,</span> <span class="n">param_list</span><span class="p">,</span> <span class="n">derivative_spacing</span><span class="p">):</span><span class="c">#=DERIVATIVE_SPACING):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    If x_0 is iterable, gives the array of derivatives of a function f(x, par1, par2, ...) around x = x_i at every x_i in x_array.</span>
 <span class="sd">    Else gives the derivative of a function f(x, par1, par2, ...) around x = x_0.</span>
@@ -134,7 +134,7 @@
             
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">output_list</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="derive_by_parameters"><a class="viewcode-back" href="../../api/kafe.html#kafe.function_tools.derive_by_parameters">[docs]</a><span class="k">def</span> <span class="nf">derive_by_parameters</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x_0</span><span class="p">,</span> <span class="n">param_list</span><span class="p">,</span> <span class="n">derivative_spacing</span><span class="p">):</span><span class="c">#=DERIVATIVE_SPACING):</span>
+<div class="viewcode-block" id="derive_by_parameters"><a class="viewcode-back" href="../../index.html#kafe.function_tools.derive_by_parameters">[docs]</a><span class="k">def</span> <span class="nf">derive_by_parameters</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x_0</span><span class="p">,</span> <span class="n">param_list</span><span class="p">,</span> <span class="n">derivative_spacing</span><span class="p">):</span><span class="c">#=DERIVATIVE_SPACING):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Returns the gradient of `func` with respect to its parameters, i.e. with respect to every variable</span>
 <span class="sd">    of `func` except the first one.</span>
@@ -148,7 +148,7 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">output_list</span><span class="p">)</span>
     
 </div>
-<div class="viewcode-block" id="outer_product"><a class="viewcode-back" href="../../api/kafe.html#kafe.function_tools.outer_product">[docs]</a><span class="k">def</span> <span class="nf">outer_product</span><span class="p">(</span><span class="n">input_array</span><span class="p">):</span>
+<div class="viewcode-block" id="outer_product"><a class="viewcode-back" href="../../index.html#kafe.function_tools.outer_product">[docs]</a><span class="k">def</span> <span class="nf">outer_product</span><span class="p">(</span><span class="n">input_array</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Takes a `NumPy` array and returns the outer (dyadic, Kronecker) product with itself</span>
 <span class="sd">    &#39;&#39;&#39;</span> 

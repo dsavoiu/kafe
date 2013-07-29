@@ -12,6 +12,7 @@ from fit import Fit
 from numeric_tools import *     # automatically includes numpy as np
 
 DEBUG_MODE = 1
+NUMBER_OF_AXES = 2
 
 def debug_print(message):
     if DEBUG_MODE:
@@ -62,6 +63,7 @@ def build_dataset(xdata, ydata, **kwargs):
         
             if key in ('title'):
                 kwargs_to_transmit.update({key: val})
+                continue
             else:
                 err_spec = key
                 err_val = val
@@ -164,7 +166,7 @@ class Dataset: #(object):
     Alternatively, field data can be set by passing iterables as keyword arguments. Available keywords
     for this purpose are:
     
-    **data**
+    **data** : tuple/list of tuples/lists/arrays of floats
     
         a tuple/list of measurement data. Each element of the tuple/list must be iterable and 
         be of the same length. The first element of the **data** tuple/list is assumed to be
@@ -179,7 +181,7 @@ class Dataset: #(object):
         In case the `Dataset` contains two data points, the ordering is ambiguous. In this case, the
         first ordering (`x` data first, then `y` data) is assumed.
         
-    **cov_mats**
+    **cov_mats** : tuple/list of `numpy.matrix`
     
         a tuple/list of two-dimensional iterables containing the covariance matrices for `x` and `y`, in that
         order. Covariance matrices can be any sort of two-dimensional NxN iterables, assuming N is the number
@@ -242,7 +244,7 @@ class Dataset: #(object):
         if not kwargs.has_key('data'):
             raise Exception, "No data provided for Dataset."
         else:
-            if len(kwargs['data']) != self.n_axes:
+            if len(kwargs['data']) != NUMBER_OF_AXES:
                 raise Exception, "Unsupported number of axes: %d" % (len(kwargs['data']),)
             
         
@@ -285,11 +287,11 @@ class Dataset: #(object):
         '''
         Set the error matrix for an axis.
         
-        **axis**
-            Axis for which to load the error matrix. Can be ``'x'`` or ``'y'``.
+        **axis** : ``'x'`` or ``'y'``
+            Axis for which to load the error matrix.
              
-        **mat**
-            Error matrix for the axis. Passing `None` unsets the error matrix. Type: `numpy.matrix` or `None`
+        **mat** : `numpy.matrix` or ``None``
+            Error matrix for the axis. Passing ``None`` unsets the error matrix.
         '''
         
         # get axis id from an alias
@@ -333,7 +335,7 @@ class Dataset: #(object):
         '''
         Get axis id from an alias.
         
-        **axis_alias**
+        **axis_alias** : string or int
             Alias of the axis whose id should be returned. This is for example either ``'0'`` or ``'x'`` for the `x`-axis (id 0).
         '''
         
@@ -359,12 +361,12 @@ class Dataset: #(object):
         Get the data span for an axis. The data span is a tuple (`min`, `max`) containing
         the smallest and highest coordinates for an axis.
         
-        **axis**
-            Axis for which to get the data span. Can be ``'x'`` or ``'y'``. Type: string
+        **axis** : string
+            Axis for which to get the data span. Can be ``'x'`` or ``'y'``.
         
-        *include_error_bars* : bool
+        *include_error_bars* : boolean
             ``True`` if the returned span should be enlarged to
-            contain the error bars of the smallest and largest datapoints (default: ``False``) Type: boolean
+            contain the error bars of the smallest and largest datapoints (default: ``False``)
         '''
         
         # get axis id from an alias
@@ -389,8 +391,8 @@ class Dataset: #(object):
         '''
         Get the measurement data for an axis.
         
-        **axis**
-            Axis for which to get the measurement data. Can be ``'x'`` or ``'y'``. Type: string
+        **axis** : string
+            Axis for which to get the measurement data. Can be ``'x'`` or ``'y'``.
         '''
         
         # get axis id from an alias
@@ -402,7 +404,7 @@ class Dataset: #(object):
         '''
         Get the error matrix for an axis.
         
-        **axis** string or int
+        **axis** : string or int
             Axis for which to load the error matrix. Can be ``'x'`` or ``'y'``. Type: string
             
         *fallback_on_singular* : `numpy.matrix` or string
@@ -458,7 +460,7 @@ class Dataset: #(object):
         Returns `True` if the covariance matrix for an axis is regular and ``False`` if it is
         singular.
         
-        **axis** string or int
+        **axis** : string or int
             Axis for which to check for regularity of the covariance matrix. Can be ``'x'`` or ``'y'``.
         
         '''
@@ -472,7 +474,7 @@ class Dataset: #(object):
         Returns `True` if the covariance matrix for an axis is regular and ``False`` if it is
         singular.
         
-        **axis** string or int
+        **axis** : string or int
             Axis for which to check for regularity of the covariance matrix. Can be ``'x'`` or ``'y'``.
         
         '''
@@ -585,7 +587,6 @@ class Dataset: #(object):
         
         returns : boolean
             ``True`` if the read succeeded, ``False`` if not.
-            
         '''
         
         try:
@@ -683,30 +684,6 @@ class Dataset: #(object):
         
 if __name__ == "__main__":
 
-#     def linear_2par(x, slope=1, x_offset=0):
-#         
-#         return slope * (x - x_offset)
-#     
-#     myXData = np.asarray([1, 2, 3, 4, 5])
-#     myYData = np.asarray([2, 3.1, 4.2, 5.5, 7.23])
-#     
-#     tstFloat = 0.1
-#     tstArray = np.asarray([.1, .1, .2, .5, .8])
-#     
-#     
-#     
-#     myDataset = Dataset(xdata=myXData, 
-#                          ydata=myYData,
-#                          xabsstat=0.1,
-#                          xabssyst=0.1)
-# 
-#     print myDataset.get_formatted()
-#     
-#     myDataset.write_formatted('/home/daniel/tmp/23465.inp')
-#     myDataset = Dataset(input_file='/home/daniel/tmp/23465.inp')
-#     
-#     print myDataset.get_formatted()
-    
     myDataset = build_dataset(xdata = [1,2,3], ydata=[2,4,8], yabssyst=0.1, yrelstat=.1)
     
     

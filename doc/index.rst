@@ -3,20 +3,54 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to kafe's documentation!
-================================
+.. module:: kafe
 
-Contents:
+###################################################
+**kafe** -- Karlsruhe Fit Environment documentation
+###################################################
 
-.. toctree::
-   :maxdepth: 2
-   
-   api/modules
+**kafe** is a data fitting framework designed for use in
+undergraduate physics lab courses. It provides a basic `Python` toolkit
+for fitting and plotting using already available `Python` packages
+such as `NumPy` and `matplotlib`, as well as `CERN` `ROOT`'s version of
+the `Minuit` minimizer.
+
+.. contents:: Contents
+    :depth: 2
+
+*******
+Summary
+*******
+
+The package provides a simple approach to fitting using variance-covariance
+matrices, thus allowing for error correlations to be taken into account. This
+implementation's error model assumes the measurement data (dependent variable)
+is distributed according to a `Gaussian` distribution centered at its "true"
+value. The spread of the distribution is given as a (:math:`1\sigma`)-error.
+
+An "errors-in-variables" model is also implemented to take uncertainties in
+the independent variable (`x` errors) into account. This is done by
+specifying/constructing a separate variance-covariance matrix for the `x` axis
+and "projecting" it onto the `y` error matrix. If the fit function
+is approximated in each point by its tangent line, the `Gaussian` errors in
+the `x` direction are not warped by this projection.
+
+:math:`\ldots`
+
+For examples on how to use **kafe**, see the ``examples`` folder. Consulting
+the `API`_ can also be helpful. 
 
 
+*******************
+`API` documentation
+*******************
+
+.. _API: 
+    
+.. include:: api/kafe.rst
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`

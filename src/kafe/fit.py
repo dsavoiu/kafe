@@ -12,7 +12,7 @@ from function_tools import get_function_property, outer_product, derive_by_x
 from copy import copy
 
 from numeric_tools import *                 # automatically includes numpy as np
-from constants import F_SIGNIFICANCE
+from constants import F_SIGNIFICANCE, M_CONFIDENCE_LEVEL
 from math import floor, log
 
 # The default FCN
@@ -151,7 +151,6 @@ class Fit:
             self.function_label = r'\verb!%s!' % ( get_function_property(self.fit_function, 'name'), )   # get the function name and wrap it in LaTeX
             
         
-        
         if self.dataset.has_errors('y'):                                                            # check if the dataset has any y errors at all
             #self.current_cov_mat = self.dataset.get_cov_mat('y', fallback_on_singular='identity')  # set the y cov_mat as starting cov_mat for the fit (use identity matrix if singular)
             self.current_cov_mat = self.dataset.get_cov_mat('y', fallback_on_singular='report')     # set the y cov_mat as starting cov_mat for the fit (report if singular matrix)
@@ -170,6 +169,9 @@ class Fit:
         
         # Define a string for storing the output
         self.output = ''
+        
+        # Do the fit
+        self.do_fit()
         
     
     def call_external_fcn(self, *param_values):
@@ -371,9 +373,9 @@ class Fit:
         
         chi2prob = self.minimizer.get_chi2_probability(self.dataset.get_size() - self.number_of_parameters)
         if chi2prob < M_CONFIDENCE_LEVEL:
-            hypothesis_status = 'rejected (CL %d%)' % (int(M_CONFIDENCE_LEVEL*100),)
+            hypothesis_status = 'rejected (CL %d%s)' % (int(M_CONFIDENCE_LEVEL*100),'%')
         else:
-            hypothesis_status = 'accepted (CL %d%)' % (int(M_CONFIDENCE_LEVEL*100),)
+            hypothesis_status = 'accepted (CL %d%s)' % (int(M_CONFIDENCE_LEVEL*100),'%')
             
         print '###############'
         print "# Fit details #"
@@ -452,7 +454,7 @@ if __name__ == '__main__':
     
     myDataset2 = build_dataset(xdata=myXData, 
                                ydata=myYData,
-                               xabssyst=tstFloat)
+                               yabsstat=tstFloat)
     
     myFit2 = Fit(myDataset2, linear_2par2)
     myFit2.do_fit()

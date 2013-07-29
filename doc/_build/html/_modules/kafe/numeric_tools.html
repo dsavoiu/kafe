@@ -59,7 +59,7 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
-<div class="viewcode-block" id="cov_to_cor"><a class="viewcode-back" href="../../api/kafe.html#kafe.numeric_tools.cov_to_cor">[docs]</a><span class="k">def</span> <span class="nf">cov_to_cor</span><span class="p">(</span><span class="n">cov_mat</span><span class="p">):</span>
+<div class="viewcode-block" id="cov_to_cor"><a class="viewcode-back" href="../../index.html#kafe.numeric_tools.cov_to_cor">[docs]</a><span class="k">def</span> <span class="nf">cov_to_cor</span><span class="p">(</span><span class="n">cov_mat</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Converts a covariance matrix to a correlation matrix according to the formula</span>
 <span class="sd">    </span>
@@ -93,7 +93,7 @@
     <span class="c"># to array and back is needed to do elementwise calculations</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">cov_mat</span><span class="p">)</span> <span class="o">/</span> <span class="n">tmp_2darray</span> <span class="p">)</span> 
 </div>
-<div class="viewcode-block" id="cor_to_cov"><a class="viewcode-back" href="../../api/kafe.html#kafe.numeric_tools.cor_to_cov">[docs]</a><span class="k">def</span> <span class="nf">cor_to_cov</span><span class="p">(</span><span class="n">cor_mat</span><span class="p">,</span> <span class="n">error_list</span><span class="p">):</span>
+<div class="viewcode-block" id="cor_to_cov"><a class="viewcode-back" href="../../index.html#kafe.numeric_tools.cor_to_cov">[docs]</a><span class="k">def</span> <span class="nf">cor_to_cov</span><span class="p">(</span><span class="n">cor_mat</span><span class="p">,</span> <span class="n">error_list</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Converts a correlation matrix to a covariance matrix according to the formula</span>
 <span class="sd">    </span>
@@ -120,7 +120,7 @@
     <span class="c"># to array and back is needed to do elementwise calculations</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">cor_mat</span><span class="p">)</span> <span class="o">*</span> <span class="n">tmp_2darray</span> <span class="p">)</span> 
 </div>
-<div class="viewcode-block" id="extract_statistical_errors"><a class="viewcode-back" href="../../api/kafe.html#kafe.numeric_tools.extract_statistical_errors">[docs]</a><span class="k">def</span> <span class="nf">extract_statistical_errors</span><span class="p">(</span><span class="n">cov_mat</span><span class="p">):</span>
+<div class="viewcode-block" id="extract_statistical_errors"><a class="viewcode-back" href="../../index.html#kafe.numeric_tools.extract_statistical_errors">[docs]</a><span class="k">def</span> <span class="nf">extract_statistical_errors</span><span class="p">(</span><span class="n">cov_mat</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Extracts the statistical errors from a covariance matrix. This means</span>
 <span class="sd">    it returns the (elementwise) square root of the diagonal entries</span>
@@ -133,7 +133,7 @@
         
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="n">diagonal</span> <span class="p">)</span>  <span class="c"># return the array of square roots </span>
     </div>
-<div class="viewcode-block" id="zero_pad_lower_triangle"><a class="viewcode-back" href="../../api/kafe.html#kafe.numeric_tools.zero_pad_lower_triangle">[docs]</a><span class="k">def</span> <span class="nf">zero_pad_lower_triangle</span><span class="p">(</span><span class="n">triangle_list</span><span class="p">):</span>
+<div class="viewcode-block" id="zero_pad_lower_triangle"><a class="viewcode-back" href="../../index.html#kafe.numeric_tools.zero_pad_lower_triangle">[docs]</a><span class="k">def</span> <span class="nf">zero_pad_lower_triangle</span><span class="p">(</span><span class="n">triangle_list</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Converts a list of lists into a lower triangle matrix. The list members should</span>
 <span class="sd">    be lists of increasing length from M{1} to M{N}, M{N} being the dimension of</span>
@@ -159,7 +159,7 @@
         
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="make_symmetric_lower"><a class="viewcode-back" href="../../api/kafe.html#kafe.numeric_tools.make_symmetric_lower">[docs]</a><span class="k">def</span> <span class="nf">make_symmetric_lower</span><span class="p">(</span><span class="n">mat</span><span class="p">):</span>
+<div class="viewcode-block" id="make_symmetric_lower"><a class="viewcode-back" href="../../index.html#kafe.numeric_tools.make_symmetric_lower">[docs]</a><span class="k">def</span> <span class="nf">make_symmetric_lower</span><span class="p">(</span><span class="n">mat</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Copies the matrix entries below the main diagonal to the upper triangle half of</span>
 <span class="sd">    the matrix. Leaves the diagonal unchanged. Returns a `NumPy` matrix object.</span>
