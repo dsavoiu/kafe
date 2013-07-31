@@ -43,9 +43,9 @@ my_dataset = build_dataset(xdata=my_x_data,
 
 # Fit the linear and the exponential model to the data
 my_fit_linear = Fit(my_dataset, linear_2par, function_label='Linear fit')
-my_fit_linear.do_fit()
-
 my_fit_exponential = Fit(my_dataset, exp_3par, function_label='Exponential fit')
+
+my_fit_linear.do_fit()
 my_fit_exponential.do_fit()
 
 # Plot both fits in the same Plot
@@ -54,4 +54,6 @@ myPlot.plot_all(show_info_for='all',    # include every fit in the parameter inf
                 show_data_for=0)        # only show data once
 
 # Show/Save the Plot
-myPlot.show()
+#myPlot.show()
+#myPlot.save('/tmp/testplotagg.pdf')
+#myPlot.save('/tmp/testplotagg.png')

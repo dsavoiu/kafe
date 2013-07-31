@@ -26,6 +26,51 @@ D_MATRIX_ERROR = {0 : "Error matrix not calculated",
                   2 : "Error matrix forced positive definite!",
                   3 : "Error matrix accurate" } #: Error matrix status codes
 
+def construct_FCN(minuit_object):    
+    function_to_minimize = minuit_object.function_to_minimize
+            
+    def FCN_wrapper(number_of_parameters, derivatives, f, parameters, internal_flag):
+        '''
+        This is actually a function called in *ROOT* and acting as a C wrapper 
+        for our `FCN`, which is implemented in Python.
+        
+        This function is called by `Minuit` several times during a fit. It doesn't return
+        anything but modifies one of its arguments (*f*). This is *ugly*, but it's how *ROOT*'s
+        ``TMinuit`` works. Its argument structure is fixed and determined by `Minuit`:
+        
+        **number_of_parameters** : int
+            The number of parameters of the current fit
+        
+        
+        **derivatives** : ?? 
+            Computed gradient (??)
+        
+        **f** : C array
+            The desired function value is in f[0] after execution.
+        
+        **parameters** : C array
+            A C array of parameters. Is cast to a Python list
+        
+        **internal_flag** : int
+            A flag allowing for different behaviour of the function.
+            Can be any integer from 1 (initial run) to 4(normal run). See `Minuit`'s specification.
+        '''
+        
+        # Retrieve the parameters from the C side of ROOT and
+        # store them in a Python list -- VERY resource-intensive
+        # for many calls, but can't be improved (yet?)
+        parameter_list = []
+        for j in range(int(number_of_parameters)):
+            parameter_list.append(parameters[j])
+        
+        if internal_flag==1:    # the internal flag is 1 for the initial run (NOT TRUE -> CHECK)
+            pass                # do something before the FCN is called for the first time
+        
+        ##print "Calling FCN%r = %s" % (parameter_list, function_to_minimize(*parameter_list)) 
+        f[0] = function_to_minimize(*parameter_list) # call the Python implementation of FCN.
+    
+    return FCN_wrapper
+
 class Minuit:
     '''
     A class for communicating with ROOT's function minimizer tool Minuit.
@@ -71,6 +116,7 @@ class Minuit:
         
         self.__gMinuit = TMinuit(self.number_of_parameters)   # create a TMinuit instance for that number of parameters
         self.__gMinuit.SetFCN(self.FCN_wrapper)               # instruct Minuit to use this class's FCN_wrapper method as a FCN
+        #self.__gMinuit.SetFCN(construct_FCN(self))               # instruct Minuit to use this class's FCN_wrapper method as a FCN
         
         # set print level according to flag
         if quiet:
@@ -183,6 +229,9 @@ class Minuit:
         p, pe = Double(0), Double(0)
         
         for i in range(0, self.number_of_parameters):
+            #print "minuit: %r " % self
+            #print "gMinuit: %r " % self.__gMinuit
+            #print "GetParameter: %r " % self.__gMinuit.GetParameter
             self.__gMinuit.GetParameter(i, p, pe)  # retrieve fitresult
             
             result.append(float(p))
@@ -331,7 +380,7 @@ class Minuit:
             Can be any integer from 1 (initial run) to 4(normal run). See `Minuit`'s specification.
         '''
         
-        if internal_flag==1:    # the internal flag is 1 for the initial run
+        if internal_flag==1:    # the internal flag is 1 for the initial run (NOT TRUE -> CHECK)
             pass                # do something before the FCN is called for the first time
         
         # Retrieve the parameters from the C side of ROOT and
@@ -340,7 +389,8 @@ class Minuit:
         parameter_list = []
         for j in range(self.number_of_parameters):
             parameter_list.append(parameters[j])
-         
+        
+        ##print "Calling FCN%r = %s" % (parameter_list, self.function_to_minimize(*parameter_list)) 
         f[0] = self.function_to_minimize(*parameter_list) # call the Python implementation of FCN.
         
 #         f[0] = self.function_to_minimize(parameter_list) # call the Python FCN.
@@ -349,11 +399,11 @@ class Minuit:
         '''Do the minimization. This calls `Minuit`'s algorithms ``MIGRAD`` for minimization
         and ``HESSE`` for computing/checking the parameter error matrix.'''
         
-        # Set the gMinuit pointer in ROOT
-        #gROOT.SetGlobal("gMinuit", self.__gMinuit)
-        #gROOT.ProcessLine("TVirtualFitter *fitter = TVirtualFitter::GetFitter()")
-        gROOT.gMinuit = self.__gMinuit
-        
+        # Set the FCN again. This HAS to be done EVERY
+        # time the minimize method is called because of
+        # the implementation of SetFCN, which is not
+        # object-oriented but sets a global pointer!!!
+        self.__gMinuit.SetFCN(self.FCN_wrapper)               # instruct Minuit to use this class's FCN_wrapper method as a FCN
         
         # Run minimization algorithm (MIGRAD + HESSE)
         error_code = Long(0)
@@ -368,18 +418,22 @@ if __name__ == "__main__":
         #return (args[0] - 3.14) ** 2 + (args[1] + 2.71) ** 2 + 1.0    # should be minimal (=1.0) at arg[0] = 3.14 and arg[1] = -2.71
         return (x - 3.14e-24) ** 2 + (y + 2.71e-23) ** 2 + 1.0    # should be minimal (=1.0) at arg[0] = 3.14 and arg[1] = -2.71
        
+    def quartic(x=5, y=10):
+        return (x - 2.9174) ** 4 + (y + 8.12947) ** 2 + 1.0    # should be minimal (=1.0) at arg[0] = 3.14 and arg[1] = -2.71
+       
     
-    myMinimizer = Minuit(quadratic)
+    myMinimizer = Minuit(2, quadratic, ('x','y'), (3e-24, 4e-23), (3e-25, 4e-25))
+    myMinimizer2 = Minuit(2, quartic, ('x','y'), (5, 10), (.05, .10))
     
     myMinimizer.minimize()
-    print myMinimizer.get_error_matrix()
-    #myMinimizer.minimize()
-    #print myMinimizer.get_error_matrix()
-    #myMinimizer.minimize()
-    #print myMinimizer.get_error_matrix()
-    #myMinimizer.minimize()
-    #print myMinimizer.get_error_matrix()
+    myMinimizer2.minimize()
     
-    print myMinimizer.get_chi2_probability(1)
+    print myMinimizer.get_parameter_values()
+    print myMinimizer.get_parameter_errors()
+    print myMinimizer.get_error_matrix()
+    
+    print myMinimizer2.get_parameter_values()
+    print myMinimizer2.get_parameter_errors()
+    print myMinimizer2.get_error_matrix()
     
     

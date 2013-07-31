@@ -55,7 +55,7 @@ def chi2(xdata, ydata, cov_mat, fit_function, param_values):
     fdata = np.asarray(map(tmp_fit_function, xdata))        # calculate f(x) for all x in xdata
     residual = ydata - fdata                                # calculate residual vector
 
-    return residual.T.dot(cov_mat.I).dot(residual)          # return the chi^2
+    return (residual.T.dot(cov_mat.I).dot(residual))[0,0]          # return the chi^2
 
 def round_to_significance(value, error, significance=F_SIGNIFICANCE):
     '''
@@ -133,7 +133,8 @@ class Fit:
         
         self.number_of_parameters = get_function_property(self.fit_function, 'number of parameters')    #: the number of parameters
         self.current_param_values = get_function_property(self.fit_function, 'parameter defaults')      #: the current values of the parameters
-        self.current_param_errors = get_function_property(self.fit_function, 'parameter defaults')      #: the current uncertainties of the parameters
+        # TODO: find sensible starting values for parameter errors
+        self.current_param_errors = [val/1000.0 for val in self.current_param_values]                   #: the current uncertainties of the parameters
         
         self.param_names = get_function_property(self.fit_function, 'parameter names')                  #: the names of the parameters
         self.param_names_latex = map(lambda tmp_string: r'\verb!'+tmp_string+'!', self.param_names)     #: :math:`\LaTeX` parameter names
@@ -142,7 +143,7 @@ class Fit:
             #: :math:`\LaTeX` function equation
             self.function_equation = function_equation # get the function equation from the arguments  
         else:
-            self.function_label = r'\verb!%s!' % ( get_function_property(self.fit_function, 'name'), )   # get the function name and wrap it in LaTeX
+            self.function_equation = r'\verb!%s!' % ( get_function_property(self.fit_function, 'name'), )   # get the function name and wrap it in LaTeX
         
         if function_label is not None:
             #: a label to use in the legend when plotting
@@ -171,7 +172,7 @@ class Fit:
         self.output = ''
         
         # Do the fit
-        self.do_fit()
+        #self.do_fit()
         
     
     def call_external_fcn(self, *param_values):
@@ -197,9 +198,12 @@ class Fit:
             A function of a single variable corresponding to the fit function at the
             current parameter values.
         '''
+        
         def current_fit_function(x):
             return self.fit_function(x, *self.current_param_values)
         
+        
+        ##print 'getting current fit function: ', current_fit_function
         return current_fit_function
     
     def get_error_matrix(self):
@@ -274,6 +278,9 @@ class Fit:
             Set to ``True`` if more output should be printed.
         '''
         
+        #print ''
+        #print 'Doing fit for fit object: %r' % self
+        
         if not quiet:
             print "###########"
             print "# Dataset #"
@@ -315,9 +322,14 @@ class Fit:
                 
                 iter_nr += 1
         
-        self.print_fit_results()
-        self.print_rounded_fit_parameters()
-        self.print_fit_details()
+        if not quiet:
+            self.print_fit_results()
+            self.print_rounded_fit_parameters()
+            self.print_fit_details()
+            
+        #print ''
+        #print self.get_parameter_values
+        #print self.get_parameter_values()
         
     def fit_one_iteration(self, verbose=False):
         '''

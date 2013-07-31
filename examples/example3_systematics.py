@@ -31,7 +31,7 @@ my_y_data = map(lambda x: linear_2par(x, true_slope, true_y_intercept), my_x_dat
 # Set "true" statistical error
 y_stat_error = .1
 
-# Set "true" systematic error
+# Set "true" systematic error (slightly larger than the statistical error)
 y_syst_error = .3
 
 # Scatter data according to y random error (add a normally distributed random value to each data point)
@@ -63,13 +63,13 @@ my_fits = [ Fit(my_dataset_stat, linear_2par, function_label='Fit for $\\sigma_y
             Fit(my_dataset_statstat, linear_2par, function_label='Fit for $\\sigma_{y,1}$ + $\\sigma_{y,2}$')
           ]
 
-# for fit in my_fits:
-#     fit.do_fit()
+for fit in my_fits:
+    fit.do_fit(quiet=True)
 
 # Plot both fits in the same Plot
 myPlot = Plot(my_fits[0], my_fits[1], my_fits[2])
 myPlot.plot_all(show_info_for='all',    # include every fit in the parameter info box
-                show_data_for='all')        # only show data once
-
+                show_data_for=0)        # only show data once
+ 
 # Show/Save the Plot
 myPlot.show()
