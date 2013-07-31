@@ -26,51 +26,6 @@ D_MATRIX_ERROR = {0 : "Error matrix not calculated",
                   2 : "Error matrix forced positive definite!",
                   3 : "Error matrix accurate" } #: Error matrix status codes
 
-def construct_FCN(minuit_object):    
-    function_to_minimize = minuit_object.function_to_minimize
-            
-    def FCN_wrapper(number_of_parameters, derivatives, f, parameters, internal_flag):
-        '''
-        This is actually a function called in *ROOT* and acting as a C wrapper 
-        for our `FCN`, which is implemented in Python.
-        
-        This function is called by `Minuit` several times during a fit. It doesn't return
-        anything but modifies one of its arguments (*f*). This is *ugly*, but it's how *ROOT*'s
-        ``TMinuit`` works. Its argument structure is fixed and determined by `Minuit`:
-        
-        **number_of_parameters** : int
-            The number of parameters of the current fit
-        
-        
-        **derivatives** : ?? 
-            Computed gradient (??)
-        
-        **f** : C array
-            The desired function value is in f[0] after execution.
-        
-        **parameters** : C array
-            A C array of parameters. Is cast to a Python list
-        
-        **internal_flag** : int
-            A flag allowing for different behaviour of the function.
-            Can be any integer from 1 (initial run) to 4(normal run). See `Minuit`'s specification.
-        '''
-        
-        # Retrieve the parameters from the C side of ROOT and
-        # store them in a Python list -- VERY resource-intensive
-        # for many calls, but can't be improved (yet?)
-        parameter_list = []
-        for j in range(int(number_of_parameters)):
-            parameter_list.append(parameters[j])
-        
-        if internal_flag==1:    # the internal flag is 1 for the initial run (NOT TRUE -> CHECK)
-            pass                # do something before the FCN is called for the first time
-        
-        ##print "Calling FCN%r = %s" % (parameter_list, function_to_minimize(*parameter_list)) 
-        f[0] = function_to_minimize(*parameter_list) # call the Python implementation of FCN.
-    
-    return FCN_wrapper
-
 class Minuit:
     '''
     A class for communicating with ROOT's function minimizer tool Minuit.
@@ -116,7 +71,6 @@ class Minuit:
         
         self.__gMinuit = TMinuit(self.number_of_parameters)   # create a TMinuit instance for that number of parameters
         self.__gMinuit.SetFCN(self.FCN_wrapper)               # instruct Minuit to use this class's FCN_wrapper method as a FCN
-        #self.__gMinuit.SetFCN(construct_FCN(self))               # instruct Minuit to use this class's FCN_wrapper method as a FCN
         
         # set print level according to flag
         if quiet:
