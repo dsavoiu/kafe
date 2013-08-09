@@ -1,0 +1,24 @@
+=================
+Install using Pip
+=================
+
+To install kafe using the Pip installer (http://www.pip-installer.org/), simply run the helper script as root:
+
+    ./install.sh
+
+If you don't have Pip installed, use:
+
+    easy_install pip
+
+To remove kafe using pip, just run the helper script:
+
+   ./uninstall.sh
+
+========================
+Install using setuptools
+========================
+
+Installing using Python's setuptools works but does not provide a clean
+uninstall. Use this method if installing with Pip is not possible:
+
+    python setup.py install

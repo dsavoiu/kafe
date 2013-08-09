@@ -13,7 +13,7 @@ Alternatively, a plain-text representation of a `Dataset` can be read from a fil
 Also provided are helper functions which construct a `Dataset` object from a
 file containing column data (one measurement per row, column order can be specified).
 
-.. moduleauthor:: Daniel Savoiu <daniel.savoiu@ekp.kit.edu>
+.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
 
 """
 
@@ -22,6 +22,8 @@ from kafe.dataset import *
 from kafe.fit import *
 from kafe.plot import *
 from kafe.file_tools import *
+
+__version__ = "0.3alpha1"
 
 if __name__ == "__main__":
     import scipy, numpy, matplotlib, ROOT
