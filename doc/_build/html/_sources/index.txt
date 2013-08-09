@@ -16,7 +16,7 @@ such as `NumPy` and `matplotlib`, as well as `CERN` `ROOT`'s version of
 the `Minuit` minimizer.
 
 .. contents:: Contents
-    :depth: 3
+    :depth: 2
 
 *******
 Summary

@@ -24,4 +24,8 @@ from kafe.plot import *
 from kafe.file_tools import *
 
 if __name__ == "__main__":
-    pass
+    import scipy, numpy, matplotlib, ROOT
+    
+    print scipy.__version__
+    print numpy.__version__
+    print matplotlib.__version__

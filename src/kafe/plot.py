@@ -124,6 +124,7 @@ class PlotStyle:
         
         # Default keyword arguments to pass to rc('font',...)
         self.rcfont_kw = {'family':'serif', 'serif':['CMU Classical Serif'], 'monospace':['CMU Typewriter Text']}
+        #self.rcfont_kw = {'family':'serif', 'serif':['URW Palladio L Italic'], 'monospace':['CMU Typewriter Text']}
         self.rcparams_kw = {
           'axes.labelsize': 20,
           'text.fontsize': 14,
@@ -134,10 +135,14 @@ class PlotStyle:
           'axes.unicode_minus': True,
           #'legend.loc': 'best'
           'legend.loc': 'upper left',
-          'figure.figsize': (12, 6)
+          'figure.figsize': (12, 6),
+          #'text.latex.preamble':'\\usepackage[sc,osf]{mathpazo},\\usepackage[euler-digits]{eulervm}'
+          #'text.latex.preamble': ['\\usepackage{eulervm}'],
+          #'mathtext.fontset': 'custom',
+          #'mathtext.fallback_to_cm': False,
+          #'mathtext.default': 'ppl',
+          #'axes.formatter.use_mathtext': False
           }
-        
-
     
     def get_marker(self, idm):
         '''Get a specific marker type. This runs cyclically through the defined defaults.'''
@@ -165,7 +170,7 @@ class Plot:
         '''
         Constuctor for the Plot object. This constuctor accepts a series of `Fit` objects as positional
         arguments. Some keyword arguments can be provided to override the defaults. A list of these keyword
-        arguments will be provided soon...
+        arguments will be provided in the future...
         '''
         
         #: list of `Fit`s to plot
@@ -178,6 +183,8 @@ class Plot:
         plt.rc('font', **self.plot_style.rcfont_kw)
         
         self.plot_range = {'x': None, 'y': None}    #: plot range
+        
+        self.show_legend = kwargs.pop('show_legend', True) #: whether to show the plot legend (``True``) or not (``False``)
         
         if len(fits)==1:
             #: axis labels
@@ -199,6 +206,7 @@ class Plot:
         '''
                 
         self.figure = plt.figure()
+        
         self.axes = self.figure.add_subplot(121)
         #self.axes = self.figure.add_axes([.07, .15, .6, .8])
         
@@ -208,6 +216,7 @@ class Plot:
                             bottom=.12,    # default .1
                             left=.11,      # default .125
                             right=.8)     # default .9
+    
          
         
         box = self.axes.get_position() 
@@ -233,7 +242,9 @@ class Plot:
             else:
                 self.plot(p_id, show_data=True)
             
-        self.draw_legend()
+        if self.show_legend:
+            self.draw_legend()
+        
         self.draw_fit_parameters_box(show_info_for)
         
     def draw_legend(self):
@@ -275,7 +286,7 @@ class Plot:
         pad_amount = self.plot_style.legendparams_kw['pad']
         pad_amount_px = (self.axes.transAxes.transform((self.plot_style.legendparams_kw['pad'],0)) - offset)[0]
         
-        text_content = "\\textbf{Fit Parameters}\n"
+        text_content = "\\textbf{Fit Parameters}\n" # allow localized text (German)?
         
         try:
             fit = self.fits[plot_spec]  # try to find the specified plot

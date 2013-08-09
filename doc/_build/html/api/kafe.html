@@ -464,7 +464,7 @@ sequence of whitespace characters is assumed to separate the data.</p>
 <span id="fit-module"></span><h2><a class="reference internal" href="../index.html#module-fit" title="fit: This submodule defines a `Fit` object which performs the actual fitting given a `Dataset` and a fit function. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">fit</span></tt></a> Module<a class="headerlink" href="#module-kafe.fit" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-fit"></span><dl class="class">
 <dt id="kafe.fit.Fit">
-<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x3973b90&gt;</em>, <em>function_label=None</em>, <em>function_equation=None</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x1eb0d70&gt;</em>, <em>function_label=None</em>, <em>function_equation=None</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Object representing a fit. This object references the fitted <cite>Dataset</cite>, the fit function and the resulting fit parameters.</p>
 <p>Necessary arguments are a <cite>Dataset</cite> object and a fit function (which should be fitted to the <cite>Dataset</cite>).
 Optionally, an external function <cite>FCN</cite> (whose minima should be located to find the best fit) can be specified.
@@ -1067,7 +1067,13 @@ the resulting lower triangle matrix. Returns a <cite>NumPy</cite> matrix object.
 <span class="target" id="module-plot"></span><dl class="class">
 <dt id="kafe.plot.Plot">
 <em class="property">class </em><tt class="descclassname">kafe.plot.</tt><tt class="descname">Plot</tt><big>(</big><em>*fits</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#Plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.plot.Plot" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
+<dd><dl class="attribute">
+<dt id="kafe.plot.Plot.axis_labels">
+<tt class="descname">axis_labels</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.plot.Plot.axis_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>axis labels</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="kafe.plot.Plot.compute_plot_range">
 <tt class="descname">compute_plot_range</tt><big>(</big><em>include_error_bars=True</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#Plot.compute_plot_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.plot.Plot.compute_plot_range" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the span of all child datasets and sets the plot range to that</p>
@@ -1099,6 +1105,12 @@ for plot ids inside the list. Passing <tt class="docutils literal"><span class="
 <p>This method extends the current plot span to include <cite>new_span</cite></p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="kafe.plot.Plot.fits">
+<tt class="descname">fits</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.plot.Plot.fits" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of <a href="#id2"><span class="problematic" id="id3">`</span></a>Fit`s to plot</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="kafe.plot.Plot.init_plots">
 <tt class="descname">init_plots</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#Plot.init_plots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.plot.Plot.init_plots" title="Permalink to this definition">¶</a></dt>
@@ -1117,6 +1129,18 @@ for plot ids inside the list. Passing <tt class="docutils literal"><span class="
 <dd><p>Plot every <cite>Fit</cite> object to its figure.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="kafe.plot.Plot.plot_range">
+<tt class="descname">plot_range</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.plot.Plot.plot_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>plot range</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.plot.Plot.plot_style">
+<tt class="descname">plot_style</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.plot.Plot.plot_style" title="Permalink to this definition">¶</a></dt>
+<dd><p>plot style</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="kafe.plot.Plot.save">
 <tt class="descname">save</tt><big>(</big><em>output_file</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#Plot.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.plot.Plot.save" title="Permalink to this definition">¶</a></dt>
@@ -1127,6 +1151,12 @@ for plot ids inside the list. Passing <tt class="docutils literal"><span class="
 <dt id="kafe.plot.Plot.show">
 <tt class="descname">show</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#Plot.show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.plot.Plot.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show the <cite>Plot</cite> in a matplotlib interactive window.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.plot.Plot.show_legend">
+<tt class="descname">show_legend</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.plot.Plot.show_legend" title="Permalink to this definition">¶</a></dt>
+<dd><p>whether to show the plot legend (<tt class="docutils literal"><span class="pre">True</span></tt>) or not (<tt class="docutils literal"><span class="pre">False</span></tt>)</p>
 </dd></dl>
 
 </dd></dl>
@@ -1168,6 +1198,18 @@ go through these lists cyclically.</p>
 <dd><p>Get a specific point size. This runs cyclically through the defined defaults.</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="kafe.plot.label_to_latex">
+<tt class="descclassname">kafe.plot.</tt><tt class="descname">label_to_latex</tt><big>(</big><em>label</em><big>)</big><a class="headerlink" href="#kafe.plot.label_to_latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a simple LaTeX-formatted label from a plain-text label.
+This treats isolated characters and words beginning with a backslash
+as mathematical expressions and surround them with $ signs accordingly.</p>
+<dl class="docutils">
+<dt><strong>label</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Plain-text string to convert to LaTeX.</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
