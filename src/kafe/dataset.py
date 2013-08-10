@@ -19,115 +19,115 @@ def debug_print(message):
         print message        
 
 def build_dataset(xdata, ydata, **kwargs):
-        '''
-        This helper function creates a `Dataset` from a series of keyword arguments.
+    '''
+    This helper function creates a `Dataset` from a series of keyword arguments.
+    
+    Valid keyword arguments are: 
+    
+    **xdata** and **ydata**
+        These keyword arguments are mandatory and should be iterables containing the measurement data.
+    
+    *error specification keywords*
+        A valid keyword is composed of an axis (*x* or *y*), an error relativity specification (*abs* or *rel*)
+        and error correlation type (*stat* or *syst*). The errors are then set as follows:
         
-        Valid keyword arguments are: 
+            1. For statistical errors:
+                - if keyword argument is a `NumPy` array, the error list is set to that
+                - if keyword argument is a number, an error list with identical entries is generated 
+            2. For systematic errors:
+                - keyword argument *must* be a single number. The global correlated error for the axis is then set to that.
         
-        **xdata** and **ydata**
-            These keyword arguments are mandatory and should be iterables containing the measurement data.
+        So, for example:
         
-        *error specification keywords*
-            A valid keyword is composed of an axis (*x* or *y*), an error relativity specification (*abs* or *rel*)
-            and error correlation type (*stat* or *syst*). The errors are then set as follows:
-            
-                1. For statistical errors:
-                    - if keyword argument is a `NumPy` array, the error list is set to that
-                    - if keyword argument is a number, an error list with identical entries is generated 
-                2. For systematic errors:
-                    - keyword argument *must* be a single number. The global correlated error for the acis is then set to that.
-            
-            So, for example:
-            
-            >>> myDataset = build_dataset(..., yabsstat=0.3, yrelsyst=0.1)
-            
-            creates a dataset where the statistical error of each `y` coordinate is set to 0.3 and the overall systematic
-            error of `y` is set to 0.1. 
-            
-        '''
+        >>> myDataset = build_dataset(..., yabsstat=0.3, yrelsyst=0.1)
         
-        # cast data to array
-        data = (np.asarray(xdata), np.asarray(ydata))
-        size = len(xdata)
+        creates a dataset where the statistical error of each `y` coordinate is set to 0.3 and the overall systematic
+        error of `y` is set to 0.1. 
         
-        # check that x and y data have the same length
-        if size != len(ydata):
-            raise Exception, "xdata and ydata must have matching lengths (%d != %d)" % (size, len(ydata))
+    '''
+    
+    # cast data to array
+    data = (np.asarray(xdata), np.asarray(ydata))
+    size = len(xdata)
+    
+    # check that x and y data have the same length
+    if size != len(ydata):
+        raise Exception, "xdata and ydata must have matching lengths (%d != %d)" % (size, len(ydata))
+    
+    # initialize cov_mats with zero matrices
+    cov_mats = [np.asmatrix(np.zeros((size, size))), np.asmatrix(np.zeros((size, size)))]
+    
+    kwargs_to_transmit = {}
+    
+    for key, val in kwargs.iteritems():   # go through the keyword arguments
+    
+        if key in ('title'):
+            kwargs_to_transmit.update({key: val})
+            continue
+        else:
+            err_spec = key
+            err_val = val
+    
+        if len(err_spec) != 8:       # check that the error specification has required length
+            raise SyntaxError, "Cannot interpret error specification `%s'." % (err_spec,)
         
-        # initialize cov_mats with zero matrices
-        cov_mats = [np.asmatrix(np.zeros((size, size))), np.asmatrix(np.zeros((size, size)))]
+        # interpret the error specification
+        axis = err_spec[0]          # extract the axis from the error specification
+        relativity = err_spec[1:4]  # extract the relativity from the error spec.
+        correlation = err_spec[4:]  # extract the correlation from the error spec.
         
-        kwargs_to_transmit = {}
+        # check error specification for integrity
+        if axis not in ('x', 'y'):
+            raise SyntaxError, "Unknown axis `%s'." % (axis, )
+        if relativity not in ('abs', 'rel'):
+            raise SyntaxError, "Unknown relativity specification `%s'. Expected `abs' or `rel'." % (relativity, )
+        if correlation not in ('stat', 'syst'):
+            raise SyntaxError, "Unknown correlation specification `%s'. Expected `stat' or `syst'." % (correlation, )
         
-        for key, val in kwargs.iteritems():   # go through the keyword arguments
+        # get axis is from axis name
+        axis = ('x', 'y').index(axis)
         
-            if key in ('title'):
-                kwargs_to_transmit.update({key: val})
-                continue
-            else:
-                err_spec = key
-                err_val = val
+        # make sure errors are floats. Cast to float if necessary...
+        if isinstance(err_val, np.ndarray) or isinstance(err_val, int):
+            # cast err_val to a float
+            err_val = 1.0 * err_val
         
-            if len(err_spec) != 8:       # check that the error specification has required length
-                raise SyntaxError, "Cannot interpret error specification `%s'." % (err_spec,)
+        if correlation == 'syst':
+            # systematic errors should be floats
+            if not isinstance(err_val, float):
+                # if not, raise error
+                raise SyntaxError, "Error setting systematic error `%s', expected number." % (err_spec,)
             
-            # interpret the error specification
-            axis = err_spec[0]          # extract the axis from the error specification
-            relativity = err_spec[1:4]  # extract the relativity from the error spec.
-            correlation = err_spec[4:]  # extract the correlation from the error spec.
-            
-            # check error specification for integrity
-            if axis not in ('x', 'y'):
-                raise SyntaxError, "Unknown axis `%s'." % (axis, )
-            if relativity not in ('abs', 'rel'):
-                raise SyntaxError, "Unknown relativity specification `%s'. Expected `abs' or `rel'." % (relativity, )
-            if correlation not in ('stat', 'syst'):
-                raise SyntaxError, "Unknown correlation specification `%s'. Expected `stat' or `syst'." % (correlation, )
-            
-            # get axis is from axis name
-            axis = ('x', 'y').index(axis)
-            
-            # make sure errors are floats. Cast to float if necessary...
-            if isinstance(err_val, np.ndarray) or isinstance(err_val, int):
-                # cast err_val to a float
-                err_val = 1.0 * err_val
-            
-            if correlation == 'syst':
-                # systematic errors should be floats
-                if not isinstance(err_val, float):
-                    # if not, raise error
-                    raise SyntaxError, "Error setting systematic error `%s', expected number." % (err_spec,)
-                
-                # otherwise, calculate covariance matrix
-                if relativity == 'rel':             
-                    err_val *= data[axis]  # relative errors need to be weighted with the actual data
+            # otherwise, calculate covariance matrix
+            if relativity == 'rel':             
+                err_val *= data[axis]  # relative errors need to be weighted with the actual data
 
-                    # systematic error matrix given by outer product of err_var vector with itself
-                    cov_mats[axis] += np.asmatrix( np.outer(err_val, err_val) )
-                else:
-                    # systematic error matrix is proportional to np.ones
-                    cov_mats[axis] += np.asmatrix( np.ones((size,size)) * err_val**2 )
-                    
-            elif correlation == 'stat':
-                # statistical errors should be error lists
-                if isinstance(err_val, float): # if a float value is given
-                    # turn float value into array of identical values
-                    err_val = np.ones(size) * err_val
+                # systematic error matrix given by outer product of err_var vector with itself
+                cov_mats[axis] += np.asmatrix( np.outer(err_val, err_val) )
+            else:
+                # systematic error matrix is proportional to np.ones
+                cov_mats[axis] += np.asmatrix( np.ones((size,size)) * err_val**2 )
                 
-                # check if err_val is iterable    
-                try:
-                    iter(err_val)
-                except:
-                    raise SyntaxError, "Error setting statistical error `%s', expected number or NumPy array." % (err_spec,)
-                else:
-                    err_val = np.asarray(err_val)   # cast to numpy array
+        elif correlation == 'stat':
+            # statistical errors should be error lists
+            if isinstance(err_val, float): # if a float value is given
+                # turn float value into array of identical values
+                err_val = np.ones(size) * err_val
+            
+            # check if err_val is iterable    
+            try:
+                iter(err_val)
+            except:
+                raise SyntaxError, "Error setting statistical error `%s', expected number or NumPy array." % (err_spec,)
+            else:
+                err_val = np.asarray(err_val)   # cast to numpy array
+            
+            if relativity == 'rel':             
+                err_val *= data[axis]  # relative errors need to be weighted with the actual data
+            
+            cov_mats[axis] += np.asmatrix( np.diag(err_val)**2 )
                 
-                if relativity == 'rel':             
-                    err_val *= data[axis]  # relative errors need to be weighted with the actual data
-                
-                cov_mats[axis] += np.asmatrix( np.diag(err_val)**2 )
-                    
-        return Dataset(data=data, cov_mats=cov_mats, **kwargs_to_transmit)
+    return Dataset(data=data, cov_mats=cov_mats, **kwargs_to_transmit)
 
 
 class Dataset: #(object):
@@ -227,10 +227,7 @@ class Dataset: #(object):
         #############################
         
         # name the Dataset
-        if kwargs.has_key('title'):
-            self.data_label = kwargs['title']
-        else:
-            self.data_label = 'Untitled Dataset'
+        self.data_label = kwargs.pop('title', "Untitled Dataset")
 
         # check for an input file
         if kwargs.has_key('input_file'):
@@ -311,7 +308,12 @@ class Dataset: #(object):
         else:
             self.__query_cov_mats_regular[axis] = False   # else, mat is regular
         
-        # check if the matrix is zero or None and set/unset a flag accordingly
+#         try:    # check if all elements are zero
+#             (mat==0).all()
+#         except AttributeError: # this means mat is not a matrix object (no all() method)
+#             mat=None
+        
+        # check if the matrix is zero or None and set/unset a flag accordingly    
         if mat is None or (mat==0).all():               # check if matrix in None or zero
             self.__query_has_errors[axis] = False
             self.__query_has_correlations[axis] = False
