@@ -220,7 +220,7 @@ class Fit:
         '''
         Get the current parameter uncertainties from the minimizer.
         
-        *rounding* : boolean
+        *rounding* : boolean (optional)
             Whether or not to round the returned values to significance.
         
         returns : tuple
@@ -239,7 +239,7 @@ class Fit:
         '''
         Get the current parameter values from the minimizer.
         
-        *rounding* : boolean
+        *rounding* : boolean (optional)
             Whether or not to round the returned values to significance.
         
         returns : tuple
@@ -271,10 +271,10 @@ class Fit:
         This last step is repeater until the change in the error matrix caused by the projection
         becomes negligible.
         
-        *quiet* : boolean
+        *quiet* : boolean (optional)
             Set to ``True`` if no output should be printed.
             
-        *verbose* : boolean
+        *verbose* : boolean (optional)
             Set to ``True`` if more output should be printed.
         '''
         

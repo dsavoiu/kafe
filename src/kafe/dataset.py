@@ -364,7 +364,7 @@ class Dataset: #(object):
         **axis** : string
             Axis for which to get the data span. Can be ``'x'`` or ``'y'``.
         
-        *include_error_bars* : boolean
+        *include_error_bars* : boolean (optional)
             ``True`` if the returned span should be enlarged to
             contain the error bars of the smallest and largest datapoints (default: ``False``)
         '''
@@ -407,7 +407,7 @@ class Dataset: #(object):
         **axis** : string or int
             Axis for which to load the error matrix. Can be ``'x'`` or ``'y'``. Type: string
             
-        *fallback_on_singular* : `numpy.matrix` or string
+        *fallback_on_singular* : `numpy.matrix` or string (optional)
             What to return if the matrix is singular. If this is ``None`` (default), the matrix is returned anyway.
             If this is a `numpy.matrix` object or similar, that is returned istead. Alternatively, the shortcuts
             ``'identity'`` or ``1`` and ``'zero'`` or ``0`` can be used to return the identity and zero matrix

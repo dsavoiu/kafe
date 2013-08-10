@@ -300,6 +300,42 @@ class Minuit:
         ndf = Long(n_deg_of_freedom)
         return TMath.Prob(chi2, ndf)
         
+    def get_contour(self, parameter1, parameter2, n_points=20):
+        '''
+        Returns a list of points (2-tuples) representing a sampling of
+        the :math:`1\\sigma` contour of the TMinuit fit. The ``FCN`` has to be
+        minimized before calling this.
+        
+        **parameter1** : int
+            ID of the parameter to be displayed on the `x`-axis.
+            
+        **parameter2** : int
+            ID of the parameter to be displayed on the `y`-axis.
+            
+        *n_points* : int (optional)
+            number of points used to draw the contour. Default is 20.
+            
+        ------
+        
+        *returns* : 2-tuple of tuples
+            a 2-tuple (x, y) containing ``n_points+1`` points sampled
+            along the contour. The first point is repeated at the end
+            of the list to generate a closed contour.
+        '''
+        
+        # get the TGraph object from ROOT
+        g = self.__gMinuit.Contour(n_points, parameter1, parameter2)
+        
+        # extract point data into buffers
+        xbuf, ybuf = g.GetX(), g.GetY()
+        N = g.GetN()
+        
+        # generate tuples from buffers
+        x = np.frombuffer(xbuf, dtype=float, count=N)
+        y = np.frombuffer(ybuf, dtype=float, count=N)
+        
+        #
+        return (x, y)
     
     # Other methods
     ################
