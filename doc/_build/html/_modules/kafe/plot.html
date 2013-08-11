@@ -50,17 +50,42 @@
             
   <h1>Source code for kafe.plot</h1><div class="highlight"><pre>
 <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">Created on Jul 18, 2013</span>
-
+<span class="sd">.. module:: plot</span>
+<span class="sd">   :platform: Unix</span>
+<span class="sd">   :synopsis: A submodule for plotting `Dataset`s with ``matplotib``.</span>
 <span class="sd">.. moduleauthor:: Daniel Savoiu &lt;daniel.savoiu@ekp.kit.edu&gt;</span>
 <span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s">&#39;Qt4AGG&#39;</span><span class="p">)</span>    <span class="c"># use the Qt backend for mpl</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">numeric_tools</span> <span class="kn">import</span> <span class="o">*</span> <span class="c"># includes importing numpy as np</span>
 <span class="kn">from</span> <span class="nn">function_tools</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">fit</span> <span class="kn">import</span> <span class="n">round_to_significance</span>
+<span class="kn">import</span> <span class="nn">re</span> <span class="c"># some regular expression stuff</span>
+<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">split</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">lower</span>
 
-
+<div class="viewcode-block" id="label_to_latex"><a class="viewcode-back" href="../../index.html#kafe.plot.label_to_latex">[docs]</a><span class="k">def</span> <span class="nf">label_to_latex</span><span class="p">(</span><span class="n">label</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Generates a simple LaTeX-formatted label from a plain-text label.</span>
+<span class="sd">    This treats isolated characters and words beginning with a backslash</span>
+<span class="sd">    as mathematical expressions and surround them with $ signs accordingly.</span>
+<span class="sd">    </span>
+<span class="sd">    **label** : string</span>
+<span class="sd">        Plain-text string to convert to LaTeX.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="n">tokens</span> <span class="o">=</span> <span class="n">split</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">token_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">token_id</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">tokens</span><span class="p">[</span><span class="n">token_id</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s">&#39;</span><span class="se">\\</span><span class="s">&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">lower</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">token_id</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="ow">not</span> <span class="ow">in</span> <span class="s">&quot;abcdefghijklmnopqrstuvwxyz&quot;</span><span class="p">:</span>
+                <span class="n">tokens</span><span class="p">[</span><span class="n">token_id</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;$</span><span class="si">%s</span><span class="s">$</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">token_id</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">tokens</span><span class="p">[</span><span class="n">token_id</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="c"># surround isolated chars with $ (omit last)</span>
+            <span class="k">else</span><span class="p">:</span> 
+                <span class="n">tokens</span><span class="p">[</span><span class="n">token_id</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;$</span><span class="si">%s</span><span class="s">$&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">token_id</span><span class="p">],)</span> <span class="c"># surround isolated chars with $</span>
+    <span class="k">return</span> <span class="n">join</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+            </div>
 <div class="viewcode-block" id="pad_span"><a class="viewcode-back" href="../../index.html#kafe.plot.pad_span">[docs]</a><span class="k">def</span> <span class="nf">pad_span</span><span class="p">(</span><span class="n">span</span><span class="p">,</span> <span class="n">pad_coeff</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">additional_pad</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Enlarges the interval `span` (list of two floats) symmetrically around</span>
@@ -131,8 +156,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="bp">True</span>        <span class="c"># use a grid per default</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">usetex</span> <span class="o">=</span> <span class="bp">True</span>      <span class="c"># tell matplotlib to use TeX</span>
         
-        <span class="bp">self</span><span class="o">.</span><span class="n">axis_labels</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;$x$&#39;</span><span class="p">,</span> <span class="s">&#39;$y$&#39;</span><span class="p">)</span>                   <span class="c"># Default axis labels</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">axis_label_styles</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;italic&#39;</span><span class="p">,</span> <span class="s">&#39;italic&#39;</span><span class="p">)</span>             <span class="c"># Default axis label styles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axis_label_styles</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;italic&#39;</span><span class="p">,</span> <span class="s">&#39;italic&#39;</span><span class="p">)</span>       <span class="c"># Default axis label styles</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">axis_label_coords</span> <span class="o">=</span> <span class="p">(</span> <span class="p">(</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">-.</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-.</span><span class="mi">12</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">)</span> <span class="p">)</span>  <span class="c"># default offset for axes</span>
         
@@ -145,11 +169,13 @@
           <span class="s">&#39;shadow&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
           <span class="s">&#39;numpoints&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
           <span class="s">&#39;bbox_to_anchor&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span>
-          <span class="s">&#39;borderaxespad&#39;</span> <span class="p">:</span> <span class="mf">0.</span>
+          <span class="s">&#39;borderaxespad&#39;</span> <span class="p">:</span> <span class="mf">0.</span><span class="p">,</span>
+          <span class="s">&#39;pad&#39;</span><span class="p">:</span><span class="mf">0.05</span>
           <span class="p">}</span>
         
         <span class="c"># Default keyword arguments to pass to rc(&#39;font&#39;,...)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rcfont_kw</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;family&#39;</span><span class="p">:</span><span class="s">&#39;serif&#39;</span><span class="p">,</span> <span class="s">&#39;serif&#39;</span><span class="p">:[</span><span class="s">&#39;CMU Classical Serif&#39;</span><span class="p">],</span> <span class="s">&#39;monospace&#39;</span><span class="p">:[</span><span class="s">&#39;CMU Typewriter Text&#39;</span><span class="p">]}</span>
+        <span class="c">#self.rcfont_kw = {&#39;family&#39;:&#39;serif&#39;, &#39;serif&#39;:[&#39;URW Palladio L Italic&#39;], &#39;monospace&#39;:[&#39;CMU Typewriter Text&#39;]}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rcparams_kw</span> <span class="o">=</span> <span class="p">{</span>
           <span class="s">&#39;axes.labelsize&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
           <span class="s">&#39;text.fontsize&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
@@ -160,10 +186,14 @@
           <span class="s">&#39;axes.unicode_minus&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
           <span class="c">#&#39;legend.loc&#39;: &#39;best&#39;</span>
           <span class="s">&#39;legend.loc&#39;</span><span class="p">:</span> <span class="s">&#39;upper left&#39;</span><span class="p">,</span>
-          <span class="s">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+          <span class="s">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+          <span class="c">#&#39;text.latex.preamble&#39;:&#39;\\usepackage[sc,osf]{mathpazo},\\usepackage[euler-digits]{eulervm}&#39;</span>
+          <span class="c">#&#39;text.latex.preamble&#39;: [&#39;\\usepackage{eulervm}&#39;],</span>
+          <span class="c">#&#39;mathtext.fontset&#39;: &#39;custom&#39;,</span>
+          <span class="c">#&#39;mathtext.fallback_to_cm&#39;: False,</span>
+          <span class="c">#&#39;mathtext.default&#39;: &#39;ppl&#39;,</span>
+          <span class="c">#&#39;axes.formatter.use_mathtext&#39;: False</span>
           <span class="p">}</span>
-        
-
     
 <div class="viewcode-block" id="PlotStyle.get_marker"><a class="viewcode-back" href="../../index.html#kafe.plot.PlotStyle.get_marker">[docs]</a>    <span class="k">def</span> <span class="nf">get_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idm</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Get a specific marker type. This runs cyclically through the defined defaults.&#39;&#39;&#39;</span>
@@ -191,16 +221,33 @@
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Constuctor for the Plot object. This constuctor accepts a series of `Fit` objects as positional</span>
 <span class="sd">        arguments. Some keyword arguments can be provided to override the defaults. A list of these keyword</span>
-<span class="sd">        arguments will be provided soon...</span>
+<span class="sd">        arguments will be provided in the future...</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         
+        <span class="c">#: list of `Fit`s to plot</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">fits</span><span class="p">)</span>          <span class="c"># store the child Fit objects in an instance variable</span>
+        
+        <span class="c">#: plot style</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span> <span class="o">=</span> <span class="n">PlotStyle</span><span class="p">()</span>   <span class="c"># set the default style as the current plot style</span>
         
         <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">rcparams_kw</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s">&#39;font&#39;</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">rcfont_kw</span><span class="p">)</span>
         
-        <span class="bp">self</span><span class="o">.</span><span class="n">plot_range</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s">&#39;y&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]}</span>    <span class="c"># default plot range in [0, 1] for each axis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_range</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">}</span>    <span class="c">#: plot range</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_legend</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;show_legend&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span> <span class="c">#: whether to show the plot legend (``True``) or not (``False``)</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fits</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="c">#: axis labels</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">axis_labels</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">label_to_latex</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">axis_labels</span><span class="p">)</span> <span class="c"># inherit axis labels from Fit&#39;s Dataset</span>
+            
+            <span class="c"># set unit in brackets (if available)</span>
+            <span class="k">for</span> <span class="n">label_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis_labels</span><span class="p">)):</span>
+                <span class="n">unit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">axis_units</span><span class="p">[</span><span class="n">label_id</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">unit</span> <span class="o">!=</span> <span class="s">&#39;&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">axis_labels</span><span class="p">[</span><span class="n">label_id</span><span class="p">]</span> <span class="o">+=</span> <span class="s">&quot; [</span><span class="se">\\</span><span class="s">textrm{</span><span class="si">%s</span><span class="s">}]&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">unit</span><span class="p">,)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">axis_labels</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;$x$&#39;</span><span class="p">,</span> <span class="s">&#39;$y$&#39;</span><span class="p">)</span> <span class="c"># set default axis names</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">init_plots</span><span class="p">()</span>               <span class="c"># initialize the plots</span>
                 
@@ -210,7 +257,9 @@
 <span class="sd">        &#39;&#39;&#39;</span>
                 
         <span class="bp">self</span><span class="o">.</span><span class="n">figure</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        
         <span class="bp">self</span><span class="o">.</span><span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+        <span class="c">#self.axes = self.figure.add_axes([.07, .15, .6, .8])</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span>     <span class="c"># default .2</span>
                             <span class="n">hspace</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span>     <span class="c"># default .2</span>
@@ -218,6 +267,7 @@
                             <span class="n">bottom</span><span class="o">=.</span><span class="mi">12</span><span class="p">,</span>    <span class="c"># default .1</span>
                             <span class="n">left</span><span class="o">=.</span><span class="mi">11</span><span class="p">,</span>      <span class="c"># default .125</span>
                             <span class="n">right</span><span class="o">=.</span><span class="mi">8</span><span class="p">)</span>     <span class="c"># default .9</span>
+    
          
         
         <span class="n">box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span> 
@@ -225,17 +275,119 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">compute_plot_range</span><span class="p">()</span>
             </div>
-<div class="viewcode-block" id="Plot.plot_all"><a class="viewcode-back" href="../../index.html#kafe.plot.Plot.plot_all">[docs]</a>    <span class="k">def</span> <span class="nf">plot_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Plot.plot_all"><a class="viewcode-back" href="../../index.html#kafe.plot.Plot.plot_all">[docs]</a>    <span class="k">def</span> <span class="nf">plot_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_info_for</span><span class="o">=</span><span class="s">&#39;all&#39;</span><span class="p">,</span> <span class="n">show_data_for</span><span class="o">=</span><span class="s">&#39;all&#39;</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Plot every `Fit` object to its figure.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">for</span> <span class="n">p_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fits</span><span class="p">)):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">show_data_for</span> <span class="o">!=</span> <span class="s">&#39;all&#39;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="nb">iter</span><span class="p">(</span><span class="n">show_data_for</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="n">show_data_for</span><span class="o">=</span><span class="p">(</span><span class="n">show_data_for</span><span class="p">,)</span> <span class="c"># wrap value in tuple</span>
+                
+                <span class="k">if</span> <span class="n">p_id</span> <span class="ow">in</span> <span class="n">show_data_for</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_id</span><span class="p">,</span> <span class="n">show_data</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_id</span><span class="p">,</span> <span class="n">show_data</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_id</span><span class="p">,</span> <span class="n">show_data</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_legend</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_legend</span><span class="p">()</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_fit_parameters_box</span><span class="p">(</span><span class="n">show_info_for</span><span class="p">)</span>
+        </div>
+<div class="viewcode-block" id="Plot.draw_legend"><a class="viewcode-back" href="../../index.html#kafe.plot.Plot.draw_legend">[docs]</a>    <span class="k">def</span> <span class="nf">draw_legend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Draw the plot legend to the canvas&#39;&#39;&#39;</span>
+        <span class="c"># show plot legend</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">legend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">legendparams_kw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">draggable</span><span class="p">()</span>
+        
+        </div>
+<div class="viewcode-block" id="Plot.draw_fit_parameters_box"><a class="viewcode-back" href="../../index.html#kafe.plot.Plot.draw_fit_parameters_box">[docs]</a>    <span class="k">def</span> <span class="nf">draw_fit_parameters_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plot_spec</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>        
+        <span class="sd">&#39;&#39;&#39;Draw the parameter box to the canvas</span>
+<span class="sd">        </span>
+<span class="sd">        *plot_spec* : int, list of ints, string or None (optional, default: 0)</span>
+<span class="sd">            Specify the plot id of the plot for which to draw the parameters. Passing 0 will only draw the</span>
+<span class="sd">            parameter box for the first plot, and so on. Passing a list of ints will only draw the parameters</span>
+<span class="sd">            for plot ids inside the list. Passing ``&#39;all&#39;`` will print parameters for all plots. Passing</span>
+<span class="sd">            ``None`` will return immediately doing nothing.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">plot_spec</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        
+        <span class="c"># get the offset to subtract for each axes transformation</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">transAxes</span><span class="o">.</span><span class="n">transform</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+        
+        <span class="c"># get the legend bounding box and extract some dimension info</span>
+        <span class="n">legend_bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">legendPatch</span><span class="o">.</span><span class="n">get_bbox</span><span class="p">()</span><span class="o">.</span><span class="n">inverse_transformed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">transAxes</span><span class="p">)</span> 
+        
+        <span class="c"># size of the legend box. Use this to create the fit parameters text box below it.</span>
+        <span class="n">legend_size_px</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">transAxes</span><span class="o">.</span><span class="n">transform</span><span class="p">((</span><span class="n">legend_bbox</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">legend_bbox</span><span class="o">.</span><span class="n">height</span><span class="p">))</span> <span class="o">-</span> <span class="n">offset</span> 
+        <span class="n">legend_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">legend_bbox</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">legend_bbox</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+
+        <span class="c"># fit parameters box size</span>
+        <span class="n">textbox_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">legend_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">legend_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.05</span><span class="p">)</span>
+        <span class="n">textbox_size_px</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">transAxes</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">textbox_size</span><span class="p">)</span> <span class="o">-</span> <span class="n">offset</span>
+        
+        <span class="c"># pad text in fit parameters box by this amount</span>
+        <span class="n">pad_amount</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">legendparams_kw</span><span class="p">[</span><span class="s">&#39;pad&#39;</span><span class="p">]</span>
+        <span class="n">pad_amount_px</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">transAxes</span><span class="o">.</span><span class="n">transform</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">legendparams_kw</span><span class="p">[</span><span class="s">&#39;pad&#39;</span><span class="p">],</span><span class="mi">0</span><span class="p">))</span> <span class="o">-</span> <span class="n">offset</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="n">text_content</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\\</span><span class="s">textbf{Fit Parameters}</span><span class="se">\n</span><span class="s">&quot;</span> <span class="c"># allow localized text (German)?</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fits</span><span class="p">[</span><span class="n">plot_spec</span><span class="p">]</span>  <span class="c"># try to find the specified plot</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">plot_spec</span> <span class="o">==</span> <span class="s">&quot;all&quot;</span><span class="p">:</span>   <span class="c"># if not found, check for keyword &#39;all&#39;</span>
+                <span class="n">fits_with_parameter_box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fits</span> <span class="c"># go through all fits</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">fits_with_parameter_box</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">p_id</span> <span class="ow">in</span> <span class="n">plot_spec</span><span class="p">:</span>
+                        <span class="n">fits_with_parameter_box</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fits</span><span class="p">[</span><span class="n">p_id</span><span class="p">])</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">,</span> <span class="s">&quot;Cannot parse plot specification </span><span class="si">%r</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">plot_spec</span><span class="p">,)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fits_with_parameter_box</span> <span class="o">=</span> <span class="p">[</span><span class="n">fit</span><span class="p">]</span>
+                
+                
+        <span class="k">for</span> <span class="n">fit</span> <span class="ow">in</span> <span class="n">fits_with_parameter_box</span><span class="p">:</span>
+            <span class="c">#text_content += &quot;~\nFit for &quot; + fit.dataset.data_label + &#39;:\n&#39;</span>
+            <span class="n">text_content</span> <span class="o">+=</span> <span class="s">&quot;~</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="n">fit</span><span class="o">.</span><span class="n">function_label</span> <span class="o">+</span> <span class="s">&#39;:</span><span class="se">\n</span><span class="s">&#39;</span>
+            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">param_names</span><span class="p">)):</span>
+                <span class="n">parname</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">param_names_latex</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+                <span class="n">parval</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">get_parameter_values</span><span class="p">(</span><span class="n">rounding</span><span class="o">=</span><span class="bp">True</span><span class="p">)[</span><span class="n">idx</span><span class="p">]</span>
+                <span class="n">parerrs</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">get_parameter_errors</span><span class="p">(</span><span class="n">rounding</span><span class="o">=</span><span class="bp">True</span><span class="p">)[</span><span class="n">idx</span><span class="p">]</span>
+                <span class="n">text_content</span> <span class="o">+=</span> <span class="p">(</span><span class="s">&#39;$</span><span class="si">%s</span><span class="s">=</span><span class="si">%g</span><span class="s">\pm</span><span class="si">%g</span><span class="s">$</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">parname</span><span class="p">,</span> <span class="n">parval</span><span class="p">,</span> <span class="n">parerrs</span><span class="p">))</span>
+        
+        <span class="c"># replace scientific notation with power of ten</span>
+        <span class="n">text_content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">r&#39;(-?\d*\.?\d+?)0*e\+?(-?[0-9]*[1-9]?)&#39;</span><span class="p">,</span> <span class="s">r&#39;\1</span><span class="se">\\</span><span class="s">times10^{\2}&#39;</span><span class="p">,</span> <span class="n">text_content</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">textbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">legend_bbox</span><span class="o">.</span><span class="n">xmin</span><span class="o">+</span><span class="n">pad_amount</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.00</span><span class="o">+</span><span class="n">pad_amount</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+                       <span class="n">text_content</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                       <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span>
+                       <span class="n">fontsize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">rcparams_kw</span><span class="p">[</span><span class="s">&#39;legend.fontsize&#39;</span><span class="p">],</span>
+                       <span class="n">verticalalignment</span><span class="o">=</span><span class="s">&#39;bottom&#39;</span><span class="p">,</span>
+                       <span class="n">horizontalalignment</span><span class="o">=</span><span class="s">&#39;left&#39;</span><span class="p">,</span>
+                       <span class="n">bbox</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;facecolor&#39;</span><span class="p">:</span><span class="s">&#39;white&#39;</span><span class="p">,</span>
+                             <span class="s">&#39;width&#39;</span><span class="p">:</span><span class="n">textbox_size_px</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                             <span class="c">#&#39;height&#39;: textbox_size_px[1],</span>
+                             <span class="s">&#39;pad&#39;</span><span class="p">:</span> <span class="n">pad_amount_px</span><span class="p">}</span>
+                             <span class="c">#&#39;pad&#39;: 22}</span>
+                       <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
     </div>
 <div class="viewcode-block" id="Plot.compute_plot_range"><a class="viewcode-back" href="../../index.html#kafe.plot.Plot.compute_plot_range">[docs]</a>    <span class="k">def</span> <span class="nf">compute_plot_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_error_bars</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Compute the span of all child datasets and sets the plot range to that</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_range</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">}</span>    <span class="c"># default plot range None (undefined)</span>
         
         <span class="k">for</span> <span class="n">current_fit</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fits</span><span class="p">:</span>
             <span class="n">xspan</span> <span class="o">=</span> <span class="n">current_fit</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_data_span</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="n">include_error_bars</span><span class="p">)</span>  <span class="c"># initialize plot x span</span>
@@ -257,11 +409,16 @@
         <span class="k">if</span> <span class="n">axis</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">,</span><span class="s">&#39;y&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">,</span> <span class="s">&quot;Unknown axis `</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">axis</span><span class="p">,)</span> 
         
-        <span class="bp">self</span><span class="o">.</span><span class="n">plot_range</span><span class="p">[</span><span class="n">axis</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_range</span><span class="p">[</span><span class="n">axis</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">new_span</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="c"># move the minimum down, if necessary</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">plot_range</span><span class="p">[</span><span class="n">axis</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_range</span><span class="p">[</span><span class="n">axis</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">new_span</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="c"># move the maximum up, if necessary</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_range</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_range</span><span class="p">[</span><span class="n">axis</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_range</span><span class="p">[</span><span class="n">axis</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">new_span</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="c"># move the minimum down, if necessary</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_range</span><span class="p">[</span><span class="n">axis</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_range</span><span class="p">[</span><span class="n">axis</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">new_span</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="c"># move the maximum up, if necessary</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_range</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_span</span>  <span class="c"># if plot range in None (undefined), take the new values directly</span>
+            
+        
         
     </div>
-<div class="viewcode-block" id="Plot.plot"><a class="viewcode-back" href="../../index.html#kafe.plot.Plot.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_id</span><span class="p">):</span>
+<div class="viewcode-block" id="Plot.plot"><a class="viewcode-back" href="../../index.html#kafe.plot.Plot.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_id</span><span class="p">,</span> <span class="n">show_data</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Plot the `Fit` object with the number `p_id` to its figure.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -277,13 +434,15 @@
                      <span class="s">&#39;color&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">get_markercolor</span><span class="p">(</span><span class="n">p_id</span><span class="p">),</span>
                      <span class="s">&#39;label&#39;</span><span class="p">:</span><span class="n">current_fit</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">data_label</span><span class="p">,</span>
                      <span class="s">&#39;ms&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">get_pointsize</span><span class="p">(</span><span class="n">p_id</span><span class="p">),</span>
-                     <span class="s">&#39;capsize&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span>
+                     <span class="s">&#39;capsize&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+                     <span class="s">&#39;zorder&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span>
         
         <span class="c"># for the fit function </span>
         <span class="n">_fdata_kw</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;marker&#39;</span><span class="p">:</span><span class="s">&#39;None&#39;</span><span class="p">,</span>
                      <span class="s">&#39;linestyle&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">get_line</span><span class="p">(</span><span class="n">p_id</span><span class="p">),</span>
                      <span class="s">&#39;color&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">get_linecolor</span><span class="p">(</span><span class="n">p_id</span><span class="p">),</span>
-                     <span class="s">&#39;label&#39;</span><span class="p">:</span><span class="n">current_fit</span><span class="o">.</span><span class="n">function_label</span><span class="p">}</span>
+                     <span class="s">&#39;label&#39;</span><span class="p">:</span><span class="n">current_fit</span><span class="o">.</span><span class="n">function_label</span><span class="p">,</span>
+                     <span class="s">&#39;zorder&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">}</span>
         
         <span class="c"># current error bar data defaults to None</span>
         <span class="n">error_bar_data</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:</span><span class="bp">None</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">:</span><span class="bp">None</span><span class="p">}</span>
@@ -293,7 +452,7 @@
             <span class="c"># only set error bar data if errors are explicitly given,</span>
             <span class="c"># either in form of a user-defined covariance matrix</span>
             <span class="c"># or error lists</span>
-            <span class="k">if</span> <span class="n">current_fit</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">has_any_errors</span><span class="p">(</span><span class="n">axis</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">current_fit</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">has_errors</span><span class="p">(</span><span class="n">axis</span><span class="p">):</span>
                 <span class="n">error_bar_data</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="n">extract_statistical_errors</span><span class="p">(</span><span class="n">current_fit</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_cov_mat</span><span class="p">(</span><span class="n">axis</span><span class="p">))</span> <span class="c"># use the covmat&#39;s diagonal for the error bars</span>
         
         
@@ -328,8 +487,8 @@
         
         <span class="c"># set some properties inherited from plot_style</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">grid</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">axis_labels</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">style</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">axis_label_styles</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">axis_labels</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">style</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">axis_label_styles</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis_labels</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">style</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">axis_label_styles</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis_labels</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">style</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">axis_label_styles</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_label_coords</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">axis_label_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_label_coords</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">axis_label_coords</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -337,8 +496,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">axis_label_pad</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">axis_label_pad</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         
-        <span class="c"># plot data points</span>
-        <span class="n">pplot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">current_fit</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">),</span> <span class="n">current_fit</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">),</span> <span class="n">yerr</span><span class="o">=</span><span class="n">error_bar_data</span><span class="p">[</span><span class="s">&#39;y&#39;</span><span class="p">],</span> <span class="n">xerr</span><span class="o">=</span><span class="n">error_bar_data</span><span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">_pdata_kw</span><span class="p">)</span>
+        <span class="c"># plot data points, unless otherwise specified by the caller</span>
+        <span class="k">if</span> <span class="n">show_data</span><span class="p">:</span>
+            <span class="n">pplot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">current_fit</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">),</span>
+                                       <span class="n">current_fit</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">),</span>
+                                       <span class="n">yerr</span><span class="o">=</span><span class="n">error_bar_data</span><span class="p">[</span><span class="s">&#39;y&#39;</span><span class="p">],</span> 
+                                       <span class="n">xerr</span><span class="o">=</span><span class="n">error_bar_data</span><span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">_pdata_kw</span><span class="p">)</span>
         
         <span class="c"># shade confidence band</span>
         <span class="n">cband</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">fxdata</span><span class="p">,</span> <span class="n">lower_cb</span><span class="p">,</span> <span class="n">upper_cb</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="s">&#39;0.1&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">_fdata_kw</span><span class="p">[</span><span class="s">&#39;color&#39;</span><span class="p">])</span>
@@ -350,10 +513,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_range</span><span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_range</span><span class="p">[</span><span class="s">&#39;y&#39;</span><span class="p">])</span>
         
-        <span class="c"># show plot legend</span>
-        <span class="c">#self.axes.legend((pplot[0], fplot[0]),(current_fit.dataset.data_label, r&#39;\verb!%s!&#39; % (current_fit.function_label,)), **self._legendparams_kw) ##</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_style</span><span class="o">.</span><span class="n">legendparams_kw</span><span class="p">)</span> <span class="c">##</span>
         
+        <span class="c"># draw everything so positions are known</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
     </div>
 <div class="viewcode-block" id="Plot.show"><a class="viewcode-back" href="../../index.html#kafe.plot.Plot.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -370,38 +532,43 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
         </div></div>
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">dataset</span> <span class="kn">import</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">Fit</span><span class="p">,</span> <span class="n">Plot</span>
-    
+    <span class="kn">from</span> <span class="nn">dataset</span> <span class="kn">import</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">build_dataset</span>
+    <span class="kn">from</span> <span class="nn">fit</span> <span class="kn">import</span> <span class="n">Fit</span>
+     
     <span class="k">def</span> <span class="nf">linear_2par2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">x_offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        
-        <span class="k">return</span> <span class="n">slope</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x_offset</span><span class="p">)</span>    
-    
+         
+        <span class="k">return</span> <span class="n">slope</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x_offset</span><span class="p">)</span>
+     
+    <span class="k">def</span> <span class="nf">exp_2par</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">y_intercept</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+         
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">damping</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">shift</span><span class="p">)</span> <span class="o">+</span> <span class="n">y_intercept</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">shift</span><span class="p">)</span>  
+     
     <span class="n">myXData</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="o">.</span><span class="mi">4</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">.</span><span class="mi">6</span><span class="p">,</span> <span class="o">.</span><span class="mi">7</span><span class="p">,</span> <span class="o">.</span><span class="mi">8</span><span class="p">,</span> <span class="o">.</span><span class="mi">9</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
     <span class="n">myYData</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mf">0.227216</span><span class="p">,</span>    <span class="o">-</span><span class="mf">0.159875</span><span class="p">,</span>    <span class="mf">0.0924984</span><span class="p">,</span>    <span class="o">-</span><span class="mf">0.299377</span><span class="p">,</span>    <span class="mf">0.307159</span><span class="p">,</span>    <span class="mf">1.15718</span><span class="p">,</span>    <span class="mf">0.701532</span><span class="p">,</span>    <span class="mf">0.661879</span><span class="p">,</span>    <span class="mf">0.536548</span><span class="p">,</span>    <span class="mf">0.874998</span><span class="p">,</span>    <span class="mf">1.02603</span><span class="p">])</span>
     <span class="n">myYData2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="o">-</span><span class="mf">0.254749307136</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0983575484803</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.108455145055</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.317740870797</span><span class="p">,</span> <span class="mf">0.112078239069</span><span class="p">,</span> <span class="mf">0.238810848121</span><span class="p">,</span> <span class="mf">0.285778651146</span><span class="p">,</span> <span class="mf">0.498801157207</span><span class="p">,</span> <span class="mf">0.220837168526</span><span class="p">,</span> <span class="mf">0.587468379781</span><span class="p">,</span> <span class="mf">0.517299353294</span><span class="p">])</span>
-    <span class="n">tstFloat</span> <span class="o">=</span> <span class="mf">0.3</span>
-    <span class="n">tstFloat2</span> <span class="o">=</span> <span class="mf">0.15</span>
      
-    <span class="n">myDataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">myXData</span><span class="p">,</span> 
+    <span class="n">myXData</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>
+     
+    <span class="k">def</span> <span class="nf">tmp</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">exp_2par</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">6.5</span><span class="p">)</span>
+     
+    <span class="n">tstFloat</span> <span class="o">=</span> <span class="o">.</span><span class="mi">1</span>
+    <span class="n">myFits</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">slope</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">myYData</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">linear_2par2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">slope</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">myXData</span><span class="p">))</span>
+        <span class="n">myYData</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">tstFloat</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">myYData</span><span class="p">))</span> 
+        <span class="n">myDataset</span> <span class="o">=</span> <span class="n">build_dataset</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">myXData</span><span class="p">,</span> 
                         <span class="n">ydata</span><span class="o">=</span><span class="n">myYData</span><span class="p">,</span>
-                        <span class="n">xabsstat</span><span class="o">=</span><span class="n">tstFloat</span><span class="p">,</span>
-                        <span class="n">title</span><span class="o">=</span><span class="s">&quot;Example dataset&quot;</span><span class="p">)</span>
-    <span class="n">myDataset2</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">myXData</span><span class="p">,</span> 
-                        <span class="n">ydata</span><span class="o">=</span><span class="n">myYData2</span><span class="p">,</span>
-                        <span class="n">yabsstat</span><span class="o">=</span><span class="n">tstFloat2</span><span class="p">,</span>
-                        <span class="n">title</span><span class="o">=</span><span class="s">&quot;Another example&quot;</span><span class="p">)</span>
-    
-    <span class="n">myFit</span> <span class="o">=</span> <span class="n">Fit</span><span class="p">(</span><span class="n">myDataset</span><span class="p">,</span> <span class="n">linear_2par2</span><span class="p">,</span> <span class="n">function_label</span><span class="o">=</span><span class="s">&#39;Linear fit for example data&#39;</span><span class="p">)</span>
-    <span class="n">myFit</span><span class="o">.</span><span class="n">do_fit</span><span class="p">()</span>
-    
-    <span class="n">myFit2</span> <span class="o">=</span> <span class="n">Fit</span><span class="p">(</span><span class="n">myDataset2</span><span class="p">,</span> <span class="n">linear_2par2</span><span class="p">,</span> <span class="n">function_label</span><span class="o">=</span><span class="s">&#39;Linear fit for other example data&#39;</span><span class="p">)</span>
-    <span class="n">myFit2</span><span class="o">.</span><span class="n">do_fit</span><span class="p">()</span>
-    
-    <span class="n">myPlot</span> <span class="o">=</span> <span class="n">Plot</span><span class="p">(</span><span class="n">myFit</span><span class="p">,</span> <span class="n">myFit2</span><span class="p">)</span>
+                        <span class="n">yrelstat</span><span class="o">=</span><span class="n">tstFloat</span><span class="p">)</span>
+        <span class="c">#myDataset.axis_labels=[&#39;\lambda&#39;, &#39;U&#39;]</span>
+        <span class="c">#myDataset.axis_units=[&#39;nm&#39;, &#39;V&#39;]</span>
+        <span class="n">myFits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Fit</span><span class="p">(</span><span class="n">myDataset</span><span class="p">,</span> <span class="n">linear_2par2</span><span class="p">,</span> <span class="n">function_label</span><span class="o">=</span><span class="s">&#39;Linear fit for example data&#39;</span><span class="p">))</span>
+        <span class="n">myFits</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">do_fit</span><span class="p">()</span>
+     
+    <span class="n">myPlot</span> <span class="o">=</span> <span class="n">Plot</span><span class="p">(</span><span class="o">*</span><span class="n">myFits</span><span class="p">)</span>
+     
     <span class="n">myPlot</span><span class="o">.</span><span class="n">plot_all</span><span class="p">()</span>
-    <span class="c">#myPlot.save(&#39;/home/daniel/Desktop/testfig.pdf&#39;)</span>
     <span class="n">myPlot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-    
 </pre></div>
 
           </div>

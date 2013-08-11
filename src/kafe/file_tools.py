@@ -36,8 +36,6 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ', cov_mat_f
         
     *cov_mat_files* : ``None`` or tuple of strings/file-like objects (optional)
         Files which contain x- and y-covariance matrices, in that order. Defaults to ``None``.
-        
-    -------
     
     **return** : `Dataset`
         A Dataset built from the parsed file.

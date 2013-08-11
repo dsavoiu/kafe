@@ -60,16 +60,17 @@
 <span class="c"># (G) Constants related to the graphical output</span>
 <span class="c">#################################################</span>
 
-<span class="n">G_PADDING_FACTOR_X</span> <span class="o">=</span> <span class="mf">1.2</span>    <span class="c">#: make plot view slightly larger than the data span</span>
-<span class="n">G_PADDING_FACTOR_Y</span> <span class="o">=</span> <span class="mf">1.2</span>    <span class="c">#: make plot view slightly larger than the data span</span>
-<span class="n">G_PLOT_POINTS</span> <span class="o">=</span> <span class="mi">10</span> <span class="c">#200         #: number of plot points for plotting the function</span>
+<span class="n">G_PADDING_FACTOR_X</span> <span class="o">=</span> <span class="mf">1.2</span>    <span class="c">#: factor by which to expand `x` data range</span>
+<span class="n">G_PADDING_FACTOR_Y</span> <span class="o">=</span> <span class="mf">1.2</span>    <span class="c">#: factor by which to expand `y` data range</span>
+<span class="n">G_PLOT_POINTS</span> <span class="o">=</span> <span class="mi">200</span>         <span class="c">#: number of plot points for plotting the function</span>
 
 <span class="c"># (M) Related to the behavior of TMinuit</span>
 <span class="c">#################################################</span>
 
-<span class="n">M_TOLERANCE</span> <span class="o">=</span> <span class="mf">0.1</span>           <span class="c">#: I{Minuit} tolerance level</span>
-<span class="n">M_MAX_ITERATIONS</span> <span class="o">=</span> <span class="mi">6000</span>     <span class="c">#: Maximum I{Minuit} iterations until aborting the process</span>
-<span class="n">M_MAX_X_FIT_ITERATIONS</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c">#: Number of maximal additional iterations for I{x} fit (0 disregards I{x} errors), default = 2</span>
+<span class="n">M_TOLERANCE</span> <span class="o">=</span> <span class="mf">0.1</span>           <span class="c">#: `Minuit` tolerance level</span>
+<span class="n">M_MAX_ITERATIONS</span> <span class="o">=</span> <span class="mi">6000</span>     <span class="c">#: Maximum `Minuit` iterations until aborting the process</span>
+<span class="n">M_MAX_X_FIT_ITERATIONS</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c">#: Number of maximal additional iterations for `x` fit (0 disregards `x` errors)</span>
+<span class="n">M_CONFIDENCE_LEVEL</span> <span class="o">=</span> <span class="mf">0.05</span>   <span class="c">#: Confidence level for hypythesis test. A fit is rejected it :math:`\chi^2_\text{prob}` is smaller than this constant</span>
 
 <span class="c"># (F) Output number format preferences</span>
 <span class="c">#################################################</span>
@@ -78,13 +79,11 @@
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">Set significance for returning results and errors</span>
 <span class="sd">N = rounding error to N significant digits and value</span>
-<span class="sd">to the same order of magnitude as the error</span>
+<span class="sd">to the same order of magnitude as the error.</span>
 <span class="sd">&#39;&#39;&#39;</span>
                             
 <span class="c"># Other constants</span>
 <span class="c">#################################################</span>
-
-<span class="n">DERIVATIVE_SPACING</span> <span class="o">=</span> <span class="mf">0.01</span>   <span class="c">#: spacing to use when computing function derivatives</span>
 </pre></div>
 
           </div>

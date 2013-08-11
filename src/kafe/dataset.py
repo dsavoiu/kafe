@@ -242,12 +242,19 @@ class Dataset: #(object):
             raise Exception, "No data provided for Dataset."
         else:
             if len(kwargs['data']) != NUMBER_OF_AXES:
-                raise Exception, "Unsupported number of axes: %d" % (len(kwargs['data']),)
+                data = np.asarray(kwargs['data']).T.tolist() # in case of xy value pairs, transpose
+                if len(data) != NUMBER_OF_AXES:
+                    raise Exception, "Unsupported number of axes: %d" % (len(kwargs['data']),)
+                else:
+                    kwargs['data'] = data # set the transposed data as the read data
             
         
         for axis in range(self.n_axes):         # go through the axes
-            self.set_data(axis, kwargs['data'][axis])        # load data for axis            
-            self.set_cov_mat(axis, kwargs['cov_mats'][axis]) # load cov mat for axis
+            self.set_data(axis, kwargs['data'][axis])        # load data for axis
+            if kwargs.has_key('cov_mats'):            
+                self.set_cov_mat(axis, kwargs['cov_mats'][axis]) # load cov mat for axis
+            else:
+                self.set_cov_mat(axis, None) # don't load cov mat for axis
     
     # Set methods
     ##############
@@ -682,10 +689,10 @@ class Dataset: #(object):
         
         return True
         
-        
-        
 if __name__ == "__main__":
 
-    myDataset = build_dataset(xdata = [1,2,3], ydata=[2,4,8], yabssyst=0.1, yrelstat=.1)
+    #myDataset = build_dataset(xdata = [1,2,3], ydata=[2,4,8], yabssyst=0.1, yrelstat=.1)
+    myDataset = Dataset(data=[[1.0,2.0,3.9], [2.1,4.1], [4.2,8.2]])
+    print myDataset.get_formatted()
     
     

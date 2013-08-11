@@ -314,8 +314,6 @@ class Minuit:
             
         *n_points* : int (optional)
             number of points used to draw the contour. Default is 20.
-            
-        ------
         
         *returns* : 2-tuple of tuples
             a 2-tuple (x, y) containing ``n_points+1`` points sampled
