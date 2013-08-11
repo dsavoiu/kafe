@@ -532,7 +532,7 @@ class Dataset: #(object):
             data = self.get_data(axis)
             cor_mat = cov_to_cor(self.get_cov_mat(axis))
             
-            helper_list.append(['# Axis %d: %s' % (axis, self.axis_labels[axis])]) # add section title as a comment
+            helper_list.append(['# axis %d: %s' % (axis, self.axis_labels[axis])]) # add section title as a comment
             helper_list.append(['# datapoints'])                                   # add a row for headings
             
             if self.__query_has_errors[axis]:                             # if the dataset has stat errors

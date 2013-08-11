@@ -376,14 +376,14 @@ class Minuit:
         # Retrieve the parameters from the C side of ROOT and
         # store them in a Python list -- VERY resource-intensive
         # for many calls, but can't be improved (yet?)
-        parameter_list = []
-        for j in range(self.number_of_parameters):
-            parameter_list.append(parameters[j])
+#         parameter_list = []
+#         for j in range(self.number_of_parameters):
+#             parameter_list.append(parameters[j])
+        
+        parameter_list = np.frombuffer(parameters, dtype=float, count=self.number_of_parameters)
         
         ##print "Calling FCN%r = %s" % (parameter_list, self.function_to_minimize(*parameter_list)) 
         f[0] = self.function_to_minimize(*parameter_list) # call the Python implementation of FCN.
-        
-#         f[0] = self.function_to_minimize(parameter_list) # call the Python FCN.
 
     def minimize(self):
         '''Do the minimization. This calls `Minuit`'s algorithms ``MIGRAD`` for minimization
