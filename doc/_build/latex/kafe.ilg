@@ -1,7 +1,0 @@
-This is makeindex, version 2.15 [TeX Live 2013/dev] (kpathsea + Thai support).
-Scanning style file ./python.ist......done (6 attributes redefined, 0 ignored).
-Scanning input file kafe.idx....done (104 entries accepted, 0 rejected).
-Sorting entries....done (771 comparisons).
-Generating output file kafe.ind....done (161 lines written, 0 warnings).
-Output written in kafe.ind.
-Transcript written in kafe.ilg.
