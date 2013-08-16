@@ -73,3 +73,11 @@ kafe Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`stream` Module
+--------------------
+
+.. automodule:: kafe.stream
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

@@ -64,6 +64,9 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">gmtime</span><span class="p">,</span> <span class="n">strftime</span>
+
 <span class="c"># Constants</span>
 <span class="c">############</span>
 
@@ -120,6 +123,8 @@
         
         <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span> <span class="o">=</span> <span class="n">number_of_parameters</span>      <span class="c">#: number of parameters to minimize for</span>
         
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span> <span class="s">&quot;minuit.log&quot;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">)</span>
+        
         <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span> <span class="o">=</span> <span class="n">TMinuit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">)</span>   <span class="c"># create a TMinuit instance for that number of parameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">SetFCN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FCN_wrapper</span><span class="p">)</span>               <span class="c"># instruct Minuit to use this class&#39;s FCN_wrapper method as a FCN</span>
         
@@ -134,8 +139,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_err</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_strategy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_parameter_values</span><span class="p">(</span><span class="n">start_params</span><span class="p">)</span>                                                             <span class="c"># set the current parameter values</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_parameter_errors</span><span class="p">(</span><span class="n">param_errors</span><span class="p">)</span>                                                             <span class="c"># set the current parameter errors</span>
-        <span class="c">#self.parameter_names = self.function_to_minimize.func_code.co_varnames[:function_to_minimize.func_code.co_argcount]      # extract the parameter names      from the FCN</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_parameter_errors</span><span class="p">(</span><span class="n">param_errors</span><span class="p">)</span>                                                             <span class="c"># set the current parameter errorss</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_parameter_names</span><span class="p">(</span><span class="n">par_names</span><span class="p">)</span>
         
         <span class="n">error_code</span> <span class="o">=</span> <span class="n">Long</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -158,6 +162,7 @@
 <span class="sd">            more output it generates.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">SetPrintLevel</span><span class="p">(</span><span class="n">print_level</span><span class="p">)</span> <span class="c"># set Minuit print level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_level</span> <span class="o">=</span> <span class="n">print_level</span>
         </div>
 <div class="viewcode-block" id="Minuit.set_strategy"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.set_strategy">[docs]</a>    <span class="k">def</span> <span class="nf">set_strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strategy_id</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Sets the strategy Minuit.</span>
@@ -234,9 +239,6 @@
         <span class="n">p</span><span class="p">,</span> <span class="n">pe</span> <span class="o">=</span> <span class="n">Double</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">Double</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">):</span>
-            <span class="c">#print &quot;minuit: %r &quot; % self</span>
-            <span class="c">#print &quot;gMinuit: %r &quot; % self.__gMinuit</span>
-            <span class="c">#print &quot;GetParameter: %r &quot; % self.__gMinuit.GetParameter</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">GetParameter</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pe</span><span class="p">)</span>  <span class="c"># retrieve fitresult</span>
             
             <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
@@ -423,18 +425,13 @@
             <span class="k">pass</span>                <span class="c"># do something before the FCN is called for the first time</span>
         
         <span class="c"># Retrieve the parameters from the C side of ROOT and</span>
-        <span class="c"># store them in a Python list -- VERY resource-intensive</span>
+        <span class="c"># store them in a Python list -- resource-intensive</span>
         <span class="c"># for many calls, but can&#39;t be improved (yet?)</span>
-<span class="c">#         parameter_list = []</span>
-<span class="c">#         for j in range(self.number_of_parameters):</span>
-<span class="c">#             parameter_list.append(parameters[j])</span>
-        
         <span class="n">parameter_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">)</span>
-        
-        <span class="c">##print &quot;Calling FCN%r = %s&quot; % (parameter_list, self.function_to_minimize(*parameter_list)) </span>
+         
         <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">function_to_minimize</span><span class="p">(</span><span class="o">*</span><span class="n">parameter_list</span><span class="p">)</span> <span class="c"># call the Python implementation of FCN.</span>
 </div>
-<div class="viewcode-block" id="Minuit.minimize"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.minimize">[docs]</a>    <span class="k">def</span> <span class="nf">minimize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Minuit.minimize"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.minimize">[docs]</a>    <span class="k">def</span> <span class="nf">minimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_print_level</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Do the minimization. This calls `Minuit`&#39;s algorithms ``MIGRAD`` for minimization</span>
 <span class="sd">        and ``HESSE`` for computing/checking the parameter error matrix.&#39;&#39;&#39;</span>
         
@@ -447,35 +444,29 @@
         <span class="c"># Run minimization algorithm (MIGRAD + HESSE)</span>
         <span class="n">error_code</span> <span class="o">=</span> <span class="n">Long</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         
+        <span class="n">prefix</span> <span class="o">=</span> <span class="s">&quot;Minuit run at&quot;</span> <span class="c"># set the timestamp prefix</span>
+        
+        <span class="c"># insert timestamp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;#&#39;</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span><span class="o">+</span><span class="mi">4</span><span class="o">+</span><span class="mi">20</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;# </span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">prefix</span><span class="p">,)</span> <span class="o">+</span> <span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%Y-%m-</span><span class="si">%d</span><span class="s"> %H:%M:%S #</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">gmtime</span><span class="p">()))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;#&#39;</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span><span class="o">+</span><span class="mi">4</span><span class="o">+</span><span class="mi">20</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n\n</span><span class="s">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        
+        <span class="c"># save the old stdout stream</span>
+        <span class="n">old_out_stream</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">dup</span><span class="p">(</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">fileno</span><span class="p">()</span> <span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">dup2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">fileno</span><span class="p">(),</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">fileno</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">SetPrintLevel</span><span class="p">(</span><span class="n">log_print_level</span><span class="p">)</span> <span class="c"># set Minuit print level</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnexcm</span><span class="p">(</span><span class="s">&quot;MIGRAD&quot;</span><span class="p">,</span> <span class="n">arr</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span><span class="p">]),</span> <span class="mi">2</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnexcm</span><span class="p">(</span><span class="s">&quot;HESSE&quot;</span><span class="p">,</span> <span class="n">arr</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">6000</span><span class="p">]),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span> <span class="c"># Call HESSE with max. 6000 calls</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">SetPrintLevel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">print_level</span><span class="p">)</span> <span class="c"># return to normal print level</span>
 
-</div></div>
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
-    
-    <span class="k">def</span> <span class="nf">quadratic</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">3e-24</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">4e-23</span><span class="p">):</span>
-        <span class="c">#return (args[0] - 3.14) ** 2 + (args[1] + 2.71) ** 2 + 1.0    # should be minimal (=1.0) at arg[0] = 3.14 and arg[1] = -2.71</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">3.14e-24</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="mf">2.71e-23</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="mf">1.0</span>    <span class="c"># should be minimal (=1.0) at arg[0] = 3.14 and arg[1] = -2.71</span>
-       
-    <span class="k">def</span> <span class="nf">quartic</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">2.9174</span><span class="p">)</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="mf">8.12947</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="mf">1.0</span>    <span class="c"># should be minimal (=1.0) at arg[0] = 3.14 and arg[1] = -2.71</span>
-       
-    
-    <span class="n">myMinimizer</span> <span class="o">=</span> <span class="n">Minuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">quadratic</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">,</span><span class="s">&#39;y&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mf">3e-24</span><span class="p">,</span> <span class="mf">4e-23</span><span class="p">),</span> <span class="p">(</span><span class="mf">3e-25</span><span class="p">,</span> <span class="mf">4e-25</span><span class="p">))</span>
-    <span class="n">myMinimizer2</span> <span class="o">=</span> <span class="n">Minuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">quartic</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">,</span><span class="s">&#39;y&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="o">.</span><span class="mo">05</span><span class="p">,</span> <span class="o">.</span><span class="mi">10</span><span class="p">))</span>
-    
-    <span class="n">myMinimizer</span><span class="o">.</span><span class="n">minimize</span><span class="p">()</span>
-    <span class="n">myMinimizer2</span><span class="o">.</span><span class="n">minimize</span><span class="p">()</span>
-    
-    <span class="k">print</span> <span class="n">myMinimizer</span><span class="o">.</span><span class="n">get_parameter_values</span><span class="p">()</span>
-    <span class="k">print</span> <span class="n">myMinimizer</span><span class="o">.</span><span class="n">get_parameter_errors</span><span class="p">()</span>
-    <span class="k">print</span> <span class="n">myMinimizer</span><span class="o">.</span><span class="n">get_error_matrix</span><span class="p">()</span>
-    
-    <span class="k">print</span> <span class="n">myMinimizer2</span><span class="o">.</span><span class="n">get_parameter_values</span><span class="p">()</span>
-    <span class="k">print</span> <span class="n">myMinimizer2</span><span class="o">.</span><span class="n">get_parameter_errors</span><span class="p">()</span>
-    <span class="k">print</span> <span class="n">myMinimizer2</span><span class="o">.</span><span class="n">get_error_matrix</span><span class="p">()</span>
-    
-    
+        <span class="c"># restore the previous output stream</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">dup2</span><span class="p">(</span> <span class="n">old_out_stream</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">fileno</span><span class="p">()</span> <span class="p">)</span>
+    </div></div>
 </pre></div>
 
           </div>

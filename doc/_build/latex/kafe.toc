@@ -1,0 +1,17 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Summary}{3}{chapter.1}
+\contentsline {chapter}{\numberline {2}\emph {API} documentation}{5}{chapter.2}
+\contentsline {section}{\numberline {2.1}kafe Package}{5}{section.2.1}
+\contentsline {subsection}{\numberline {2.1.1}\texttt {kafe} Package}{5}{subsection.2.1.1}
+\contentsline {subsection}{\numberline {2.1.2}\texttt {constants} Module}{5}{subsection.2.1.2}
+\contentsline {subsection}{\numberline {2.1.3}\texttt {dataset} Module}{6}{subsection.2.1.3}
+\contentsline {subsection}{\numberline {2.1.4}\texttt {file\_tools} Module}{9}{subsection.2.1.4}
+\contentsline {subsection}{\numberline {2.1.5}\texttt {fit} Module}{10}{subsection.2.1.5}
+\contentsline {subsection}{\numberline {2.1.6}\texttt {function\_tools} Module}{13}{subsection.2.1.6}
+\contentsline {subsection}{\numberline {2.1.7}\texttt {minuit} Module}{13}{subsection.2.1.7}
+\contentsline {subsection}{\numberline {2.1.8}\texttt {numeric\_tools} Module}{15}{subsection.2.1.8}
+\contentsline {subsection}{\numberline {2.1.9}\texttt {plot} Module}{16}{subsection.2.1.9}
+\contentsline {subsection}{\numberline {2.1.10}\texttt {stream} Module}{17}{subsection.2.1.10}
+\contentsline {subsection}{\numberline {2.1.11}Indices and tables}{18}{subsection.2.1.11}
+\contentsline {chapter}{Python Module Index}{19}{section*.138}
+\contentsline {chapter}{Index}{21}{section*.139}

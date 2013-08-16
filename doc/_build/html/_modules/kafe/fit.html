@@ -66,6 +66,9 @@
 <span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="n">F_SIGNIFICANCE</span><span class="p">,</span> <span class="n">M_CONFIDENCE_LEVEL</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">floor</span><span class="p">,</span> <span class="n">log</span>
 
+<span class="kn">from</span> <span class="nn">stream</span> <span class="kn">import</span> <span class="n">StreamDup</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span> 
+
 <span class="c"># The default FCN</span>
 <div class="viewcode-block" id="chi2"><a class="viewcode-back" href="../../index.html#kafe.fit.chi2">[docs]</a><span class="k">def</span> <span class="nf">chi2</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">cov_mat</span><span class="p">,</span> <span class="n">fit_function</span><span class="p">,</span> <span class="n">param_values</span><span class="p">):</span>
     <span class="sd">r&#39;&#39;&#39;</span>
@@ -201,7 +204,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">function_label</span> <span class="o">=</span> <span class="n">function_label</span>     <span class="c"># get the function name from the arguments</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">function_label</span> <span class="o">=</span> <span class="s">r&#39;\verb!</span><span class="si">%s</span><span class="s">!&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">get_function_property</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">),</span> <span class="p">)</span>   <span class="c"># get the function name and wrap it in LaTeX</span>
-            
         
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">has_errors</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">):</span>                                                            <span class="c"># check if the dataset has any y errors at all</span>
             <span class="c">#self.current_cov_mat = self.dataset.get_cov_mat(&#39;y&#39;, fallback_on_singular=&#39;identity&#39;)  # set the y cov_mat as starting cov_mat for the fit (use identity matrix if singular)</span>
@@ -209,6 +211,7 @@
             <span class="sd">&#39;&#39;&#39;the current covariance matrix used for the `Fit`&#39;&#39;&#39;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">current_cov_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_size</span><span class="p">())</span> <span class="p">)</span>                   <span class="c"># set the identity matrix as starting cov_mat for the fit</span>
+        
         
         <span class="c">#: this `Fit`&#39;s minimizer (`Minuit`)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span> <span class="o">=</span> <span class="n">Minuit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_external_fcn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_param_values</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>   <span class="c"># initialize minimizer for fit</span>
@@ -219,10 +222,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">xdata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span> <span class="c">#: the `x` coordinates of the data points used for this `Fit`</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ydata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">)</span> <span class="c">#: the `y` coordinates of the data points used for this `Fit`</span>
         
-        <span class="c"># Define a string for storing the output</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="c"># Define a stream for storing the output</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span> <span class="o">=</span> <span class="n">StreamDup</span><span class="p">(</span><span class="s">&#39;fit.log&#39;</span><span class="p">)</span>
         
-        <span class="c"># Do the fit</span>
+        <span class="c"># Do the fit (Should the fit be done in __init__?)</span>
         <span class="c">#self.do_fit()</span>
         
     
@@ -253,8 +256,6 @@
         <span class="k">def</span> <span class="nf">current_fit_function</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">current_param_values</span><span class="p">)</span>
         
-        
-        <span class="c">##print &#39;getting current fit function: &#39;, current_fit_function</span>
         <span class="k">return</span> <span class="n">current_fit_function</span>
     </div>
 <div class="viewcode-block" id="Fit.get_error_matrix"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.get_error_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_error_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -328,23 +329,23 @@
 <span class="sd">        *verbose* : boolean (optional)</span>
 <span class="sd">            Set to ``True`` if more output should be printed.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        
-        <span class="c">#print &#39;&#39;</span>
-        <span class="c">#print &#39;Doing fit for fit object: %r&#39; % self</span>
+
+        <span class="c"># insert timestamp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="o">.</span><span class="n">write_timestamp</span><span class="p">(</span><span class="s">&#39;Fit from&#39;</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
-            <span class="k">print</span> <span class="s">&quot;###########&quot;</span>
-            <span class="k">print</span> <span class="s">&quot;# Dataset #&quot;</span>
-            <span class="k">print</span> <span class="s">&quot;###########&quot;</span>
-            <span class="k">print</span> <span class="s">&#39;&#39;</span>
-            <span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_formatted</span><span class="p">()</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;###########&quot;</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;# Dataset #&quot;</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;###########&quot;</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_formatted</span><span class="p">()</span>
             
-            <span class="k">print</span> <span class="s">&quot;################&quot;</span>
-            <span class="k">print</span> <span class="s">&quot;# Fit function #&quot;</span>
-            <span class="k">print</span> <span class="s">&quot;################&quot;</span>
-            <span class="k">print</span> <span class="s">&#39;&#39;</span>
-            <span class="k">print</span> <span class="n">get_function_property</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">)</span>
-            <span class="k">print</span> <span class="s">&#39;&#39;</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;################&quot;</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;# Fit function #&quot;</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;################&quot;</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="n">get_function_property</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">)</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
             
         <span class="n">initial_iterations</span> <span class="o">=</span> <span class="mi">2</span> 
         <span class="n">max_x_iterations</span> <span class="o">=</span> <span class="mi">12</span>
@@ -377,10 +378,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">print_fit_results</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">print_rounded_fit_parameters</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">print_fit_details</span><span class="p">()</span>
-            
-        <span class="c">#print &#39;&#39;</span>
-        <span class="c">#print self.get_parameter_values</span>
-        <span class="c">#print self.get_parameter_values()</span>
         </div>
 <div class="viewcode-block" id="Fit.fit_one_iteration"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.fit_one_iteration">[docs]</a>    <span class="k">def</span> <span class="nf">fit_one_iteration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -418,18 +415,18 @@
 <div class="viewcode-block" id="Fit.print_rounded_fit_parameters"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.print_rounded_fit_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">print_rounded_fit_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;prints the fit parameters&#39;&#39;&#39;</span>
         
-        <span class="k">print</span> <span class="s">&quot;########################&quot;</span>
-        <span class="k">print</span> <span class="s">&quot;# Final fit parameters #&quot;</span>
-        <span class="k">print</span> <span class="s">&quot;########################&quot;</span>
-        <span class="k">print</span> <span class="s">&#39;&#39;</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;########################&quot;</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;# Final fit parameters #&quot;</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;########################&quot;</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
         
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">error</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_parameter_info</span><span class="p">():</span>
             
             <span class="n">tmp_rounded</span> <span class="o">=</span> <span class="n">round_to_significance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">F_SIGNIFICANCE</span><span class="p">)</span>
             
-            <span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> = </span><span class="si">%g</span><span class="s"> +- </span><span class="si">%g</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">tmp_rounded</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tmp_rounded</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> = </span><span class="si">%g</span><span class="s"> +- </span><span class="si">%g</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">tmp_rounded</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tmp_rounded</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         
-        <span class="k">print</span> <span class="s">&#39;&#39;</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
     </div>
 <div class="viewcode-block" id="Fit.print_fit_details"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.print_fit_details">[docs]</a>    <span class="k">def</span> <span class="nf">print_fit_details</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;prints some fit goodness details&#39;&#39;&#39;</span>
@@ -440,28 +437,28 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">hypothesis_status</span> <span class="o">=</span> <span class="s">&#39;accepted (CL </span><span class="si">%d%s</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">M_CONFIDENCE_LEVEL</span><span class="o">*</span><span class="mi">100</span><span class="p">),</span><span class="s">&#39;%&#39;</span><span class="p">)</span>
             
-        <span class="k">print</span> <span class="s">&#39;###############&#39;</span>
-        <span class="k">print</span> <span class="s">&quot;# Fit details #&quot;</span>
-        <span class="k">print</span> <span class="s">&quot;###############&quot;</span>
-        <span class="k">print</span> <span class="s">&#39;&#39;</span>
-        <span class="k">print</span> <span class="s">&#39;FCN     &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;fcn&#39;</span><span class="p">)</span>
-        <span class="k">print</span> <span class="s">&#39;FCN/ndf &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;fcn&#39;</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">)</span>
-        <span class="k">print</span> <span class="s">&#39;EdM     &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;edm&#39;</span><span class="p">)</span>
-        <span class="k">print</span> <span class="s">&#39;UP      &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;err_def&#39;</span><span class="p">)</span>
-        <span class="k">print</span> <span class="s">&#39;STA     &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;status_code&#39;</span><span class="p">)</span>
-        <span class="k">print</span> <span class="s">&#39;&#39;</span>
-        <span class="k">print</span> <span class="s">&#39;chi2prob&#39;</span><span class="p">,</span> <span class="n">chi2prob</span>
-        <span class="k">print</span> <span class="s">&#39;H0      &#39;</span><span class="p">,</span> <span class="n">hypothesis_status</span>
-        <span class="k">print</span> <span class="s">&#39;&#39;</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;###############&#39;</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;# Fit details #&quot;</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;###############&quot;</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;FCN     &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;fcn&#39;</span><span class="p">)</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;FCN/ndf &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;fcn&#39;</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">)</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;EdM     &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;edm&#39;</span><span class="p">)</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;UP      &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;err_def&#39;</span><span class="p">)</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;STA     &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;status_code&#39;</span><span class="p">)</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;chi2prob&#39;</span><span class="p">,</span> <span class="n">chi2prob</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;H0      &#39;</span><span class="p">,</span> <span class="n">hypothesis_status</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
         
         </div>
 <div class="viewcode-block" id="Fit.print_fit_results"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.print_fit_results">[docs]</a>    <span class="k">def</span> <span class="nf">print_fit_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;prints fit results&#39;&#39;&#39;</span>
         
-        <span class="k">print</span> <span class="s">&#39;##############&#39;</span>
-        <span class="k">print</span> <span class="s">&#39;# Fit result #&#39;</span>
-        <span class="k">print</span> <span class="s">&#39;##############&#39;</span>
-        <span class="k">print</span> <span class="s">&#39;&#39;</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;##############&#39;</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;# Fit result #&#39;</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;##############&#39;</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
         
         <span class="n">par_cov_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_error_matrix</span><span class="p">()</span>
         <span class="n">par_err</span> <span class="o">=</span> <span class="n">extract_statistical_errors</span><span class="p">(</span><span class="n">par_cov_mat</span><span class="p">)</span>
@@ -469,59 +466,21 @@
         
         
         <span class="k">for</span> <span class="n">par_nr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_param_values</span><span class="p">)):</span>
-            <span class="k">print</span> <span class="s">&#39;# &#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">param_names</span><span class="p">[</span><span class="n">par_nr</span><span class="p">]</span>
-            <span class="k">print</span> <span class="s">&#39;# value        stat. err.    &#39;</span><span class="p">,</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;# &#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">param_names</span><span class="p">[</span><span class="n">par_nr</span><span class="p">]</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;# value        stat. err.    &#39;</span><span class="p">,</span>
             <span class="k">if</span> <span class="n">par_nr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">print</span> <span class="s">&#39;correlations&#39;</span>
+                <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;correlations&#39;</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">print</span> <span class="s">&#39;&#39;</span>
-            <span class="k">print</span> <span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_param_values</span><span class="p">[</span><span class="n">par_nr</span><span class="p">],</span> <span class="s">&#39;.06e&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;  &#39;</span><span class="p">,</span>
-            <span class="k">print</span> <span class="n">format</span><span class="p">(</span><span class="n">par_err</span><span class="p">[</span><span class="n">par_nr</span><span class="p">],</span> <span class="s">&#39;.06e&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;  &#39;</span><span class="p">,</span>
+                <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_param_values</span><span class="p">[</span><span class="n">par_nr</span><span class="p">],</span> <span class="s">&#39;.06e&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;  &#39;</span><span class="p">,</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="n">format</span><span class="p">(</span><span class="n">par_err</span><span class="p">[</span><span class="n">par_nr</span><span class="p">],</span> <span class="s">&#39;.06e&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;  &#39;</span><span class="p">,</span>
             <span class="k">if</span> <span class="n">par_nr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">par_nr</span><span class="p">):</span>
-                    <span class="k">print</span> <span class="n">format</span><span class="p">(</span><span class="n">par_cor_mat</span><span class="p">[</span><span class="n">par_nr</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="s">&#39;.06e&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;  &#39;</span><span class="p">,</span>
+                    <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="n">format</span><span class="p">(</span><span class="n">par_cor_mat</span><span class="p">[</span><span class="n">par_nr</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="s">&#39;.06e&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;  &#39;</span><span class="p">,</span>
                     
-            <span class="k">print</span> <span class="s">&#39;&#39;</span>
-            <span class="k">print</span> <span class="s">&#39;&#39;</span>
-
-        </div></div>
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
-    
-    <span class="kn">from</span> <span class="nn">dataset</span> <span class="kn">import</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">build_dataset</span>
-    
-    <span class="k">def</span> <span class="nf">linear_2par2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">x_offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        
-        <span class="k">return</span> <span class="n">slope</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x_offset</span><span class="p">)</span>
-    
-    <span class="k">def</span> <span class="nf">linear_2par</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y_intercept</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        
-        <span class="k">return</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y_intercept</span>
-    
-    <span class="n">myXData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="o">.</span><span class="mi">4</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">.</span><span class="mi">6</span><span class="p">,</span> <span class="o">.</span><span class="mi">7</span><span class="p">,</span> <span class="o">.</span><span class="mi">8</span><span class="p">,</span> <span class="o">.</span><span class="mi">9</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
-    <span class="n">myYData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mf">0.227216</span><span class="p">,</span>    <span class="o">-</span><span class="mf">0.159875</span><span class="p">,</span>    <span class="mf">0.0924984</span><span class="p">,</span>    <span class="o">-</span><span class="mf">0.299377</span><span class="p">,</span>    <span class="mf">0.307159</span><span class="p">,</span>    <span class="mf">1.15718</span><span class="p">,</span>    <span class="mf">0.701532</span><span class="p">,</span>    <span class="mf">0.661879</span><span class="p">,</span>    <span class="mf">0.536548</span><span class="p">,</span>    <span class="mf">0.874998</span><span class="p">,</span>    <span class="mf">1.02603</span><span class="p">])</span>
-    <span class="n">tstFloat</span> <span class="o">=</span> <span class="mf">0.3</span>
-     
-    <span class="n">myDataset</span> <span class="o">=</span> <span class="n">build_dataset</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">myXData</span><span class="p">,</span> 
-                              <span class="n">ydata</span><span class="o">=</span><span class="n">myYData</span><span class="p">,</span>
-                              <span class="n">xabsstat</span><span class="o">=</span><span class="n">tstFloat</span><span class="p">)</span>
-    
-    <span class="n">myFit</span> <span class="o">=</span> <span class="n">Fit</span><span class="p">(</span><span class="n">myDataset</span><span class="p">,</span> <span class="n">linear_2par2</span><span class="p">)</span>
-    <span class="n">myFit</span><span class="o">.</span><span class="n">do_fit</span><span class="p">()</span>
-    
-<span class="c">#     myDataset = Dataset(xdata=myXData, </span>
-<span class="c">#                         ydata=myYData,</span>
-<span class="c">#                         xabsstat=tstFloat)</span>
-<span class="c">#     </span>
-<span class="c">#     myFit = myDataset.fit(linear_2par2)</span>
-<span class="c">#     myFit.do_fit()</span>
-    
-    <span class="n">myDataset2</span> <span class="o">=</span> <span class="n">build_dataset</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">myXData</span><span class="p">,</span> 
-                               <span class="n">ydata</span><span class="o">=</span><span class="n">myYData</span><span class="p">,</span>
-                               <span class="n">yabsstat</span><span class="o">=</span><span class="n">tstFloat</span><span class="p">)</span>
-    
-    <span class="n">myFit2</span> <span class="o">=</span> <span class="n">Fit</span><span class="p">(</span><span class="n">myDataset2</span><span class="p">,</span> <span class="n">linear_2par2</span><span class="p">)</span>
-    <span class="n">myFit2</span><span class="o">.</span><span class="n">do_fit</span><span class="p">()</span>
-    
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
+    </div></div>
 </pre></div>
 
           </div>

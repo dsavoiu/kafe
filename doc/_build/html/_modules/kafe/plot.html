@@ -157,9 +157,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">usetex</span> <span class="o">=</span> <span class="bp">True</span>      <span class="c"># tell matplotlib to use TeX</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">axis_label_styles</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;italic&#39;</span><span class="p">,</span> <span class="s">&#39;italic&#39;</span><span class="p">)</span>       <span class="c"># Default axis label styles</span>
-        
         <span class="bp">self</span><span class="o">.</span><span class="n">axis_label_coords</span> <span class="o">=</span> <span class="p">(</span> <span class="p">(</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">-.</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-.</span><span class="mi">12</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">)</span> <span class="p">)</span>  <span class="c"># default offset for axes</span>
-        
         <span class="bp">self</span><span class="o">.</span><span class="n">axis_label_pad</span> <span class="o">=</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>                        <span class="c"># padding for axis labels</span>
         
         <span class="c"># Set legend parameters</span>
@@ -186,13 +184,7 @@
           <span class="s">&#39;axes.unicode_minus&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
           <span class="c">#&#39;legend.loc&#39;: &#39;best&#39;</span>
           <span class="s">&#39;legend.loc&#39;</span><span class="p">:</span> <span class="s">&#39;upper left&#39;</span><span class="p">,</span>
-          <span class="s">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
-          <span class="c">#&#39;text.latex.preamble&#39;:&#39;\\usepackage[sc,osf]{mathpazo},\\usepackage[euler-digits]{eulervm}&#39;</span>
-          <span class="c">#&#39;text.latex.preamble&#39;: [&#39;\\usepackage{eulervm}&#39;],</span>
-          <span class="c">#&#39;mathtext.fontset&#39;: &#39;custom&#39;,</span>
-          <span class="c">#&#39;mathtext.fallback_to_cm&#39;: False,</span>
-          <span class="c">#&#39;mathtext.default&#39;: &#39;ppl&#39;,</span>
-          <span class="c">#&#39;axes.formatter.use_mathtext&#39;: False</span>
+          <span class="s">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
           <span class="p">}</span>
     
 <div class="viewcode-block" id="PlotStyle.get_marker"><a class="viewcode-back" href="../../index.html#kafe.plot.PlotStyle.get_marker">[docs]</a>    <span class="k">def</span> <span class="nf">get_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idm</span><span class="p">):</span>
@@ -356,7 +348,6 @@
                 
                 
         <span class="k">for</span> <span class="n">fit</span> <span class="ow">in</span> <span class="n">fits_with_parameter_box</span><span class="p">:</span>
-            <span class="c">#text_content += &quot;~\nFit for &quot; + fit.dataset.data_label + &#39;:\n&#39;</span>
             <span class="n">text_content</span> <span class="o">+=</span> <span class="s">&quot;~</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="n">fit</span><span class="o">.</span><span class="n">function_label</span> <span class="o">+</span> <span class="s">&#39;:</span><span class="se">\n</span><span class="s">&#39;</span>
             <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">param_names</span><span class="p">)):</span>
                 <span class="n">parname</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">param_names_latex</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>

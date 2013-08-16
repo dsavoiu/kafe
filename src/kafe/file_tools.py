@@ -120,7 +120,6 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ', cov_mat_f
         except:
             print "Warning: Invalid cov_mat_files specification, ignoring... Expected 2-tuple of strings/file objects instead of %r." % (cov_mat_files,)
         else:
-            #print "NotImplemented: Reading covariance matrices from files not yet implemented"
             cov_mats = []
             for axis_id in range(len(axes)):
                 if cov_mat_files[axis_id] is not None:

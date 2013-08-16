@@ -1,0 +1,212 @@
+\begin{theindex}
+\def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
+
+  \bigletter A
+  \item axis\_labels (kafe.dataset.Dataset attribute), \hyperpage{7}
+  \item axis\_labels (kafe.plot.Plot attribute), \hyperpage{16}
+  \item axis\_units (kafe.dataset.Dataset attribute), \hyperpage{7}
+
+  \indexspace
+  \bigletter B
+  \item build\_dataset() (in module kafe.dataset), \hyperpage{8}
+
+  \indexspace
+  \bigletter C
+  \item call\_external\_fcn() (kafe.fit.Fit method), \hyperpage{10}
+  \item chi2() (in module kafe.fit), \hyperpage{12}
+  \item compute\_plot\_range() (kafe.plot.Plot method), \hyperpage{16}
+  \item constants (module), \hyperpage{5}
+  \item cor\_to\_cov() (in module kafe.numeric\_tools), \hyperpage{15}
+  \item cov\_mat\_is\_regular() (kafe.dataset.Dataset method), \hyperpage{7}
+  \item cov\_mats (kafe.dataset.Dataset attribute), \hyperpage{7}
+  \item cov\_to\_cor() (in module kafe.numeric\_tools), \hyperpage{15}
+  \item current\_cov\_mat (kafe.fit.Fit attribute), \hyperpage{10}
+  \item current\_param\_errors (kafe.fit.Fit attribute), \hyperpage{10}
+  \item current\_param\_values (kafe.fit.Fit attribute), \hyperpage{10}
+
+  \indexspace
+  \bigletter D
+  \item D\_MATRIX\_ERROR (in module kafe.minuit), \hyperpage{13}
+  \item data (kafe.dataset.Dataset attribute), \hyperpage{7}
+  \item Dataset (class in kafe.dataset), \hyperpage{6}
+  \item dataset (kafe.fit.Fit attribute), \hyperpage{11}
+  \item dataset (module), \hyperpage{6}
+  \item debug\_print() (in module kafe.dataset), \hyperpage{9}
+  \item derivative() (in module kafe.function\_tools), \hyperpage{13}
+  \item derive\_by\_parameters() (in module kafe.function\_tools), \hyperpage{13}
+  \item derive\_by\_x() (in module kafe.function\_tools), \hyperpage{13}
+  \item do\_fit() (kafe.fit.Fit method), \hyperpage{11}
+  \item draw\_fit\_parameters\_box() (kafe.plot.Plot method), \hyperpage{16}
+  \item draw\_legend() (kafe.plot.Plot method), \hyperpage{16}
+
+  \indexspace
+  \bigletter E
+  \item extend\_span() (kafe.plot.Plot method), \hyperpage{16}
+  \item external\_fcn (kafe.fit.Fit attribute), \hyperpage{11}
+  \item extract\_statistical\_errors() (in module kafe.numeric\_tools), \hyperpage{15}
+
+  \indexspace
+  \bigletter F
+  \item F\_SIGNIFICANCE (in module kafe.constants), \hyperpage{5}
+  \item FCN\_wrapper() (kafe.minuit.Minuit method), \hyperpage{13}
+  \item file\_tools (module), \hyperpage{9}
+  \item fileno() (kafe.stream.StreamDup method), \hyperpage{17}
+  \item Fit (class in kafe.fit), \hyperpage{10}
+  \item fit (module), \hyperpage{10}
+  \item fit\_function (kafe.fit.Fit attribute), \hyperpage{11}
+  \item fit\_one\_iteration() (kafe.fit.Fit method), \hyperpage{11}
+  \item fits (kafe.plot.Plot attribute), \hyperpage{16}
+  \item flush() (kafe.stream.StreamDup method), \hyperpage{17}
+  \item function\_equation (kafe.fit.Fit attribute), \hyperpage{11}
+  \item function\_label (kafe.fit.Fit attribute), \hyperpage{11}
+  \item function\_to\_minimize (kafe.minuit.Minuit attribute), \hyperpage{13}
+  \item function\_tools (module), \hyperpage{13}
+
+  \indexspace
+  \bigletter G
+  \item G\_PADDING\_FACTOR\_X (in module kafe.constants), \hyperpage{5}
+  \item G\_PADDING\_FACTOR\_Y (in module kafe.constants), \hyperpage{5}
+  \item G\_PLOT\_POINTS (in module kafe.constants), \hyperpage{5}
+  \item get\_axis() (kafe.dataset.Dataset method), \hyperpage{7}
+  \item get\_chi2\_probability() (kafe.minuit.Minuit method), \hyperpage{13}
+  \item get\_contour() (kafe.minuit.Minuit method), \hyperpage{14}
+  \item get\_cov\_mat() (kafe.dataset.Dataset method), \hyperpage{7}
+  \item get\_current\_fit\_function() (kafe.fit.Fit method), \hyperpage{11}
+  \item get\_data() (kafe.dataset.Dataset method), \hyperpage{7}
+  \item get\_data\_span() (kafe.dataset.Dataset method), \hyperpage{7}
+  \item get\_error\_matrix() (kafe.fit.Fit method), \hyperpage{11}
+  \item get\_error\_matrix() (kafe.minuit.Minuit method), \hyperpage{14}
+  \item get\_fit\_info() (kafe.minuit.Minuit method), \hyperpage{14}
+  \item get\_formatted() (kafe.dataset.Dataset method), \hyperpage{7}
+  \item get\_function\_property() (in module kafe.function\_tools), \hyperpage{13}
+  \item get\_line() (kafe.plot.PlotStyle method), \hyperpage{17}
+  \item get\_linecolor() (kafe.plot.PlotStyle method), \hyperpage{17}
+  \item get\_marker() (kafe.plot.PlotStyle method), \hyperpage{17}
+  \item get\_markercolor() (kafe.plot.PlotStyle method), \hyperpage{17}
+  \item get\_parameter\_errors() (kafe.fit.Fit method), \hyperpage{11}
+  \item get\_parameter\_errors() (kafe.minuit.Minuit method), \hyperpage{14}
+  \item get\_parameter\_info() (kafe.minuit.Minuit method), \hyperpage{14}
+  \item get\_parameter\_name() (kafe.minuit.Minuit method), \hyperpage{14}
+  \item get\_parameter\_values() (kafe.fit.Fit method), \hyperpage{11}
+  \item get\_parameter\_values() (kafe.minuit.Minuit method), \hyperpage{14}
+  \item get\_pointsize() (kafe.plot.PlotStyle method), \hyperpage{17}
+  \item get\_size() (kafe.dataset.Dataset method), \hyperpage{8}
+
+  \indexspace
+  \bigletter H
+  \item has\_correlations() (kafe.dataset.Dataset method), \hyperpage{8}
+  \item has\_errors() (kafe.dataset.Dataset method), \hyperpage{8}
+
+  \indexspace
+  \bigletter I
+  \item init\_plots() (kafe.plot.Plot method), \hyperpage{16}
+
+  \indexspace
+  \bigletter K
+  \item kafe (module), \hyperpage{1}
+  \item kafe.\_\_init\_\_ (module), \hyperpage{5}
+  \item kafe.constants (module), \hyperpage{5}
+  \item kafe.dataset (module), \hyperpage{6}
+  \item kafe.file\_tools (module), \hyperpage{9}
+  \item kafe.fit (module), \hyperpage{10}
+  \item kafe.function\_tools (module), \hyperpage{13}
+  \item kafe.minuit (module), \hyperpage{13}
+  \item kafe.numeric\_tools (module), \hyperpage{15}
+  \item kafe.plot (module), \hyperpage{16}
+  \item kafe.stream (module), \hyperpage{17}
+
+  \indexspace
+  \bigletter L
+  \item label\_to\_latex() (in module kafe.plot), \hyperpage{17}
+
+  \indexspace
+  \bigletter M
+  \item M\_CONFIDENCE\_LEVEL (in module kafe.constants), \hyperpage{5}
+  \item M\_MAX\_ITERATIONS (in module kafe.constants), \hyperpage{5}
+  \item M\_MAX\_X\_FIT\_ITERATIONS (in module kafe.constants), \hyperpage{5}
+  \item M\_TOLERANCE (in module kafe.constants), \hyperpage{5}
+  \item make\_symmetric\_lower() (in module kafe.numeric\_tools), \hyperpage{15}
+  \item max\_iterations (kafe.minuit.Minuit attribute), \hyperpage{14}
+  \item minimize() (kafe.minuit.Minuit method), \hyperpage{14}
+  \item minimizer (kafe.fit.Fit attribute), \hyperpage{11}
+  \item Minuit (class in kafe.minuit), \hyperpage{13}
+  \item minuit (module), \hyperpage{13}
+
+  \indexspace
+  \bigletter N
+  \item n\_axes (kafe.dataset.Dataset attribute), \hyperpage{8}
+  \item n\_datapoints (kafe.dataset.Dataset attribute), \hyperpage{8}
+  \item number\_of\_parameters (kafe.fit.Fit attribute), \hyperpage{12}
+  \item number\_of\_parameters (kafe.minuit.Minuit attribute), \hyperpage{14}
+  \item numeric\_tools (module), \hyperpage{15}
+
+  \indexspace
+  \bigletter O
+  \item outer\_product() (in module kafe.function\_tools), \hyperpage{13}
+
+  \indexspace
+  \bigletter P
+  \item pad\_span() (in module kafe.plot), \hyperpage{17}
+  \item param\_names (kafe.fit.Fit attribute), \hyperpage{12}
+  \item param\_names\_latex (kafe.fit.Fit attribute), \hyperpage{12}
+  \item parse\_column\_data() (in module kafe.file\_tools), \hyperpage{9}
+  \item parse\_matrix\_file() (in module kafe.file\_tools), \hyperpage{9}
+  \item Plot (class in kafe.plot), \hyperpage{16}
+  \item plot (module), \hyperpage{16}
+  \item plot() (kafe.plot.Plot method), \hyperpage{16}
+  \item plot\_all() (kafe.plot.Plot method), \hyperpage{16}
+  \item plot\_range (kafe.plot.Plot attribute), \hyperpage{16}
+  \item plot\_style (kafe.plot.Plot attribute), \hyperpage{16}
+  \item PlotStyle (class in kafe.plot), \hyperpage{17}
+  \item print\_fit\_details() (kafe.fit.Fit method), \hyperpage{12}
+  \item print\_fit\_results() (kafe.fit.Fit method), \hyperpage{12}
+  \item print\_rounded\_fit\_parameters() (kafe.fit.Fit method), \hyperpage{12}
+  \item project\_x\_covariance\_matrix() (kafe.fit.Fit method), \hyperpage{12}
+
+  \indexspace
+  \bigletter R
+  \item read\_from\_file() (kafe.dataset.Dataset method), \hyperpage{8}
+  \item reset() (kafe.minuit.Minuit method), \hyperpage{14}
+  \item round\_to\_significance() (in module kafe.fit), \hyperpage{12}
+
+  \indexspace
+  \bigletter S
+  \item save() (kafe.plot.Plot method), \hyperpage{17}
+  \item set\_cov\_mat() (kafe.dataset.Dataset method), \hyperpage{8}
+  \item set\_data() (kafe.dataset.Dataset method), \hyperpage{8}
+  \item set\_err() (kafe.minuit.Minuit method), \hyperpage{15}
+  \item set\_parameter\_errors() (kafe.minuit.Minuit method), \hyperpage{15}
+  \item set\_parameter\_names() (kafe.minuit.Minuit method), \hyperpage{15}
+  \item set\_parameter\_values() (kafe.minuit.Minuit method), \hyperpage{15}
+  \item set\_print\_level() (kafe.minuit.Minuit method), \hyperpage{15}
+  \item set\_strategy() (kafe.minuit.Minuit method), \hyperpage{15}
+  \item show() (kafe.plot.Plot method), \hyperpage{17}
+  \item show\_legend (kafe.plot.Plot attribute), \hyperpage{17}
+  \item stream (module), \hyperpage{17}
+  \item StreamDup (class in kafe.stream), \hyperpage{17}
+
+  \indexspace
+  \bigletter T
+  \item tolerance (kafe.minuit.Minuit attribute), \hyperpage{15}
+
+  \indexspace
+  \bigletter W
+  \item write() (kafe.stream.StreamDup method), \hyperpage{17}
+  \item write\_formatted() (kafe.dataset.Dataset method), \hyperpage{8}
+  \item write\_timestamp() (kafe.stream.StreamDup method), \hyperpage{17}
+  \item write\_to\_file() (kafe.stream.StreamDup method), \hyperpage{17}
+  \item write\_to\_stdout() (kafe.stream.StreamDup method), \hyperpage{18}
+
+  \indexspace
+  \bigletter X
+  \item xdata (kafe.fit.Fit attribute), \hyperpage{12}
+
+  \indexspace
+  \bigletter Y
+  \item ydata (kafe.fit.Fit attribute), \hyperpage{12}
+
+  \indexspace
+  \bigletter Z
+  \item zero\_pad\_lower\_triangle() (in module kafe.numeric\_tools), \hyperpage{16}
+
+\end{theindex}

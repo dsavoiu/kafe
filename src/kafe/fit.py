@@ -15,6 +15,9 @@ from numeric_tools import *                 # automatically includes numpy as np
 from constants import F_SIGNIFICANCE, M_CONFIDENCE_LEVEL
 from math import floor, log
 
+from stream import StreamDup
+import os, sys 
+
 # The default FCN
 def chi2(xdata, ydata, cov_mat, fit_function, param_values):
     r'''
@@ -150,7 +153,6 @@ class Fit:
             self.function_label = function_label     # get the function name from the arguments
         else:
             self.function_label = r'\verb!%s!' % ( get_function_property(self.fit_function, 'name'), )   # get the function name and wrap it in LaTeX
-            
         
         if self.dataset.has_errors('y'):                                                            # check if the dataset has any y errors at all
             #self.current_cov_mat = self.dataset.get_cov_mat('y', fallback_on_singular='identity')  # set the y cov_mat as starting cov_mat for the fit (use identity matrix if singular)
@@ -158,6 +160,7 @@ class Fit:
             '''the current covariance matrix used for the `Fit`'''
         else:
             self.current_cov_mat = np.asmatrix( np.eye(self.dataset.get_size()) )                   # set the identity matrix as starting cov_mat for the fit
+        
         
         #: this `Fit`'s minimizer (`Minuit`)
         self.minimizer = Minuit(self.number_of_parameters, self.call_external_fcn, self.param_names, self.current_param_values, None)   # initialize minimizer for fit
@@ -168,10 +171,10 @@ class Fit:
         self.xdata = self.dataset.get_data('x') #: the `x` coordinates of the data points used for this `Fit`
         self.ydata = self.dataset.get_data('y') #: the `y` coordinates of the data points used for this `Fit`
         
-        # Define a string for storing the output
-        self.output = ''
+        # Define a stream for storing the output
+        self.out_stream = StreamDup('fit.log')
         
-        # Do the fit
+        # Do the fit (Should the fit be done in __init__?)
         #self.do_fit()
         
     
@@ -202,8 +205,6 @@ class Fit:
         def current_fit_function(x):
             return self.fit_function(x, *self.current_param_values)
         
-        
-        ##print 'getting current fit function: ', current_fit_function
         return current_fit_function
     
     def get_error_matrix(self):
@@ -277,23 +278,23 @@ class Fit:
         *verbose* : boolean (optional)
             Set to ``True`` if more output should be printed.
         '''
-        
-        #print ''
-        #print 'Doing fit for fit object: %r' % self
+
+        # insert timestamp
+        self.out_stream.write_timestamp('Fit from')
         
         if not quiet:
-            print "###########"
-            print "# Dataset #"
-            print "###########"
-            print ''
-            print self.dataset.get_formatted()
+            print >>self.out_stream, "###########"
+            print >>self.out_stream, "# Dataset #"
+            print >>self.out_stream, "###########"
+            print >>self.out_stream, ''
+            print >>self.out_stream, self.dataset.get_formatted()
             
-            print "################"
-            print "# Fit function #"
-            print "################"
-            print ''
-            print get_function_property(self.fit_function, 'name')
-            print ''
+            print >>self.out_stream, "################"
+            print >>self.out_stream, "# Fit function #"
+            print >>self.out_stream, "################"
+            print >>self.out_stream, ''
+            print >>self.out_stream, get_function_property(self.fit_function, 'name')
+            print >>self.out_stream, ''
             
         initial_iterations = 2 
         max_x_iterations = 12
@@ -326,10 +327,6 @@ class Fit:
             self.print_fit_results()
             self.print_rounded_fit_parameters()
             self.print_fit_details()
-            
-        #print ''
-        #print self.get_parameter_values
-        #print self.get_parameter_values()
         
     def fit_one_iteration(self, verbose=False):
         '''
@@ -367,18 +364,18 @@ class Fit:
     def print_rounded_fit_parameters(self):
         '''prints the fit parameters'''
         
-        print "########################"
-        print "# Final fit parameters #"
-        print "########################"
-        print ''
+        print >>self.out_stream, "########################"
+        print >>self.out_stream, "# Final fit parameters #"
+        print >>self.out_stream, "########################"
+        print >>self.out_stream, ''
         
         for name, value, error in self.minimizer.get_parameter_info():
             
             tmp_rounded = round_to_significance(value, error, F_SIGNIFICANCE)
             
-            print "%s = %g +- %g" % (name, tmp_rounded[0], tmp_rounded[1])
+            print >>self.out_stream, "%s = %g +- %g" % (name, tmp_rounded[0], tmp_rounded[1])
         
-        print ''
+        print >>self.out_stream, ''
     
     def print_fit_details(self):
         '''prints some fit goodness details'''
@@ -389,28 +386,28 @@ class Fit:
         else:
             hypothesis_status = 'accepted (CL %d%s)' % (int(M_CONFIDENCE_LEVEL*100),'%')
             
-        print '###############'
-        print "# Fit details #"
-        print "###############"
-        print ''
-        print 'FCN     ', self.minimizer.get_fit_info('fcn')
-        print 'FCN/ndf ', self.minimizer.get_fit_info('fcn')/(self.dataset.get_size() - self.number_of_parameters)
-        print 'EdM     ', self.minimizer.get_fit_info('edm')
-        print 'UP      ', self.minimizer.get_fit_info('err_def')
-        print 'STA     ', self.minimizer.get_fit_info('status_code')
-        print ''
-        print 'chi2prob', chi2prob
-        print 'H0      ', hypothesis_status
-        print ''
+        print >>self.out_stream, '###############'
+        print >>self.out_stream, "# Fit details #"
+        print >>self.out_stream, "###############"
+        print >>self.out_stream, ''
+        print >>self.out_stream, 'FCN     ', self.minimizer.get_fit_info('fcn')
+        print >>self.out_stream, 'FCN/ndf ', self.minimizer.get_fit_info('fcn')/(self.dataset.get_size() - self.number_of_parameters)
+        print >>self.out_stream, 'EdM     ', self.minimizer.get_fit_info('edm')
+        print >>self.out_stream, 'UP      ', self.minimizer.get_fit_info('err_def')
+        print >>self.out_stream, 'STA     ', self.minimizer.get_fit_info('status_code')
+        print >>self.out_stream, ''
+        print >>self.out_stream, 'chi2prob', chi2prob
+        print >>self.out_stream, 'H0      ', hypothesis_status
+        print >>self.out_stream, ''
         
         
     def print_fit_results(self):
         '''prints fit results'''
         
-        print '##############'
-        print '# Fit result #'
-        print '##############'
-        print ''
+        print >>self.out_stream, '##############'
+        print >>self.out_stream, '# Fit result #'
+        print >>self.out_stream, '##############'
+        print >>self.out_stream, ''
         
         par_cov_mat = self.get_error_matrix()
         par_err = extract_statistical_errors(par_cov_mat)
@@ -418,56 +415,18 @@ class Fit:
         
         
         for par_nr in range(len(self.current_param_values)):
-            print '# '+self.param_names[par_nr]
-            print '# value        stat. err.    ',
+            print >>self.out_stream, '# '+self.param_names[par_nr]
+            print >>self.out_stream, '# value        stat. err.    ',
             if par_nr > 0:
-                print 'correlations'
+                print >>self.out_stream, 'correlations'
             else:
-                print ''
-            print format(self.current_param_values[par_nr], '.06e')+'  ',
-            print format(par_err[par_nr], '.06e')+'  ',
+                print >>self.out_stream, ''
+            print >>self.out_stream, format(self.current_param_values[par_nr], '.06e')+'  ',
+            print >>self.out_stream, format(par_err[par_nr], '.06e')+'  ',
             if par_nr > 0:
                 for i in range(par_nr):
-                    print format(par_cor_mat[par_nr, i], '.06e')+'  ',
+                    print >>self.out_stream, format(par_cor_mat[par_nr, i], '.06e')+'  ',
                     
-            print ''
-            print ''
-
-        
-if __name__ == '__main__':
-    
-    from dataset import Dataset, build_dataset
-    
-    def linear_2par2(x, slope=1, x_offset=0):
-        
-        return slope * (x - x_offset)
-    
-    def linear_2par(x, slope=1, y_intercept=0):
-        
-        return slope * x + y_intercept
-    
-    myXData = np.asarray([0., .1, .2, .3, .4, .5, .6, .7, .8, .9, 1.])
-    myYData = np.asarray([0.227216,    -0.159875,    0.0924984,    -0.299377,    0.307159,    1.15718,    0.701532,    0.661879,    0.536548,    0.874998,    1.02603])
-    tstFloat = 0.3
-     
-    myDataset = build_dataset(xdata=myXData, 
-                              ydata=myYData,
-                              xabsstat=tstFloat)
-    
-    myFit = Fit(myDataset, linear_2par2)
-    myFit.do_fit()
-    
-#     myDataset = Dataset(xdata=myXData, 
-#                         ydata=myYData,
-#                         xabsstat=tstFloat)
-#     
-#     myFit = myDataset.fit(linear_2par2)
-#     myFit.do_fit()
-    
-    myDataset2 = build_dataset(xdata=myXData, 
-                               ydata=myYData,
-                               yabsstat=tstFloat)
-    
-    myFit2 = Fit(myDataset2, linear_2par2)
-    myFit2.do_fit()
+            print >>self.out_stream, ''
+            print >>self.out_stream, ''
     

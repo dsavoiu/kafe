@@ -178,7 +178,7 @@ To specify a covariance matrix for a single axis, replace the other with <tt cla
 </pre></div>
 </div>
 </div></blockquote>
-<p><strong>title</strong></p>
+<p><strong>title</strong> : string</p>
 <blockquote>
 <div>the name of the <cite>Dataset</cite>. If omitted, the <cite>Dataset</cite> will be given the generic name &#8216;Untitled Dataset&#8217;.</div></blockquote>
 <dl class="attribute">
@@ -199,8 +199,8 @@ To specify a covariance matrix for a single axis, replace the other with <tt cla
 <dd><p>Returns <cite>True</cite> if the covariance matrix for an axis is regular and <tt class="docutils literal"><span class="pre">False</span></tt> if it is
 singular.</p>
 <dl class="docutils">
-<dt><strong>axis</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string or int</span></dt>
-<dd>Axis for which to check for regularity of the covariance matrix. Can be <tt class="docutils literal"><span class="pre">'x'</span></tt> or <tt class="docutils literal"><span class="pre">'y'</span></tt>.</dd>
+<dt><strong>axis</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="docutils literal"><span class="pre">'x'</span></tt> or <tt class="docutils literal"><span class="pre">'y'</span></tt></span></dt>
+<dd>Axis for which to check for regularity of the covariance matrix.</dd>
 </dl>
 </dd></dl>
 
@@ -231,8 +231,8 @@ singular.</p>
 <tt class="descname">get_cov_mat</tt><big>(</big><em>axis</em>, <em>fallback_on_singular=None</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.get_cov_mat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.dataset.Dataset.get_cov_mat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the error matrix for an axis.</p>
 <dl class="docutils">
-<dt><strong>axis</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string or int</span></dt>
-<dd>Axis for which to load the error matrix. Can be <tt class="docutils literal"><span class="pre">'x'</span></tt> or <tt class="docutils literal"><span class="pre">'y'</span></tt>. Type: string</dd>
+<dt><strong>axis</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="docutils literal"><span class="pre">'x'</span></tt> or <tt class="docutils literal"><span class="pre">'y'</span></tt></span></dt>
+<dd>Axis for which to load the error matrix.</dd>
 <dt><em>fallback_on_singular</em> <span class="classifier-delimiter">:</span> <span class="classifier"><cite>numpy.matrix</cite> or string (optional)</span></dt>
 <dd>What to return if the matrix is singular. If this is <tt class="docutils literal"><span class="pre">None</span></tt> (default), the matrix is returned anyway.
 If this is a <cite>numpy.matrix</cite> object or similar, that is returned istead. Alternatively, the shortcuts
@@ -257,8 +257,8 @@ respectively.</dd>
 <dd><p>Get the data span for an axis. The data span is a tuple (<cite>min</cite>, <cite>max</cite>) containing
 the smallest and highest coordinates for an axis.</p>
 <dl class="docutils">
-<dt><strong>axis</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Axis for which to get the data span. Can be <tt class="docutils literal"><span class="pre">'x'</span></tt> or <tt class="docutils literal"><span class="pre">'y'</span></tt>.</dd>
+<dt><strong>axis</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="docutils literal"><span class="pre">'x'</span></tt> or <tt class="docutils literal"><span class="pre">'y'</span></tt></span></dt>
+<dd>Axis for which to get the data span.</dd>
 <dt><em>include_error_bars</em> <span class="classifier-delimiter">:</span> <span class="classifier">boolean (optional)</span></dt>
 <dd><tt class="docutils literal"><span class="pre">True</span></tt> if the returned span should be enlarged to
 contain the error bars of the smallest and largest datapoints (default: <tt class="docutils literal"><span class="pre">False</span></tt>)</dd>
@@ -307,22 +307,21 @@ the numbers are represented in scientific notation with six significant digits.<
 <dl class="method">
 <dt id="kafe.dataset.Dataset.has_correlations">
 <tt class="descname">has_correlations</tt><big>(</big><em>axis</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.has_correlations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.dataset.Dataset.has_correlations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns <cite>True</cite> if the covariance matrix for an axis is regular and <tt class="docutils literal"><span class="pre">False</span></tt> if it is
+<dd><p>Returns <cite>True</cite> if the specified axis has correlation data, <tt class="docutils literal"><span class="pre">False</span></tt> if not.
 singular.</p>
 <dl class="docutils">
-<dt><strong>axis</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string or int</span></dt>
-<dd>Axis for which to check for regularity of the covariance matrix. Can be <tt class="docutils literal"><span class="pre">'x'</span></tt> or <tt class="docutils literal"><span class="pre">'y'</span></tt>.</dd>
+<dt><strong>axis</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="docutils literal"><span class="pre">'x'</span></tt> or <tt class="docutils literal"><span class="pre">'y'</span></tt></span></dt>
+<dd>Axis for which to check for correlations.</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="kafe.dataset.Dataset.has_errors">
 <tt class="descname">has_errors</tt><big>(</big><em>axis</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.has_errors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.dataset.Dataset.has_errors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns <cite>True</cite> if the covariance matrix for an axis is regular and <tt class="docutils literal"><span class="pre">False</span></tt> if it is
-singular.</p>
+<dd><p>Returns <cite>True</cite> if the specified axis has statistical error data.</p>
 <dl class="docutils">
-<dt><strong>axis</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string or int</span></dt>
-<dd>Axis for which to check for regularity of the covariance matrix. Can be <tt class="docutils literal"><span class="pre">'x'</span></tt> or <tt class="docutils literal"><span class="pre">'y'</span></tt>.</dd>
+<dt><strong>axis</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="docutils literal"><span class="pre">'x'</span></tt> or <tt class="docutils literal"><span class="pre">'y'</span></tt></span></dt>
+<dd>Axis for which to check for error data.</dd>
 </dl>
 </dd></dl>
 
@@ -365,10 +364,10 @@ singular.</p>
 <tt class="descname">set_data</tt><big>(</big><em>axis</em>, <em>data</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.set_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.dataset.Dataset.set_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the measurement data for an axis.</p>
 <dl class="docutils">
-<dt><strong>axis</strong></dt>
-<dd>Axis for which to set the measurement data. Can be <tt class="docutils literal"><span class="pre">'x'</span></tt> or <tt class="docutils literal"><span class="pre">'y'</span></tt>. Type: string</dd>
-<dt><strong>data</strong></dt>
-<dd>Measurement data for axis. Type: any iterable</dd>
+<dt><strong>axis</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="docutils literal"><span class="pre">'x'</span></tt> or <tt class="docutils literal"><span class="pre">'y'</span></tt></span></dt>
+<dd>Axis for which to set the measurement data.</dd>
+<dt><strong>data</strong> <span class="classifier-delimiter">:</span> <span class="classifier">iterable</span></dt>
+<dd>Measurement data for axis.</dd>
 </dl>
 </dd></dl>
 
@@ -395,9 +394,9 @@ the numbers are represented in scientific notation with six significant digits.<
 <dd><p>This helper function creates a <cite>Dataset</cite> from a series of keyword arguments.</p>
 <p>Valid keyword arguments are:</p>
 <dl class="docutils">
-<dt><strong>xdata</strong> and <strong>ydata</strong></dt>
+<dt><strong>xdata</strong> and <strong>ydata</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list/tuple/<cite>np.array</cite> of floats</span></dt>
 <dd>These keyword arguments are mandatory and should be iterables containing the measurement data.</dd>
-<dt><em>error specification keywords</em></dt>
+<dt><em>error specification keywords</em> <span class="classifier-delimiter">:</span> <span class="classifier">iterable or numeric (see below)</span></dt>
 <dd><p class="first">A valid keyword is composed of an axis (<em>x</em> or <em>y</em>), an error relativity specification (<em>abs</em> or <em>rel</em>)
 and error correlation type (<em>stat</em> or <em>syst</em>). The errors are then set as follows:</p>
 <blockquote>
@@ -405,7 +404,7 @@ and error correlation type (<em>stat</em> or <em>syst</em>). The errors are then
 <li><dl class="first docutils">
 <dt>For statistical errors:</dt>
 <dd><ul class="first last simple">
-<li>if keyword argument is a <cite>NumPy</cite> array, the error list is set to that</li>
+<li>if keyword argument is iterable, the error list is set to that</li>
 <li>if keyword argument is a number, an error list with identical entries is generated</li>
 </ul>
 </dd>
@@ -488,7 +487,7 @@ a_N1  a_N2  ...  a_NM</pre>
 <span id="fit-module"></span><h2><a class="reference internal" href="../index.html#module-fit" title="fit: This submodule defines a `Fit` object which performs the actual fitting given a `Dataset` and a fit function. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">fit</span></tt></a> Module<a class="headerlink" href="#module-kafe.fit" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-fit"></span><dl class="class">
 <dt id="kafe.fit.Fit">
-<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x48a2ed8&gt;</em>, <em>function_label=None</em>, <em>function_equation=None</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x4e3dde8&gt;</em>, <em>function_label=None</em>, <em>function_equation=None</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Object representing a fit. This object references the fitted <cite>Dataset</cite>, the fit function and the resulting fit parameters.</p>
 <p>Necessary arguments are a <cite>Dataset</cite> object and a fit function (which should be fitted to the <cite>Dataset</cite>).
 Optionally, an external function <cite>FCN</cite> (whose minima should be located to find the best fit) can be specified.
@@ -956,7 +955,7 @@ of the list to generate a closed contour.</dd>
 
 <dl class="method">
 <dt id="kafe.minuit.Minuit.minimize">
-<tt class="descname">minimize</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.minimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.minuit.Minuit.minimize" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">minimize</tt><big>(</big><em>log_print_level=3</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.minimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.minuit.Minuit.minimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Do the minimization. This calls <cite>Minuit</cite>&#8216;s algorithms <tt class="docutils literal"><span class="pre">MIGRAD</span></tt> for minimization
 and <tt class="docutils literal"><span class="pre">HESSE</span></tt> for computing/checking the parameter error matrix.</p>
 </dd></dl>
@@ -1270,6 +1269,46 @@ towards the interval&#8217;s center).</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-kafe.stream">
+<span id="stream-module"></span><h2><a class="reference internal" href="../index.html#module-stream" title="stream: A submodule containing an object for simultaneous output to file and to ``sys.stdout``. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">stream</span></tt></a> Module<a class="headerlink" href="#module-kafe.stream" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-stream"></span><dl class="class">
+<dt id="kafe.stream.StreamDup">
+<em class="property">class </em><tt class="descclassname">kafe.stream.</tt><tt class="descname">StreamDup</tt><big>(</big><em>out_file</em><big>)</big><a class="reference internal" href="../_modules/kafe/stream.html#StreamDup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.stream.StreamDup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Object for simultaneous logging to stdout and a file.</p>
+<dl class="method">
+<dt id="kafe.stream.StreamDup.fileno">
+<tt class="descname">fileno</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/stream.html#StreamDup.fileno"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.stream.StreamDup.fileno" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kafe.stream.StreamDup.flush">
+<tt class="descname">flush</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/stream.html#StreamDup.flush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.stream.StreamDup.flush" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kafe.stream.StreamDup.write">
+<tt class="descname">write</tt><big>(</big><em>message</em><big>)</big><a class="reference internal" href="../_modules/kafe/stream.html#StreamDup.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.stream.StreamDup.write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kafe.stream.StreamDup.write_timestamp">
+<tt class="descname">write_timestamp</tt><big>(</big><em>prefix</em><big>)</big><a class="reference internal" href="../_modules/kafe/stream.html#StreamDup.write_timestamp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.stream.StreamDup.write_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kafe.stream.StreamDup.write_to_file">
+<tt class="descname">write_to_file</tt><big>(</big><em>message</em><big>)</big><a class="reference internal" href="../_modules/kafe/stream.html#StreamDup.write_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.stream.StreamDup.write_to_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kafe.stream.StreamDup.write_to_stdout">
+<tt class="descname">write_to_stdout</tt><big>(</big><em>message</em><big>)</big><a class="reference internal" href="../_modules/kafe/stream.html#StreamDup.write_to_stdout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.stream.StreamDup.write_to_stdout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -1290,6 +1329,7 @@ towards the interval&#8217;s center).</p>
 <li><a class="reference internal" href="#module-kafe.minuit"><tt class="docutils literal"><span class="pre">minuit</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.numeric_tools"><tt class="docutils literal"><span class="pre">numeric_tools</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.plot"><tt class="docutils literal"><span class="pre">plot</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-kafe.stream"><tt class="docutils literal"><span class="pre">stream</span></tt> Module</a></li>
 </ul>
 </li>
 </ul>

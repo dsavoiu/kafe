@@ -75,15 +75,15 @@
 <span class="sd">    </span>
 <span class="sd">    Valid keyword arguments are: </span>
 <span class="sd">    </span>
-<span class="sd">    **xdata** and **ydata**</span>
+<span class="sd">    **xdata** and **ydata** : list/tuple/`np.array` of floats</span>
 <span class="sd">        These keyword arguments are mandatory and should be iterables containing the measurement data.</span>
 <span class="sd">    </span>
-<span class="sd">    *error specification keywords*</span>
+<span class="sd">    *error specification keywords* : iterable or numeric (see below)</span>
 <span class="sd">        A valid keyword is composed of an axis (*x* or *y*), an error relativity specification (*abs* or *rel*)</span>
 <span class="sd">        and error correlation type (*stat* or *syst*). The errors are then set as follows:</span>
 <span class="sd">        </span>
 <span class="sd">            1. For statistical errors:</span>
-<span class="sd">                - if keyword argument is a `NumPy` array, the error list is set to that</span>
+<span class="sd">                - if keyword argument is iterable, the error list is set to that</span>
 <span class="sd">                - if keyword argument is a number, an error list with identical entries is generated </span>
 <span class="sd">            2. For systematic errors:</span>
 <span class="sd">                - keyword argument *must* be a single number. The global correlated error for the axis is then set to that.</span>
@@ -245,7 +245,7 @@
 <span class="sd">    </span>
 <span class="sd">        &gt;&gt;&gt; my_dataset = Dataset(data=([0., 1., 2.], [1.23, 3.45, 5.62]), cov_mats=(None, my_cov_mat_y))</span>
 <span class="sd">    </span>
-<span class="sd">    **title**</span>
+<span class="sd">    **title** : string</span>
 <span class="sd">    </span>
 <span class="sd">        the name of the `Dataset`. If omitted, the `Dataset` will be given the generic name &#39;Untitled Dataset&#39;.</span>
 <span class="sd">            </span>
@@ -314,11 +314,11 @@
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Set the measurement data for an axis.</span>
 <span class="sd">        </span>
-<span class="sd">        **axis**</span>
-<span class="sd">            Axis for which to set the measurement data. Can be ``&#39;x&#39;`` or ``&#39;y&#39;``. Type: string</span>
+<span class="sd">        **axis** : ``&#39;x&#39;`` or ``&#39;y&#39;``</span>
+<span class="sd">            Axis for which to set the measurement data.</span>
 <span class="sd">            </span>
-<span class="sd">        **data**</span>
-<span class="sd">            Measurement data for axis. Type: any iterable</span>
+<span class="sd">        **data** : iterable</span>
+<span class="sd">            Measurement data for axis.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         
         <span class="c"># get axis id from an alias</span>
@@ -365,11 +365,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">__query_cov_mats_regular</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>    <span class="c"># if that fails, mat is singular</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__query_cov_mats_regular</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>   <span class="c"># else, mat is regular</span>
-        
-<span class="c">#         try:    # check if all elements are zero</span>
-<span class="c">#             (mat==0).all()</span>
-<span class="c">#         except AttributeError: # this means mat is not a matrix object (no all() method)</span>
-<span class="c">#             mat=None</span>
         
         <span class="c"># check if the matrix is zero or None and set/unset a flag accordingly    </span>
         <span class="k">if</span> <span class="n">mat</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="p">(</span><span class="n">mat</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>               <span class="c"># check if matrix in None or zero</span>
@@ -421,8 +416,8 @@
 <span class="sd">        Get the data span for an axis. The data span is a tuple (`min`, `max`) containing</span>
 <span class="sd">        the smallest and highest coordinates for an axis.</span>
 <span class="sd">        </span>
-<span class="sd">        **axis** : string</span>
-<span class="sd">            Axis for which to get the data span. Can be ``&#39;x&#39;`` or ``&#39;y&#39;``.</span>
+<span class="sd">        **axis** : ``&#39;x&#39;`` or ``&#39;y&#39;``</span>
+<span class="sd">            Axis for which to get the data span.</span>
 <span class="sd">        </span>
 <span class="sd">        *include_error_bars* : boolean (optional)</span>
 <span class="sd">            ``True`` if the returned span should be enlarged to</span>
@@ -439,11 +434,9 @@
         <span class="n">min_idx</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">axis</span><span class="p">))</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">axis</span><span class="p">)))</span>   <span class="c"># get the index of the min datapoint</span>
         
         <span class="k">if</span> <span class="n">include_error_bars</span><span class="p">:</span>
-            <span class="c">#try:</span>
             <span class="n">max_error_bar_size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_cov_mat</span><span class="p">(</span><span class="n">axis</span><span class="p">)[</span><span class="n">max_idx</span><span class="p">,</span> <span class="n">max_idx</span><span class="p">])</span>  <span class="c"># get the error of the maximum datapoint</span>
             <span class="n">min_error_bar_size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_cov_mat</span><span class="p">(</span><span class="n">axis</span><span class="p">)[</span><span class="n">min_idx</span><span class="p">,</span> <span class="n">min_idx</span><span class="p">])</span>  <span class="c"># get the error of the minimum datapoint</span>
-            <span class="c">#except:</span>
-            <span class="c">#    pass</span>
+            
         
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">axis</span><span class="p">)[</span><span class="n">min_idx</span><span class="p">]</span> <span class="o">-</span> <span class="n">min_error_bar_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">axis</span><span class="p">)[</span><span class="n">max_idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">max_error_bar_size</span><span class="p">]</span>
         </div>
@@ -464,8 +457,8 @@
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get the error matrix for an axis.</span>
 <span class="sd">        </span>
-<span class="sd">        **axis** : string or int</span>
-<span class="sd">            Axis for which to load the error matrix. Can be ``&#39;x&#39;`` or ``&#39;y&#39;``. Type: string</span>
+<span class="sd">        **axis** :  ``&#39;x&#39;`` or ``&#39;y&#39;``</span>
+<span class="sd">            Axis for which to load the error matrix.</span>
 <span class="sd">            </span>
 <span class="sd">        *fallback_on_singular* : `numpy.matrix` or string (optional)</span>
 <span class="sd">            What to return if the matrix is singular. If this is ``None`` (default), the matrix is returned anyway.</span>
@@ -505,8 +498,8 @@
 <span class="sd">        Returns `True` if the covariance matrix for an axis is regular and ``False`` if it is</span>
 <span class="sd">        singular.</span>
 <span class="sd">        </span>
-<span class="sd">        **axis** : string or int</span>
-<span class="sd">            Axis for which to check for regularity of the covariance matrix. Can be ``&#39;x&#39;`` or ``&#39;y&#39;``.</span>
+<span class="sd">        **axis** : ``&#39;x&#39;`` or ``&#39;y&#39;``</span>
+<span class="sd">            Axis for which to check for regularity of the covariance matrix.</span>
 <span class="sd">        </span>
 <span class="sd">        &#39;&#39;&#39;</span>
         
@@ -517,11 +510,11 @@
     </div>
 <div class="viewcode-block" id="Dataset.has_correlations"><a class="viewcode-back" href="../../index.html#kafe.dataset.Dataset.has_correlations">[docs]</a>    <span class="k">def</span> <span class="nf">has_correlations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Returns `True` if the covariance matrix for an axis is regular and ``False`` if it is</span>
+<span class="sd">        Returns `True` if the specified axis has correlation data, ``False`` if not.</span>
 <span class="sd">        singular.</span>
 <span class="sd">        </span>
-<span class="sd">        **axis** : string or int</span>
-<span class="sd">            Axis for which to check for regularity of the covariance matrix. Can be ``&#39;x&#39;`` or ``&#39;y&#39;``.</span>
+<span class="sd">        **axis** :  ``&#39;x&#39;`` or ``&#39;y&#39;``</span>
+<span class="sd">            Axis for which to check for correlations.</span>
 <span class="sd">        </span>
 <span class="sd">        &#39;&#39;&#39;</span>
         
@@ -531,11 +524,10 @@
     </div>
 <div class="viewcode-block" id="Dataset.has_errors"><a class="viewcode-back" href="../../index.html#kafe.dataset.Dataset.has_errors">[docs]</a>    <span class="k">def</span> <span class="nf">has_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Returns `True` if the covariance matrix for an axis is regular and ``False`` if it is</span>
-<span class="sd">        singular.</span>
+<span class="sd">        Returns `True` if the specified axis has statistical error data.</span>
 <span class="sd">        </span>
-<span class="sd">        **axis** : string or int</span>
-<span class="sd">            Axis for which to check for regularity of the covariance matrix. Can be ``&#39;x&#39;`` or ``&#39;y&#39;``.</span>
+<span class="sd">        **axis** :  ``&#39;x&#39;`` or ``&#39;y&#39;``</span>
+<span class="sd">            Axis for which to check for error data.</span>
 <span class="sd">        </span>
 <span class="sd">        &#39;&#39;&#39;</span>
         

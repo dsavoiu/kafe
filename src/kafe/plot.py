@@ -106,9 +106,7 @@ class PlotStyle:
         self.usetex = True      # tell matplotlib to use TeX
         
         self.axis_label_styles = ('italic', 'italic')       # Default axis label styles
-        
         self.axis_label_coords = ( (.5, -.1), (-.12, .5) )  # default offset for axes
-        
         self.axis_label_pad = (7, 7)                        # padding for axis labels
         
         # Set legend parameters
@@ -135,13 +133,7 @@ class PlotStyle:
           'axes.unicode_minus': True,
           #'legend.loc': 'best'
           'legend.loc': 'upper left',
-          'figure.figsize': (12, 6),
-          #'text.latex.preamble':'\\usepackage[sc,osf]{mathpazo},\\usepackage[euler-digits]{eulervm}'
-          #'text.latex.preamble': ['\\usepackage{eulervm}'],
-          #'mathtext.fontset': 'custom',
-          #'mathtext.fallback_to_cm': False,
-          #'mathtext.default': 'ppl',
-          #'axes.formatter.use_mathtext': False
+          'figure.figsize': (12, 6)
           }
     
     def get_marker(self, idm):
@@ -305,7 +297,6 @@ class Plot:
                 
                 
         for fit in fits_with_parameter_box:
-            #text_content += "~\nFit for " + fit.dataset.data_label + ':\n'
             text_content += "~\n" + fit.function_label + ':\n'
             for idx in range(len(fit.param_names)):
                 parname = fit.param_names_latex[idx]

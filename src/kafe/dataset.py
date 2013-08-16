@@ -24,15 +24,15 @@ def build_dataset(xdata, ydata, **kwargs):
     
     Valid keyword arguments are: 
     
-    **xdata** and **ydata**
+    **xdata** and **ydata** : list/tuple/`np.array` of floats
         These keyword arguments are mandatory and should be iterables containing the measurement data.
     
-    *error specification keywords*
+    *error specification keywords* : iterable or numeric (see below)
         A valid keyword is composed of an axis (*x* or *y*), an error relativity specification (*abs* or *rel*)
         and error correlation type (*stat* or *syst*). The errors are then set as follows:
         
             1. For statistical errors:
-                - if keyword argument is a `NumPy` array, the error list is set to that
+                - if keyword argument is iterable, the error list is set to that
                 - if keyword argument is a number, an error list with identical entries is generated 
             2. For systematic errors:
                 - keyword argument *must* be a single number. The global correlated error for the axis is then set to that.
@@ -194,7 +194,7 @@ class Dataset: #(object):
     
         >>> my_dataset = Dataset(data=([0., 1., 2.], [1.23, 3.45, 5.62]), cov_mats=(None, my_cov_mat_y))
     
-    **title**
+    **title** : string
     
         the name of the `Dataset`. If omitted, the `Dataset` will be given the generic name 'Untitled Dataset'.
             
@@ -263,11 +263,11 @@ class Dataset: #(object):
         '''
         Set the measurement data for an axis.
         
-        **axis**
-            Axis for which to set the measurement data. Can be ``'x'`` or ``'y'``. Type: string
+        **axis** : ``'x'`` or ``'y'``
+            Axis for which to set the measurement data.
             
-        **data**
-            Measurement data for axis. Type: any iterable
+        **data** : iterable
+            Measurement data for axis.
         '''
         
         # get axis id from an alias
@@ -314,11 +314,6 @@ class Dataset: #(object):
             self.__query_cov_mats_regular[axis] = True    # if that fails, mat is singular
         else:
             self.__query_cov_mats_regular[axis] = False   # else, mat is regular
-        
-#         try:    # check if all elements are zero
-#             (mat==0).all()
-#         except AttributeError: # this means mat is not a matrix object (no all() method)
-#             mat=None
         
         # check if the matrix is zero or None and set/unset a flag accordingly    
         if mat is None or (mat==0).all():               # check if matrix in None or zero
@@ -370,8 +365,8 @@ class Dataset: #(object):
         Get the data span for an axis. The data span is a tuple (`min`, `max`) containing
         the smallest and highest coordinates for an axis.
         
-        **axis** : string
-            Axis for which to get the data span. Can be ``'x'`` or ``'y'``.
+        **axis** : ``'x'`` or ``'y'``
+            Axis for which to get the data span.
         
         *include_error_bars* : boolean (optional)
             ``True`` if the returned span should be enlarged to
@@ -388,11 +383,9 @@ class Dataset: #(object):
         min_idx = tuple(self.get_data(axis)).index(min(self.get_data(axis)))   # get the index of the min datapoint
         
         if include_error_bars:
-            #try:
             max_error_bar_size = np.sqrt(self.get_cov_mat(axis)[max_idx, max_idx])  # get the error of the maximum datapoint
             min_error_bar_size = np.sqrt(self.get_cov_mat(axis)[min_idx, min_idx])  # get the error of the minimum datapoint
-            #except:
-            #    pass
+            
         
         return [self.get_data(axis)[min_idx] - min_error_bar_size, self.get_data(axis)[max_idx] + max_error_bar_size]
         
@@ -413,8 +406,8 @@ class Dataset: #(object):
         '''
         Get the error matrix for an axis.
         
-        **axis** : string or int
-            Axis for which to load the error matrix. Can be ``'x'`` or ``'y'``. Type: string
+        **axis** :  ``'x'`` or ``'y'``
+            Axis for which to load the error matrix.
             
         *fallback_on_singular* : `numpy.matrix` or string (optional)
             What to return if the matrix is singular. If this is ``None`` (default), the matrix is returned anyway.
@@ -454,8 +447,8 @@ class Dataset: #(object):
         Returns `True` if the covariance matrix for an axis is regular and ``False`` if it is
         singular.
         
-        **axis** : string or int
-            Axis for which to check for regularity of the covariance matrix. Can be ``'x'`` or ``'y'``.
+        **axis** : ``'x'`` or ``'y'``
+            Axis for which to check for regularity of the covariance matrix.
         
         '''
         
@@ -466,11 +459,11 @@ class Dataset: #(object):
     
     def has_correlations(self, axis):
         '''
-        Returns `True` if the covariance matrix for an axis is regular and ``False`` if it is
+        Returns `True` if the specified axis has correlation data, ``False`` if not.
         singular.
         
-        **axis** : string or int
-            Axis for which to check for regularity of the covariance matrix. Can be ``'x'`` or ``'y'``.
+        **axis** :  ``'x'`` or ``'y'``
+            Axis for which to check for correlations.
         
         '''
         
@@ -480,11 +473,10 @@ class Dataset: #(object):
     
     def has_errors(self, axis):
         '''
-        Returns `True` if the covariance matrix for an axis is regular and ``False`` if it is
-        singular.
+        Returns `True` if the specified axis has statistical error data.
         
-        **axis** : string or int
-            Axis for which to check for regularity of the covariance matrix. Can be ``'x'`` or ``'y'``.
+        **axis** :  ``'x'`` or ``'y'``
+            Axis for which to check for error data.
         
         '''
         

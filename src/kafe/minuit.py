@@ -13,6 +13,9 @@ from constants import *
 
 import numpy as np
 
+import os, sys
+from time import gmtime, strftime
+
 # Constants
 ############
 
@@ -69,6 +72,8 @@ class Minuit:
         
         self.number_of_parameters = number_of_parameters      #: number of parameters to minimize for
         
+        self.out_file = open( "minuit.log", 'a')
+        
         self.__gMinuit = TMinuit(self.number_of_parameters)   # create a TMinuit instance for that number of parameters
         self.__gMinuit.SetFCN(self.FCN_wrapper)               # instruct Minuit to use this class's FCN_wrapper method as a FCN
         
@@ -83,8 +88,7 @@ class Minuit:
         self.set_err()
         self.set_strategy()
         self.set_parameter_values(start_params)                                                             # set the current parameter values
-        self.set_parameter_errors(param_errors)                                                             # set the current parameter errors
-        #self.parameter_names = self.function_to_minimize.func_code.co_varnames[:function_to_minimize.func_code.co_argcount]      # extract the parameter names      from the FCN
+        self.set_parameter_errors(param_errors)                                                             # set the current parameter errorss
         self.set_parameter_names(par_names)
         
         error_code = Long(0)
@@ -107,6 +111,7 @@ class Minuit:
             more output it generates.
         '''
         self.__gMinuit.SetPrintLevel(print_level) # set Minuit print level
+        self.print_level = print_level
         
     def set_strategy(self, strategy_id=1):
         '''Sets the strategy Minuit.
@@ -183,9 +188,6 @@ class Minuit:
         p, pe = Double(0), Double(0)
         
         for i in range(0, self.number_of_parameters):
-            #print "minuit: %r " % self
-            #print "gMinuit: %r " % self.__gMinuit
-            #print "GetParameter: %r " % self.__gMinuit.GetParameter
             self.__gMinuit.GetParameter(i, p, pe)  # retrieve fitresult
             
             result.append(float(p))
@@ -372,18 +374,13 @@ class Minuit:
             pass                # do something before the FCN is called for the first time
         
         # Retrieve the parameters from the C side of ROOT and
-        # store them in a Python list -- VERY resource-intensive
+        # store them in a Python list -- resource-intensive
         # for many calls, but can't be improved (yet?)
-#         parameter_list = []
-#         for j in range(self.number_of_parameters):
-#             parameter_list.append(parameters[j])
-        
         parameter_list = np.frombuffer(parameters, dtype=float, count=self.number_of_parameters)
-        
-        ##print "Calling FCN%r = %s" % (parameter_list, self.function_to_minimize(*parameter_list)) 
+         
         f[0] = self.function_to_minimize(*parameter_list) # call the Python implementation of FCN.
 
-    def minimize(self):
+    def minimize(self, log_print_level=3):
         '''Do the minimization. This calls `Minuit`'s algorithms ``MIGRAD`` for minimization
         and ``HESSE`` for computing/checking the parameter error matrix.'''
         
@@ -396,32 +393,26 @@ class Minuit:
         # Run minimization algorithm (MIGRAD + HESSE)
         error_code = Long(0)
         
+        prefix = "Minuit run at" # set the timestamp prefix
+        
+        # insert timestamp
+        self.out_file.write('\n')
+        self.out_file.write('#'*(len(prefix)+4+20))
+        self.out_file.write('\n')
+        self.out_file.write("# %s " % (prefix,) + strftime("%Y-%m-%d %H:%M:%S #\n", gmtime()))
+        self.out_file.write('#'*(len(prefix)+4+20))
+        self.out_file.write('\n\n')
+        self.out_file.flush()
+        
+        # save the old stdout stream
+        old_out_stream = os.dup( sys.stdout.fileno() )
+        os.dup2(self.out_file.fileno(), sys.stdout.fileno())
+
+        self.__gMinuit.SetPrintLevel(log_print_level) # set Minuit print level
         self.__gMinuit.mnexcm("MIGRAD", arr('d', [self.max_iterations, self.tolerance]), 2, error_code)
         self.__gMinuit.mnexcm("HESSE", arr('d', [6000]), 1, error_code) # Call HESSE with max. 6000 calls
+        self.__gMinuit.SetPrintLevel(self.print_level) # return to normal print level
 
-
-if __name__ == "__main__":
-    
-    def quadratic(x=3e-24, y=4e-23):
-        #return (args[0] - 3.14) ** 2 + (args[1] + 2.71) ** 2 + 1.0    # should be minimal (=1.0) at arg[0] = 3.14 and arg[1] = -2.71
-        return (x - 3.14e-24) ** 2 + (y + 2.71e-23) ** 2 + 1.0    # should be minimal (=1.0) at arg[0] = 3.14 and arg[1] = -2.71
-       
-    def quartic(x=5, y=10):
-        return (x - 2.9174) ** 4 + (y + 8.12947) ** 2 + 1.0    # should be minimal (=1.0) at arg[0] = 3.14 and arg[1] = -2.71
-       
-    
-    myMinimizer = Minuit(2, quadratic, ('x','y'), (3e-24, 4e-23), (3e-25, 4e-25))
-    myMinimizer2 = Minuit(2, quartic, ('x','y'), (5, 10), (.05, .10))
-    
-    myMinimizer.minimize()
-    myMinimizer2.minimize()
-    
-    print myMinimizer.get_parameter_values()
-    print myMinimizer.get_parameter_errors()
-    print myMinimizer.get_error_matrix()
-    
-    print myMinimizer2.get_parameter_values()
-    print myMinimizer2.get_parameter_errors()
-    print myMinimizer2.get_error_matrix()
-    
+        # restore the previous output stream
+        os.dup2( old_out_stream, sys.stdout.fileno() )
     
