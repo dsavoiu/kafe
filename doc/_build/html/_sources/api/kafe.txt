@@ -9,6 +9,22 @@ kafe Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`_version_info (copy)` Module
+----------------------------------
+
+.. automodule:: kafe._version_info (copy)
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`_version_info` Module
+---------------------------
+
+.. automodule:: kafe._version_info
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`constants` Module
 -----------------------
 

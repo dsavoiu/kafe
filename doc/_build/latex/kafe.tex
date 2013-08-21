@@ -21,7 +21,7 @@
 
 \title{kafe Documentation}
 \date{August 21, 2013}
-\release{0.3alpha1}
+\release{0.3alpha45}
 \author{Daniel Savoiu}
 \newcommand{\sphinxlogo}{}
 \renewcommand{\releasename}{Release}
@@ -192,6 +192,12 @@ Alternatively, a plain-text representation of a \emph{Dataset} can be read from 
 Also provided are helper functions which construct a \emph{Dataset} object from a
 file containing column data (one measurement per row, column order can be specified).
 
+
+\subsection{\texttt{\_version\_info (copy)} Module}
+\label{index:version-info-copy-module}\phantomsection\label{index:module-kafe._version_info(copy)}\index{kafe.\_version\_info(copy) (module)}
+
+\subsection{\texttt{\_version\_info} Module}
+\label{index:module-kafe._version_info}\label{index:version-info-module}\index{kafe.\_version\_info (module)}
 
 \subsection{\texttt{constants} Module}
 \label{index:constants-module}\label{index:module-kafe.constants}\index{kafe.constants (module)}\phantomsection\label{index:module-constants}\index{constants (module)}\index{F\_SIGNIFICANCE (in module kafe.constants)}
@@ -748,7 +754,7 @@ Column delimiter use in the matrix file. Defaults to \code{None}, meaning any wh
 \label{index:fit-module}\label{index:module-kafe.fit}\index{kafe.fit (module)}\phantomsection\label{index:module-fit}\index{fit (module)}\index{Fit (class in kafe.fit)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x3ebbe60\textgreater{}}, \emph{function\_label=None}, \emph{function\_equation=None}}{}
+\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x401e2a8\textgreater{}}, \emph{function\_label=None}, \emph{function\_equation=None}}{}
 Object representing a fit. This object references the fitted \emph{Dataset}, the fit function and the resulting fit parameters.
 
 Necessary arguments are a \emph{Dataset} object and a fit function (which should be fitted to the \emph{Dataset}).
@@ -1960,6 +1966,8 @@ Object for simultaneous logging to stdout and a file.
 \bigletter{k}
 \item {\texttt{kafe}}, \pageref{index:module-kafe}
 \item {\texttt{kafe.\_\_init\_\_}}, \pageref{index:module-kafe.__init__}
+\item {\texttt{kafe.\_version\_info}}, \pageref{index:module-kafe._version_info}
+\item {\texttt{kafe.\_version\_info(copy)}}, \pageref{index:module-kafe._version_info(copy)}
 \item {\texttt{kafe.constants}}, \pageref{index:module-kafe.constants}
 \item {\texttt{kafe.dataset}}, \pageref{index:module-kafe.dataset}
 \item {\texttt{kafe.file\_tools}}, \pageref{index:module-kafe.file_tools}
