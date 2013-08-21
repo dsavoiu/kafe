@@ -3,7 +3,7 @@
    :platform: Unix
    :synopsis: A submodule defining some constants used by the fit package.
 
-.. moduleauthor:: Daniel Savoiu <daniel.savoiu@ekp.kit.edu>
+.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
 '''
 
 # (G) Constants related to the graphical output

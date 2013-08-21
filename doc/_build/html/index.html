@@ -523,7 +523,7 @@ a_N1  a_N2  ...  a_NM</pre>
 <span id="fit-module"></span><h4><a class="reference internal" href="#module-fit" title="fit: This submodule defines a `Fit` object which performs the actual fitting given a `Dataset` and a fit function. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">fit</span></tt></a> Module<a class="headerlink" href="#module-kafe.fit" title="Permalink to this headline">¶</a></h4>
 <span class="target" id="module-fit"></span><dl class="class">
 <dt id="kafe.fit.Fit">
-<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x4509de8&gt;</em>, <em>function_label=None</em>, <em>function_equation=None</em><big>)</big><a class="reference internal" href="_modules/kafe/fit.html#Fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x3ebbe60&gt;</em>, <em>function_label=None</em>, <em>function_equation=None</em><big>)</big><a class="reference internal" href="_modules/kafe/fit.html#Fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Object representing a fit. This object references the fitted <cite>Dataset</cite>, the fit function and the resulting fit parameters.</p>
 <p>Necessary arguments are a <cite>Dataset</cite> object and a fit function (which should be fitted to the <cite>Dataset</cite>).
 Optionally, an external function <cite>FCN</cite> (whose minima should be located to find the best fit) can be specified.
@@ -793,6 +793,99 @@ order of magnitude as the error.</p>
 <dd>number of significant digits of the error to consider</dd>
 </dl>
 </dd></dl>
+
+</div>
+<div class="section" id="module-kafe.function_library">
+<span id="function-library-module"></span><h4><a class="reference internal" href="#module-function_library" title="function_library: A submodule containing a collection of model functions. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">function_library</span></tt></a> Module<a class="headerlink" href="#module-kafe.function_library" title="Permalink to this headline">¶</a></h4>
+<span class="target" id="module-function_library"></span><dl class="function">
+<dt id="kafe.function_library.constant_1par">
+<tt class="descclassname">kafe.function_library.</tt><tt class="descname">constant_1par</tt><big>(</big><em>x</em>, <em>constant=1.0</em><big>)</big><a class="reference internal" href="_modules/kafe/function_library.html#constant_1par"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.constant_1par" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_library.exp_2par">
+<tt class="descclassname">kafe.function_library.</tt><tt class="descname">exp_2par</tt><big>(</big><em>x</em>, <em>growth=1.0</em>, <em>constant_factor=0.0</em><big>)</big><a class="reference internal" href="_modules/kafe/function_library.html#exp_2par"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.exp_2par" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_library.exp_3par">
+<tt class="descclassname">kafe.function_library.</tt><tt class="descname">exp_3par</tt><big>(</big><em>x</em>, <em>growth=1.0</em>, <em>constant_factor=0.0</em>, <em>y_offset=0.0</em><big>)</big><a class="reference internal" href="_modules/kafe/function_library.html#exp_3par"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.exp_3par" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_library.exp_3par2">
+<tt class="descclassname">kafe.function_library.</tt><tt class="descname">exp_3par2</tt><big>(</big><em>x</em>, <em>growth=1.0</em>, <em>constant_factor=0.0</em>, <em>x_offset=0.0</em><big>)</big><a class="reference internal" href="_modules/kafe/function_library.html#exp_3par2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.exp_3par2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_library.exp_4par">
+<tt class="descclassname">kafe.function_library.</tt><tt class="descname">exp_4par</tt><big>(</big><em>x</em>, <em>growth=1.0</em>, <em>constant_factor=0.0</em>, <em>x_offset=0.0</em>, <em>y_offset=0.0</em><big>)</big><a class="reference internal" href="_modules/kafe/function_library.html#exp_4par"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.exp_4par" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_library.gauss">
+<tt class="descclassname">kafe.function_library.</tt><tt class="descname">gauss</tt><big>(</big><em>x</em>, <em>mean=0.0</em>, <em>sigma=1.0</em>, <em>scale=1.0</em><big>)</big><a class="reference internal" href="_modules/kafe/function_library.html#gauss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.gauss" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_library.linear_1par">
+<tt class="descclassname">kafe.function_library.</tt><tt class="descname">linear_1par</tt><big>(</big><em>x</em>, <em>slope=1.0</em><big>)</big><a class="reference internal" href="_modules/kafe/function_library.html#linear_1par"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.linear_1par" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_library.linear_2par">
+<tt class="descclassname">kafe.function_library.</tt><tt class="descname">linear_2par</tt><big>(</big><em>x</em>, <em>slope=1.0</em>, <em>y_intercept=0.0</em><big>)</big><a class="reference internal" href="_modules/kafe/function_library.html#linear_2par"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.linear_2par" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_library.linear_2par2">
+<tt class="descclassname">kafe.function_library.</tt><tt class="descname">linear_2par2</tt><big>(</big><em>x</em>, <em>slope=1.0</em>, <em>x_offset=0.0</em><big>)</big><a class="reference internal" href="_modules/kafe/function_library.html#linear_2par2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.linear_2par2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_library.poisson">
+<tt class="descclassname">kafe.function_library.</tt><tt class="descname">poisson</tt><big>(</big><em>x</em>, <em>mean=0.0</em>, <em>scale=1.0</em><big>)</big><a class="reference internal" href="_modules/kafe/function_library.html#poisson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.poisson" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_library.poly3">
+<tt class="descclassname">kafe.function_library.</tt><tt class="descname">poly3</tt><big>(</big><em>x</em>, <em>coeff3=1.0</em>, <em>coeff2=0.0</em>, <em>coeff1=0.0</em>, <em>coeff0=0.0</em><big>)</big><a class="reference internal" href="_modules/kafe/function_library.html#poly3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.poly3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_library.poly4">
+<tt class="descclassname">kafe.function_library.</tt><tt class="descname">poly4</tt><big>(</big><em>x</em>, <em>coeff4=1.0</em>, <em>coeff3=0.0</em>, <em>coeff2=0.0</em>, <em>coeff1=0.0</em>, <em>coeff0=0.0</em><big>)</big><a class="reference internal" href="_modules/kafe/function_library.html#poly4"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.poly4" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_library.poly5">
+<tt class="descclassname">kafe.function_library.</tt><tt class="descname">poly5</tt><big>(</big><em>x</em>, <em>coeff5=1.0</em>, <em>coeff4=0.0</em>, <em>coeff3=0.0</em>, <em>coeff2=0.0</em>, <em>coeff1=0.0</em>, <em>coeff0=0.0</em><big>)</big><a class="reference internal" href="_modules/kafe/function_library.html#poly5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.poly5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_library.quadratic_1par">
+<tt class="descclassname">kafe.function_library.</tt><tt class="descname">quadratic_1par</tt><big>(</big><em>x</em>, <em>quad_coeff=1.0</em><big>)</big><a class="reference internal" href="_modules/kafe/function_library.html#quadratic_1par"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.quadratic_1par" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_library.quadratic_2par">
+<tt class="descclassname">kafe.function_library.</tt><tt class="descname">quadratic_2par</tt><big>(</big><em>x</em>, <em>quad_coeff=1.0</em>, <em>constant=0.0</em><big>)</big><a class="reference internal" href="_modules/kafe/function_library.html#quadratic_2par"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.quadratic_2par" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_library.quadratic_2par2">
+<tt class="descclassname">kafe.function_library.</tt><tt class="descname">quadratic_2par2</tt><big>(</big><em>x</em>, <em>quad_coeff=1.0</em>, <em>x_offset=0.0</em><big>)</big><a class="reference internal" href="_modules/kafe/function_library.html#quadratic_2par2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.quadratic_2par2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_library.quadratic_3par">
+<tt class="descclassname">kafe.function_library.</tt><tt class="descname">quadratic_3par</tt><big>(</big><em>x</em>, <em>quad_coeff=1.0</em>, <em>lin_coeff=0.0</em>, <em>constant=0.0</em><big>)</big><a class="reference internal" href="_modules/kafe/function_library.html#quadratic_3par"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.quadratic_3par" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_library.quadratic_3par2">
+<tt class="descclassname">kafe.function_library.</tt><tt class="descname">quadratic_3par2</tt><big>(</big><em>x</em>, <em>quad_coeff=1.0</em>, <em>x_offset=0.0</em>, <em>constant=0.0</em><big>)</big><a class="reference internal" href="_modules/kafe/function_library.html#quadratic_3par2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.quadratic_3par2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 <div class="section" id="module-kafe.function_tools">
@@ -1374,6 +1467,7 @@ towards the interval&#8217;s center).</p>
 <li><a class="reference internal" href="#module-kafe.dataset"><tt class="docutils literal"><span class="pre">dataset</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.file_tools"><tt class="docutils literal"><span class="pre">file_tools</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.fit"><tt class="docutils literal"><span class="pre">fit</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-kafe.function_library"><tt class="docutils literal"><span class="pre">function_library</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.function_tools"><tt class="docutils literal"><span class="pre">function_tools</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.minuit"><tt class="docutils literal"><span class="pre">minuit</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.numeric_tools"><tt class="docutils literal"><span class="pre">numeric_tools</span></tt> Module</a></li>

@@ -2,7 +2,7 @@
 .. module:: plot
    :platform: Unix
    :synopsis: A submodule for plotting `Dataset`s with ``matplotib``.
-.. moduleauthor:: Daniel Savoiu <daniel.savoiu@ekp.kit.edu>
+.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
 '''
 
 import matplotlib as mpl

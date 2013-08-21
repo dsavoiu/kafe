@@ -3,7 +3,7 @@
    :platform: Unix
    :synopsis: This submodule provides a set of helper functions for parsing files
 
-.. moduleauthor:: Daniel Savoiu <daniel.savoiu@ekp.kit.edu>
+.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
 '''
 
 from string import join, split 

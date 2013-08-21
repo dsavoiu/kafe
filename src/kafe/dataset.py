@@ -3,7 +3,7 @@
    :platform: Unix
    :synopsis: This submodule defines a `Dataset` object, a container class for storing measurement data and error data.
    
-.. moduleauthor:: Daniel Savoiu <daniel.savoiu@ekp.kit.edu>
+.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
 '''
 
 from string import join, split

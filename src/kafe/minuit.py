@@ -3,7 +3,7 @@
    :platform: Unix
    :synopsis: A submodule providing the `Minuit` object, which communicates with CERN *ROOT*'s function minimizer *Minuit*.
    
-.. moduleauthor:: Daniel Savoiu <daniel.savoiu@ekp.kit.edu>
+.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
 '''
 
 from ROOT import gROOT, TMinuit, Double, Long # ROOT's data types needed to use TMinuit

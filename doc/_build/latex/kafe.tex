@@ -20,7 +20,7 @@
 
 
 \title{kafe Documentation}
-\date{August 16, 2013}
+\date{August 21, 2013}
 \release{0.3alpha1}
 \author{Daniel Savoiu}
 \newcommand{\sphinxlogo}{}
@@ -748,7 +748,7 @@ Column delimiter use in the matrix file. Defaults to \code{None}, meaning any wh
 \label{index:fit-module}\label{index:module-kafe.fit}\index{kafe.fit (module)}\phantomsection\label{index:module-fit}\index{fit (module)}\index{Fit (class in kafe.fit)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x4509de8\textgreater{}}, \emph{function\_label=None}, \emph{function\_equation=None}}{}
+\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x3ebbe60\textgreater{}}, \emph{function\_label=None}, \emph{function\_equation=None}}{}
 Object representing a fit. This object references the fitted \emph{Dataset}, the fit function and the resulting fit parameters.
 
 Necessary arguments are a \emph{Dataset} object and a fit function (which should be fitted to the \emph{Dataset}).
@@ -1102,6 +1102,117 @@ number of significant digits of the error to consider
 
 \end{description}
 
+\end{fulllineitems}
+
+
+
+\subsection{\texttt{function\_library} Module}
+\label{index:module-kafe.function_library}\label{index:function-library-module}\index{kafe.function\_library (module)}\phantomsection\label{index:module-function_library}\index{function\_library (module)}\index{constant\_1par() (in module kafe.function\_library)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.function_library.constant_1par}\pysiglinewithargsret{\code{kafe.function\_library.}\bfcode{constant\_1par}}{\emph{x}, \emph{constant=1.0}}{}
+\end{fulllineitems}
+
+\index{exp\_2par() (in module kafe.function\_library)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.function_library.exp_2par}\pysiglinewithargsret{\code{kafe.function\_library.}\bfcode{exp\_2par}}{\emph{x}, \emph{growth=1.0}, \emph{constant\_factor=0.0}}{}
+\end{fulllineitems}
+
+\index{exp\_3par() (in module kafe.function\_library)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.function_library.exp_3par}\pysiglinewithargsret{\code{kafe.function\_library.}\bfcode{exp\_3par}}{\emph{x}, \emph{growth=1.0}, \emph{constant\_factor=0.0}, \emph{y\_offset=0.0}}{}
+\end{fulllineitems}
+
+\index{exp\_3par2() (in module kafe.function\_library)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.function_library.exp_3par2}\pysiglinewithargsret{\code{kafe.function\_library.}\bfcode{exp\_3par2}}{\emph{x}, \emph{growth=1.0}, \emph{constant\_factor=0.0}, \emph{x\_offset=0.0}}{}
+\end{fulllineitems}
+
+\index{exp\_4par() (in module kafe.function\_library)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.function_library.exp_4par}\pysiglinewithargsret{\code{kafe.function\_library.}\bfcode{exp\_4par}}{\emph{x}, \emph{growth=1.0}, \emph{constant\_factor=0.0}, \emph{x\_offset=0.0}, \emph{y\_offset=0.0}}{}
+\end{fulllineitems}
+
+\index{gauss() (in module kafe.function\_library)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.function_library.gauss}\pysiglinewithargsret{\code{kafe.function\_library.}\bfcode{gauss}}{\emph{x}, \emph{mean=0.0}, \emph{sigma=1.0}, \emph{scale=1.0}}{}
+\end{fulllineitems}
+
+\index{linear\_1par() (in module kafe.function\_library)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.function_library.linear_1par}\pysiglinewithargsret{\code{kafe.function\_library.}\bfcode{linear\_1par}}{\emph{x}, \emph{slope=1.0}}{}
+\end{fulllineitems}
+
+\index{linear\_2par() (in module kafe.function\_library)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.function_library.linear_2par}\pysiglinewithargsret{\code{kafe.function\_library.}\bfcode{linear\_2par}}{\emph{x}, \emph{slope=1.0}, \emph{y\_intercept=0.0}}{}
+\end{fulllineitems}
+
+\index{linear\_2par2() (in module kafe.function\_library)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.function_library.linear_2par2}\pysiglinewithargsret{\code{kafe.function\_library.}\bfcode{linear\_2par2}}{\emph{x}, \emph{slope=1.0}, \emph{x\_offset=0.0}}{}
+\end{fulllineitems}
+
+\index{poisson() (in module kafe.function\_library)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.function_library.poisson}\pysiglinewithargsret{\code{kafe.function\_library.}\bfcode{poisson}}{\emph{x}, \emph{mean=0.0}, \emph{scale=1.0}}{}
+\end{fulllineitems}
+
+\index{poly3() (in module kafe.function\_library)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.function_library.poly3}\pysiglinewithargsret{\code{kafe.function\_library.}\bfcode{poly3}}{\emph{x}, \emph{coeff3=1.0}, \emph{coeff2=0.0}, \emph{coeff1=0.0}, \emph{coeff0=0.0}}{}
+\end{fulllineitems}
+
+\index{poly4() (in module kafe.function\_library)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.function_library.poly4}\pysiglinewithargsret{\code{kafe.function\_library.}\bfcode{poly4}}{\emph{x}, \emph{coeff4=1.0}, \emph{coeff3=0.0}, \emph{coeff2=0.0}, \emph{coeff1=0.0}, \emph{coeff0=0.0}}{}
+\end{fulllineitems}
+
+\index{poly5() (in module kafe.function\_library)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.function_library.poly5}\pysiglinewithargsret{\code{kafe.function\_library.}\bfcode{poly5}}{\emph{x}, \emph{coeff5=1.0}, \emph{coeff4=0.0}, \emph{coeff3=0.0}, \emph{coeff2=0.0}, \emph{coeff1=0.0}, \emph{coeff0=0.0}}{}
+\end{fulllineitems}
+
+\index{quadratic\_1par() (in module kafe.function\_library)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.function_library.quadratic_1par}\pysiglinewithargsret{\code{kafe.function\_library.}\bfcode{quadratic\_1par}}{\emph{x}, \emph{quad\_coeff=1.0}}{}
+\end{fulllineitems}
+
+\index{quadratic\_2par() (in module kafe.function\_library)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.function_library.quadratic_2par}\pysiglinewithargsret{\code{kafe.function\_library.}\bfcode{quadratic\_2par}}{\emph{x}, \emph{quad\_coeff=1.0}, \emph{constant=0.0}}{}
+\end{fulllineitems}
+
+\index{quadratic\_2par2() (in module kafe.function\_library)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.function_library.quadratic_2par2}\pysiglinewithargsret{\code{kafe.function\_library.}\bfcode{quadratic\_2par2}}{\emph{x}, \emph{quad\_coeff=1.0}, \emph{x\_offset=0.0}}{}
+\end{fulllineitems}
+
+\index{quadratic\_3par() (in module kafe.function\_library)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.function_library.quadratic_3par}\pysiglinewithargsret{\code{kafe.function\_library.}\bfcode{quadratic\_3par}}{\emph{x}, \emph{quad\_coeff=1.0}, \emph{lin\_coeff=0.0}, \emph{constant=0.0}}{}
+\end{fulllineitems}
+
+\index{quadratic\_3par2() (in module kafe.function\_library)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.function_library.quadratic_3par2}\pysiglinewithargsret{\code{kafe.function\_library.}\bfcode{quadratic\_3par2}}{\emph{x}, \emph{quad\_coeff=1.0}, \emph{x\_offset=0.0}, \emph{constant=0.0}}{}
 \end{fulllineitems}
 
 
@@ -1843,6 +1954,7 @@ Object for simultaneous logging to stdout and a file.
 \bigletter{f}
 \item {\texttt{file\_tools}} \emph{(Unix)}, \pageref{index:module-file_tools}
 \item {\texttt{fit}} \emph{(Unix)}, \pageref{index:module-fit}
+\item {\texttt{function\_library}} \emph{(Unix)}, \pageref{index:module-function_library}
 \item {\texttt{function\_tools}} \emph{(Unix)}, \pageref{index:module-function_tools}
 \indexspace
 \bigletter{k}
@@ -1852,6 +1964,7 @@ Object for simultaneous logging to stdout and a file.
 \item {\texttt{kafe.dataset}}, \pageref{index:module-kafe.dataset}
 \item {\texttt{kafe.file\_tools}}, \pageref{index:module-kafe.file_tools}
 \item {\texttt{kafe.fit}}, \pageref{index:module-kafe.fit}
+\item {\texttt{kafe.function\_library}}, \pageref{index:module-kafe.function_library}
 \item {\texttt{kafe.function\_tools}}, \pageref{index:module-kafe.function_tools}
 \item {\texttt{kafe.minuit}}, \pageref{index:module-kafe.minuit}
 \item {\texttt{kafe.numeric\_tools}}, \pageref{index:module-kafe.numeric_tools}

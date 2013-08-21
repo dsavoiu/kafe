@@ -3,7 +3,7 @@
    :platform: Unix
    :synopsis: This submodule contains several useful tools for getting information about a function, including the number, names and default values of its parameters and its derivatives with respect to the independent variable or the parameters.
 
-.. moduleauthor:: Daniel Savoiu <daniel.savoiu@ekp.kit.edu>
+.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
 
 '''
 

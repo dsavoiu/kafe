@@ -3,7 +3,7 @@
    :platform: Unix
    :synopsis: A submodule containing several numeric algorithms used by the fit package, such as methods for converting beween covariance and correlation matrices or extracting the statistical errors from a covariance matrix.
 
-.. moduleauthor:: Daniel Savoiu <daniel.savoiu@ekp.kit.edu>
+.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
 
 '''
 

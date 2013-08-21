@@ -41,6 +41,14 @@ kafe Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`function_library` Module
+------------------------------
+
+.. automodule:: kafe.function_library
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`function_tools` Module
 ----------------------------
 
