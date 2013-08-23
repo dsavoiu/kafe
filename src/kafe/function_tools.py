@@ -13,6 +13,33 @@ from copy import copy                               # needed to make shallow cop
 
 from constants import *
 
+##############
+# Decorators #
+##############
+
+class FitFunction:
+	"""
+	Decorator class for fit functions. If a function definition is decorated using this class,
+	some information is collected about the function which is relevant to the fitting process,
+	such as the number of parameters, their names and default values, and even other optional
+	details, such as LaTeX parameter names, LaTeX function name and LaTeX equation.
+	"""
+	def __init__(self, f):
+		self.f = f
+		self.parameter_names = get_function_property(f, 'parameter names') #: The names of the parameters
+		self.number_of_parameters = get_function_property(f, 'number of parameters') #: The number of parameters
+		self.name = get_function_property(f, 'name') #: The function's name
+		self.parameter_defaults = get_function_property(f, 'parameter defaults') #: The default values of the parameters
+		self.x_name = 'x' #: The name given to the independent variable
+		
+		# Properties related to LaTeX:
+		self.latex_name = '\\verb!%s!' % self.name #: The function's name in :math:`\LaTeX{}`
+		self.latex_parameter_names = ['\\verb!%s!' % name for name in self.parameter_names] #: A list of parameter names in :math:`\LaTeX{}`
+		self.latex_equation = self.latex_name + "(" + self.latex_parameter_names.join(',~') + ")" #: The function's equation in :math:`\LaTeX{}`
+		
+	def __call__(self, *args):
+		return self.f(*args)
+
 def derivative(func, derive_by_index, variables_tuple, derivative_spacing):
     r'''
     Gives :math:`\frac{\partial f}{\partial x_k}` for :math:`f = f(x_0, x_1, \ldots)`. `func` is :math:`f`, `variables_tuple` is :math:`\{x_i\}` and `derive_by_index` is :math:`k`.
