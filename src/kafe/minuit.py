@@ -93,7 +93,7 @@ class Minuit:
         
         error_code = Long(0)
         # Set up the starting fit parameters in TMinuit
-        for i in range(0, self.number_of_parameters):
+        for i in xrange(0, self.number_of_parameters):
             self.__gMinuit.mnparm(i, self.parameter_names[i], self.current_parameters[i], 0.1 * self.parameter_errors[i], 0, 0, error_code)
             # use 10% of the parameter 1-sigma errors as the initial step size
         
@@ -187,7 +187,7 @@ class Minuit:
         # retrieve fit parameters
         p, pe = Double(0), Double(0)
         
-        for i in range(0, self.number_of_parameters):
+        for i in xrange(0, self.number_of_parameters):
             self.__gMinuit.GetParameter(i, p, pe)  # retrieve fitresult
             
             result.append(float(p))
@@ -205,7 +205,7 @@ class Minuit:
         # retrieve fit parameters
         p, pe = Double(0), Double(0)
         
-        for i in range(0, self.number_of_parameters):
+        for i in xrange(0, self.number_of_parameters):
             self.__gMinuit.GetParameter(i, p, pe)  # retrieve fitresult
             
             result.append(float(pe))
@@ -223,7 +223,7 @@ class Minuit:
         # retrieve fit parameters
         p, pe = Double(0), Double(0)
         
-        for i in range(0, self.number_of_parameters):
+        for i in xrange(0, self.number_of_parameters):
             self.__gMinuit.GetParameter(i, p, pe)  # retrieve fitresult
             
             result.append( (self.get_parameter_name(i), float(p), float(pe)) )

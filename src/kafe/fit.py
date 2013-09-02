@@ -414,17 +414,17 @@ class Fit:
         par_cor_mat = cov_to_cor(par_cov_mat)
         
         
-        for par_nr in range(len(self.current_param_values)):
+        for par_nr, par_val in enumerate(self.current_param_values):
             print >>self.out_stream, '# '+self.param_names[par_nr]
             print >>self.out_stream, '# value        stat. err.    ',
             if par_nr > 0:
                 print >>self.out_stream, 'correlations'
             else:
                 print >>self.out_stream, ''
-            print >>self.out_stream, format(self.current_param_values[par_nr], '.06e')+'  ',
+            print >>self.out_stream, format(par_val, '.06e')+'  ',
             print >>self.out_stream, format(par_err[par_nr], '.06e')+'  ',
             if par_nr > 0:
-                for i in range(par_nr):
+                for i in xrange(par_nr):
                     print >>self.out_stream, format(par_cor_mat[par_nr, i], '.06e')+'  ',
                     
             print >>self.out_stream, ''

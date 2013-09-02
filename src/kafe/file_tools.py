@@ -98,8 +98,8 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ', cov_mat_f
             tmp_fields = split(line, delimiter) # split line on delimiter
     
         # append those contents to the right fields
-        for idx in range(len(field_order_list)):
-            fields[field_order_list[idx]].append( float(tmp_fields[idx]) )
+        for idx, field_name in enumerate(field_order_list):
+            fields[field_name].append( float(tmp_fields[idx]) )
             
     # construct Dataset object
     dataset_kwargs = {}
@@ -121,11 +121,11 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ', cov_mat_f
             print "Warning: Invalid cov_mat_files specification, ignoring... Expected 2-tuple of strings/file objects instead of %r." % (cov_mat_files,)
         else:
             cov_mats = []
-            for axis_id in range(len(axes)):
+            for axis_id, axis_name in enumerate(axes):
                 if cov_mat_files[axis_id] is not None:
                     # if cov mat is given, check for other errors on the same axis and warn
-                    if set(dataset_kwargs) & set([axes[axis_id]+'absstat', axes[axis_id]+'relstat']):
-                        print "Warning: Errors provided for axis `%s` along with covariance matrix. Ignoring errors..." % (axes[axis_id])
+                    if set(dataset_kwargs) & set([axis_name+'absstat', axis_name+'relstat']):
+                        print "Warning: Errors provided for axis `%s` along with covariance matrix. Ignoring errors..." % (axis_name)
                 
                     # parse the given matrix file into cov mat
                     cov_mats.append(parse_matrix_file(cov_mat_files[axis_id]))

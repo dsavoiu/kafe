@@ -27,12 +27,12 @@ def label_to_latex(label):
     '''
     
     tokens = split(label)
-    for token_id in range(len(tokens)):
-        if len(tokens[token_id]) == 1 or tokens[token_id][0]=='\\':
-            if lower(tokens[token_id][-1]) not in "abcdefghijklmnopqrstuvwxyz":
-                tokens[token_id] = '$%s$%s' % (tokens[token_id][:-1],tokens[token_id][-1]) # surround isolated chars with $ (omit last)
+    for token_id, token in tokens.enumerate():
+        if len(token) == 1 or token[0]=='\\':
+            if lower(token[-1]) not in "abcdefghijklmnopqrstuvwxyz":
+                tokens[token_id] = '$%s$%s' % (token[:-1],token[-1]) # surround isolated chars with $ (omit last)
             else: 
-                tokens[token_id] = '$%s$' % (tokens[token_id],) # surround isolated chars with $
+                tokens[token_id] = '$%s$' % (token,) # surround isolated chars with $
     return join(tokens)
             
 def pad_span(span, pad_coeff=1, additional_pad=None):
@@ -176,14 +176,14 @@ class Plot:
         
         self.plot_range = {'x': None, 'y': None}    #: plot range
         
-        self.show_legend = kwargs.pop('show_legend', True) #: whether to show the plot legend (``True``) or not (``False``)
+        self.show_legend = kwargs.get('show_legend', True) #: whether to show the plot legend (``True``) or not (``False``)
         
         if len(fits)==1:
             #: axis labels
             self.axis_labels = map(label_to_latex, self.fits[0].dataset.axis_labels) # inherit axis labels from Fit's Dataset
             
             # set unit in brackets (if available)
-            for label_id in range(len(self.axis_labels)):
+            for label_id, _ in enumerate(self.axis_labels):
                 unit = self.fits[0].dataset.axis_units[label_id]
                 if unit != '':
                     self.axis_labels[label_id] += " [\\textrm{%s}]" % (unit,)
@@ -220,7 +220,7 @@ class Plot:
         '''
         Plot every `Fit` object to its figure.
         '''
-        for p_id in range(len(self.fits)):
+        for p_id, _ in enumerate(self.fits):
             if show_data_for != 'all':
                 try:
                     iter(show_data_for)
@@ -298,7 +298,7 @@ class Plot:
                 
         for fit in fits_with_parameter_box:
             text_content += "~\n" + fit.function_label + ':\n'
-            for idx in range(len(fit.param_names)):
+            for idx, _ in enumerate(fit.param_names):
                 parname = fit.param_names_latex[idx]
                 parval = fit.get_parameter_values(rounding=True)[idx]
                 parerrs = fit.get_parameter_errors(rounding=True)[idx]
@@ -409,10 +409,10 @@ class Plot:
         confidence_band_data = np.zeros(G_PLOT_POINTS) # initialize conficence band data with zero
         
         # go through each data point and calculate the confidence interval
-        for i in range(len(fxdata)):            
+        for i, fval in enumerate(fxdata):            
             # calculate the outer product of the gradient of f (with respect to the parameters) with itself
             derivative_spacing = 0.01 * np.sqrt(min(np.diag(current_fit.get_error_matrix())))    # use 1/100th of the smallest parameter error as spacing for df/dp
-            par_deriv_outer_prod = outer_product(derive_by_parameters(current_fit.fit_function, fxdata[i], current_fit.current_param_values, derivative_spacing))
+            par_deriv_outer_prod = outer_product(derive_by_parameters(current_fit.fit_function, fval, current_fit.current_param_values, derivative_spacing))
             tmp_sum = np.sum(par_deriv_outer_prod * np.asarray(current_fit.get_error_matrix()))
             confidence_band_data[i] = np.sqrt(tmp_sum)
         
@@ -494,7 +494,7 @@ if __name__ == '__main__':
      
     tstFloat = .1
     myFits = []
-    for slope in range(1,2):
+    for slope in xrange(1,2):
         myYData  = np.asarray(map(lambda x: linear_2par2(x, slope, 0), myXData))
         myYData += np.random.normal(loc=0.0, scale=tstFloat, size=len(myYData)) 
         myDataset = build_dataset(xdata=myXData, 
