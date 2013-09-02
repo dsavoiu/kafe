@@ -21,11 +21,11 @@ def derivative(func, derive_by_index, variables_tuple, derivative_spacing):
     # define a dummy function, so that the variable by which f is to be derived is the only variable
     def tmp_func(derive_by_var):
         argument_list = []
-        for arg_nr in range(len(variables_tuple)):
+        for arg_nr, arg_val in enumerate(variables_tuple):
             if arg_nr==derive_by_index:
                 argument_list.append(derive_by_var)
             else:
-                argument_list.append(variables_tuple[arg_nr])
+                argument_list.append(arg_val)
         return func(*argument_list)    
     
     # return the derivative of that function
@@ -82,7 +82,7 @@ def derive_by_parameters(func, x_0, param_list, derivative_spacing):
     output_list = []
     variables_tuple = tuple([x_0] + list(param_list))   # compile all function arguments into a variables tuple
     
-    for derive_by_index in range(1, func.func_code.co_argcount): # go through all arguments except the first one
+    for derive_by_index in xrange(1, func.func_code.co_argcount): # go through all arguments except the first one
         output_list.append(derivative(func, derive_by_index, variables_tuple, derivative_spacing))
     
     return np.asarray(output_list)
@@ -168,7 +168,7 @@ if __name__ == '__main__':
 #         '''Return an array of derivatives df/dp_i (p_i runs through parameters) at a certain point x_0'''
 #         output_list = []
 #         tmp_arg_list = [x_0] + list(args) # add the x as "zeroth variable"
-#         for arg_index in range(1, len(args) + 1):
+#         for arg_index in xrange(1, len(args) + 1):
 #             output_list.append(derivative(self.function_pointer, arg_index, tmp_arg_list)) # get the derivatives in the arguments
 #         return np.array(output_list)
 #         

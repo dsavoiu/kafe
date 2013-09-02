@@ -227,10 +227,10 @@ class Dataset: #(object):
         #############################
         
         # name the Dataset
-        self.data_label = kwargs.pop('title', "Untitled Dataset")
+        self.data_label = kwargs.get('title', "Untitled Dataset")
 
         # check for an input file
-        if kwargs.has_key('input_file'):
+        if 'input_file' in kwargs:
             self.read_from_file(kwargs['input_file'])
             return   # exit constructor after loading input file
             
@@ -238,7 +238,7 @@ class Dataset: #(object):
         ############
         
         # preliminary checks
-        if not kwargs.has_key('data'):
+        if not 'data' in kwargs:
             raise Exception, "No data provided for Dataset."
         else:
             if len(kwargs['data']) != NUMBER_OF_AXES:
@@ -249,9 +249,9 @@ class Dataset: #(object):
                     kwargs['data'] = data # set the transposed data as the read data
             
         
-        for axis in range(self.n_axes):         # go through the axes
+        for axis in xrange(self.n_axes):         # go through the axes
             self.set_data(axis, kwargs['data'][axis])        # load data for axis
-            if kwargs.has_key('cov_mats'):            
+            if 'cov_mats' in kwargs:            
                 self.set_cov_mat(axis, kwargs['cov_mats'][axis]) # load cov mat for axis
             else:
                 self.set_cov_mat(axis, None) # don't load cov mat for axis
@@ -525,7 +525,7 @@ class Dataset: #(object):
         output_list = []
         
         # go through the axes
-        for axis in range(self.n_axes):
+        for axis in xrange(self.n_axes):
             helper_list = []                                                # define a helper list which we will fill out
             stat_errs = extract_statistical_errors(self.get_cov_mat(axis))  # get the statistical errors of the data
             data = self.get_data(axis)
@@ -539,13 +539,13 @@ class Dataset: #(object):
                 if self.__query_has_correlations[axis]:                          # if there are also correlations (syst errors)
                     helper_list[-1].append('correlation coefficients')  # add a heading for the correlation matrix
             
-            for idx in range(len(data)):
+            for idx, val in enumerate(data):
                 helper_list.append([])                                              # append a new "row" to the helper list
-                helper_list[-1].append( format(data[idx], format_string) )          # append the coordinate of the data point
-                if self.__query_has_errors[axis]:                             # if the dataset has stat errors
+                helper_list[-1].append( format(val, format_string) )                # append the coordinate of the data point
+                if self.__query_has_errors[axis]:                                   # if the dataset has stat errors
                     helper_list[-1].append( format(stat_errs[idx], format_string) ) # append the stat error of the data point
-                    if self.__query_has_correlations[axis]:                          # if there are also correlations (syst errors)
-                        for col in range(idx):                                                  # go through the columns of the correlation matrix
+                    if self.__query_has_correlations[axis]:                         # if there are also correlations (syst errors)
+                        for col in xrange(idx):                                                  # go through the columns of the correlation matrix
                             helper_list[-1].append( format(cor_mat[idx, col], format_string))   # append the correlation coefficients to the helper list
             
             helper_list.append([])  # append an empty list -> blank line
