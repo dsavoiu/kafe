@@ -14,10 +14,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
+@FitFunction
 def gauss_2par(x, mu=0.0, sigma=1.0):
     '''Gaussian distribution'''
     return 1.0 / (np.sqrt(2 * math.pi) * sigma) * np.exp( -( (x - mu) ** 2 / (2 * sigma ** 2)) )    
-
 
 # Define x-axis data
 my_x_data  = np.linspace(-3,3,20)    # twenty evenly-spaced points on the x axis, from -3 to 3
@@ -35,7 +35,7 @@ my_dataset = build_dataset(
 my_fit = Fit(my_dataset, gauss_2par, function_label='Standard-Normalverteilung')
 
 # Don't call do_fit for this Fit. 
- 
+
 # Plot the Fit
 myPlot = Plot(my_fit, show_legend=True)
 

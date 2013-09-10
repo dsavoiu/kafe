@@ -7,14 +7,13 @@ find the mass of the W boson. It also shows the effect of including co-
 variance matrices into one's calculations instead of just statistical
 errors.
 
-
 '''
 from kafe import *
 
 import matplotlib.pyplot as plt
 import numpy as np
 
-
+@FitFunction
 def constant_1par(x, mean=80):    
     '''Constant Function'''
     return mean
@@ -50,4 +49,3 @@ myPlot.save("plot.pdf")
 
 # Show
 myPlot.show()
-
