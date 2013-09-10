@@ -6,7 +6,7 @@
 .. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
 '''
 
-from string import join, split 
+from string import join, split
 from dataset import Dataset, build_dataset
 import numpy as np
 
@@ -28,7 +28,7 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ', cov_mat_f
     **file_to_parse** : file-like object or string containing a file path
         The file to parse.
 
-    *field_order* : string (optional) 
+    *field_order* : string (optional)
         A string of comma-separated field names giving the order of the columns in the file. Defaults to ``'x,y'``.
 
     *delimiter* : string (optional)
@@ -67,14 +67,14 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ', cov_mat_f
         field_order_list = []
         for field in split(field_order, ','):   # go through the fields
             if field not in fields.keys():      # raise error for invalid fields
-                raise SyntaxError, "Supplied field order `%s' contains invalid field `%s'." % (field_order,field)
+                raise SyntaxError, "Supplied field order `%s' contains invalid field `%s'." % (field_order, field)
             elif field in field_order_list:     # raise error for repeated fields
-                raise SyntaxError, "Supplied field order `%s' contains repeated field `%s'." % (field_order,field)
+                raise SyntaxError, "Supplied field order `%s' contains repeated field `%s'." % (field_order, field)
             else:                               # validate field
                 field_order_list.append(field)
         for axis in axes:
             if axis not in field_order_list:
-                raise SyntaxError, "Supplied field order `%s' missing mandatory field `%s'." % (field_order,axis)
+                raise SyntaxError, "Supplied field order `%s' missing mandatory field `%s'." % (field_order, axis)
     else:
         raise SyntaxError, "Supplied field order `%s' is not a comma-separated list of valid fields." % (field_order,)
 
@@ -189,12 +189,3 @@ def parse_matrix_file(file_like, delimiter=None):
         result.append(tmp_fields)
 
     return np.asmatrix(result) # return np.matrix as result
-
-if __name__ == '__main__':
-    #print parse_matrix_file('../../examples/tmp/example4_W_Boson_mass/w_mass.cov')
-    myDataset = parse_column_data('../../examples/tmp/example4_W_Boson_mass/w_mittelung.dat',
-                                  field_order='x,y,yabsstat',
-                                  cov_mat_files=(None, '../../examples/tmp/example4_W_Boson_mass/w_mass.cov'),
-                                  title="W Boson mass")
-
-    print myDataset.get_formatted()

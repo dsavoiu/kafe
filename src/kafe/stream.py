@@ -1,12 +1,14 @@
 '''
 .. module:: stream
-   :platform: Unix
-   :synopsis: A submodule containing an object for simultaneous output to file and to ``sys.stdout``.
+    :platform: Unix
+    :synopsis: A submodule containing an object for simultaneous output to file
+        and to ``sys.stdout``.
 .. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
 '''
 
 import sys
 from time import gmtime, strftime
+
 
 class StreamDup(object):
     '''
@@ -35,7 +37,8 @@ class StreamDup(object):
         self.out_file.write('\n')
         self.out_file.write('#'*(len(prefix)+4+20))
         self.out_file.write('\n')
-        self.out_file.write("# %s " % (prefix,) + strftime("%Y-%m-%d %H:%M:%S #\n", gmtime()))
+        self.out_file.write("# %s " % (prefix,) +
+                            strftime("%Y-%m-%d %H:%M:%S #\n", gmtime()))
         self.out_file.write('#'*(len(prefix)+4+20))
         self.out_file.write('\n\n')
 
