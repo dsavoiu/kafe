@@ -25,12 +25,11 @@ from kafe.file_tools import *
 
 from kafe._version_info import *
 
-__version_info__ = (major, minor, prefix, revision, suffix)
-if prefix != '':
-	__version__ = "%d.%d%s%d%s" % __version_info__
-else:
-	__version__ = "%d.%d%s.%d%s" % __version_info__
-__version_major_minor__ = "%d.%d" % (major, minor)
+__version_info__ = (major, minor, revision)
+__version_suffix__ = "" # for suffixes such as 'rc' or 'beta' or 'alpha'
+
+__version__ = "%d.%d.%d" % __version_info__
+__version__ += suffix
 
 if __name__ == "__main__":
     import scipy, numpy, matplotlib, ROOT
