@@ -29,7 +29,7 @@ __version_info__ = (major, minor, revision)
 __version_suffix__ = "" # for suffixes such as 'rc' or 'beta' or 'alpha'
 
 __version__ = "%d.%d.%d" % __version_info__
-__version__ += suffix
+__version__ += __version_suffix__
 
 if __name__ == "__main__":
     import scipy, numpy, matplotlib, ROOT
