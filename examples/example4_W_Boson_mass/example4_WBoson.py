@@ -2,7 +2,7 @@
 W boson mass
 ============
 
-	This example shows the averaging of several experiments' results to
+    This example shows the averaging of several experiments' results to
 find the mass of the W boson. It also shows the effect of including co-
 variance matrices into one's calculations instead of just statistical
 errors.

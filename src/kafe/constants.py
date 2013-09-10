@@ -17,9 +17,12 @@ G_PLOT_POINTS = 200         #: number of plot points for plotting the function
 #################################################
 
 M_TOLERANCE = 0.1           #: `Minuit` tolerance level
-M_MAX_ITERATIONS = 6000     #: Maximum `Minuit` iterations until aborting the process
-M_MAX_X_FIT_ITERATIONS = 2  #: Number of maximal additional iterations for `x` fit (0 disregards `x` errors)
-M_CONFIDENCE_LEVEL = 0.05   #: Confidence level for hypythesis test. A fit is rejected it :math:`\chi^2_\text{prob}` is smaller than this constant
+M_MAX_ITERATIONS = 6000     #: Maximum `Minuit` iterations until abort
+M_MAX_X_FIT_ITERATIONS = 2  #: Maximum additional iterations for `x` fit
+M_CONFIDENCE_LEVEL = 0.05   #: Confidence level for hypothesis test
+
+# A fit is rejected if :math:`\chi^2_\text{prob}`
+# is smaller than this constant.
 
 # (F) Output number format preferences
 #################################################

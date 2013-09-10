@@ -2,11 +2,11 @@
 Plotting a Gaussian curve without data points
 ---------------------------------------------
 
-	This example creates a dummy Dataset object whose points lie exactly
+    This example creates a dummy Dataset object whose points lie exactly
 on a Gaussian curve. The Fit will then converge toward that very same
 Gaussian. When plotting, the data points used to "support" the curve
 can be skipped.
-	This example shows how to use matplotlib further to annotate plots.
+    This example shows how to use matplotlib further to annotate plots.
 
 '''
 from kafe import *
