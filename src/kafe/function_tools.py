@@ -17,7 +17,7 @@ def derivative(func, derive_by_index, variables_tuple, derivative_spacing):
     r'''
     Gives :math:`\frac{\partial f}{\partial x_k}` for :math:`f = f(x_0, x_1, \ldots)`. `func` is :math:`f`, `variables_tuple` is :math:`\{x_i\}` and `derive_by_index` is :math:`k`.
     '''
-    
+
     # define a dummy function, so that the variable by which f is to be derived is the only variable
     def tmp_func(derive_by_var):
         argument_list = []
@@ -27,23 +27,23 @@ def derivative(func, derive_by_index, variables_tuple, derivative_spacing):
             else:
                 argument_list.append(arg_val)
         return func(*argument_list)    
-    
+
     # return the derivative of that function
     return scipy_der(tmp_func, variables_tuple[derive_by_index], dx=derivative_spacing)
 
 def get_function_property(func, prop):
     '''
     Returns a specific property of the function. This assumes that the function is defined as
-    
+
         >>> def func(x, par1=1.0, par2=3.14, par3=2.71, ...): ...
-    
+
     **func** : function
         A function object from which to extract the property.
-    
+
     **prop** : any of ``'name'``, ``'parameter names'``, ``'parameter defaults'``, ``'number of parameters'``
         A string representing a property.
     '''
-    
+
     if prop == 'name':
         return func.__name__                    # get the function name from the Python function
     elif prop == 'number of parameters':
@@ -71,7 +71,7 @@ def derive_by_x(func, x_0, param_list, derivative_spacing):
         output_list = []
         for x in iterator_over_x_0:
             output_list.append(derive_by_x(func, x, param_list, derivative_spacing)) # call recursively
-            
+
         return np.asarray(output_list)
 
 def derive_by_parameters(func, x_0, param_list, derivative_spacing):
@@ -81,12 +81,11 @@ def derive_by_parameters(func, x_0, param_list, derivative_spacing):
     '''
     output_list = []
     variables_tuple = tuple([x_0] + list(param_list))   # compile all function arguments into a variables tuple
-    
+
     for derive_by_index in xrange(1, func.func_code.co_argcount): # go through all arguments except the first one
         output_list.append(derivative(func, derive_by_index, variables_tuple, derivative_spacing))
-    
+
     return np.asarray(output_list)
-    
 
 def outer_product(input_array):
     r'''
@@ -96,11 +95,10 @@ def outer_product(input_array):
     la = len(input_array)                                       # get vector size
     return np.kron(input_array, input_array).reshape(la, la)    # return outer product as numpy array
 
-
 if __name__ == '__main__':
     def test_function(x, par0=3.14, par1=1.11, par2=2.71):
         return (x - par0) ** 2 - par1 * x + par2
-    
+
     def test_function_grad(x, par0=3.14, par1=1.11, par2=2.71):
         return (
                  2 * (x - par0) - par1, # derivative by x
@@ -108,17 +106,14 @@ if __name__ == '__main__':
                 -x,                     # derivative by par1
                 1)                      # derivative by par2
 
-        
     x_array = [0., 1., 2., 3.]
-    
+
     print '    df/dx|x=0 : ', derive_by_x(test_function, 0, (1,-1,0))
     print 'df/dx_vec|x=0..3 : ', derive_by_x(test_function, x_array, (1,-1,0))
-    
+
     #print outer_product(derive_by_x(test_function, x_array, (1,-1,0)))
-    
+
     print outer_product(derive_by_parameters(test_function, 0, (1,-1,0)))
-
-
 
 # class Function:
 #     '''A class representing a 1D function on the reals.'''
@@ -184,18 +179,17 @@ if __name__ == '__main__':
 #         la = len(args) # get vector size
 #         return np.kron(fp,fp).reshape(la, la)           # return outer product as numpy array
 
-
 if __name__ == "__main__":
     def myf(x, y=1, z=3):
         latex = 'x^2 + y^3 - y z + x z^2'
         return x*x + y**2 - y*z + x*z**2
-    
+
         # df/dx =  2x + z^2
         # df/dy =  2y - z
         # df/dz = 2zx - y
- 
+
     def function_info(y):
-  
+
         y_code = \
         y.func_code.co_nlocals, \
         y.func_code.co_stacksize, \
@@ -207,10 +201,8 @@ if __name__ == "__main__":
         y.func_code.co_filename, \
         y.func_code.co_firstlineno, \
         y.func_code.co_lnotab
- 
+
         print y_code
-         
+
     #print get_function_property(myf, 'latex')
     function_info(myf)
-    
-    

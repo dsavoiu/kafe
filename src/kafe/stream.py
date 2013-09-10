@@ -5,7 +5,6 @@
 .. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
 '''
 
-
 import sys
 from time import gmtime, strftime
 
@@ -20,18 +19,18 @@ class StreamDup(object):
             self.out_file = open(out_file, 'a')
         else:
             self.out_file = out_file
-        
+
     def write(self, message):
         # write to log file AND to stdout
         self.out_file.write(message)
         sys.stdout.write(message)
-    
+
     def write_to_file(self, message):
         self.out_file.write(message)
-    
+
     def write_to_stdout(self, message):
         sys.stdout.write(message)
-    
+
     def write_timestamp(self, prefix):
         self.out_file.write('\n')
         self.out_file.write('#'*(len(prefix)+4+20))
@@ -39,10 +38,10 @@ class StreamDup(object):
         self.out_file.write("# %s " % (prefix,) + strftime("%Y-%m-%d %H:%M:%S #\n", gmtime()))
         self.out_file.write('#'*(len(prefix)+4+20))
         self.out_file.write('\n\n')
-    
+
     def fileno(self):
         return self.out_file.fileno()
-    
+
     def flush(self):
         sys.stdout.flush()
         self.out_file.flush()

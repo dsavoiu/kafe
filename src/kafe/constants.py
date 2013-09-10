@@ -30,6 +30,6 @@ Set significance for returning results and errors
 N = rounding error to N significant digits and value
 to the same order of magnitude as the error.
 '''
-                            
+
 # Other constants
 #################################################
