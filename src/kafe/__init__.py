@@ -26,6 +26,7 @@ from kafe.fit import Fit, chi2
 from kafe.plot import Plot, PlotStyle
 from kafe.file_tools import parse_column_data,  parse_matrix_file
 from kafe.numeric_tools import cov_to_cor, cor_to_cov
+from function_tools import FitFunction
 
 from kafe._version_info import major, minor, revision
 

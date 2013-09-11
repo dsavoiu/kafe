@@ -2,11 +2,11 @@
 Plotting a Gaussian curve without data points
 ---------------------------------------------
 
-	This example creates a dummy Dataset object whose points lie exactly
+    This example creates a dummy Dataset object whose points lie exactly
 on a Gaussian curve. The Fit will then converge toward that very same
 Gaussian. When plotting, the data points used to "support" the curve
 can be skipped.
-	This example shows how to use matplotlib further to annotate plots.
+    This example shows how to use matplotlib further to annotate plots.
 
 '''
 from kafe import *
@@ -14,10 +14,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
+@FitFunction
 def gauss_2par(x, mu=0.0, sigma=1.0):
     '''Gaussian distribution'''
     return 1.0 / (np.sqrt(2 * math.pi) * sigma) * np.exp( -( (x - mu) ** 2 / (2 * sigma ** 2)) )    
-
 
 # Define x-axis data
 my_x_data  = np.linspace(-3,3,20)    # twenty evenly-spaced points on the x axis, from -3 to 3
@@ -35,7 +35,7 @@ my_dataset = build_dataset(
 my_fit = Fit(my_dataset, gauss_2par, function_label='Standard-Normalverteilung')
 
 # Don't call do_fit for this Fit. 
- 
+
 # Plot the Fit
 myPlot = Plot(my_fit, show_legend=True)
 

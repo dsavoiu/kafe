@@ -3,7 +3,7 @@
     :platform: Unix
     :synopsis: A submodule containing an object for simultaneous output to file
         and to ``sys.stdout``.
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+..  moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
 '''
 
 import sys

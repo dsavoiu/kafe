@@ -1,3 +1,3 @@
 major = 0
-minor = 3
-revision = 53
+minor = 4
+revision = 2

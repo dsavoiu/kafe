@@ -40,8 +40,9 @@ class Minuit:
     A class for communicating with ROOT's function minimizer tool Minuit.
     '''
 
-    def __init__(self, number_of_parameters, function_to_minimize, par_names,
-                 start_params, param_errors, quiet=True, verbose=False):
+    def __init__(self, number_of_parameters, function_to_minimize,
+                 parameter_names, start_parameters, parameter_errors,
+                 quiet=True, verbose=False):
         '''
         Create a Minuit minimizer for a function `function_to_minimize`.
         Necessary arguments are the number of parameters and the function to be
@@ -58,17 +59,17 @@ class Minuit:
             The function which `Minuit` should minimize. This must be a Python
             function with <``number_of_parameters``> arguments.
 
-        **par_names** : tuple/list of strings
+        **parameter_names** : tuple/list of strings
             The parameter names. These are used to keep track of the parameters
             in `Minuit`'s output.
 
-        **start_params** : tuple/list of floats
+        **start_parameters** : tuple/list of floats
             The start values of the parameters. It is important to have a good,
             if rough, estimate of the parameters at the minimum before starting
             the minimization. Wrong initial parameters can yield a local
             minimum instead of a global one.
 
-        **param_errors** : tuple/list of floats
+        **parameter_errors** : tuple/list of floats
             An initial guess of the parameter errors. These errors are used to
             define the initial step size.
 
@@ -105,9 +106,9 @@ class Minuit:
         # initialize minimizer
         self.set_err()
         self.set_strategy()
-        self.set_parameter_values(start_params)
-        self.set_parameter_errors(param_errors)
-        self.set_parameter_names(par_names)
+        self.set_parameter_values(start_parameters)
+        self.set_parameter_errors(parameter_errors)
+        self.set_parameter_names(parameter_names)
 
         error_code = Long(0)
         # Set up the starting fit parameters in TMinuit
@@ -160,39 +161,39 @@ class Minuit:
         # execute SET ERR command
         self.__gMinuit.mnexcm("SET ERR", arr('d', [up_value]), 1, error_code)
 
-    def set_parameter_values(self, param_values):
-        '''Sets the fit parameters. If param_values=`None`, tries to infer
+    def set_parameter_values(self, parameter_values):
+        '''Sets the fit parameters. If parameter_values=`None`, tries to infer
         defaults from the function_to_minimize.'''
-        if len(param_values) == self.number_of_parameters:
-            self.current_parameters = param_values
+        if len(parameter_values) == self.number_of_parameters:
+            self.current_parameters = parameter_values
         else:
             raise Exception("Cannot get default parameter values from the \
             FCN. Not all parameters have default values given.")
 
-    def set_parameter_names(self, param_names):
-        '''Sets the fit parameters. If param_values=`None`, tries to infer
+    def set_parameter_names(self, parameter_names):
+        '''Sets the fit parameters. If parameter_values=`None`, tries to infer
         defaults from the function_to_minimize.'''
-        if len(param_names) == self.number_of_parameters:
-            self.parameter_names = param_names
+        if len(parameter_names) == self.number_of_parameters:
+            self.parameter_names = parameter_names
         else:
             raise Exception("Cannot set param names. Tuple length mismatch.")
 
-    def set_parameter_errors(self, param_errors=None):
-        '''Sets the fit parameter errors. If param_values=`None`, sets the
+    def set_parameter_errors(self, parameter_errors=None):
+        '''Sets the fit parameter errors. If parameter_values=`None`, sets the
         error to 1% of the parameter value.'''
 
-        if param_errors is None:  # set to 1% of the parameter value
+        if parameter_errors is None:  # set to 1% of the parameter value
             if not self.current_parameters is None:
                 self.parameter_errors = [max(0.01, 0.01 * par)
                                          for par in self.current_parameters]
             else:
                 raise Exception("Cannot set parameter errors. No errors \
                                 provided and no parameters initialized.")
-        elif len(param_errors) != len(self.current_parameters):
+        elif len(parameter_errors) != len(self.current_parameters):
             raise Exception("Cannot set parameter errors. \
                             Tuple length mismatch.")
         else:
-            self.parameter_errors = param_errors
+            self.parameter_errors = parameter_errors
 
     # Get methods
     ##############
@@ -255,7 +256,7 @@ class Minuit:
         '''Retrieves parameter information from TMinuit.
 
         return : list of tuples
-            ``(param_name, param_val, param_error)``
+            ``(parameter_name, parameter_val, parameter_error)``
         '''
 
         result = []
@@ -269,14 +270,14 @@ class Minuit:
 
         return result
 
-    def get_parameter_name(self, param_nr):
-        '''Gets the name of parameter number ``param_nr``
+    def get_parameter_name(self, parameter_nr):
+        '''Gets the name of parameter number ``parameter_nr``
 
-        **param_nr** : int
+        **parameter_nr** : int
             Number of the parameter whose name to get.
         '''
 
-        return self.parameter_names[param_nr]
+        return self.parameter_names[parameter_nr]
 
     def get_fit_info(self, info):
         '''Retrieves other info from `Minuit`.

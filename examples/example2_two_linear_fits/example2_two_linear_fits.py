@@ -9,6 +9,7 @@ and plots both Fits into the same Plot.
 from kafe import *
 import numpy as np
 
+@FitFunction
 def linear_2par(x, slope=1, y_intercept=0):
     return slope * x + y_intercept
 

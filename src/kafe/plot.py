@@ -11,7 +11,7 @@ import matplotlib as mpl
 mpl.use('Qt4AGG')    # use the Qt backend for mpl
 
 import matplotlib.pyplot as plt
-from function_tools import derive_by_parameters, outer_product
+from function_tools import outer_product
 from numeric_tools import extract_statistical_errors
 
 from constants import G_PADDING_FACTOR_X, G_PADDING_FACTOR_Y, G_PLOT_POINTS
@@ -345,8 +345,8 @@ class Plot(object):
 
         for fit in fits_with_parameter_box:
             text_content += "~\n" + fit.function_label + ':\n'
-            for idx, _ in enumerate(fit.param_names):
-                parname = fit.param_names_latex[idx]
+            for idx, _ in enumerate(fit.parameter_names):
+                parname = fit.latex_parameter_names[idx]
                 parval = fit.get_parameter_values(rounding=True)[idx]
                 parerrs = fit.get_parameter_errors(rounding=True)[idx]
                 text_content += ('$%s=%g\pm%g$\n' % (parname, parval, parerrs))
@@ -481,9 +481,11 @@ class Plot(object):
                 min(np.diag(current_fit.get_error_matrix()))
             )
             par_deriv_outer_prod = outer_product(
-                derive_by_parameters(current_fit.fit_function, fval,
-                                     current_fit.current_param_values,
-                                     derivative_spacing)
+                current_fit.fit_function.derive_by_parameters(
+                    fval,
+                    derivative_spacing,
+                    current_fit.current_parameter_values
+                )
             )
 
             tmp_sum = np.sum(

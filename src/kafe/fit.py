@@ -9,7 +9,7 @@
 '''
 
 from minuit import Minuit
-from function_tools import get_function_property, outer_product, derive_by_x
+from function_tools import outer_product
 from copy import copy
 
 import numpy as np
@@ -24,7 +24,7 @@ from stream import StreamDup
 
 
 # The default FCN
-def chi2(xdata, ydata, cov_mat, fit_function, param_values):
+def chi2(xdata, ydata, cov_mat, fit_function, parameter_values):
     r'''
     A simple :math:`\chi^2` implementation. Calculates :math:`\chi^2` according
     to the formula:
@@ -48,18 +48,18 @@ def chi2(xdata, ydata, cov_mat, fit_function, param_values):
     **fit_function** : function
         The fit function :math:`f(x)`
 
-    **param_values** : list/tuple
+    **parameter_values** : list/tuple
         The values of the parameters at which :math:`f(x)` should be evaluated.
 
     '''
 
-    # since the param_values are constants, the
+    # since the parameter_values are constants, the
     # fit function is a function of only one
     # variable: `x'. To apply it elementwise using
     # Python's `map' method, make a temporary
     # function where `x' is the only variable:
     def tmp_fit_function(x):
-        return fit_function(x, *param_values)
+        return fit_function(x, *parameter_values)
 
     # calculate f(x) for all x in xdata
     fdata = np.asarray(map(tmp_fit_function, xdata))
@@ -122,7 +122,7 @@ class Fit(object):
         An external `FCN` (function to minimize). This function must have the
         following call signature:
 
-        >>> FCN(xdata, ydata, cov_mat, fit_function, param_values)
+        >>> FCN(xdata, ydata, cov_mat, fit_function, parameter_values)
 
         It should return a float. If not specified, the default :math:`\chi^2`
         `FCN` is used. This should be sufficient for most fits.
@@ -137,7 +137,7 @@ class Fit(object):
     '''
 
     def __init__(self, dataset, fit_function, external_fcn=chi2,
-                 function_label=None, function_equation=None):
+                 function_label=None):
         '''
         Construct a fit.
         '''
@@ -153,48 +153,54 @@ class Fit(object):
         #: the (external) function to be minimized for this `Fit`
         self.external_fcn = external_fcn
 
-        #: the number of parameters
-        self.number_of_parameters = get_function_property(
-            self.fit_function,
-            'number of parameters'
-        )
+        try:
+            #: the number of parameters
+            self.number_of_parameters = self.fit_function.number_of_parameters
+            #: the current values of the parameters
+            self.current_parameter_values = \
+                self.fit_function.parameter_defaults
+            #: the names of the parameters
+            self.parameter_names = self.fit_function.parameter_names
+            #: :math:`\LaTeX` parameter names
+            self.latex_parameter_names = \
+                self.fit_function.latex_parameter_names
 
-        #: the current values of the parameters
-        self.current_param_values = get_function_property(self.fit_function,
-                                                          'parameter defaults')
+            self.function_equation = \
+                self.fit_function.get_function_equation('latex', 'full')
+
+            if function_label is None:
+                # get the function name in LaTeX
+                self.function_label = self.fit_function.latex_name
+            else:
+                # override function label
+                self.function_label = function_label
+
+        except AttributeError:
+            raise AttributeError("Fit-function object does not have \
+                the required properties. Did you maybe forget the \
+                `@FitFunction` decorator?")
+            ##: the number of parameters
+            #self.number_of_parameters = self.fit_function.number_of_parameters
+            ##: the current values of the parameters
+            #self.current_parameter_values = \
+            #    self.fit_function.parameter_defaults
+            ##: the names of the parameters
+            #self.parameter_names = self.fit_function.parameter_names
+            ##: :math:`\LaTeX` parameter names
+            #self.latex_parameter_names = \
+            #    self.fit_function.latex_parameter_names
+
+            #self.function_equation = \
+            #    self.fit_function.get_function_equation('latex', 'full')
+
+            ## get the function name in LaTeX
+            #self.function_label = self.fit_function.latex_name
 
         # TODO: find sensible starting values for parameter errors
         #: the current uncertainties of the parameters
-        self.current_param_errors = [val/1000.0
-                                     for val in self.current_param_values]
-
-        #: the names of the parameters
-        self.param_names = get_function_property(self.fit_function,
-                                                 'parameter names')
-
-        #: :math:`\LaTeX` parameter names
-        self.param_names_latex = map(
-            lambda tmp_string: r'\verb!'+tmp_string+'!',
-            self.param_names
-        )
-
-        if function_equation is not None:
-            # get the function equation from the arguments
-            #: :math:`\LaTeX` function equation
-            self.function_equation = function_equation
-        else:
-            # get the function name and wrap it in LaTeX
-            self.function_equation = r'\verb!%s!' \
-                % (get_function_property(self.fit_function, 'name'),)
-
-        if function_label is not None:
-            # get the function name from the arguments
-            #: a label to use in the legend when plotting
-            self.function_label = function_label
-        else:
-            # get the function name and wrap it in LaTeX
-            self.function_label = r'\verb!%s!' \
-                % (get_function_property(self.fit_function, 'name'),)
+        self.current_parameter_errors = [val/1000.0
+                                         for val
+                                         in self.current_parameter_values]
 
         # check if the dataset has any y errors at all
         if self.dataset.has_errors('y'):
@@ -211,11 +217,11 @@ class Fit(object):
 
         #: this `Fit`'s minimizer (`Minuit`)
         self.minimizer = Minuit(self.number_of_parameters,
-                                self.call_external_fcn, self.param_names,
-                                self.current_param_values, None)
+                                self.call_external_fcn, self.parameter_names,
+                                self.current_parameter_values, None)
 
         # set Minuit's start parameters and parameter errors
-        self.minimizer.set_parameter_values(self.current_param_values)
+        self.minimizer.set_parameter_values(self.current_parameter_values)
         self.minimizer.set_parameter_errors()
 
         # store measurement data locally in Fit object
@@ -230,20 +236,20 @@ class Fit(object):
         # Do the fit (Should the fit be done in __init__?)
         #self.do_fit()
 
-    def call_external_fcn(self, *param_values):
+    def call_external_fcn(self, *parameter_names):
         '''
         Wrapper for the external `FCN`. Since the actual fit process depends on
-        finding the right parameter values and keeping everything else
-        constant, we can use the `Dataset` object to pass known, fixed
-        information to the external `FCN`, varying only the parameter values.
+        finding the right parameter values and keeping everything else constant
+        we can use the `Dataset` object to pass known, fixed information to the
+        external `FCN`, varying only the parameter values.
 
-        **param_values** : sequence of values
+        **parameter_names** : sequence of values
             the parameter values at which `FCN` is to be evaluated
 
         '''
 
         return self.external_fcn(self.xdata, self.ydata, self.current_cov_mat,
-                                 self.fit_function, param_values)
+                                 self.fit_function, parameter_names)
 
     def get_current_fit_function(self):
         '''
@@ -257,7 +263,7 @@ class Fit(object):
         '''
 
         def current_fit_function(x):
-            return self.fit_function(x, *self.current_param_values)
+            return self.fit_function(x, *self.current_parameter_values)
 
         return current_fit_function
 
@@ -349,8 +355,10 @@ class Fit(object):
             print >>self.out_stream, "# Fit function #"
             print >>self.out_stream, "################"
             print >>self.out_stream, ''
-            print >>self.out_stream, get_function_property(self.fit_function,
-                                                           'name')
+            print >>self.out_stream, self.fit_function.get_function_equation(
+                'ascii',
+                'full'
+            )
             print >>self.out_stream, ''
 
         initial_iterations = 2
@@ -390,8 +398,8 @@ class Fit(object):
         '''
 
         self.minimizer.minimize()
-        self.current_param_values = self.minimizer.get_parameter_values()
-        self.current_param_errors = self.minimizer.get_parameter_errors()
+        self.current_parameter_values = self.minimizer.get_parameter_values()
+        self.current_parameter_errors = self.minimizer.get_parameter_errors()
 
         #par_cov_mat = self.get_error_matrix()
 
@@ -407,7 +415,7 @@ class Fit(object):
             C_{\text{tot}, ij} = C_{y, ij} + C_{x, ij}
             \frac{\partial f}{\partial x_i}  \frac{\partial f}{\partial x_j}
         '''
-        # use 1/100th of the smallest parameter error as spacing for df/dp
+         # use 1/100th of the smallest parameter error as spacing for df/dp
         derivative_spacing = 0.01 * np.sqrt(
             min(
                 np.diag(self.get_error_matrix())
@@ -416,12 +424,16 @@ class Fit(object):
 
         proj_xcov_mat = np.asarray(self.dataset.get_cov_mat('x')) * \
             outer_product(
-                derive_by_x(self.fit_function, self.dataset.get_data('x'),
-                            self.current_param_values, derivative_spacing)
+                self.fit_function.derive_by_x(self.dataset.get_data('x'),
+                                              derivative_spacing,
+                                              self.current_parameter_values
+                                              )
             )
 
         self.current_cov_mat = self.dataset.get_cov_mat('y') + \
             np.asmatrix(proj_xcov_mat)
+
+        ##print self.current_cov_mat
 
     # Output functions
     ###################
@@ -489,8 +501,8 @@ class Fit(object):
         par_err = extract_statistical_errors(par_cov_mat)
         par_cor_mat = cov_to_cor(par_cov_mat)
 
-        for par_nr, par_val in enumerate(self.current_param_values):
-            print >>self.out_stream, '# '+self.param_names[par_nr]
+        for par_nr, par_val in enumerate(self.current_parameter_values):
+            print >>self.out_stream, '# '+self.parameter_names[par_nr]
             print >>self.out_stream, '# value        stat. err.    ',
             if par_nr > 0:
                 print >>self.out_stream, 'correlations'

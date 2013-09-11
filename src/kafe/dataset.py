@@ -9,7 +9,10 @@
 
 from string import join, split
 
-from numeric_tools import *  # automatically includes numpy as np
+import numpy as np
+
+from numeric_tools import cov_to_cor, cor_to_cov, extract_statistical_errors, \
+    zero_pad_lower_triangle, make_symmetric_lower
 
 DEBUG_MODE = 1
 NUMBER_OF_AXES = 2
@@ -340,7 +343,7 @@ class Dataset(object):
         try:
             # check if the object is iterable (list or array)
             # by trying to get its iterator.
-            iterator = iter(data)
+            iter(data)
         except TypeError:
             # if this fails, then this object is not iterable
             raise TypeError(

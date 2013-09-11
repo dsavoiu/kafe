@@ -9,9 +9,11 @@ to data from a single Dataset.
 from kafe import *
 import numpy as np
 
+@FitFunction
 def linear_2par(x, slope=1, y_int=0):
     return slope * x + y_int
 
+@FitFunction
 def exp_2par(x, constant=1, growth=0):
     return np.exp(growth * x) * constant
 
@@ -34,8 +36,8 @@ my_dataset = Dataset(input_file='dataset.dat', title="Example Dataset")
 
 # Create the Fits
 my_fits = [
-           Fit(my_dataset, exp_2par, function_label="Exponential Fit"),
-           Fit(my_dataset, linear_2par, function_label="Linear Fit"),
+           Fit(my_dataset, exp_2par),
+           Fit(my_dataset, linear_2par),
           ]
 
 # Do the Fits

@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='kafe',
-    version='0.3.53',
+    version='0.4.2',
     author='Daniel Savoiu',
     author_email='danielsavoiu@gmail.com',
     packages=['kafe'],
