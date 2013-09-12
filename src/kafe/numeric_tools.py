@@ -70,19 +70,14 @@ def cor_to_cov(cor_mat, error_list):
 
     '''
 
-    stat_errs = np.asarray(error_list)    # cast to a numpy array
-
     # construct the outer (dyadic) product between the error array
-    # and an equally long array of ones
-    tmp_2darray = np.outer(stat_errs, np.ones(len(stat_errs)))
-
-    # multiply this elementwise to its transpose
-    tmp_2darray *= tmp_2darray.T
+    # and itself. This is an numpy array, so '*' will stand for an
+    # elementwise multiplication
+    stat_err_outer_prod = np.outer(error_list, error_list)
 
     # the covariance matrix is the correlation matrix multiplied
-    # elementwise by the calculated matrix. The cast from matrix
-    # to array and back is needed to do elementwise calculations
-    return np.asmatrix(np.asarray(cor_mat) * tmp_2darray)
+    # elementwise by the calculated array. Return a matrix.
+    return np.asmatrix(np.asarray(cor_mat) * stat_err_outer_prod)
 
 
 def extract_statistical_errors(cov_mat):
