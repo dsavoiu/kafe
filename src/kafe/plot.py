@@ -18,6 +18,10 @@ from constants import G_PADDING_FACTOR_X, G_PADDING_FACTOR_Y, G_PLOT_POINTS
 import re  # regular expressions
 from string import split, join, lower
 
+# import main logger for kafe
+import logging
+logger = logging.getLogger('kafe')
+
 
 def label_to_latex(label):
     '''

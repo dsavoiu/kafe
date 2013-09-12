@@ -14,13 +14,11 @@ import numpy as np
 from numeric_tools import cov_to_cor, cor_to_cov, extract_statistical_errors, \
     zero_pad_lower_triangle, make_symmetric_lower
 
-DEBUG_MODE = 1
 NUMBER_OF_AXES = 2
 
-
-def debug_print(message):
-    if DEBUG_MODE:
-        print message
+# import main logger for kafe
+import logging
+logger = logging.getLogger('kafe')
 
 
 def build_dataset(xdata, ydata, **kwargs):
@@ -535,8 +533,10 @@ class Dataset(object):
                             (self.get_size(), self.get_size())
                         )
                     elif fallback_on_singular == 'report':
-                        print "Warning: Covariance matrix for axis %s is \
+                        logger.warning(
+                            "Warning: Covariance matrix for axis %s is \
                             singular!" % (axis,)
+                        )
                         # if not, return the (regular) matrix itself
                         return self.cov_mats[axis]
                     else:

@@ -33,8 +33,8 @@ def cov_to_cor(cov_mat):
     # Note: this can only happen if NO errors are defined for the
     #       axis in question
     if 0 in diagonal:
-        # return a zero matrix in this case
-        return np.asmatrix(np.zeros((len(diagonal), len(diagonal))))
+        raise ZeroDivisionError("Conversion to correlation matrix failed. \
+                                 Zeroes present on error matrix diagonal...")
 
     # get the statistical error from the diagonal entries
     error_array = np.sqrt(diagonal)
