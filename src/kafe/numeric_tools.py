@@ -33,8 +33,8 @@ def cov_to_cor(cov_mat):
     # Note: this can only happen if NO errors are defined for the
     #       axis in question
     if 0 in diagonal:
-        # return a zero matrix in this case
-        return np.asmatrix(np.zeros((len(diagonal), len(diagonal))))
+        raise ZeroDivisionError("Conversion to correlation matrix failed. \
+                                 Zeroes present on error matrix diagonal...")
 
     # construct the outer (dyadic) product between the diagonal
     # and an equally long array of ones

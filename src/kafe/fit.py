@@ -19,8 +19,10 @@ from constants import F_SIGNIFICANCE, M_CONFIDENCE_LEVEL
 from math import floor, log
 
 from stream import StreamDup
-#import sys
-#import os
+
+# import main logger for kafe
+import logging
+logger = logging.getLogger('kafe')
 
 
 # The default FCN

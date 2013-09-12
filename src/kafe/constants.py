@@ -36,3 +36,5 @@ to the same order of magnitude as the error.
 
 # Other constants
 #################################################
+
+D_DEBUG_MODE = False

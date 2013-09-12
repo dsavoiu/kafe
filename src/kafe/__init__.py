@@ -1,4 +1,7 @@
 """
+kafe
+====
+
 A Python package for fitting and plotting for use in physics lab courses.
 
 This Python package allows fitting of user-defined functions to data. A dataset
@@ -28,7 +31,28 @@ from kafe.file_tools import parse_column_data,  parse_matrix_file
 from kafe.numeric_tools import cov_to_cor, cor_to_cov
 from function_tools import FitFunction
 
+# Import version info
 from kafe._version_info import major, minor, revision
+
+# Import and create logging tools and related stuff
+import logging
+from constants import D_DEBUG_MODE
+
+logger = logging.getLogger('kafe')  # create logger
+ch = logging.StreamHandler()  # create console handler (ch)
+
+if D_DEBUG_MODE:
+    logger.setLevel(logging.DEBUG)
+    ch.setLevel(logging.DEBUG)
+else:
+    logger.setLevel(logging.WARNING)
+    ch.setLevel(logging.WARNING)
+
+# create formatter
+formatter = logging.Formatter('%(name)s %(asctime)s :: \
+                               %(levelname)s :: %(message)s')
+ch.setFormatter(formatter)  # add formatter to ch
+logger.addHandler(ch)  # add ch to logger
 
 _version_info = (major, minor, revision)
 _version_suffix = ""  # for suffixes such as 'rc' or 'beta' or 'alpha'
