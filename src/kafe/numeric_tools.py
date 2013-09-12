@@ -36,20 +36,17 @@ def cov_to_cor(cov_mat):
         # return a zero matrix in this case
         return np.asmatrix(np.zeros((len(diagonal), len(diagonal))))
 
-    # construct the outer (dyadic) product between the diagonal
-    # and an equally long array of ones
-    tmp_2darray = np.outer(diagonal, np.ones(len(diagonal)))
+    # get the statistical error from the diagonal entries
+    error_array = np.sqrt(diagonal)
 
-    # multiply that elementwise to its transpose
-    tmp_2darray *= tmp_2darray.T
-
-    # and get the square root
-    tmp_2darray = np.sqrt(tmp_2darray)
+    # construct the outer (dyadic) product between the error array
+    # and itself. This is an numpy array, so '/' will stand for an
+    # elementwise division
+    stat_err_outer_prod = np.outer(error_array, error_array)
 
     # the correlation matrix is the original matrix divided
-    # elementwise by the calculated matrix. The cast from matrix
-    # to array and back is needed to do elementwise calculations
-    return np.asmatrix(np.asarray(cov_mat) / tmp_2darray)
+    # elementwise by the calculated matrix. Return a matrix.
+    return np.asmatrix(np.asarray(cov_mat) / stat_err_outer_prod)
 
 
 def cor_to_cov(cor_mat, error_list):
