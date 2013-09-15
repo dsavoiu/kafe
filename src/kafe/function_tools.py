@@ -85,11 +85,19 @@ class FitFunction:
         self.parameter_defaults = f.func_defaults
 
         #: string object holding the source code for the fit-function
-
         self.sourcelines = getsourcelines(f)  # (for REALLY explicit docs)
 
         # String properties in ASCII/plaintext format
         self.name = f.__name__  #: The name of the function
+
+        # Check if all parameters have default values
+        if (self.parameter_defaults is None or
+                len(self.parameter_defaults) != self.number_of_parameters):
+            raise SyntaxError("Number of default parameters given for "
+                              "function <%s> does not match total parameter "
+                              "number. Did you provide default values for all "
+                              "parameters?" % self.name)
+
         #: The names of the parameters
         self.parameter_names = f.func_code.co_varnames[
             1:f.func_code.co_argcount
@@ -172,8 +180,13 @@ class FitFunction:
             Can be either "latex" (default) or "ascii".
 
         *equation_type* : string (optional)
-            Can be either "full" (default) or "short". A "short"-type equation
-            limits itself to the function name and variables::
+            Can be either "full" (default), "short" or "name". A "name"-type
+            equation returns a representation of the function name::
+
+                f
+
+            A "short"-type equation limits itself to the function name and
+            variables::
 
                 f(x, par1, par2)
 
@@ -204,8 +217,10 @@ class FitFunction:
                             % (equation_format,))
 
         if equation_type == 'full':
-            if tmp_dict['expr'] is None:
+            if tmp_dict['expr'] is None and equation_format == 'ascii':
                 tmp_dict['expr'] = "<expression not specified>"
+            elif tmp_dict['expr'] is None and equation_format == 'latex':
+                tmp_dict['expr'] = "\,?"
             if equation_format == 'latex' and ensuremath:
                 return "\\ensuremath{%(name)s(%(xname)s,%(hspc)s"\
                        "%(paramstring)s) = %(expr)s}" % tmp_dict
@@ -219,9 +234,14 @@ class FitFunction:
                     "%(paramstring)s)}" % tmp_dict
             else:
                 return "%(name)s(%(xname)s,%(hspc)s%(paramstring)s)" % tmp_dict
+        elif equation_type == 'name':
+            if equation_format == 'latex' and ensuremath:
+                return "\\ensuremath{%(name)s}" % tmp_dict
+            else:
+                return "%(name)s" % tmp_dict
         else:
             raise Exception("Unknown function equation type: "
-                            "Expected `full` or `short`, got `%s`."
+                            "Expected `full`, `short` or `name`, got `%s`."
                             % (equation_type,))
 
 

@@ -62,12 +62,12 @@ def pad_span(span, pad_coeff=1, additional_pad=None):
     try:
         len(span)
     except:
-        raise TypeError("Span passed to pad_span must be an iterable type \
-            (got %s)" % type(span))
+        raise TypeError("Span passed to pad_span must be an iterable type"
+                        "(got %s)" % type(span))
 
     if len(span) != 2:
-        raise IndexError("Span passed to pad_span must be an iterable \
-            of length 2 (got %d)" % (len(span),))
+        raise IndexError("Span passed to pad_span must be an iterable"
+                         "of length 2 (got %d)" % (len(span),))
 
     if additional_pad is None:
         additional_pad = [0, 0]
@@ -353,8 +353,16 @@ class Plot(object):
                 text_content += "~\n%s:\n" \
                     % fit.fit_function.get_function_equation('latex', 'full')
             else:
-                text_content += "~\n%s:\n" \
-                    % fit.fit_function.get_function_equation('latex', 'full')
+                # if no expression is provided for the function,
+                # just display the name
+                if fit.fit_function.latex_expression is not None:
+                    text_content += "~\n%s:\n" \
+                        % fit.fit_function.get_function_equation('latex',
+                                                                 'full')
+                else:
+                    text_content += "~\n%s:\n" \
+                        % fit.fit_function.get_function_equation('latex',
+                                                                 'name')
             for idx, _ in enumerate(fit.parameter_names):
                 parname = fit.latex_parameter_names[idx]
                 parval = fit.get_parameter_values(rounding=True)[idx]
