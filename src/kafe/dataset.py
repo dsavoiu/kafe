@@ -645,7 +645,15 @@ class Dataset(object):
             # get the statistical errors of the data
             stat_errs = extract_statistical_errors(self.get_cov_mat(axis))
             data = self.get_data(axis)
-            cor_mat = cov_to_cor(self.get_cov_mat(axis))
+            # try to get a correlation matrix
+            try:
+                cor_mat = cov_to_cor(self.get_cov_mat(axis))
+            except ZeroDivisionError:
+                # if it fails, this means there are no
+                # errors for the axis, so return
+                # a zero matrix
+                sz = self.get_size()
+                cor_mat = np.asmatrix(np.zeros((sz, sz)))
 
             # add section title as a comment
             helper_list.append([

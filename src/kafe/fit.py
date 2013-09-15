@@ -129,17 +129,14 @@ class Fit(object):
         It should return a float. If not specified, the default :math:`\chi^2`
         `FCN` is used. This should be sufficient for most fits.
 
-    *function_label* : :math:`\LaTeX`-formatted string (optional)
+    *fit_label* : :math:`\LaTeX`-formatted string (optional)
         A name/label/short description of the fit function. This appears in the
         legend describing the fitter curve. If omitted, this defaults to the
-        function's Python name.
-
-    *function_equation* : :math:`\LaTeX`-formatted string (optional)
-        The fit function's equation.
+        fit function's :math:`\LaTeX` expression.
     '''
 
     def __init__(self, dataset, fit_function, external_fcn=chi2,
-                 function_label=None):
+                 fit_label=None):
         '''
         Construct a fit.
         '''
@@ -167,20 +164,28 @@ class Fit(object):
             self.latex_parameter_names = \
                 self.fit_function.latex_parameter_names
 
-            self.function_equation = \
+            # store the full function definition
+            self.function_equation_full = \
                 self.fit_function.get_function_equation('latex', 'full')
+            
+            # store a short version of the function's equation
+            self.function_equation = \
+                self.fit_function.get_function_equation('latex', 'short')
 
-            if function_label is None:
-                # get the function name in LaTeX
-                self.function_label = self.fit_function.latex_name
-            else:
-                # override function label
-                self.function_label = function_label
+            self.fit_label = fit_label
+
+            #~ if fit_label is None:
+                #~ # let the function equation serve as the function label
+                #~ #self.fit_label = self.fit_function.latex_name
+                #~ self.fit_label = self.function_equation
+            #~ else:
+                #~ # override function label
+                #~ self.fit_label = fit_label
 
         except AttributeError:
-            raise AttributeError("Fit-function object does not have \
+            raise AttributeError("Fit-function object %s does not have \
                 the required properties. Did you maybe forget the \
-                `@FitFunction` decorator?")
+                `@FitFunction` decorator?" % (self.fit_function.__name__))
             ##: the number of parameters
             #self.number_of_parameters = self.fit_function.number_of_parameters
             ##: the current values of the parameters
@@ -196,7 +201,7 @@ class Fit(object):
             #    self.fit_function.get_function_equation('latex', 'full')
 
             ## get the function name in LaTeX
-            #self.function_label = self.fit_function.latex_name
+            #self.fit_label = self.fit_function.latex_name
 
         # TODO: find sensible starting values for parameter errors
         #: the current uncertainties of the parameters

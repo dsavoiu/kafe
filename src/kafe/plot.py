@@ -348,7 +348,13 @@ class Plot(object):
             fits_with_parameter_box = [fit]
 
         for fit in fits_with_parameter_box:
-            text_content += "~\n" + fit.function_label + ':\n'
+            if fit.fit_label is not None:
+                text_content += "~\n%s" % fit.fit_label
+                text_content += "~\n%s:\n" \
+                    % fit.fit_function.get_function_equation('latex', 'full')
+            else:
+                text_content += "~\n%s:\n" \
+                    % fit.fit_function.get_function_equation('latex', 'full')
             for idx, _ in enumerate(fit.parameter_names):
                 parname = fit.latex_parameter_names[idx]
                 parval = fit.get_parameter_values(rounding=True)[idx]
@@ -441,9 +447,14 @@ class Plot(object):
             'marker': 'None',
             'linestyle': self.plot_style.get_line(p_id),
             'color': self.plot_style.get_linecolor(p_id),
-            'label': current_fit.function_label,
+            'label': current_fit.fit_label,
             'zorder': 2
         }
+
+        # take care of empty fit labels (replace with full function equation)
+        if current_fit.fit_label is None:
+            _fdata_kw['label'] = \
+                current_fit.fit_function.get_function_equation('latex', 'full')
 
         # current error bar data defaults to None
         error_bar_data = {'x': None, 'y': None}

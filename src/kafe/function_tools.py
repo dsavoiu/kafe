@@ -107,7 +107,7 @@ class FitFunction:
         self.latex_parameter_names = [ascii_to_latex_math(name)
                                       for name in self.parameter_names]
         #: A :math:`\LaTeX{}` symbol for the independent variable.
-        self.latex_x_name = ascii_to_latex_math(self.x_name)
+        self.latex_x_name = ascii_to_latex_math(self.x_name, monospace=False)
         #: a :math:`\LaTeX{}` math expression, the function's result
         self.latex_expression = None
 
@@ -185,27 +185,141 @@ class FitFunction:
         *ensuremath* : boolean (optional)
             If a :math:`\LaTeX{}` math equation is requested, ``True``
             (default) will wrap the resulting expression in an
-            ``\ensuremath{}`` tag. Otherwise no wrapping is done.
+            ``\ensuremath{}`` tag. Otherwise, no wrapping is done.
         '''
 
         if equation_format == 'latex':
             tmp_dict = {'name': self.latex_name, 'xname': self.latex_x_name,
-                        'paramstring': ",~".join(self.latex_parameter_names),
-                        'expr': self.latex_expression}
+                        'paramstring': ",\,".join(self.latex_parameter_names),
+                        'expr': self.latex_expression,
+                        'hspc': "\\,"}
         elif equation_format == 'ascii':
             tmp_dict = {'name': self.name, 'xname': self.x_name,
                         'paramstring': ", ".join(self.parameter_names),
-                        'expr': self.expression}
+                        'expr': self.expression,
+                        'hspc': " "}
         else:
-            raise Exception("Unknown function equation format: \
-            Expected `latex` or `ascii`, got `%s`" % (equation_format,))
+            raise Exception("Unknown function equation format: "
+                            "Expected `latex` or `ascii`, got `%s`"
+                            % (equation_format,))
 
         if equation_type == 'full':
             if tmp_dict['expr'] is None:
                 tmp_dict['expr'] = "<expression not specified>"
-            return "%(name)s(%(xname)s, %(paramstring)s) = %(expr)s" % tmp_dict
+            if equation_format == 'latex' and ensuremath:
+                return "\\ensuremath{%(name)s(%(xname)s,%(hspc)s"\
+                       "%(paramstring)s) = %(expr)s}" % tmp_dict
+            else:
+                return "%(name)s(%(xname)s,%(hspc)s%(paramstring)s) \
+                = %(expr)s" % tmp_dict
         elif equation_type == 'short':
-            return "%(name)s(%(xname)s, %(paramstring)s)" % tmp_dict
+            if equation_format == 'latex' and ensuremath:
+                return \
+                    "\\ensuremath{%(name)s(%(xname)s,%(hspc)s"\
+                    "%(paramstring)s)}" % tmp_dict
+            else:
+                return "%(name)s(%(xname)s,%(hspc)s%(paramstring)s)" % tmp_dict
         else:
-            raise Exception("Unknown function equation type: \
-            Expected `full` or `short`, got `%s`." % (equation_type,))
+            raise Exception("Unknown function equation type: "
+                            "Expected `full` or `short`, got `%s`."
+                            % (equation_type,))
+
+
+def LaTeX(**kwargs):
+    r"""
+    Optional decorator for fit functions. This overrides a FitFunction's
+    `latex_` attributes. The new values for the `latex_` attributes must be
+    passed as keyword arguments to the decorator. Possible arguments:
+
+    *name* : string
+        :math:`\LaTeX{}` representation of the function name.
+
+    *parameter_names* : list of strings
+        List of :math:`\LaTeX{}` representations of the function's arguments.
+        The length of this list must be equal to the function's argument
+        number. The argument names should be in the same order as in the
+        function definition.
+
+    *x_name* : string
+        :math:`\LaTeX{}` representation of the independent variable's name.
+
+    *expression* : string
+        :math:`\LaTeX{}`-formatted expression representing the
+        function's formula.
+    """
+
+    # retrieve values from the dictionary
+    name = kwargs.pop("name", None)
+    parameter_names = kwargs.pop("parameter_names", None)
+    x_name = kwargs.pop("x_name", None)
+    expression = kwargs.pop("expression", None)
+
+    if not kwargs:
+        pass  # TODO: Warn about existence of non-supported parameters
+
+    # override initial LaTeX-related parameters with the ones provided
+    def override(fit_function):
+        if name is not None:
+            fit_function.latex_name = name
+        if parameter_names is not None:
+            # check if list has the right length
+            if len(parameter_names) == fit_function.number_of_parameters:
+                fit_function.latex_parameter_names = parameter_names
+        if x_name is not None:
+            fit_function.latex_x_name = x_name
+        if expression is not None:
+            fit_function.latex_expression = expression
+
+        return fit_function
+
+    return override
+
+
+def ASCII(**kwargs):
+    r"""
+    Optional decorator for fit functions. This overrides a FitFunction's
+    plain-text (ASCII) attributes. The new values for these attributes must be
+    passed as keyword arguments to the decorator. Possible arguments:
+
+    *name* : string
+        Plain-text representation of the function name.
+
+    *parameter_names* : list of strings
+        List of plain-text representations of the function's arguments.
+        The length of this list must be equal to the function's argument
+        number. The argument names should be in the same order as in the
+        function definition.
+
+    *x_name* : string
+        Plain-text representation of the independent variable's name.
+
+    *expression* : string
+        Plain-text-formatted expression representing the
+        function's formula.
+    """
+
+    # retrieve values from the dictionary
+    name = kwargs.pop("name", None)
+    parameter_names = kwargs.pop("parameter_names", None)
+    x_name = kwargs.pop("x_name", None)
+    expression = kwargs.pop("expression", None)
+
+    if not kwargs:
+        pass  # TODO: Warn about existence of non-supported parameters
+
+    # override initial LaTeX-related parameters with the ones provided
+    def override(fit_function):
+        if name is not None:
+            fit_function.name = name
+        if parameter_names is not None:
+            # check if list has the right length
+            if len(parameter_names) == fit_function.number_of_parameters:
+                fit_function.parameter_names = parameter_names
+        if x_name is not None:
+            fit_function.x_name = x_name
+        if expression is not None:
+            fit_function.expression = expression
+
+        return fit_function
+
+    return override

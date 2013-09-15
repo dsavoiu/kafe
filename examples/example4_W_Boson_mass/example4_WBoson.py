@@ -1,6 +1,6 @@
 '''
 W boson mass
-============
+------------
 
     This example shows the averaging of several experiments' results to
 find the mass of the W boson. It also shows the effect of including co-
@@ -8,31 +8,39 @@ variance matrices into one's calculations instead of just statistical
 errors.
 
 '''
+
+###########
+# Imports #
+###########
+
+# import everything we need from kafe
 from kafe import *
 
-import matplotlib.pyplot as plt
-import numpy as np
+# additionally, import the model function we
+# want to fit:
+from kafe.function_library import constant_1par
 
-@FitFunction
-def constant_1par(x, mean=80):    
-    '''Constant Function'''
-    return mean
+############
+# Workflow #
+############
 
-# Load the Datasets from a file
+# Load the Datasets from a file (one-datapoint-per-row format)
 myDataset_CM = parse_column_data('w_mittelung.dat',
-                              field_order='x,y',
-                              cov_mat_files=(None, 'w_mass.cov'),
-                              title="W-Boson-Mass (mit KMen)")
+                                 field_order='x,y',
+                                 cov_mat_files=(None, 'w_mass.cov'),
+                                 title="W-Boson-Mass (mit KMen)")
 
 myDataset_YE = parse_column_data('w_mittelung.dat',
-                              field_order='x,y,yabsstat',
-                              title="W-Boson-Masse (ohne KMen)")
+                                 field_order='x,y,yabsstat',
+                                 title="W-Boson-Masse (ohne KMen)")
 
-# Create the Fits
-myFit_CM = Fit(myDataset_CM, constant_1par, function_label="Mittelwert mit KMen")
+# Create and do the Fits
+myFit_CM = Fit(myDataset_CM, constant_1par,
+               fit_label="Mittelwert mit KMen")
 myFit_CM.do_fit()
 
-myFit_YE = Fit(myDataset_YE, constant_1par, function_label="Mittelwert ohne KMen")
+myFit_YE = Fit(myDataset_YE, constant_1par,
+               fit_label="Mittelwert ohne KMen")
 myFit_YE.do_fit()
 
 # Plot the Fits
@@ -43,6 +51,10 @@ myPlot.axis_labels = ("Experiment Nr.", "W-Boson-Masse [GeV]")
 
 # Draw the Fits
 myPlot.plot_all()
+
+###############
+# Plot output #
+###############
 
 # Save
 myPlot.save("plot.pdf")
