@@ -84,8 +84,8 @@ def pad_span(span, pad_coeff=1, additional_pad=None):
         else:
             if len(additional_pad) != 2:
                 raise IndexError(
-                    "Additional pad passed to pad_span \
-                    is not an iterable of length 2 (got %d)"
+                    "Additional pad passed to pad_span "
+                    "is not an iterable of length 2 (got %d)"
                     % (len(additional_pad),)
                 )
 

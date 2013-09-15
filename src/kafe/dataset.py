@@ -100,14 +100,14 @@ def build_dataset(xdata, ydata, **kwargs):
             raise SyntaxError("Unknown axis `%s'." % (axis, ))
         if relativity not in ('abs', 'rel'):
             raise SyntaxError(
-                "Unknown relativity specification `%s'. \
-                Expected `abs' or `rel'."
+                "Unknown relativity specification `%s'. "
+                "Expected `abs' or `rel'."
                 % (relativity, )
             )
         if correlation not in ('stat', 'syst'):
             raise SyntaxError(
-                "Unknown correlation specification `%s'. \
-                Expected `stat' or `syst'."
+                "Unknown correlation specification `%s'. "
+                "Expected `stat' or `syst'."
                 % (correlation, )
             )
 
@@ -124,8 +124,8 @@ def build_dataset(xdata, ydata, **kwargs):
             if not isinstance(err_val, float):
                 # if not, raise error
                 raise SyntaxError(
-                    "Error setting systematic error `%s', \
-                    expected number." % (err_spec,)
+                    "Error setting systematic error `%s', "
+                    "expected number." % (err_spec,)
                 )
 
             # otherwise, calculate covariance matrix
@@ -153,8 +153,8 @@ def build_dataset(xdata, ydata, **kwargs):
                 iter(err_val)
             except:
                 raise SyntaxError(
-                    "Error setting statistical error `%s', \
-                    expected number or NumPy array."
+                    "Error setting statistical error `%s', "
+                    "expected number or NumPy array."
                     % (err_spec,)
                 )
             else:
@@ -345,8 +345,8 @@ class Dataset(object):
         except TypeError:
             # if this fails, then this object is not iterable
             raise TypeError(
-                "Error loading data for axis `%s`. \
-                Expected iterable, got %s."
+                "Error loading data for axis `%s`. "
+                "Expected iterable, got %s."
                 % (axis, type(data))
             )
         else:
@@ -376,8 +376,8 @@ class Dataset(object):
                 mat = np.asmatrix(mat)  # try to cast argument to a matrix
             except:
                 raise TypeError(
-                    "Cast to matrix failed. \
-                    Object was of type `%s'"
+                    "Cast to matrix failed. "
+                    "Object was of type `%s'"
                     % (type(mat),)
                 )
 
@@ -534,15 +534,15 @@ class Dataset(object):
                         )
                     elif fallback_on_singular == 'report':
                         logger.warning(
-                            "Warning: Covariance matrix for axis %s is \
-                            singular!" % (axis,)
+                            "Warning: Covariance matrix for axis %s is "
+                            "singular!" % (axis,)
                         )
                         # if not, return the (regular) matrix itself
                         return self.cov_mats[axis]
                     else:
                         raise SyntaxError(
-                            "Cannot interpret fallback \
-                            matrix specification `%s`"
+                            "Cannot interpret fallback "
+                            "matrix specification `%s`"
                             % (fallback_matrix,)
                         )
 

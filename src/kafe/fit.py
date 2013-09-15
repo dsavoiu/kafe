@@ -183,9 +183,9 @@ class Fit(object):
                 #~ self.fit_label = fit_label
 
         except AttributeError:
-            raise AttributeError("Fit-function object %s does not have \
-                the required properties. Did you maybe forget the \
-                `@FitFunction` decorator?" % (self.fit_function.__name__))
+            raise AttributeError("Fit-function object %s does not have "
+                "the required attributes. Did you maybe forget the "
+                "`@FitFunction` decorator?" % (self.fit_function.__name__))
             ##: the number of parameters
             #self.number_of_parameters = self.fit_function.number_of_parameters
             ##: the current values of the parameters

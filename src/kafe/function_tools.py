@@ -225,8 +225,8 @@ class FitFunction:
                 return "\\ensuremath{%(name)s(%(xname)s,%(hspc)s"\
                        "%(paramstring)s) = %(expr)s}" % tmp_dict
             else:
-                return "%(name)s(%(xname)s,%(hspc)s%(paramstring)s) \
-                = %(expr)s" % tmp_dict
+                return "%(name)s(%(xname)s,%(hspc)s%(paramstring)s) "\
+                       "= %(expr)s" % tmp_dict
         elif equation_type == 'short':
             if equation_format == 'latex' and ensuremath:
                 return \
