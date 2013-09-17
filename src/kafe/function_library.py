@@ -24,7 +24,7 @@ def constant_1par(x, constant=1.0):
 
 # Linear Models
 @ASCII(expression='slope * x')
-@LaTeX(name='f', parameter_names=('m',), expression='m\\,x')
+@LaTeX(name='f', parameter_names=('m',), expression='m\,x')
 @FitFunction
 def linear_1par(x, slope=1.0):
     return slope * x

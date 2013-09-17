@@ -275,7 +275,8 @@ def LaTeX(**kwargs):
     expression = kwargs.pop("expression", None)
 
     if not kwargs:
-        pass  # TODO: Warn about existence of non-supported parameters
+        logger.warn("Unknown keyword arguments for decorator LaTeX ignored: %r"
+                    % (kwargs.keys(),)
 
     # override initial LaTeX-related parameters with the ones provided
     def override(fit_function):
@@ -325,7 +326,8 @@ def ASCII(**kwargs):
     expression = kwargs.pop("expression", None)
 
     if not kwargs:
-        pass  # TODO: Warn about existence of non-supported parameters
+        logger.warn("Unknown keyword arguments for decorator ASCII ignored: %r"
+                    % (kwargs.keys(),)
 
     # override initial LaTeX-related parameters with the ones provided
     def override(fit_function):

@@ -12,6 +12,10 @@ import numpy as np
 from string import split
 from dataset import Dataset, build_dataset
 
+# import main logger for kafe
+import logging
+logger = logging.getLogger('kafe')
+
 
 def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
                       cov_mat_files=None, title="Untitled Dataset"):
@@ -54,10 +58,14 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
     try:
         # try to read the lines of the file
         tmp_lines = file_to_parse.readlines()
+        logger.info("Reading column data (%s) from file: %r"
+                    % (field_order, file_to_parse))
         # this will fail if a file path string was passed, so alternatively:
     except AttributeError:
         # open the file pointed to by the path
         tmp_file = open(file_to_parse, 'r')
+        logger.info("Reading column data (%s) from file: %s"
+                    % (field_order, file_to_parse))
         # and then read the lines of the file
         tmp_lines = tmp_file.readlines()
         tmp_file.close()
@@ -168,6 +176,7 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
 
     else:   # if not covariance matrices given, build dataset without them
         return build_dataset(**dataset_kwargs)
+
 
 def parse_matrix_file(file_like, delimiter=None):
     '''
