@@ -17,6 +17,11 @@ from scipy.misc import derivative as scipy_der
 from latex_tools import ascii_to_latex_math
 from inspect import getsourcelines
 
+# import main logger for kafe
+import logging
+logger = logging.getLogger('kafe')
+
+
 ##################
 # Useful methods #
 ##################
@@ -222,18 +227,18 @@ class FitFunction:
             elif tmp_dict['expr'] is None and equation_format == 'latex':
                 tmp_dict['expr'] = "\,?"
             if equation_format == 'latex' and ensuremath:
-                return "\\ensuremath{%(name)s(%(xname)s,%(hspc)s"\
+                return "\\ensuremath{%(name)s(%(xname)s;%(hspc)s"\
                        "%(paramstring)s) = %(expr)s}" % tmp_dict
             else:
-                return "%(name)s(%(xname)s,%(hspc)s%(paramstring)s) "\
+                return "%(name)s(%(xname)s;%(hspc)s%(paramstring)s) "\
                        "= %(expr)s" % tmp_dict
         elif equation_type == 'short':
             if equation_format == 'latex' and ensuremath:
                 return \
-                    "\\ensuremath{%(name)s(%(xname)s,%(hspc)s"\
+                    "\\ensuremath{%(name)s(%(xname)s;%(hspc)s"\
                     "%(paramstring)s)}" % tmp_dict
             else:
-                return "%(name)s(%(xname)s,%(hspc)s%(paramstring)s)" % tmp_dict
+                return "%(name)s(%(xname)s;%(hspc)s%(paramstring)s)" % tmp_dict
         elif equation_type == 'name':
             if equation_format == 'latex' and ensuremath:
                 return "\\ensuremath{%(name)s}" % tmp_dict
@@ -274,9 +279,9 @@ def LaTeX(**kwargs):
     x_name = kwargs.pop("x_name", None)
     expression = kwargs.pop("expression", None)
 
-    if not kwargs:
+    if kwargs:
         logger.warn("Unknown keyword arguments for decorator LaTeX ignored: %r"
-                    % (kwargs.keys(),)
+                    % (kwargs.keys(),))
 
     # override initial LaTeX-related parameters with the ones provided
     def override(fit_function):
@@ -325,9 +330,9 @@ def ASCII(**kwargs):
     x_name = kwargs.pop("x_name", None)
     expression = kwargs.pop("expression", None)
 
-    if not kwargs:
+    if kwargs:
         logger.warn("Unknown keyword arguments for decorator ASCII ignored: %r"
-                    % (kwargs.keys(),)
+                    % (kwargs.keys(),))
 
     # override initial LaTeX-related parameters with the ones provided
     def override(fit_function):

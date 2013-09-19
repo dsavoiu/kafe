@@ -10,7 +10,7 @@ You can browse the HTML documentation in:
 
     kafe-<version>/doc/_build/html/index.html
 
-Requirements for version 0.3alpha1 of kafe are:
+Requirements for kafe are:
 
 Python packages:
     * SciPy >= 0.12.0, which includes
@@ -21,6 +21,7 @@ Other dependencies:
     * ROOT >= 5.34 (http://root.cern.ch)
     * Qt4 >= 4.8.5 (could work with other versions)
     * PyQt >= 3.18.1 (could work with other versions)
+    * A LaTeX distribution (tested with texlive)
 
 Be sure to compile ROOT with PyROOT support. For Python to see the PyROOT
 bindings, the following environment variables have to be set correctly:
@@ -34,3 +35,5 @@ For more info, refer to [http://root.cern.ch/drupal/content/pyroot].
 
 Qt is basically needed because it's the supported interactive frontend for
 matplotlib. Other frontends are not supported and can cause weird behavior.
+
+LaTeX is used by matplotlib for any labels and mathematical expressions.

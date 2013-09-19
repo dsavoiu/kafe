@@ -155,9 +155,10 @@ class Fit(object):
         try:
             #: the number of parameters
             self.number_of_parameters = self.fit_function.number_of_parameters
-            #: the current values of the parameters
-            self.current_parameter_values = \
-                self.fit_function.parameter_defaults
+
+            self.set_parameters(self.fit_function.parameter_defaults,
+                                        None, no_warning=True)
+            
             #: the names of the parameters
             self.parameter_names = self.fit_function.parameter_names
             #: :math:`\LaTeX` parameter names
@@ -167,7 +168,7 @@ class Fit(object):
             # store the full function definition
             self.function_equation_full = \
                 self.fit_function.get_function_equation('latex', 'full')
-            
+
             # store a short version of the function's equation
             self.function_equation = \
                 self.fit_function.get_function_equation('latex', 'short')
@@ -184,8 +185,9 @@ class Fit(object):
 
         except AttributeError:
             raise AttributeError("Fit-function object %s does not have "
-                "the required attributes. Did you maybe forget the "
-                "`@FitFunction` decorator?" % (self.fit_function.__name__))
+                                 "the required attributes. Did you maybe "
+                                 " forget the `@FitFunction` decorator?"
+                                 % (self.fit_function.name))
             ##: the number of parameters
             #self.number_of_parameters = self.fit_function.number_of_parameters
             ##: the current values of the parameters
@@ -202,12 +204,6 @@ class Fit(object):
 
             ## get the function name in LaTeX
             #self.fit_label = self.fit_function.latex_name
-
-        # TODO: find sensible starting values for parameter errors
-        #: the current uncertainties of the parameters
-        self.current_parameter_errors = [val/1000.0
-                                         for val
-                                         in self.current_parameter_values]
 
         # check if the dataset has any y errors at all
         if self.dataset.has_errors('y'):
@@ -322,6 +318,54 @@ class Fit(object):
             output.append(value)
 
         return tuple(output)
+
+    def set_parameters(self, par_values, par_errors=None,
+                       no_warning=False):
+        '''
+        Sets the parameter values (and optionally errors) for this fit.
+        This is usually called just before the fit is done, to establish
+        the initial parameters. If `par_errors` is omitted, the errors
+        are set to about 1/1000th of the parameter values.
+        '''
+        if len(par_values) == self.number_of_parameters:
+            #: the current values of the parameters
+            self.current_parameter_values = par_values
+        else:
+            raise Exception("Cannot set parameters. Number of given "
+                            "parameters (%d) doesn't match the Fit's "
+                            "parameter number (%d)."
+                            % (len(par_values), self.number_of_parameters))
+
+        if par_errors is not None:
+            if len(par_values) == self.number_of_parameters:
+                #: the current uncertainties of the parameters
+                self.current_parameter_errors = par_errors
+            else:
+                raise Exception("Cannot set parameter errors. Number of given "
+                                "parameter errors (%d) doesn't match the "
+                                "Fit's parameter number (%d)."
+                                % (len(par_errors), self.number_of_parameters))
+        else:
+            #: the current uncertainties of the parameters
+            if not no_warning:
+                logger.warn("Parameter errors not given. Setting to "
+                            "1/1000th of the parameter values.")
+            # TODO: find sensible starting values for parameter errors
+            self.current_parameter_errors = [val/1000.0
+                                             for val
+                                             in self.current_parameter_values]
+        
+        # try to update the minimizer's parameters
+        # (fails is minimizer not yet initialized)
+        try:
+            # set Minuit's start parameters and parameter errors
+            self.minimizer.set_parameter_values(self.current_parameter_values)
+            self.minimizer.set_parameter_errors(self.current_parameter_errors)
+        except AttributeError:
+            if not no_warning:
+                logger.warn("Failed to set the minimizer's parameters. "
+                            "Maybe minimizer not initialized for this Fit "
+                            "yet?")
 
     def do_fit(self, quiet=False, verbose=False):
         '''

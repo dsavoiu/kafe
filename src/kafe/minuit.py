@@ -110,20 +110,31 @@ class Minuit:
         self.set_parameter_errors(parameter_errors)
         self.set_parameter_names(parameter_names)
 
-        error_code = Long(0)
-        # Set up the starting fit parameters in TMinuit
-        for i in xrange(0, self.number_of_parameters):
-            self.__gMinuit.mnparm(i, self.parameter_names[i],
-                                  self.current_parameters[i],
-                                  0.1 * self.parameter_errors[i],
-                                  0, 0, error_code)
-            # use 10% of the parameter 1-sigma errors as the initial step size
-
         #: maximum number of iterations until ``TMinuit`` gives up
         self.max_iterations = M_MAX_ITERATIONS
 
         #: ``TMinuit`` tolerance
         self.tolerance = M_TOLERANCE
+
+    def update_parameter_data(self, show_warnings=False):
+        """
+        (Re-)Sets the parameter names, values and step size on the
+        C side of Minuit.
+        """
+        error_code = Long(0)
+        try:
+            # Set up the starting fit parameters in TMinuit
+            for i in xrange(0, self.number_of_parameters):
+                self.__gMinuit.mnparm(i, self.parameter_names[i],
+                                      self.current_parameters[i],
+                                      0.1 * self.parameter_errors[i],
+                                      0, 0, error_code)
+                # use 10% of the parameter 1-sigma errors as the initial step size
+        except AttributeError, e:
+            if show_warnings:
+                logger.warn("Cannot update Minuit data on the C++ side. "
+                            "AttributeError: %s" % (e, ))
+        return error_code
 
     # Set methods
     ##############
@@ -170,6 +181,8 @@ class Minuit:
             raise Exception("Cannot get default parameter values from the \
             FCN. Not all parameters have default values given.")
 
+        self.update_parameter_data()
+
     def set_parameter_names(self, parameter_names):
         '''Sets the fit parameters. If parameter_values=`None`, tries to infer
         defaults from the function_to_minimize.'''
@@ -177,14 +190,16 @@ class Minuit:
             self.parameter_names = parameter_names
         else:
             raise Exception("Cannot set param names. Tuple length mismatch.")
+        
+        self.update_parameter_data()
 
     def set_parameter_errors(self, parameter_errors=None):
         '''Sets the fit parameter errors. If parameter_values=`None`, sets the
         error to 1% of the parameter value.'''
 
-        if parameter_errors is None:  # set to 1% of the parameter value
+        if parameter_errors is None:  # set to 0.1% of the parameter value
             if not self.current_parameters is None:
-                self.parameter_errors = [max(0.01, 0.01 * par)
+                self.parameter_errors = [max(0.001, 0.001 * par)
                                          for par in self.current_parameters]
             else:
                 raise Exception("Cannot set parameter errors. No errors \
@@ -194,6 +209,8 @@ class Minuit:
                             Tuple length mismatch.")
         else:
             self.parameter_errors = parameter_errors
+            
+        self.update_parameter_data()
 
     # Get methods
     ##############

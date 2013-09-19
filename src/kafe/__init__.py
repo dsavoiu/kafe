@@ -49,8 +49,8 @@ else:
     ch.setLevel(logging.WARNING)
 
 # create formatter
-formatter = logging.Formatter('%(name)s %(asctime)s :: \
-                               %(levelname)s :: %(message)s')
+formatter = logging.Formatter("%(name)s %(asctime)s :: "
+                              "%(levelname)s :: %(message)s")
 ch.setFormatter(formatter)  # add formatter to ch
 logger.addHandler(ch)  # add ch to logger
 
