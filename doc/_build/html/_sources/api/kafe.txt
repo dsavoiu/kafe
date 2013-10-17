@@ -65,6 +65,14 @@ kafe Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`latex_tools` Module
+-------------------------
+
+.. automodule:: kafe.latex_tools
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`minuit` Module
 --------------------
 

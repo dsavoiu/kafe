@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>kafe Package &mdash; kafe 0.3alpha46 documentation</title>
+    <title>kafe Package &mdash; kafe  documentation</title>
     
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.3alpha46',
+        VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="kafe 0.3alpha46 documentation" href="../index.html" /> 
+    <link rel="top" title="kafe  documentation" href="../index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">kafe 0.3alpha46 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">kafe  documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -50,16 +50,22 @@
 <h1>kafe Package<a class="headerlink" href="#kafe-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
 <h2><a class="reference internal" href="../index.html#module-kafe" title="kafe"><tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-kafe.__init__"></span><p>A Python package for fitting and plotting for use in physics lab courses.</p>
-<p>This Python package allows fitting of user-defined functions to data. A dataset is
-represented by a <cite>Dataset</cite> object which stores measurement data as <cite>NumPy</cite> arrays.
-The uncertainties of the data are also stored in the <cite>Dataset</cite> as an <cite>error matrix</cite>,
-allowing for both correlated and uncorrelated errors to be accurately represented.</p>
-<p>The constructor of a <cite>Dataset</cite> object accepts several keyword arguments and can be used
-to construct a <cite>Dataset</cite> out of data which has been loaded into <cite>Python</cite> as <cite>NumPy</cite> arrays.
-Alternatively, a plain-text representation of a <cite>Dataset</cite> can be read from a file.</p>
+<span class="target" id="module-kafe.__init__"></span><div class="section" id="kafe">
+<h3>kafe<a class="headerlink" href="#kafe" title="Permalink to this headline">¶</a></h3>
+<p>A Python package for fitting and plotting for use in physics lab courses.</p>
+<p>This Python package allows fitting of user-defined functions to data. A dataset
+is represented by a <cite>Dataset</cite> object which stores measurement data as <cite>NumPy</cite>
+arrays. The uncertainties of the data are also stored in the <cite>Dataset</cite> as an
+<cite>error matrix</cite>, allowing for both correlated and uncorrelated errors to be
+accurately represented.</p>
+<p>The constructor of a <cite>Dataset</cite> object accepts several keyword arguments and can
+be used to construct a <cite>Dataset</cite> out of data which has been loaded into
+<cite>Python</cite> as <cite>NumPy</cite> arrays. Alternatively, a plain-text representation of a
+<cite>Dataset</cite> can be read from a file.</p>
 <p>Also provided are helper functions which construct a <cite>Dataset</cite> object from a
-file containing column data (one measurement per row, column order can be specified).</p>
+file containing column data (one measurement per row, column order can be
+specified).</p>
+</div>
 </div>
 <div class="section" id="module-kafe._version_info">
 <span id="version-info-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">_version_info</span></tt> Module<a class="headerlink" href="#module-kafe._version_info" title="Permalink to this headline">¶</a></h2>
@@ -95,19 +101,19 @@ to the same order of magnitude as the error.</p>
 <dl class="data">
 <dt id="kafe.constants.M_CONFIDENCE_LEVEL">
 <tt class="descname">M_CONFIDENCE_LEVEL</tt><em class="property"> = 0.05</em><a class="headerlink" href="#kafe.constants.M_CONFIDENCE_LEVEL" title="Permalink to this definition">¶</a></dt>
-<dd><p>Confidence level for hypythesis test. A fit is rejected it <span class="math">\(\chi^2_\text{prob}\)</span> is smaller than this constant</p>
+<dd><p>Confidence level for hypothesis test</p>
 </dd></dl>
 
 <dl class="data">
 <dt id="kafe.constants.M_MAX_ITERATIONS">
 <tt class="descname">M_MAX_ITERATIONS</tt><em class="property"> = 6000</em><a class="headerlink" href="#kafe.constants.M_MAX_ITERATIONS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Maximum <cite>Minuit</cite> iterations until aborting the process</p>
+<dd><p>Maximum <cite>Minuit</cite> iterations until abort</p>
 </dd></dl>
 
 <dl class="data">
 <dt id="kafe.constants.M_MAX_X_FIT_ITERATIONS">
 <tt class="descname">M_MAX_X_FIT_ITERATIONS</tt><em class="property"> = 2</em><a class="headerlink" href="#kafe.constants.M_MAX_X_FIT_ITERATIONS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Number of maximal additional iterations for <cite>x</cite> fit (0 disregards <cite>x</cite> errors)</p>
+<dd><p>Maximum additional iterations for <cite>x</cite> fit</p>
 </dd></dl>
 
 <dl class="data">
@@ -122,11 +128,14 @@ to the same order of magnitude as the error.</p>
 <span class="target" id="module-dataset"></span><dl class="class">
 <dt id="kafe.dataset.Dataset">
 <em class="property">class </em><tt class="descname">Dataset</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.dataset.Dataset" title="Permalink to this definition">¶</a></dt>
-<dd><p>The <cite>Dataset</cite> object is a data structure for storing measurement and error data. In this implementation,
-the <cite>Dataset</cite> has the compulsory field <cite>data</cite>, which is used for storing the measurement data,
-and another field <cite>cov_mats</cite>, used for storing the covariance matrix for each axis.</p>
-<p>There are several ways a <cite>Dataset</cite> can be constructed. The most straightforward way is to specify an
-input file containing a plain-text representation of the dataset:</p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>The <cite>Dataset</cite> object is a data structure for storing measurement and error
+data. In this implementation, the <cite>Dataset</cite> has the compulsory field
+<cite>data</cite>, which is used for storing the measurement data, and another field
+<cite>cov_mats</cite>, used for storing the covariance matrix for each axis.</p>
+<p>There are several ways a <cite>Dataset</cite> can be constructed. The most
+straightforward way is to specify an input file containing a plain-text
+representation of the dataset:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">input_file</span><span class="o">=</span><span class="s">&#39;/path/to/file&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -134,73 +143,82 @@ input file containing a plain-text representation of the dataset:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">input_file</span><span class="o">=</span><span class="n">my_file_object</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>If an <cite>input_file</cite> keyword is provided, all other input is ignored. The <cite>Dataset</cite> plain-text representation
-format is as follows:</p>
+<p>If an <cite>input_file</cite> keyword is provided, all other input is ignored. The
+<cite>Dataset</cite> plain-text representation format is as follows:</p>
 <div class="highlight-python"><pre># x data
-x_1  sigma_x_1  
+x_1  sigma_x_1
 x_2  sigma_x_2  cor_x_12
 ...  ...        ...       ...
 x_N  sigma_x_N  cor_x_1N  ...  cor_x_NN
 
 # y data
-y_1  sigma_y_1  
+y_1  sigma_y_1
 y_2  sigma_y_2  cor_y_12
 ...  ...        ...       ...
 y_N  sigma_y_N  cor_y_1N  ...  cor_y_NN</pre>
 </div>
-<p>Here, the <cite>sigma_...</cite> represents the statistical error of the data point and <cite>cor_..._ij</cite> is the
-correlation coefficient between the <em>i</em>-th and <em>j</em>-th data point.</p>
-<p>Alternatively, field data can be set by passing iterables as keyword arguments. Available keywords
-for this purpose are:</p>
+<p>Here, the <cite>sigma_...</cite> represents the statistical error of the data point
+and <cite>cor_..._ij</cite> is the correlation coefficient between the <em>i</em>-th and
+<em>j</em>-th data point.</p>
+<p>Alternatively, field data can be set by passing iterables as keyword
+arguments. Available keywords for this purpose are:</p>
 <p><strong>data</strong> : tuple/list of tuples/lists/arrays of floats</p>
 <blockquote>
-<div><p>a tuple/list of measurement data. Each element of the tuple/list must be iterable and 
-be of the same length. The first element of the <strong>data</strong> tuple/list is assumed to be
-the <cite>x</cite> data, and the second to be the <cite>y</cite> data:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.23</span><span class="p">,</span> <span class="mf">3.45</span><span class="p">,</span> <span class="mf">5.62</span><span class="p">,</span> <span class="mf">7.88</span><span class="p">,</span> <span class="mf">9.64</span><span class="p">]))</span>
+<div><p>a tuple/list of measurement data. Each element of the tuple/list must
+be iterable and be of the same length. The first element of the
+<strong>data</strong> tuple/list is assumed to be the <cite>x</cite> data, and the second to be
+the <cite>y</cite> data:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.23</span><span class="p">,</span> <span class="mf">3.45</span><span class="p">,</span> <span class="mf">5.62</span><span class="p">]))</span>
 </pre></div>
 </div>
-<p>Alternatively, x-y value pairs can also be passed as <strong>data</strong>. The following is equivalent to the above:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.23</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.45</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">5.62</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">7.88</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">9.64</span><span class="p">]))</span>
+<p>Alternatively, x-y value pairs can also be passed as <strong>data</strong>. The
+following is equivalent to the above:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.23</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.45</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">5.62</span><span class="p">]))</span>
 </pre></div>
 </div>
-<p>In case the <cite>Dataset</cite> contains two data points, the ordering is ambiguous. In this case, the
-first ordering (<cite>x</cite> data first, then <cite>y</cite> data) is assumed.</p>
+<p>In case the <cite>Dataset</cite> contains two data points, the ordering is
+ambiguous. In this case, the first ordering (<cite>x</cite> data first, then <cite>y</cite>
+data) is assumed.</p>
 </div></blockquote>
-<p><strong>cov_mats</strong> : tuple/list of <cite>numpy.matrix</cite></p>
+<p><em>cov_mats</em> : tuple/list of <cite>numpy.matrix</cite> (optional)</p>
 <blockquote>
-<div><p>a tuple/list of two-dimensional iterables containing the covariance matrices for <cite>x</cite> and <cite>y</cite>, in that
-order. Covariance matrices can be any sort of two-dimensional NxN iterables, assuming N is the number
-of data points.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.23</span><span class="p">,</span> <span class="mf">3.45</span><span class="p">,</span> <span class="mf">5.62</span><span class="p">]),</span> <span class="n">cov_mats</span><span class="o">=</span><span class="p">(</span><span class="n">my_cov_mat_x</span><span class="p">,</span> <span class="n">my_cov_mat_y</span><span class="p">))</span>
+<div><p>a tuple/list of two-dimensional iterables containing the covariance
+matrices for <cite>x</cite> and <cite>y</cite>, in that order. Covariance matrices can be any
+sort of two-dimensional NxN iterables, assuming N is the number of data
+points.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.23</span><span class="p">,</span> <span class="mf">3.45</span><span class="p">,</span> <span class="mf">5.62</span><span class="p">]),</span>             <span class="n">cov_mats</span><span class="o">=</span><span class="p">(</span><span class="n">my_cov_mat_x</span><span class="p">,</span> <span class="n">my_cov_mat_y</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>This keyword argument can be omitted, in which case covariance matrices of zero are assumed.
-To specify a covariance matrix for a single axis, replace the other with <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.23</span><span class="p">,</span> <span class="mf">3.45</span><span class="p">,</span> <span class="mf">5.62</span><span class="p">]),</span> <span class="n">cov_mats</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">my_cov_mat_y</span><span class="p">))</span>
+<p>This keyword argument can be omitted, in which case covariance matrices
+of zero are assumed. To specify a covariance matrix for a single axis,
+replace the other with <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.23</span><span class="p">,</span> <span class="mf">3.45</span><span class="p">,</span> <span class="mf">5.62</span><span class="p">]),</span>             <span class="n">cov_mats</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">my_cov_mat_y</span><span class="p">))</span>
 </pre></div>
 </div>
 </div></blockquote>
-<p><strong>title</strong> : string</p>
+<p><em>title</em> : string (optional)</p>
 <blockquote>
-<div>the name of the <cite>Dataset</cite>. If omitted, the <cite>Dataset</cite> will be given the generic name &#8216;Untitled Dataset&#8217;.</div></blockquote>
+<div>the name of the <cite>Dataset</cite>. If omitted, the <cite>Dataset</cite> will be given the
+generic name &#8216;Untitled Dataset&#8217;.</div></blockquote>
+<p><em>axis_labels</em> : list of strings (optional)</p>
+<blockquote>
+<div>labels for the <cite>x</cite> and <cite>y</cite> axes. If omitted, these will be set to <tt class="docutils literal"><span class="pre">'x'</span></tt>
+and <tt class="docutils literal"><span class="pre">'y'</span></tt>, respectively.</div></blockquote>
+<p><em>axis_units</em> : list of strings (optional)</p>
+<blockquote>
+<div>units for the <cite>x</cite> and <cite>y</cite> axes. If omitted, these will be assumed to be
+dimensionless, i.e. the unit will be an empty string.</div></blockquote>
 <dl class="attribute">
 <dt id="kafe.dataset.Dataset.axis_labels">
 <tt class="descname">axis_labels</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.dataset.Dataset.axis_labels" title="Permalink to this definition">¶</a></dt>
 <dd><p>axis labels</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="kafe.dataset.Dataset.axis_units">
-<tt class="descname">axis_units</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.dataset.Dataset.axis_units" title="Permalink to this definition">¶</a></dt>
-<dd><p>units to assume for axis</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="kafe.dataset.Dataset.cov_mat_is_regular">
 <tt class="descname">cov_mat_is_regular</tt><big>(</big><em>axis</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.cov_mat_is_regular"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.dataset.Dataset.cov_mat_is_regular" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns <cite>True</cite> if the covariance matrix for an axis is regular and <tt class="docutils literal"><span class="pre">False</span></tt> if it is
-singular.</p>
+<dd><p>Returns <cite>True</cite> if the covariance matrix for an axis is regular and
+<tt class="docutils literal"><span class="pre">False</span></tt> if it is singular.</p>
 <dl class="docutils">
 <dt><strong>axis</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="docutils literal"><span class="pre">'x'</span></tt> or <tt class="docutils literal"><span class="pre">'y'</span></tt></span></dt>
 <dd>Axis for which to check for regularity of the covariance matrix.</dd>
@@ -213,19 +231,14 @@ singular.</p>
 <dd><p>list of covariance matrices</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="kafe.dataset.Dataset.data">
-<tt class="descname">data</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.dataset.Dataset.data" title="Permalink to this definition">¶</a></dt>
-<dd><p>list containing measurement data (axis-ordering)</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="kafe.dataset.Dataset.get_axis">
 <tt class="descname">get_axis</tt><big>(</big><em>axis_alias</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.get_axis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.dataset.Dataset.get_axis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get axis id from an alias.</p>
 <dl class="docutils">
 <dt><strong>axis_alias</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string or int</span></dt>
-<dd>Alias of the axis whose id should be returned. This is for example either <tt class="docutils literal"><span class="pre">'0'</span></tt> or <tt class="docutils literal"><span class="pre">'x'</span></tt> for the <cite>x</cite>-axis (id 0).</dd>
+<dd>Alias of the axis whose id should be returned. This is for example
+either <tt class="docutils literal"><span class="pre">'0'</span></tt> or <tt class="docutils literal"><span class="pre">'x'</span></tt> for the <cite>x</cite>-axis (id 0).</dd>
 </dl>
 </dd></dl>
 
@@ -237,9 +250,11 @@ singular.</p>
 <dt><strong>axis</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="docutils literal"><span class="pre">'x'</span></tt> or <tt class="docutils literal"><span class="pre">'y'</span></tt></span></dt>
 <dd>Axis for which to load the error matrix.</dd>
 <dt><em>fallback_on_singular</em> <span class="classifier-delimiter">:</span> <span class="classifier"><cite>numpy.matrix</cite> or string (optional)</span></dt>
-<dd>What to return if the matrix is singular. If this is <tt class="docutils literal"><span class="pre">None</span></tt> (default), the matrix is returned anyway.
-If this is a <cite>numpy.matrix</cite> object or similar, that is returned istead. Alternatively, the shortcuts
-<tt class="docutils literal"><span class="pre">'identity'</span></tt> or <tt class="docutils literal"><span class="pre">1</span></tt> and <tt class="docutils literal"><span class="pre">'zero'</span></tt> or <tt class="docutils literal"><span class="pre">0</span></tt> can be used to return the identity and zero matrix
+<dd>What to return if the matrix is singular. If this is <tt class="docutils literal"><span class="pre">None</span></tt>
+(default), the matrix is returned anyway. If this is a
+<cite>numpy.matrix</cite> object or similar, that is returned istead.
+Alternatively, the shortcuts <tt class="docutils literal"><span class="pre">'identity'</span></tt> or <tt class="docutils literal"><span class="pre">1</span></tt> and <tt class="docutils literal"><span class="pre">'zero'</span></tt>
+or <tt class="docutils literal"><span class="pre">0</span></tt> can be used to return the identity and zero matrix
 respectively.</dd>
 </dl>
 </dd></dl>
@@ -250,21 +265,23 @@ respectively.</dd>
 <dd><p>Get the measurement data for an axis.</p>
 <dl class="docutils">
 <dt><strong>axis</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Axis for which to get the measurement data. Can be <tt class="docutils literal"><span class="pre">'x'</span></tt> or <tt class="docutils literal"><span class="pre">'y'</span></tt>.</dd>
+<dd>Axis for which to get the measurement data. Can be <tt class="docutils literal"><span class="pre">'x'</span></tt> or
+<tt class="docutils literal"><span class="pre">'y'</span></tt>.</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="kafe.dataset.Dataset.get_data_span">
 <tt class="descname">get_data_span</tt><big>(</big><em>axis</em>, <em>include_error_bars=False</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.get_data_span"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.dataset.Dataset.get_data_span" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the data span for an axis. The data span is a tuple (<cite>min</cite>, <cite>max</cite>) containing
-the smallest and highest coordinates for an axis.</p>
+<dd><p>Get the data span for an axis. The data span is a tuple (<cite>min</cite>, <cite>max</cite>)
+containing the smallest and highest coordinates for an axis.</p>
 <dl class="docutils">
 <dt><strong>axis</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="docutils literal"><span class="pre">'x'</span></tt> or <tt class="docutils literal"><span class="pre">'y'</span></tt></span></dt>
 <dd>Axis for which to get the data span.</dd>
 <dt><em>include_error_bars</em> <span class="classifier-delimiter">:</span> <span class="classifier">boolean (optional)</span></dt>
 <dd><tt class="docutils literal"><span class="pre">True</span></tt> if the returned span should be enlarged to
-contain the error bars of the smallest and largest datapoints (default: <tt class="docutils literal"><span class="pre">False</span></tt>)</dd>
+contain the error bars of the smallest and largest datapoints
+(default: <tt class="docutils literal"><span class="pre">False</span></tt>)</dd>
 </dl>
 </dd></dl>
 
@@ -275,27 +292,30 @@ contain the error bars of the smallest and largest datapoints (default: <tt clas
 can later be used as an input file for the creation of a new <cite>Dataset</cite>.</p>
 <p id="get-formatted">The format is as follows:</p>
 <div class="highlight-python"><pre># x data
-x_1  sigma_x_1  
+x_1  sigma_x_1
 x_2  sigma_x_2  cor_x_12
 ...  ...        ...       ...
 x_N  sigma_x_N  cor_x_1N  ...  cor_x_NN
 
 # y data
-y_1  sigma_y_1  
+y_1  sigma_y_1
 y_2  sigma_y_2  cor_y_12
 ...  ...        ...       ...
 y_N  sigma_y_N  cor_y_1N  ...  cor_y_NN</pre>
 </div>
-<p>Here, the <tt class="docutils literal"><span class="pre">x_i</span></tt> and <tt class="docutils literal"><span class="pre">y_i</span></tt> represent the measurement data, the <tt class="docutils literal"><span class="pre">sigma_?_i</span></tt> are the
-statistical uncertainties of each data point, and the <tt class="docutils literal"><span class="pre">cor_?_ij</span></tt> are the correlation
-coefficients between the <em>i</em>-th and <em>j</em>-th data point.</p>
-<p>If the <tt class="docutils literal"><span class="pre">x</span></tt> or <tt class="docutils literal"><span class="pre">y</span></tt> errors are not correlated, then the entire correlation coefficient matrix
-can be omitted. If there are no statistical uncertainties for an axis, the second
-column can also be omitted. A blank line is required at the end of each data block!</p>
+<p>Here, the <tt class="docutils literal"><span class="pre">x_i</span></tt> and <tt class="docutils literal"><span class="pre">y_i</span></tt> represent the measurement data, the
+<tt class="docutils literal"><span class="pre">sigma_?_i</span></tt> are the statistical uncertainties of each data point, and
+the <tt class="docutils literal"><span class="pre">cor_?_ij</span></tt> are the correlation coefficients between the <em>i</em>-th
+and <em>j</em>-th data point.</p>
+<p>If the <tt class="docutils literal"><span class="pre">x</span></tt> or <tt class="docutils literal"><span class="pre">y</span></tt> errors are not correlated, then the entire
+correlation coefficient matrix can be omitted. If there are no
+statistical uncertainties for an axis, the second column can also be
+omitted. A blank line is required at the end of each data block!</p>
 <dl class="docutils">
 <dt><em>format_string</em> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
-<dd>A format string with which each entry will be rendered. Default is <tt class="docutils literal"><span class="pre">'.06e'</span></tt>, which means
-the numbers are represented in scientific notation with six significant digits.</dd>
+<dd>A format string with which each entry will be rendered. Default is
+<tt class="docutils literal"><span class="pre">'.06e'</span></tt>, which means the numbers are represented in scientific
+notation with six significant digits.</dd>
 <dt><em>delimiter</em> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
 <dd>A delimiter used to separate columns in the output.</dd>
 </dl>
@@ -304,14 +324,15 @@ the numbers are represented in scientific notation with six significant digits.<
 <dl class="method">
 <dt id="kafe.dataset.Dataset.get_size">
 <tt class="descname">get_size</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.get_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.dataset.Dataset.get_size" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the size of the <cite>Dataset</cite>. This is equivalent to the length of the <cite>x</cite>-axis data.</p>
+<dd><p>Get the size of the <cite>Dataset</cite>. This is equivalent to the length of the
+<cite>x</cite>-axis data.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="kafe.dataset.Dataset.has_correlations">
 <tt class="descname">has_correlations</tt><big>(</big><em>axis</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.has_correlations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.dataset.Dataset.has_correlations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns <cite>True</cite> if the specified axis has correlation data, <tt class="docutils literal"><span class="pre">False</span></tt> if not.
-singular.</p>
+<dd><p>Returns <cite>True</cite> if the specified axis has correlation data, <tt class="docutils literal"><span class="pre">False</span></tt> if
+not.</p>
 <dl class="docutils">
 <dt><strong>axis</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="docutils literal"><span class="pre">'x'</span></tt> or <tt class="docutils literal"><span class="pre">'y'</span></tt></span></dt>
 <dd>Axis for which to check for correlations.</dd>
@@ -331,7 +352,8 @@ singular.</p>
 <dl class="attribute">
 <dt id="kafe.dataset.Dataset.n_axes">
 <tt class="descname">n_axes</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.dataset.Dataset.n_axes" title="Permalink to this definition">¶</a></dt>
-<dd><p>dimensionality of the <cite>Dataset</cite>. Currently, only 2D <cite>Datasets</cite> are supported</p>
+<dd><p>dimensionality of the <cite>Dataset</cite>. Currently, only 2D <cite>Datasets</cite> are
+supported</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -358,7 +380,8 @@ singular.</p>
 <dt><strong>axis</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="docutils literal"><span class="pre">'x'</span></tt> or <tt class="docutils literal"><span class="pre">'y'</span></tt></span></dt>
 <dd>Axis for which to load the error matrix.</dd>
 <dt><strong>mat</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><cite>numpy.matrix</cite> or <tt class="docutils literal"><span class="pre">None</span></tt></span></dt>
-<dd>Error matrix for the axis. Passing <tt class="docutils literal"><span class="pre">None</span></tt> unsets the error matrix.</dd>
+<dd>Error matrix for the axis. Passing <tt class="docutils literal"><span class="pre">None</span></tt> unsets the error
+matrix.</dd>
 </dl>
 </dd></dl>
 
@@ -377,13 +400,16 @@ singular.</p>
 <dl class="method">
 <dt id="kafe.dataset.Dataset.write_formatted">
 <tt class="descname">write_formatted</tt><big>(</big><em>file_path</em>, <em>format_string='.06e'</em>, <em>delimiter='t'</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#Dataset.write_formatted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.dataset.Dataset.write_formatted" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes the dataset to a plain-text file. For details on the format, see <a class="reference internal" href="#get-formatted">get_formatted</a>.</p>
+<dd><p>Writes the dataset to a plain-text file. For details on the format, see
+<a class="reference internal" href="#get-formatted">get_formatted</a>.</p>
 <dl class="docutils">
 <dt><strong>file_path</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Path of the file object to write. <strong>WARNING</strong>: <em>overwrites existing files</em>!</dd>
+<dd>Path of the file object to write. <strong>WARNING</strong>: <em>overwrites existing
+files</em>!</dd>
 <dt><em>format_string</em> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
-<dd>A format string with which each entry will be rendered. Default is <tt class="docutils literal"><span class="pre">'.06e'</span></tt>, which means
-the numbers are represented in scientific notation with six significant digits.</dd>
+<dd>A format string with which each entry will be rendered. Default is
+<tt class="docutils literal"><span class="pre">'.06e'</span></tt>, which means the numbers are represented in scientific
+notation with six significant digits.</dd>
 <dt><em>delimiter</em> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
 <dd>A delimiter used to separate columns in the output.</dd>
 </dl>
@@ -394,30 +420,36 @@ the numbers are represented in scientific notation with six significant digits.<
 <dl class="function">
 <dt id="kafe.dataset.build_dataset">
 <tt class="descname">build_dataset</tt><big>(</big><em>xdata</em>, <em>ydata</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#build_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.dataset.build_dataset" title="Permalink to this definition">¶</a></dt>
-<dd><p>This helper function creates a <cite>Dataset</cite> from a series of keyword arguments.</p>
+<dd><p>This helper function creates a <cite>Dataset</cite> from a series of keyword
+arguments.</p>
 <p>Valid keyword arguments are:</p>
 <dl class="docutils">
 <dt><strong>xdata</strong> and <strong>ydata</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list/tuple/<cite>np.array</cite> of floats</span></dt>
-<dd>These keyword arguments are mandatory and should be iterables containing the measurement data.</dd>
+<dd>These keyword arguments are mandatory and should be iterables
+containing the measurement data.</dd>
 <dt><em>error specification keywords</em> <span class="classifier-delimiter">:</span> <span class="classifier">iterable or numeric (see below)</span></dt>
-<dd><p class="first">A valid keyword is composed of an axis (<em>x</em> or <em>y</em>), an error relativity specification (<em>abs</em> or <em>rel</em>)
-and error correlation type (<em>stat</em> or <em>syst</em>). The errors are then set as follows:</p>
+<dd><p class="first">A valid keyword is composed of an axis (<em>x</em> or <em>y</em>), an error
+relativity specification (<em>abs</em> or <em>rel</em>) and error correlation type
+(<em>stat</em> or <em>syst</em>). The errors are then set as follows:</p>
 <blockquote>
 <div><ol class="arabic">
 <li><dl class="first docutils">
 <dt>For statistical errors:</dt>
-<dd><ul class="first last simple">
-<li>if keyword argument is iterable, the error list is set to that</li>
-<li>if keyword argument is a number, an error list with identical entries is generated</li>
+<dd><ul class="first simple">
+<li>if keyword argument is iterable, the error list is set to</li>
 </ul>
+<p class="last">that
+- if keyword argument is a number, an error list with identical
+entries is generated</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt>For systematic errors:</dt>
-<dd><ul class="first last simple">
-<li>keyword argument <em>must</em> be a single number. The global correlated error for the axis is then set to that.</li>
+<dd><ul class="first simple">
+<li>keyword argument <em>must</em> be a single number. The global</li>
 </ul>
+<p class="last">correlated error for the axis is then set to that.</p>
 </dd>
 </dl>
 </li>
@@ -427,16 +459,11 @@ and error correlation type (<em>stat</em> or <em>syst</em>). The errors are then
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">myDataset</span> <span class="o">=</span> <span class="n">build_dataset</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">yabsstat</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">yrelsyst</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="last">creates a dataset where the statistical error of each <cite>y</cite> coordinate is set to 0.3 and the overall systematic
-error of <cite>y</cite> is set to 0.1.</p>
+<p class="last">creates a dataset where the statistical error of each <cite>y</cite> coordinate is
+set to 0.3 and the overall systematic error of <cite>y</cite> is set to 0.1.</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="function">
-<dt id="kafe.dataset.debug_print">
-<tt class="descname">debug_print</tt><big>(</big><em>message</em><big>)</big><a class="reference internal" href="../_modules/kafe/dataset.html#debug_print"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.dataset.debug_print" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </div>
 <div class="section" id="module-kafe.file_tools">
@@ -444,24 +471,29 @@ error of <cite>y</cite> is set to 0.1.</p>
 <span class="target" id="module-file_tools"></span><dl class="function">
 <dt id="kafe.file_tools.parse_column_data">
 <tt class="descname">parse_column_data</tt><big>(</big><em>file_to_parse</em>, <em>field_order='x</em>, <em>y'</em>, <em>delimiter=' '</em>, <em>cov_mat_files=None</em>, <em>title='Untitled Dataset'</em><big>)</big><a class="reference internal" href="../_modules/kafe/file_tools.html#parse_column_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.file_tools.parse_column_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parses a file which contains measurement data in a one-measurement-per-row format.
-The field (column) order can be specified. It defaults to <cite>x,y&#8217;. Valid field names are
-`x</cite>, <cite>y</cite>, <cite>xabsstat</cite>, <cite>yabsstat</cite>, <cite>xrelstat</cite>, <cite>yrelstat</cite>. Another
-valid field name is <cite>ignore</cite> which can be used to skip a field.</p>
+<dd><p>Parses a file which contains measurement data in a one-measurement-per-row
+format. The field (column) order can be specified. It defaults to <cite>x,y&#8217;.
+Valid field names are `x</cite>, <cite>y</cite>, <cite>xabsstat</cite>, <cite>yabsstat</cite>, <cite>xrelstat</cite>,
+<cite>yrelstat</cite>. Another valid field name is <cite>ignore</cite> which can be used to skip
+a field.</p>
 <p>Every valid measurement data file <em>must</em> have an <cite>x</cite> and a <cite>y</cite> field.</p>
-<p>Additionally, a delimiter can be specified. If this is a whitespace character or omitted, any
-sequence of whitespace characters is assumed to separate the data.</p>
-<p>If the measurement errors and correlations are given as covariance matrices (in a separate file),
-these files can be specified using the <cite>cov_mat_files</cite> argument.</p>
+<p>Additionally, a delimiter can be specified. If this is a whitespace
+character or omitted, any sequence of whitespace characters is assumed to
+separate the data.</p>
+<p>If the measurement errors and correlations are given as covariance matrices
+(in a separate file), these files can be specified using the
+<cite>cov_mat_files</cite> argument.</p>
 <dl class="docutils">
 <dt><strong>file_to_parse</strong> <span class="classifier-delimiter">:</span> <span class="classifier">file-like object or string containing a file path</span></dt>
 <dd>The file to parse.</dd>
-<dt><em>field_order</em> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional) </span></dt>
-<dd>A string of comma-separated field names giving the order of the columns in the file. Defaults to <tt class="docutils literal"><span class="pre">'x,y'</span></tt>.</dd>
+<dt><em>field_order</em> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
+<dd>A string of comma-separated field names giving the order of the columns
+in the file. Defaults to <tt class="docutils literal"><span class="pre">'x,y'</span></tt>.</dd>
 <dt><em>delimiter</em> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
 <dd>The field delimiter used in the file. Defaults to any whitespace.</dd>
 <dt><em>cov_mat_files</em> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="docutils literal"><span class="pre">None</span></tt> or tuple of strings/file-like objects (optional)</span></dt>
-<dd>Files which contain x- and y-covariance matrices, in that order. Defaults to <tt class="docutils literal"><span class="pre">None</span></tt>.</dd>
+<dd>Files which contain x- and y-covariance matrices, in that order.
+Defaults to <tt class="docutils literal"><span class="pre">None</span></tt>.</dd>
 <dt><strong>return</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><cite>Dataset</cite></span></dt>
 <dd>A Dataset built from the parsed file.</dd>
 </dl>
@@ -481,7 +513,8 @@ a_N1  a_N2  ...  a_NM</pre>
 <dt><strong>file_like</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string or file-like object</span></dt>
 <dd>File path or file object to read matrix from.</dd>
 <dt><em>delimiter</em> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="docutils literal"><span class="pre">None</span></tt> or string (optional)</span></dt>
-<dd>Column delimiter use in the matrix file. Defaults to <tt class="docutils literal"><span class="pre">None</span></tt>, meaning any whitespace.</dd>
+<dd>Column delimiter use in the matrix file. Defaults to <tt class="docutils literal"><span class="pre">None</span></tt>,
+meaning any whitespace.</dd>
 </dl>
 </dd></dl>
 
@@ -490,48 +523,54 @@ a_N1  a_N2  ...  a_NM</pre>
 <span id="fit-module"></span><h2><a class="reference internal" href="../index.html#module-fit" title="fit: This submodule defines a `Fit` object which performs the actual fitting given a `Dataset` and a fit function. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">fit</span></tt></a> Module<a class="headerlink" href="#module-kafe.fit" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-fit"></span><dl class="class">
 <dt id="kafe.fit.Fit">
-<em class="property">class </em><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x28452a8&gt;</em>, <em>function_label=None</em>, <em>function_equation=None</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Object representing a fit. This object references the fitted <cite>Dataset</cite>, the fit function and the resulting fit parameters.</p>
-<p>Necessary arguments are a <cite>Dataset</cite> object and a fit function (which should be fitted to the <cite>Dataset</cite>).
-Optionally, an external function <cite>FCN</cite> (whose minima should be located to find the best fit) can be specified.
-If not given, the <cite>FCN</cite> function defaults to <span class="math">\(\chi^2\)</span>.</p>
+<em class="property">class </em><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x366a5f0&gt;</em>, <em>fit_label=None</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Object representing a fit. This object references the fitted <cite>Dataset</cite>,
+the fit function and the resulting fit parameters.</p>
+<p>Necessary arguments are a <cite>Dataset</cite> object and a fit function (which should
+be fitted to the <cite>Dataset</cite>). Optionally, an external function <cite>FCN</cite> (whose
+minima should be located to find the best fit) can be specified. If not
+given, the <cite>FCN</cite> function defaults to <span class="math">\(\chi^2\)</span>.</p>
 <dl class="docutils">
 <dt><strong>dataset</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><cite>Dataset</cite></span></dt>
 <dd>A <cite>Dataset</cite> object containing all information about the data</dd>
 <dt><strong>fit_function</strong> <span class="classifier-delimiter">:</span> <span class="classifier">function</span></dt>
-<dd><p class="first">A user-defined Python function to be fitted to the data. This function&#8217;s first argument must be the 
-independent variable <cite>x</cite>. All other arguments <em>must</em> be named and have default values given. These
-defaults are used as a starting point for the actual minimization. For example, a simple linear function
-would be defined like:</p>
+<dd><p class="first">A user-defined Python function to be fitted to the data. This
+function&#8217;s first argument must be the independent variable <cite>x</cite>. All
+other arguments <em>must</em> be named and have default values given. These
+defaults are used as a starting point for the actual minimization. For
+example, a simple linear function would be defined like:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">linear_2par</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y_intercept</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y_intercept</span>
 </pre></div>
 </div>
-<p class="last">Be aware that choosing sensible initial values for the parameters is often crucial for a succesful fit,
-particularly for functions of many parameters.</p>
+<p class="last">Be aware that choosing sensible initial values for the parameters is
+often crucial for a succesful fit, particularly for functions of many
+parameters.</p>
 </dd>
 <dt><em>external_fcn</em> <span class="classifier-delimiter">:</span> <span class="classifier">function (optional)</span></dt>
-<dd><p class="first">An external <cite>FCN</cite> (function to minimize). This function must have the following call signature:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">FCN</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">cov_mat</span><span class="p">,</span> <span class="n">fit_function</span><span class="p">,</span> <span class="n">param_values</span><span class="p">)</span>
+<dd><p class="first">An external <cite>FCN</cite> (function to minimize). This function must have the
+following call signature:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">FCN</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">cov_mat</span><span class="p">,</span> <span class="n">fit_function</span><span class="p">,</span> <span class="n">parameter_values</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="last">It should return a float. If not specified, the default <span class="math">\(\chi^2\)</span> <cite>FCN</cite> is used. This should
-be sufficient for most fits.</p>
+<p class="last">It should return a float. If not specified, the default <span class="math">\(\chi^2\)</span>
+<cite>FCN</cite> is used. This should be sufficient for most fits.</p>
 </dd>
-<dt><em>function_label</em> <span class="classifier-delimiter">:</span> <span class="classifier"><span class="math">\(\LaTeX\)</span>-formatted string (optional)</span></dt>
-<dd>A name/label/short description of the fit function. This appears in the legend describing the fitter curve.
-If omitted, this defaults to the function&#8217;s Python name.</dd>
-<dt><em>function_equation</em> <span class="classifier-delimiter">:</span> <span class="classifier"><span class="math">\(\LaTeX\)</span>-formatted string (optional)</span></dt>
-<dd>The fit function&#8217;s equation.</dd>
+<dt><em>fit_label</em> <span class="classifier-delimiter">:</span> <span class="classifier"><span class="math">\(\LaTeX\)</span>-formatted string (optional)</span></dt>
+<dd>A name/label/short description of the fit function. This appears in the
+legend describing the fitter curve. If omitted, this defaults to the
+fit function&#8217;s <span class="math">\(\LaTeX\)</span> expression.</dd>
 </dl>
 <dl class="method">
 <dt id="kafe.fit.Fit.call_external_fcn">
-<tt class="descname">call_external_fcn</tt><big>(</big><em>*param_values</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit.call_external_fcn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.Fit.call_external_fcn" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper for the external <cite>FCN</cite>. Since the actual fit process depends on finding the right parameter
-values and keeping everything else constant, we can use the <cite>Dataset</cite> object to pass known, fixed
-information to the external <cite>FCN</cite>, varying only the parameter values.</p>
+<tt class="descname">call_external_fcn</tt><big>(</big><em>*parameter_names</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit.call_external_fcn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.Fit.call_external_fcn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for the external <cite>FCN</cite>. Since the actual fit process depends on
+finding the right parameter values and keeping everything else constant
+we can use the <cite>Dataset</cite> object to pass known, fixed information to the
+external <cite>FCN</cite>, varying only the parameter values.</p>
 <dl class="docutils">
-<dt><strong>param_values</strong> <span class="classifier-delimiter">:</span> <span class="classifier">sequence of values</span></dt>
+<dt><strong>parameter_names</strong> <span class="classifier-delimiter">:</span> <span class="classifier">sequence of values</span></dt>
 <dd>the parameter values at which <cite>FCN</cite> is to be evaluated</dd>
 </dl>
 </dd></dl>
@@ -540,18 +579,6 @@ information to the external <cite>FCN</cite>, varying only the parameter values.
 <dt id="kafe.fit.Fit.current_cov_mat">
 <tt class="descname">current_cov_mat</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.fit.Fit.current_cov_mat" title="Permalink to this definition">¶</a></dt>
 <dd><p>the current covariance matrix used for the <cite>Fit</cite></p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="kafe.fit.Fit.current_param_errors">
-<tt class="descname">current_param_errors</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.fit.Fit.current_param_errors" title="Permalink to this definition">¶</a></dt>
-<dd><p>the current uncertainties of the parameters</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="kafe.fit.Fit.current_param_values">
-<tt class="descname">current_param_values</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.fit.Fit.current_param_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>the current values of the parameters</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -564,15 +591,17 @@ information to the external <cite>FCN</cite>, varying only the parameter values.
 <dt id="kafe.fit.Fit.do_fit">
 <tt class="descname">do_fit</tt><big>(</big><em>quiet=False</em>, <em>verbose=False</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit.do_fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.Fit.do_fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the fit algorithm for this <cite>Fit</cite> object.</p>
-<p>First, the <cite>Dataset</cite> is fitted considering only uncertainties in the <cite>y</cite> direction.
-If the <cite>Dataset</cite> has no uncertainties in the <cite>y</cite> direction, they are assumed to be 
-equal to 1.0 for this preliminary fit, as there is no better information available.</p>
-<p>Next, the fit errors in the <cite>x</cite> direction (if they exist) are taken into account by
-projecting the covariance matrix for the <cite>x</cite> errors onto the <cite>y</cite> covariance matrix.
-This is done by taking the first derivative of the fit function in each point and
-&#8220;projecting&#8221; the <cite>x</cite> error onto the resulting tangent to the curve.</p>
-<p>This last step is repeater until the change in the error matrix caused by the projection
-becomes negligible.</p>
+<p>First, the <cite>Dataset</cite> is fitted considering only uncertainties in the
+<cite>y</cite> direction. If the <cite>Dataset</cite> has no uncertainties in the <cite>y</cite>
+direction, they are assumed to be equal to 1.0 for this preliminary
+fit, as there is no better information available.</p>
+<p>Next, the fit errors in the <cite>x</cite> direction (if they exist) are taken
+into account by projecting the covariance matrix for the <cite>x</cite> errors
+onto the <cite>y</cite> covariance matrix. This is done by taking the first
+derivative of the fit function in each point and &#8220;projecting&#8221; the <cite>x</cite>
+error onto the resulting tangent to the curve.</p>
+<p>This last step is repeater until the change in the error matrix caused
+by the projection becomes negligible.</p>
 <dl class="docutils">
 <dt><em>quiet</em> <span class="classifier-delimiter">:</span> <span class="classifier">boolean (optional)</span></dt>
 <dd>Set to <tt class="docutils literal"><span class="pre">True</span></tt> if no output should be printed.</dd>
@@ -599,36 +628,32 @@ becomes negligible.</p>
 <dd><p>Instructs the minimizer to do a minimization.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="kafe.fit.Fit.function_equation">
-<tt class="descname">function_equation</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.fit.Fit.function_equation" title="Permalink to this definition">¶</a></dt>
-<dd><p><span class="math">\(\LaTeX\)</span> function equation</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="kafe.fit.Fit.function_label">
-<tt class="descname">function_label</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.fit.Fit.function_label" title="Permalink to this definition">¶</a></dt>
-<dd><p>a label to use in the legend when plotting</p>
+<dl class="method">
+<dt id="kafe.fit.Fit.fix_parameters">
+<tt class="descname">fix_parameters</tt><big>(</big><em>*parameters_to_fix</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit.fix_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fix the given parameters so that the minimizer works without them
+when <cite>do_fit</cite> is called next. Parameters can be given by their names
+or by their IDs.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="kafe.fit.Fit.get_current_fit_function">
 <tt class="descname">get_current_fit_function</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit.get_current_fit_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.Fit.get_current_fit_function" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method returns a function object corresponding to the fit function
-for the current parameter values. The returned function is a function of
-a single variable.</p>
+for the current parameter values. The returned function is a function
+of a single variable.</p>
 <dl class="docutils">
 <dt>returns <span class="classifier-delimiter">:</span> <span class="classifier">function</span></dt>
-<dd>A function of a single variable corresponding to the fit function at the
-current parameter values.</dd>
+<dd>A function of a single variable corresponding to the fit function
+at the current parameter values.</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="kafe.fit.Fit.get_error_matrix">
 <tt class="descname">get_error_matrix</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit.get_error_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.Fit.get_error_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method returns the covariance matrix of the fit parameters which is obtained
-by querying the minimizer object for this fit</p>
+<dd><p>This method returns the covariance matrix of the fit parameters which
+is obtained by querying the minimizer object for this <cite>Fit</cite></p>
 <dl class="docutils">
 <dt>returns <span class="classifier-delimiter">:</span> <span class="classifier"><cite>numpy.matrix</cite></span></dt>
 <dd>The covariance matrix of the parameters.</dd>
@@ -660,6 +685,12 @@ by querying the minimizer object for this fit</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="kafe.fit.Fit.latex_parameter_names">
+<tt class="descname">latex_parameter_names</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.fit.Fit.latex_parameter_names" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="math">\(\LaTeX\)</span> parameter names</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="kafe.fit.Fit.minimizer">
 <tt class="descname">minimizer</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.fit.Fit.minimizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>this <cite>Fit</cite>&#8216;s minimizer (<cite>Minuit</cite>)</p>
@@ -668,19 +699,13 @@ by querying the minimizer object for this fit</p>
 <dl class="attribute">
 <dt id="kafe.fit.Fit.number_of_parameters">
 <tt class="descname">number_of_parameters</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.fit.Fit.number_of_parameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>the number of parameters</p>
+<dd><p>the total number of parameters</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="kafe.fit.Fit.param_names">
-<tt class="descname">param_names</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.fit.Fit.param_names" title="Permalink to this definition">¶</a></dt>
+<dt id="kafe.fit.Fit.parameter_names">
+<tt class="descname">parameter_names</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.fit.Fit.parameter_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>the names of the parameters</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="kafe.fit.Fit.param_names_latex">
-<tt class="descname">param_names_latex</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.fit.Fit.param_names_latex" title="Permalink to this definition">¶</a></dt>
-<dd><p><span class="math">\(\LaTeX\)</span> parameter names</p>
 </dd></dl>
 
 <dl class="method">
@@ -704,10 +729,54 @@ by querying the minimizer object for this fit</p>
 <dl class="method">
 <dt id="kafe.fit.Fit.project_x_covariance_matrix">
 <tt class="descname">project_x_covariance_matrix</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit.project_x_covariance_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.Fit.project_x_covariance_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Project the <cite>x</cite> errors from the <cite>x</cite> covariance matrix onto the total matrix.</p>
+<dd><p>Project the <cite>x</cite> errors from the <cite>x</cite> covariance matrix onto the total
+matrix.</p>
 <p>This is done elementwise, according to the formula:</p>
 <div class="math">
-\[C_{\text{tot},ij} = C_{y,ij} + C_{x,ij}  \frac{\partial f}{\partial x_i}  \frac{\partial f}{\partial x_j} \]</div>
+\[C_{\text{tot}, ij} = C_{y, ij} + C_{x, ij}
+\frac{\partial f}{\partial x_i}  \frac{\partial f}{\partial x_j}\]</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.fit.Fit.release_parameters">
+<tt class="descname">release_parameters</tt><big>(</big><em>*parameters_to_fix</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit.release_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release the given parameters so that the minimizer begins to work with
+them when <cite>do_fit</cite> is called next. Parameters can be given by their
+names or by their IDs. If no arguments are provied, then release all
+parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.fit.Fit.set_parameters">
+<tt class="descname">set_parameters</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit.set_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the parameter values (and optionally errors) for this fit.
+This is usually called just before the fit is done, to establish
+the initial parameters. If a parameter error is omitted, it is
+set to 1/1000th of the parameter values themselves. If the default
+value of the parameter is 0, it is set, by exception, to 0.001.</p>
+<p>This method accepts up to two positional arguments and several
+keyword arguments.</p>
+<dl class="docutils">
+<dt><em>args[0]</em> <span class="classifier-delimiter">:</span> <span class="classifier">tuple/list of floats (optional)</span></dt>
+<dd>The first positional argument is expected to be
+a tuple/list containing the parameter values.</dd>
+<dt><em>args[1]</em> <span class="classifier-delimiter">:</span> <span class="classifier">tuple/list of floats (optional)</span></dt>
+<dd>The second positional argument is expected to be a
+tuple/list of parameter errors, which can also be set as an
+approximate estimate of the problem&#8217;s uncertainty.</dd>
+<dt><em>no_warning</em> <span class="classifier-delimiter">:</span> <span class="classifier">boolean (optional)</span></dt>
+<dd>Whether to issue warnings (<tt class="docutils literal"><span class="pre">False</span></tt>) or not (<tt class="docutils literal"><span class="pre">True</span></tt>) when
+communicating with the minimizer fails. Defaults to <tt class="docutils literal"><span class="pre">False</span></tt>.</dd>
+</dl>
+<p>Valid keyword argument names are parameter names. The keyword arguments
+themselves may be floats (parameter values) or 2-tuples containing the
+parameter values and the parameter error in that order:</p>
+<dl class="docutils">
+<dt><em>&lt;parameter_name&gt;</em> <span class="classifier-delimiter">:</span> <span class="classifier">float or 2-tuple of floats (optional)</span></dt>
+<dd>Set the parameter with the name &lt;&#8217;parameter_name&#8217;&gt; to the value
+given. If a 2-tuple is given, the first element is understood
+to be the value and the second to be the parameter error.</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -726,12 +795,13 @@ by querying the minimizer object for this fit</p>
 
 <dl class="function">
 <dt id="kafe.fit.chi2">
-<tt class="descname">chi2</tt><big>(</big><em>xdata</em>, <em>ydata</em>, <em>cov_mat</em>, <em>fit_function</em>, <em>param_values</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#chi2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.chi2" title="Permalink to this definition">¶</a></dt>
-<dd><p>A simple <span class="math">\(\chi^2\)</span> implementation. Calculates <span class="math">\(\chi^2\)</span> according to the formula:</p>
+<tt class="descname">chi2</tt><big>(</big><em>xdata</em>, <em>ydata</em>, <em>cov_mat</em>, <em>fit_function</em>, <em>parameter_values</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#chi2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.chi2" title="Permalink to this definition">¶</a></dt>
+<dd><p>A simple <span class="math">\(\chi^2\)</span> implementation. Calculates <span class="math">\(\chi^2\)</span> according
+to the formula:</p>
 <div class="math">
 \[\chi^2 = \lambda^T C^{-1} \lambda\]</div>
-<p>Here, <span class="math">\(\lambda\)</span> is the residual vector <span class="math">\(\lambda = \vec{y} - \vec{f}(\vec{x})\)</span> and
-<span class="math">\(C\)</span> is the covariance matrix.</p>
+<p>Here, <span class="math">\(\lambda\)</span> is the residual vector <span class="math">\(\lambda = \vec{y} -
+\vec{f}(\vec{x})\)</span> and <span class="math">\(C\)</span> is the covariance matrix.</p>
 <dl class="docutils">
 <dt><strong>xdata</strong> <span class="classifier-delimiter">:</span> <span class="classifier">iterable</span></dt>
 <dd>The <em>x</em> measurement data</dd>
@@ -741,7 +811,7 @@ by querying the minimizer object for this fit</p>
 <dd>The total covariance matrix</dd>
 <dt><strong>fit_function</strong> <span class="classifier-delimiter">:</span> <span class="classifier">function</span></dt>
 <dd>The fit function <span class="math">\(f(x)\)</span></dd>
-<dt><strong>param_values</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list/tuple</span></dt>
+<dt><strong>parameter_values</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list/tuple</span></dt>
 <dd>The values of the parameters at which <span class="math">\(f(x)\)</span> should be evaluated.</dd>
 </dl>
 </dd></dl>
@@ -749,8 +819,8 @@ by querying the minimizer object for this fit</p>
 <dl class="function">
 <dt id="kafe.fit.round_to_significance">
 <tt class="descname">round_to_significance</tt><big>(</big><em>value</em>, <em>error</em>, <em>significance=2</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#round_to_significance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.round_to_significance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Rounds the error to the established number of significant digits, then rounds the value to the same
-order of magnitude as the error.</p>
+<dd><p>Rounds the error to the established number of significant digits, then
+rounds the value to the same order of magnitude as the error.</p>
 <dl class="docutils">
 <dt><strong>value</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
 <dd>value to round to significance</dd>
@@ -764,140 +834,219 @@ order of magnitude as the error.</p>
 </div>
 <div class="section" id="module-kafe.function_library">
 <span id="function-library-module"></span><h2><a class="reference internal" href="../index.html#module-function_library" title="function_library: A submodule containing a collection of model functions. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">function_library</span></tt></a> Module<a class="headerlink" href="#module-kafe.function_library" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-function_library"></span><dl class="function">
-<dt id="kafe.function_library.constant_1par">
-<tt class="descname">constant_1par</tt><big>(</big><em>x</em>, <em>constant=1.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_library.html#constant_1par"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.constant_1par" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kafe.function_library.exp_2par">
-<tt class="descname">exp_2par</tt><big>(</big><em>x</em>, <em>growth=1.0</em>, <em>constant_factor=0.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_library.html#exp_2par"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.exp_2par" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kafe.function_library.exp_3par">
-<tt class="descname">exp_3par</tt><big>(</big><em>x</em>, <em>growth=1.0</em>, <em>constant_factor=0.0</em>, <em>y_offset=0.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_library.html#exp_3par"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.exp_3par" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kafe.function_library.exp_3par2">
-<tt class="descname">exp_3par2</tt><big>(</big><em>x</em>, <em>growth=1.0</em>, <em>constant_factor=0.0</em>, <em>x_offset=0.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_library.html#exp_3par2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.exp_3par2" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kafe.function_library.exp_4par">
-<tt class="descname">exp_4par</tt><big>(</big><em>x</em>, <em>growth=1.0</em>, <em>constant_factor=0.0</em>, <em>x_offset=0.0</em>, <em>y_offset=0.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_library.html#exp_4par"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.exp_4par" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kafe.function_library.gauss">
-<tt class="descname">gauss</tt><big>(</big><em>x</em>, <em>mean=0.0</em>, <em>sigma=1.0</em>, <em>scale=1.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_library.html#gauss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.gauss" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kafe.function_library.linear_1par">
-<tt class="descname">linear_1par</tt><big>(</big><em>x</em>, <em>slope=1.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_library.html#linear_1par"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.linear_1par" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kafe.function_library.linear_2par">
-<tt class="descname">linear_2par</tt><big>(</big><em>x</em>, <em>slope=1.0</em>, <em>y_intercept=0.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_library.html#linear_2par"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.linear_2par" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kafe.function_library.linear_2par2">
-<tt class="descname">linear_2par2</tt><big>(</big><em>x</em>, <em>slope=1.0</em>, <em>x_offset=0.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_library.html#linear_2par2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.linear_2par2" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kafe.function_library.poisson">
-<tt class="descname">poisson</tt><big>(</big><em>x</em>, <em>mean=0.0</em>, <em>scale=1.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_library.html#poisson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.poisson" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kafe.function_library.poly3">
-<tt class="descname">poly3</tt><big>(</big><em>x</em>, <em>coeff3=1.0</em>, <em>coeff2=0.0</em>, <em>coeff1=0.0</em>, <em>coeff0=0.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_library.html#poly3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.poly3" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kafe.function_library.poly4">
-<tt class="descname">poly4</tt><big>(</big><em>x</em>, <em>coeff4=1.0</em>, <em>coeff3=0.0</em>, <em>coeff2=0.0</em>, <em>coeff1=0.0</em>, <em>coeff0=0.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_library.html#poly4"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.poly4" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kafe.function_library.poly5">
-<tt class="descname">poly5</tt><big>(</big><em>x</em>, <em>coeff5=1.0</em>, <em>coeff4=0.0</em>, <em>coeff3=0.0</em>, <em>coeff2=0.0</em>, <em>coeff1=0.0</em>, <em>coeff0=0.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_library.html#poly5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.poly5" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kafe.function_library.quadratic_1par">
-<tt class="descname">quadratic_1par</tt><big>(</big><em>x</em>, <em>quad_coeff=1.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_library.html#quadratic_1par"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.quadratic_1par" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kafe.function_library.quadratic_2par">
-<tt class="descname">quadratic_2par</tt><big>(</big><em>x</em>, <em>quad_coeff=1.0</em>, <em>constant=0.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_library.html#quadratic_2par"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.quadratic_2par" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kafe.function_library.quadratic_2par2">
-<tt class="descname">quadratic_2par2</tt><big>(</big><em>x</em>, <em>quad_coeff=1.0</em>, <em>x_offset=0.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_library.html#quadratic_2par2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.quadratic_2par2" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kafe.function_library.quadratic_3par">
-<tt class="descname">quadratic_3par</tt><big>(</big><em>x</em>, <em>quad_coeff=1.0</em>, <em>lin_coeff=0.0</em>, <em>constant=0.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_library.html#quadratic_3par"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.quadratic_3par" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kafe.function_library.quadratic_3par2">
-<tt class="descname">quadratic_3par2</tt><big>(</big><em>x</em>, <em>quad_coeff=1.0</em>, <em>x_offset=0.0</em>, <em>constant=0.0</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_library.html#quadratic_3par2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_library.quadratic_3par2" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</div>
+<span class="target" id="module-function_library"></span></div>
 <div class="section" id="module-kafe.function_tools">
-<span id="function-tools-module"></span><h2><a class="reference internal" href="../index.html#module-function_tools" title="function_tools: This submodule contains several useful tools for getting information about a function, including the number, names and default values of its parameters and its derivatives with respect to the independent variable or the parameters. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">function_tools</span></tt></a> Module<a class="headerlink" href="#module-kafe.function_tools" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-function_tools"></span><dl class="function">
-<dt id="kafe.function_tools.derivative">
-<tt class="descname">derivative</tt><big>(</big><em>func</em>, <em>derive_by_index</em>, <em>variables_tuple</em>, <em>derivative_spacing</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_tools.html#derivative"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_tools.derivative" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gives <span class="math">\(\frac{\partial f}{\partial x_k}\)</span> for <span class="math">\(f = f(x_0, x_1, \ldots)\)</span>. <cite>func</cite> is <span class="math">\(f\)</span>, <cite>variables_tuple</cite> is <span class="math">\(\{x_i\}\)</span> and <cite>derive_by_index</cite> is <span class="math">\(k\)</span>.</p>
+<span id="function-tools-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">function_tools</span></tt> Module<a class="headerlink" href="#module-kafe.function_tools" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="kafe.function_tools.ASCII">
+<tt class="descname">ASCII</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#kafe.function_tools.ASCII" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional decorator for fit functions. This overrides a FitFunction&#8217;s
+plain-text (ASCII) attributes. The new values for these attributes must be
+passed as keyword arguments to the decorator. Possible arguments:</p>
+<dl class="docutils">
+<dt><em>name</em> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Plain-text representation of the function name.</dd>
+<dt><em>parameter_names</em> <span class="classifier-delimiter">:</span> <span class="classifier">list of strings</span></dt>
+<dd>List of plain-text representations of the function&#8217;s arguments.
+The length of this list must be equal to the function&#8217;s argument
+number. The argument names should be in the same order as in the
+function definition.</dd>
+<dt><em>x_name</em> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Plain-text representation of the independent variable&#8217;s name.</dd>
+<dt><em>expression</em> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Plain-text-formatted expression representing the
+function&#8217;s formula.</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="kafe.function_tools.derive_by_parameters">
-<tt class="descname">derive_by_parameters</tt><big>(</big><em>func</em>, <em>x_0</em>, <em>param_list</em>, <em>derivative_spacing</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_tools.html#derive_by_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_tools.derive_by_parameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the gradient of <cite>func</cite> with respect to its parameters, i.e. with respect to every variable
-of <cite>func</cite> except the first one.</p>
+<dl class="class">
+<dt id="kafe.function_tools.FitFunction">
+<em class="property">class </em><tt class="descname">FitFunction</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#kafe.function_tools.FitFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator class for fit functions. If a function definition is decorated
+using this class, some information is collected about the function which is
+relevant to the fitting process, such as the number of parameters, their
+names and default values. Some details pertaining to display and
+representation are also set, such as <span class="math">\(\LaTeX{}\)</span> representations of
+the parameter names and the function name. Other decorators can be applied
+to a function object to specify things such as a <span class="math">\(\LaTeX{}\)</span> or
+plain-text expression for the fit function.</p>
+<dl class="method">
+<dt id="kafe.function_tools.FitFunction.derive_by_parameters">
+<tt class="descname">derive_by_parameters</tt><big>(</big><em>x_0</em>, <em>derivative_spacing</em>, <em>parameter_list</em><big>)</big><a class="headerlink" href="#kafe.function_tools.FitFunction.derive_by_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the gradient of <cite>func</cite> with respect to its parameters, i.e.
+with respect to every variable of <cite>func</cite> except the first one.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="kafe.function_tools.derive_by_x">
-<tt class="descname">derive_by_x</tt><big>(</big><em>func</em>, <em>x_0</em>, <em>param_list</em>, <em>derivative_spacing</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_tools.html#derive_by_x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_tools.derive_by_x" title="Permalink to this definition">¶</a></dt>
-<dd><p>If <cite>x_0</cite> is iterable, gives the array of derivatives of a function <span class="math">\(f(x, par_1, par_2, \ldots)\)</span>
-around <span class="math">\(x = x_i\)</span> at every <span class="math">\(x_i\)</span> in <span class="math">\(\vec{x}\)</span>.
-If <cite>x_0</cite> is not iterable, gives the derivative of a function <span class="math">\(f(x, par_1, par_2, \ldots)\)</span> around <span class="math">\(x = \verb!x_0!\)</span>.</p>
+<dl class="method">
+<dt id="kafe.function_tools.FitFunction.derive_by_x">
+<tt class="descname">derive_by_x</tt><big>(</big><em>x_0</em>, <em>derivative_spacing</em>, <em>parameter_list</em><big>)</big><a class="headerlink" href="#kafe.function_tools.FitFunction.derive_by_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>If <cite>x_0</cite> is iterable, gives the array of derivatives of a function
+<span class="math">\(f(x, par_1, par_2, \ldots)\)</span> around <span class="math">\(x = x_i\)</span> at every
+<span class="math">\(x_i\)</span> in <span class="math">\(\vec{x}\)</span>. If <cite>x_0</cite> is not iterable, gives the
+derivative of a function <span class="math">\(f(x, par_1, par_2, \ldots)\)</span> around
+<span class="math">\(x = \verb!x_0!\)</span>.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="kafe.function_tools.get_function_property">
-<tt class="descname">get_function_property</tt><big>(</big><em>func</em>, <em>prop</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_tools.html#get_function_property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_tools.get_function_property" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a specific property of the function. This assumes that the function is defined as</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">par1</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">par2</span><span class="o">=</span><span class="mf">3.14</span><span class="p">,</span> <span class="n">par3</span><span class="o">=</span><span class="mf">2.71</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span> <span class="o">...</span>
+<dl class="attribute">
+<dt id="kafe.function_tools.FitFunction.expression">
+<tt class="descname">expression</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.function_tools.FitFunction.expression" title="Permalink to this definition">¶</a></dt>
+<dd><p>a math expression (string) representing the function&#8217;s result</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.function_tools.FitFunction.get_function_equation">
+<tt class="descname">get_function_equation</tt><big>(</big><em>equation_format='latex'</em>, <em>equation_type='full'</em>, <em>ensuremath=True</em><big>)</big><a class="headerlink" href="#kafe.function_tools.FitFunction.get_function_equation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string representing the function equation. Supported formats
+are <span class="math">\(\LaTeX{}\)</span> and ASCII inline math. Note that <span class="math">\(\LaTeX{}\)</span>
+math is wrapped by default in an <tt class="docutils literal"><span class="pre">\ensuremath{}</span></tt> expression. If this
+is not desired behaviour, the flag <tt class="docutils literal"><span class="pre">ensuremath</span></tt> can be set to
+<tt class="docutils literal"><span class="pre">False</span></tt>.</p>
+<dl class="docutils">
+<dt><em>equation_format</em> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
+<dd>Can be either &#8220;latex&#8221; (default) or &#8220;ascii&#8221;.</dd>
+<dt><em>equation_type</em> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
+<dd><p class="first">Can be either &#8220;full&#8221; (default), &#8220;short&#8221; or &#8220;name&#8221;. A &#8220;name&#8221;-type
+equation returns a representation of the function name:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">f</span>
 </pre></div>
 </div>
-<dl class="docutils">
-<dt><strong>func</strong> <span class="classifier-delimiter">:</span> <span class="classifier">function</span></dt>
-<dd>A function object from which to extract the property.</dd>
-<dt><strong>prop</strong> <span class="classifier-delimiter">:</span> <span class="classifier">any of <tt class="docutils literal"><span class="pre">'name'</span></tt>, <tt class="docutils literal"><span class="pre">'parameter</span> <span class="pre">names'</span></tt>, <tt class="docutils literal"><span class="pre">'parameter</span> <span class="pre">defaults'</span></tt>, <tt class="docutils literal"><span class="pre">'number</span> <span class="pre">of</span> <span class="pre">parameters'</span></tt></span></dt>
-<dd>A string representing a property.</dd>
+<p>A &#8220;short&#8221;-type equation limits itself to the function name and
+variables:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">par1</span><span class="p">,</span> <span class="n">par2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A &#8220;full&#8221;-type equation includes the expression which the function
+calculates:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">par1</span><span class="p">,</span> <span class="n">par2</span><span class="p">)</span> <span class="o">=</span> <span class="n">par1</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">par2</span>
+</pre></div>
+</div>
+</dd>
+<dt><em>ensuremath</em> <span class="classifier-delimiter">:</span> <span class="classifier">boolean (optional)</span></dt>
+<dd>If a <span class="math">\(\LaTeX{}\)</span> math equation is requested, <tt class="docutils literal"><span class="pre">True</span></tt>
+(default) will wrap the resulting expression in an
+<tt class="docutils literal"><span class="pre">\ensuremath{}</span></tt> tag. Otherwise, no wrapping is done.</dd>
 </dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.function_tools.FitFunction.latex_expression">
+<tt class="descname">latex_expression</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.function_tools.FitFunction.latex_expression" title="Permalink to this definition">¶</a></dt>
+<dd><p>a <span class="math">\(\LaTeX{}\)</span> math expression, the function&#8217;s result</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.function_tools.FitFunction.latex_name">
+<tt class="descname">latex_name</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.function_tools.FitFunction.latex_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The function&#8217;s name in <span class="math">\(\LaTeX{}\)</span></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.function_tools.FitFunction.latex_parameter_names">
+<tt class="descname">latex_parameter_names</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.function_tools.FitFunction.latex_parameter_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of parameter names in <span class="math">\(\LaTeX{}\)</span></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.function_tools.FitFunction.latex_x_name">
+<tt class="descname">latex_x_name</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.function_tools.FitFunction.latex_x_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <span class="math">\(\LaTeX{}\)</span> symbol for the independent variable.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.function_tools.FitFunction.name">
+<tt class="descname">name</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.function_tools.FitFunction.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.function_tools.FitFunction.number_of_parameters">
+<tt class="descname">number_of_parameters</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.function_tools.FitFunction.number_of_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of parameters</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.function_tools.FitFunction.parameter_defaults">
+<tt class="descname">parameter_defaults</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.function_tools.FitFunction.parameter_defaults" title="Permalink to this definition">¶</a></dt>
+<dd><p>The default values of the parameters</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.function_tools.FitFunction.parameter_names">
+<tt class="descname">parameter_names</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.function_tools.FitFunction.parameter_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>The names of the parameters</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.function_tools.FitFunction.sourcelines">
+<tt class="descname">sourcelines</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.function_tools.FitFunction.sourcelines" title="Permalink to this definition">¶</a></dt>
+<dd><p>string object holding the source code for the fit-function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.function_tools.FitFunction.x_name">
+<tt class="descname">x_name</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.function_tools.FitFunction.x_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name given to the independent variable</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_tools.LaTeX">
+<tt class="descname">LaTeX</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#kafe.function_tools.LaTeX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional decorator for fit functions. This overrides a FitFunction&#8217;s
+<cite>latex_</cite> attributes. The new values for the <cite>latex_</cite> attributes must be
+passed as keyword arguments to the decorator. Possible arguments:</p>
+<dl class="docutils">
+<dt><em>name</em> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><span class="math">\(\LaTeX{}\)</span> representation of the function name.</dd>
+<dt><em>parameter_names</em> <span class="classifier-delimiter">:</span> <span class="classifier">list of strings</span></dt>
+<dd>List of <span class="math">\(\LaTeX{}\)</span> representations of the function&#8217;s arguments.
+The length of this list must be equal to the function&#8217;s argument
+number. The argument names should be in the same order as in the
+function definition.</dd>
+<dt><em>x_name</em> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><span class="math">\(\LaTeX{}\)</span> representation of the independent variable&#8217;s name.</dd>
+<dt><em>expression</em> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><span class="math">\(\LaTeX{}\)</span>-formatted expression representing the
+function&#8217;s formula.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kafe.function_tools.derivative">
+<tt class="descname">derivative</tt><big>(</big><em>func</em>, <em>derive_by_index</em>, <em>variables_tuple</em>, <em>derivative_spacing</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_tools.html#derivative"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_tools.derivative" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gives <span class="math">\(\frac{\partial f}{\partial x_k}\)</span> for <span class="math">\(f = f(x_0, x_1,
+\ldots)\)</span>. <cite>func</cite> is <span class="math">\(f\)</span>, <cite>variables_tuple</cite> is <span class="math">\(\{x_i\}\)</span> and
+<cite>derive_by_index</cite> is <span class="math">\(k\)</span>.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="kafe.function_tools.outer_product">
 <tt class="descname">outer_product</tt><big>(</big><em>input_array</em><big>)</big><a class="reference internal" href="../_modules/kafe/function_tools.html#outer_product"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.function_tools.outer_product" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes a <cite>NumPy</cite> array and returns the outer (dyadic, Kronecker) product with itself.
-If <cite>input_array</cite> is a vector <span class="math">\(\mathbf{x}\)</span>, this returns <span class="math">\(\mathbf{x}\mathbf{x}^T\)</span>.</p>
+<dd><p>Takes a <cite>NumPy</cite> array and returns the outer (dyadic, Kronecker) product
+with itself. If <cite>input_array</cite> is a vector <span class="math">\(\mathbf{x}\)</span>, this returns
+<span class="math">\(\mathbf{x}\mathbf{x}^T\)</span>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-kafe.latex_tools">
+<span id="latex-tools-module"></span><h2><a class="reference internal" href="../index.html#module-latex_tools" title="latex_tools: This submodule contains several useful tools for handling :math:`LaTeX` expressions. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">latex_tools</span></tt></a> Module<a class="headerlink" href="#module-kafe.latex_tools" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-latex_tools"></span><dl class="function">
+<dt id="kafe.latex_tools.ascii_to_latex_math">
+<tt class="descname">ascii_to_latex_math</tt><big>(</big><em>str_ascii</em>, <em>monospace=True</em>, <em>ensuremath=True</em><big>)</big><a class="reference internal" href="../_modules/kafe/latex_tools.html#ascii_to_latex_math"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.latex_tools.ascii_to_latex_math" title="Permalink to this definition">¶</a></dt>
+<dd><p>Escapes certain characters in an ASCII input string so that the result
+can be included in math mode without error.</p>
+<dl class="docutils">
+<dt><strong>str_ascii</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>A plain-text string containing characters to be escaped for
+<span class="math">\(\LaTeX{}\)</span> math mode.</dd>
+<dt><em>monospace</em> <span class="classifier-delimiter">:</span> <span class="classifier">boolean (optional)</span></dt>
+<dd>Whether to render the whole expression as monospace. Defaults to
+<tt class="docutils literal"><span class="pre">True</span></tt>.</dd>
+<dt><em>ensuremath</em> <span class="classifier-delimiter">:</span> <span class="classifier">boolean (optional)</span></dt>
+<dd>If this is <tt class="docutils literal"><span class="pre">True</span></tt>, the resulting formula is wrapped in
+an <tt class="docutils literal"><span class="pre">\ensuremath{}</span></tt> tag. Defaults to <tt class="docutils literal"><span class="pre">True</span></tt>.</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -911,28 +1060,43 @@ If <cite>input_array</cite> is a vector <span class="math">\(\mathbf{x}\)</span>
 
 <dl class="class">
 <dt id="kafe.minuit.Minuit">
-<em class="property">class </em><tt class="descname">Minuit</tt><big>(</big><em>number_of_parameters</em>, <em>function_to_minimize</em>, <em>par_names</em>, <em>start_params</em>, <em>param_errors</em>, <em>quiet=True</em>, <em>verbose=False</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.minuit.Minuit" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descname">Minuit</tt><big>(</big><em>number_of_parameters</em>, <em>function_to_minimize</em>, <em>parameter_names</em>, <em>start_parameters</em>, <em>parameter_errors</em>, <em>quiet=True</em>, <em>verbose=False</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.minuit.Minuit" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for communicating with ROOT&#8217;s function minimizer tool Minuit.</p>
 <dl class="method">
 <dt id="kafe.minuit.Minuit.FCN_wrapper">
 <tt class="descname">FCN_wrapper</tt><big>(</big><em>number_of_parameters</em>, <em>derivatives</em>, <em>f</em>, <em>parameters</em>, <em>internal_flag</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.FCN_wrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.minuit.Minuit.FCN_wrapper" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is actually a function called in <em>ROOT</em> and acting as a C wrapper 
+<dd><p>This is actually a function called in <em>ROOT</em> and acting as a C wrapper
 for our <cite>FCN</cite>, which is implemented in Python.</p>
-<p>This function is called by <cite>Minuit</cite> several times during a fit. It doesn&#8217;t return
-anything but modifies one of its arguments (<em>f</em>). This is <em>ugly</em>, but it&#8217;s how <em>ROOT</em>&#8216;s
-<tt class="docutils literal"><span class="pre">TMinuit</span></tt> works. Its argument structure is fixed and determined by <cite>Minuit</cite>:</p>
+<p>This function is called by <cite>Minuit</cite> several times during a fit. It
+doesn&#8217;t return anything but modifies one of its arguments (<em>f</em>).
+This is <em>ugly</em>, but it&#8217;s how <em>ROOT</em>&#8216;s <tt class="docutils literal"><span class="pre">TMinuit</span></tt> works. Its argument
+structure is fixed and determined by <cite>Minuit</cite>:</p>
 <dl class="docutils">
 <dt><strong>number_of_parameters</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
 <dd>The number of parameters of the current fit</dd>
-<dt><strong>derivatives</strong> <span class="classifier-delimiter">:</span> <span class="classifier">?? </span></dt>
-<dd>Computed gradient (??)</dd>
+<dt><strong>derivatives</strong> <span class="classifier-delimiter">:</span> <span class="classifier">C array</span></dt>
+<dd>If the user chooses to calculate the first derivative of the
+function inside the <cite>FCN</cite>, this value should be written here. This
+interface to <cite>Minuit</cite> ignores this derivative, however, so
+calculating this inside the <cite>FCN</cite> has no effect (yet).</dd>
 <dt><strong>f</strong> <span class="classifier-delimiter">:</span> <span class="classifier">C array</span></dt>
 <dd>The desired function value is in f[0] after execution.</dd>
 <dt><strong>parameters</strong> <span class="classifier-delimiter">:</span> <span class="classifier">C array</span></dt>
 <dd>A C array of parameters. Is cast to a Python list</dd>
 <dt><strong>internal_flag</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
 <dd>A flag allowing for different behaviour of the function.
-Can be any integer from 1 (initial run) to 4(normal run). See <cite>Minuit</cite>&#8216;s specification.</dd>
+Can be any integer from 1 (initial run) to 4(normal run). See
+<cite>Minuit</cite>&#8216;s specification.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.minuit.Minuit.fix_parameter">
+<tt class="descname">fix_parameter</tt><big>(</big><em>parameter_number</em><big>)</big><a class="headerlink" href="#kafe.minuit.Minuit.fix_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fix parameter number &lt;<cite>parameter_number</cite>&gt;.</p>
+<dl class="docutils">
+<dt><strong>parameter_number</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Number of the parameter to fix.</dd>
 </dl>
 </dd></dl>
 
@@ -946,13 +1110,15 @@ Can be any integer from 1 (initial run) to 4(normal run). See <cite>Minuit</cite
 <dt id="kafe.minuit.Minuit.get_chi2_probability">
 <tt class="descname">get_chi2_probability</tt><big>(</big><em>n_deg_of_freedom</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.get_chi2_probability"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.minuit.Minuit.get_chi2_probability" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the probability that an observed <span class="math">\(\chi^2\)</span> exceeds
-the calculated value of <span class="math">\(\chi^2\)</span> for this fit by chance, even for a correct model.
-In other words, returns the probability that a worse fit of the model to the data exists.
-If this is a small value (typically &lt;5%), this means the fit is pretty bad. For
-values below this threshold, the model very probably does not fit the data.</p>
+the calculated value of <span class="math">\(\chi^2\)</span> for this fit by chance,
+even for a correct model. In other words, returns the probability that
+a worse fit of the model to the data exists. If this is a small value
+(typically &lt;5%), this means the fit is pretty bad. For values below
+this threshold, the model very probably does not fit the data.</p>
 <dl class="docutils">
 <dt>n_def_of_freedom <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd>The number of degrees of freedom. This is typically <span class="math">\(n_       ext{datapoints} - n_    ext{parameters}\)</span>.</dd>
+<dd>The number of degrees of freedom. This is typically
+<span class="math">\(n_   ext{datapoints} - n_    ext{parameters}\)</span>.</dd>
 </dl>
 </dd></dl>
 
@@ -989,16 +1155,16 @@ of the list to generate a closed contour.</dd>
 <dd><p>Retrieves other info from <cite>Minuit</cite>.</p>
 <dl class="docutils">
 <dt><strong>info</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><dl class="first last docutils">
-<dt>Information about the fit to retrieve. This can be any of the following:</dt>
-<dd><ul class="first last simple">
+<dd><p class="first">Information about the fit to retrieve.
+This can be any of the following:</p>
+<blockquote class="last">
+<div><ul class="simple">
 <li><tt class="docutils literal"><span class="pre">'fcn'</span></tt>: <cite>FCN</cite> value at minimum,</li>
 <li><tt class="docutils literal"><span class="pre">'edm'</span></tt>: estimated distance to minimum</li>
 <li><tt class="docutils literal"><span class="pre">'err_def'</span></tt>: <cite>Minuit</cite> error matrix status code</li>
 <li><tt class="docutils literal"><span class="pre">'status_code'</span></tt>: <cite>Minuit</cite> general status code</li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </dd>
 </dl>
 </dd></dl>
@@ -1019,16 +1185,16 @@ of the list to generate a closed contour.</dd>
 <dd><p>Retrieves parameter information from TMinuit.</p>
 <dl class="docutils">
 <dt>return <span class="classifier-delimiter">:</span> <span class="classifier">list of tuples</span></dt>
-<dd><tt class="docutils literal"><span class="pre">(param_name,</span> <span class="pre">param_val,</span> <span class="pre">param_error)</span></tt></dd>
+<dd><tt class="docutils literal"><span class="pre">(parameter_name,</span> <span class="pre">parameter_val,</span> <span class="pre">parameter_error)</span></tt></dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="kafe.minuit.Minuit.get_parameter_name">
-<tt class="descname">get_parameter_name</tt><big>(</big><em>param_nr</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.get_parameter_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.minuit.Minuit.get_parameter_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the name of parameter number <tt class="docutils literal"><span class="pre">param_nr</span></tt></p>
+<tt class="descname">get_parameter_name</tt><big>(</big><em>parameter_nr</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.get_parameter_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.minuit.Minuit.get_parameter_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the name of parameter number <tt class="docutils literal"><span class="pre">parameter_nr</span></tt></p>
 <dl class="docutils">
-<dt><strong>param_nr</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dt><strong>parameter_nr</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
 <dd>Number of the parameter whose name to get.</dd>
 </dl>
 </dd></dl>
@@ -1052,8 +1218,9 @@ of the list to generate a closed contour.</dd>
 <dl class="method">
 <dt id="kafe.minuit.Minuit.minimize">
 <tt class="descname">minimize</tt><big>(</big><em>log_print_level=3</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.minimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.minuit.Minuit.minimize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Do the minimization. This calls <cite>Minuit</cite>&#8216;s algorithms <tt class="docutils literal"><span class="pre">MIGRAD</span></tt> for minimization
-and <tt class="docutils literal"><span class="pre">HESSE</span></tt> for computing/checking the parameter error matrix.</p>
+<dd><p>Do the minimization. This calls <cite>Minuit</cite>&#8216;s algorithms <tt class="docutils literal"><span class="pre">MIGRAD</span></tt> for
+minimization and <tt class="docutils literal"><span class="pre">HESSE</span></tt> for computing/checking the parameter error
+matrix.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1063,9 +1230,20 @@ and <tt class="docutils literal"><span class="pre">HESSE</span></tt> for computi
 </dd></dl>
 
 <dl class="method">
+<dt id="kafe.minuit.Minuit.release_parameter">
+<tt class="descname">release_parameter</tt><big>(</big><em>parameter_number</em><big>)</big><a class="headerlink" href="#kafe.minuit.Minuit.release_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release parameter number &lt;<cite>parameter_number</cite>&gt;.</p>
+<dl class="docutils">
+<dt><strong>parameter_number</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Number of the parameter to release.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="kafe.minuit.Minuit.reset">
 <tt class="descname">reset</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.minuit.Minuit.reset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Execute TMinuit&#8217;s <cite>mnrset</cite> method.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="kafe.minuit.Minuit.set_err">
@@ -1079,20 +1257,23 @@ and <tt class="docutils literal"><span class="pre">HESSE</span></tt> for computi
 
 <dl class="method">
 <dt id="kafe.minuit.Minuit.set_parameter_errors">
-<tt class="descname">set_parameter_errors</tt><big>(</big><em>param_errors=None</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.set_parameter_errors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.minuit.Minuit.set_parameter_errors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the fit parameter errors. If param_values=`None`, sets the error to 1% of the parameter value.</p>
+<tt class="descname">set_parameter_errors</tt><big>(</big><em>parameter_errors=None</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.set_parameter_errors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.minuit.Minuit.set_parameter_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the fit parameter errors. If parameter_values=`None`, sets the
+error to 1% of the parameter value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="kafe.minuit.Minuit.set_parameter_names">
-<tt class="descname">set_parameter_names</tt><big>(</big><em>param_names</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.set_parameter_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.minuit.Minuit.set_parameter_names" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the fit parameters. If param_values=`None`, tries to infer defaults from the function_to_minimize.</p>
+<tt class="descname">set_parameter_names</tt><big>(</big><em>parameter_names</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.set_parameter_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.minuit.Minuit.set_parameter_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the fit parameters. If parameter_values=`None`, tries to infer
+defaults from the function_to_minimize.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="kafe.minuit.Minuit.set_parameter_values">
-<tt class="descname">set_parameter_values</tt><big>(</big><em>param_values</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.set_parameter_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.minuit.Minuit.set_parameter_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the fit parameters. If param_values=`None`, tries to infer defaults from the function_to_minimize.</p>
+<tt class="descname">set_parameter_values</tt><big>(</big><em>parameter_values</em><big>)</big><a class="reference internal" href="../_modules/kafe/minuit.html#Minuit.set_parameter_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.minuit.Minuit.set_parameter_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the fit parameters. If parameter_values=`None`, tries to infer
+defaults from the function_to_minimize.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1101,8 +1282,8 @@ and <tt class="docutils literal"><span class="pre">HESSE</span></tt> for computi
 <dd><p>Sets the print level for Minuit.</p>
 <dl class="docutils">
 <dt><em>print_level</em> <span class="classifier-delimiter">:</span> <span class="classifier">int (optional, default: 1 (frugal output))</span></dt>
-<dd>Tells <tt class="docutils literal"><span class="pre">TMinuit</span></tt> how much output to generate. The higher this value, the
-more output it generates.</dd>
+<dd>Tells <tt class="docutils literal"><span class="pre">TMinuit</span></tt> how much output to generate. The higher this
+value, the more output it generates.</dd>
 </dl>
 </dd></dl>
 
@@ -1123,6 +1304,20 @@ documentation for available strategies.</dd>
 <dd><p><tt class="docutils literal"><span class="pre">TMinuit</span></tt> tolerance</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="kafe.minuit.Minuit.update_parameter_data">
+<tt class="descname">update_parameter_data</tt><big>(</big><em>show_warnings=False</em><big>)</big><a class="headerlink" href="#kafe.minuit.Minuit.update_parameter_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Re-)Sets the parameter names, values and step size on the
+C++ side of Minuit.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="data">
+<dt id="kafe.minuit.P_DETAIL_LEVEL">
+<tt class="descname">P_DETAIL_LEVEL</tt><em class="property"> = 1</em><a class="headerlink" href="#kafe.minuit.P_DETAIL_LEVEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>default level of detail for TMinuit&#8217;s output
+(typical range: -1 to 3, default: 1)</p>
 </dd></dl>
 
 </div>
@@ -1131,7 +1326,8 @@ documentation for available strategies.</dd>
 <span class="target" id="module-numeric_tools"></span><dl class="function">
 <dt id="kafe.numeric_tools.cor_to_cov">
 <tt class="descname">cor_to_cov</tt><big>(</big><em>cor_mat</em>, <em>error_list</em><big>)</big><a class="reference internal" href="../_modules/kafe/numeric_tools.html#cor_to_cov"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.numeric_tools.cor_to_cov" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a correlation matrix to a covariance matrix according to the formula</p>
+<dd><p>Converts a correlation matrix to a covariance matrix according to the
+formula</p>
 <div class="math">
 \[\text{Cov}_{ij} = \text{Cor}_{ij}\, \sigma_i \, \sigma_j\]</div>
 <dl class="docutils">
@@ -1146,12 +1342,14 @@ as the diagonal of <cite>cor_mat</cite>.</dd>
 <dl class="function">
 <dt id="kafe.numeric_tools.cov_to_cor">
 <tt class="descname">cov_to_cor</tt><big>(</big><em>cov_mat</em><big>)</big><a class="reference internal" href="../_modules/kafe/numeric_tools.html#cov_to_cor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.numeric_tools.cov_to_cor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a covariance matrix to a correlation matrix according to the formula</p>
+<dd><p>Converts a covariance matrix to a correlation matrix according to the
+formula</p>
 <div class="math">
-\[\text{Cor}_{ij} = \frac{\text{Cov}_{ij}}{\sqrt{ \text{Cov}_{ii}\,\text{Cov}_{jj}}}\]</div>
+\[\text{Cor}_{ij} = \frac{\text{Cov}_{ij}}
+    {\sqrt{ \text{Cov}_{ii}\,\text{Cov}_{jj}}}\]</div>
 <dl class="docutils">
-<dt><strong>cov_mat</strong></dt>
-<dd>The covariance matrix to convert. Type: <cite>numpy.matrix</cite></dd>
+<dt><strong>cov_mat</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><cite>numpy.matrix</cite></span></dt>
+<dd>The covariance matrix to convert.</dd>
 </dl>
 </dd></dl>
 
@@ -1169,8 +1367,9 @@ it returns the (elementwise) square root of the diagonal entries</p>
 <dl class="function">
 <dt id="kafe.numeric_tools.make_symmetric_lower">
 <tt class="descname">make_symmetric_lower</tt><big>(</big><em>mat</em><big>)</big><a class="reference internal" href="../_modules/kafe/numeric_tools.html#make_symmetric_lower"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.numeric_tools.make_symmetric_lower" title="Permalink to this definition">¶</a></dt>
-<dd><p>Copies the matrix entries below the main diagonal to the upper triangle half of
-the matrix. Leaves the diagonal unchanged. Returns a <cite>NumPy</cite> matrix object.</p>
+<dd><p>Copies the matrix entries below the main diagonal to the upper triangle
+half of the matrix. Leaves the diagonal unchanged. Returns a <cite>NumPy</cite> matrix
+object.</p>
 <dl class="docutils">
 <dt><strong>mat</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><cite>numpy.matrix</cite></span></dt>
 <dd>A lower diagonal matrix.</dd>
@@ -1182,8 +1381,8 @@ the matrix. Leaves the diagonal unchanged. Returns a <cite>NumPy</cite> matrix o
 <dl class="function">
 <dt id="kafe.numeric_tools.zero_pad_lower_triangle">
 <tt class="descname">zero_pad_lower_triangle</tt><big>(</big><em>triangle_list</em><big>)</big><a class="reference internal" href="../_modules/kafe/numeric_tools.html#zero_pad_lower_triangle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.numeric_tools.zero_pad_lower_triangle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a list of lists into a lower triangle matrix. The list members should
-be lists of increasing length from 1 to N, N being the dimension of
+<dd><p>Converts a list of lists into a lower triangle matrix. The list members
+should be lists of increasing length from 1 to N, N being the dimension of
 the resulting lower triangle matrix. Returns a <cite>NumPy</cite> matrix object.</p>
 <p>For example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">zero_pad_lower_triangle</span><span class="p">([</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]</span> <span class="p">])</span>
@@ -1195,7 +1394,7 @@ the resulting lower triangle matrix. Returns a <cite>NumPy</cite> matrix object.
 <dl class="docutils">
 <dt><strong>triangle_list</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
 <dd>A list containing lists of increasing length.</dd>
-<dt>returns <span class="classifier-delimiter">:</span> <span class="classifier"><cite>numpy.matrix</cite> </span></dt>
+<dt>returns <span class="classifier-delimiter">:</span> <span class="classifier"><cite>numpy.matrix</cite></span></dt>
 <dd>The lower triangle matrix.</dd>
 </dl>
 </dd></dl>
@@ -1206,7 +1405,8 @@ the resulting lower triangle matrix. Returns a <cite>NumPy</cite> matrix object.
 <span class="target" id="module-plot"></span><dl class="class">
 <dt id="kafe.plot.Plot">
 <em class="property">class </em><tt class="descname">Plot</tt><big>(</big><em>*fits</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#Plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.plot.Plot" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="attribute">
 <dt id="kafe.plot.Plot.axis_labels">
 <tt class="descname">axis_labels</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.plot.Plot.axis_labels" title="Permalink to this definition">¶</a></dt>
 <dd><p>axis labels</p>
@@ -1224,10 +1424,12 @@ the resulting lower triangle matrix. Returns a <cite>NumPy</cite> matrix object.
 <dd><p>Draw the parameter box to the canvas</p>
 <dl class="docutils">
 <dt><em>plot_spec</em> <span class="classifier-delimiter">:</span> <span class="classifier">int, list of ints, string or None (optional, default: 0)</span></dt>
-<dd>Specify the plot id of the plot for which to draw the parameters. Passing 0 will only draw the
-parameter box for the first plot, and so on. Passing a list of ints will only draw the parameters
-for plot ids inside the list. Passing <tt class="docutils literal"><span class="pre">'all'</span></tt> will print parameters for all plots. Passing
-<tt class="docutils literal"><span class="pre">None</span></tt> will return immediately doing nothing.</dd>
+<dd>Specify the plot id of the plot for which to draw the parameters.
+Passing 0 will only draw the parameter box for the first plot, and
+so on. Passing a list of ints will only draw the parameters for
+plot ids inside the list. Passing <tt class="docutils literal"><span class="pre">'all'</span></tt> will print parameters
+for all plots. Passing <tt class="docutils literal"><span class="pre">None</span></tt> will return immediately doing
+nothing.</dd>
 </dl>
 </dd></dl>
 
@@ -1303,38 +1505,44 @@ for plot ids inside the list. Passing <tt class="docutils literal"><span class="
 <dl class="class">
 <dt id="kafe.plot.PlotStyle">
 <em class="property">class </em><tt class="descname">PlotStyle</tt><a class="reference internal" href="../_modules/kafe/plot.html#PlotStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.plot.PlotStyle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class for specifying a style for a specific plot. This object stores a progression of marker and line types and
-colors, as well as preferences relating to point size and label size. These can be overriden
-by overwriting the instance variables directly. A series of <cite>get_...</cite> methods are provided which
-go through these lists cyclically.</p>
+<dd><p>Class for specifying a style for a specific plot. This object stores a
+progression of marker and line types and colors, as well as preferences
+relating to point size and label size. These can be overriden by
+overwriting the instance variables directly. A series of <cite>get_...</cite> methods
+are provided which go through these lists cyclically.</p>
 <dl class="method">
 <dt id="kafe.plot.PlotStyle.get_line">
 <tt class="descname">get_line</tt><big>(</big><em>idm</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#PlotStyle.get_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.plot.PlotStyle.get_line" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a specific line type. This runs cyclically through the defined defaults.</p>
+<dd><p>Get a specific line type. This runs cyclically through the defined
+defaults.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="kafe.plot.PlotStyle.get_linecolor">
 <tt class="descname">get_linecolor</tt><big>(</big><em>idm</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#PlotStyle.get_linecolor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.plot.PlotStyle.get_linecolor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a specific line color. This runs cyclically through the defined defaults.</p>
+<dd><p>Get a specific line color. This runs cyclically through the defined
+defaults.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="kafe.plot.PlotStyle.get_marker">
 <tt class="descname">get_marker</tt><big>(</big><em>idm</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#PlotStyle.get_marker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.plot.PlotStyle.get_marker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a specific marker type. This runs cyclically through the defined defaults.</p>
+<dd><p>Get a specific marker type. This runs cyclically through the defined
+defaults.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="kafe.plot.PlotStyle.get_markercolor">
 <tt class="descname">get_markercolor</tt><big>(</big><em>idm</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#PlotStyle.get_markercolor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.plot.PlotStyle.get_markercolor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a specific marker color. This runs cyclically through the defined defaults.</p>
+<dd><p>Get a specific marker color. This runs cyclically through the
+defined defaults.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="kafe.plot.PlotStyle.get_pointsize">
 <tt class="descname">get_pointsize</tt><big>(</big><em>idm</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#PlotStyle.get_pointsize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.plot.PlotStyle.get_pointsize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a specific point size. This runs cyclically through the defined defaults.</p>
+<dd><p>Get a specific point size. This runs cyclically through the defined
+defaults.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1356,12 +1564,13 @@ as mathematical expressions and surround them with $ signs accordingly.</p>
 <tt class="descname">pad_span</tt><big>(</big><em>span</em>, <em>pad_coeff=1</em>, <em>additional_pad=None</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#pad_span"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.plot.pad_span" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enlarges the interval <cite>span</cite> (list of two floats) symmetrically around
 its center to length <cite>pad_coeff</cite>. Optionally, an <cite>additional_pad</cite> argument
-can be specified. The returned span is then additionally enlarged by that amount.</p>
-<p><cite>additional_pad</cite> can also be a list of two floats which specifies an asymmetric
-amount by which to enlarge the span. Note that in this case, positive entries in
-<cite>additional_pad</cite> will enlarge the span (move the interval end away from the
-interval&#8217;s center) and negative amounts will shorten it (move the interval end
-towards the interval&#8217;s center).</p>
+can be specified. The returned span is then additionally enlarged by that
+amount.</p>
+<p><cite>additional_pad</cite> can also be a list of two floats which specifies an
+asymmetric amount by which to enlarge the span. Note that in this case,
+positive entries in <cite>additional_pad</cite> will enlarge the span (move the
+interval end away from the interval&#8217;s center) and negative amounts will
+shorten it (move the interval end towards the interval&#8217;s center).</p>
 </dd></dl>
 
 </div>
@@ -1416,7 +1625,10 @@ towards the interval&#8217;s center).</p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">kafe Package</a><ul>
-<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">kafe</span></tt> Package</a></li>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">kafe</span></tt> Package</a><ul>
+<li><a class="reference internal" href="#kafe">kafe</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-kafe._version_info"><tt class="docutils literal"><span class="pre">_version_info</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.constants"><tt class="docutils literal"><span class="pre">constants</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.dataset"><tt class="docutils literal"><span class="pre">dataset</span></tt> Module</a></li>
@@ -1424,6 +1636,7 @@ towards the interval&#8217;s center).</p>
 <li><a class="reference internal" href="#module-kafe.fit"><tt class="docutils literal"><span class="pre">fit</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.function_library"><tt class="docutils literal"><span class="pre">function_library</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.function_tools"><tt class="docutils literal"><span class="pre">function_tools</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-kafe.latex_tools"><tt class="docutils literal"><span class="pre">latex_tools</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.minuit"><tt class="docutils literal"><span class="pre">minuit</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.numeric_tools"><tt class="docutils literal"><span class="pre">numeric_tools</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.plot"><tt class="docutils literal"><span class="pre">plot</span></tt> Module</a></li>
@@ -1463,7 +1676,7 @@ towards the interval&#8217;s center).</p>
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">kafe 0.3alpha46 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">kafe  documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

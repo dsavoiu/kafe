@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.13 (TeX Live 2013/dev) (format=pdflatex 2013.4.11)  16 AUG 2013 10:50
+This is pdfTeX, Version 3.1415926-2.5-1.40.13 (TeX Live 2013/dev) (format=pdflatex 2013.4.11)  17 OCT 2013 11:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1010,190 +1010,87 @@ LaTeX Font Info:    Font shape `T1/phv/b/n' will be
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
 (Font)              Font shape `T1/lmtt/b/n' tried instead on input line 179.
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 200.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 209.
 [5]
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <9> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 278.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 291.
 LaTeX Font Info:    Font shape `T1/phv/bx/it' in size <10> not available
-(Font)              Font shape `T1/phv/b/it' tried instead on input line 345.
+(Font)              Font shape `T1/phv/b/it' tried instead on input line 355.
 LaTeX Font Info:    Font shape `T1/phv/b/it' in size <10> not available
-(Font)              Font shape `T1/phv/b/sl' tried instead on input line 345.
+(Font)              Font shape `T1/phv/b/sl' tried instead on input line 355.
 LaTeX Font Info:    Font shape `T1/phv/b/sl' will be
-(Font)              scaled to size 9.49997pt on input line 345.
- [6] [7] [8]
-Underfull \hbox (badness 10000) in paragraph at lines 688--688
-[]\T1/pplj/m/it/10 file_to_parse\T1/pplj/m/n/10 , \T1/pplj/m/it/10 field_order=
-'x\T1/pplj/m/n/10 , \T1/pplj/m/it/10 y'\T1/pplj/m/n/10 , \T1/pplj/m/it/10 de-li
-m-iter=' `\T1/pplj/m/n/10 ,
- []
-
-[9]
-Underfull \hbox (badness 5771) in paragraph at lines 751--751
-[]\T1/pplj/m/it/10 dataset\T1/pplj/m/n/10 , \T1/pplj/m/it/10 fit_function\T1/pp
-lj/m/n/10 , \T1/pplj/m/it/10 ex-ter-nal_fcn=<function chi2 at 0x3ccae60>\T1/ppl
-j/m/n/10 , \T1/pplj/m/it/10 func-
- []
-
-[10] [11] [12] [13] [14] [15] [16] [17] [18] [19
+(Font)              scaled to size 9.49997pt on input line 355.
+ [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17] [18] [19] [20]
+[21
 
 
 
-] (./kafe.ind [20
+] (./kafe.ind [22
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 20--21
-[]\T1/pplj/m/n/10 cov_mat_is_regular() (kafe.dataset.Dataset
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 36--37
-[]\T1/pplj/m/n/10 derive_by_parameters() (in mod-ule
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 39--40
-[]\T1/pplj/m/n/10 draw_fit_parameters_box() (kafe.plot.Plot
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 46--47
+Underfull \hbox (badness 10000) in paragraph at lines 44--45
 []\T1/pplj/m/n/10 extract_statistical_errors() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 62--63
-[]\T1/pplj/m/n/10 function_to_minimize (kafe.minuit.Minuit at-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 67--68
+Underfull \hbox (badness 10000) in paragraph at lines 66--67
 []\T1/pplj/m/n/10 G_PADDING_FACTOR_X (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 68--69
+Underfull \hbox (badness 10000) in paragraph at lines 67--68
 []\T1/pplj/m/n/10 G_PADDING_FACTOR_Y (in mod-ule
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 71--72
-[]\T1/pplj/m/n/10 get_chi2_probability() (kafe.minuit.Minuit
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 81--82
-[]\T1/pplj/m/n/10 get_function_property() (in mod-ule
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 87--88
-[]\T1/pplj/m/n/10 get_parameter_errors() (kafe.minuit.Minuit
- []
-
-[21
-
-]
-Underfull \hbox (badness 10000) in paragraph at lines 88--89
-[]\T1/pplj/m/n/10 get_parameter_info() (kafe.minuit.Minuit
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 89--90
-[]\T1/pplj/m/n/10 get_parameter_name() (kafe.minuit.Minuit
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 91--92
-[]\T1/pplj/m/n/10 get_parameter_values() (kafe.minuit.Minuit
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 124--125
-[]\T1/pplj/m/n/10 M_CONFIDENCE_LEVEL (in mod-ule
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 125--126
-[]\T1/pplj/m/n/10 M_MAX_ITERATIONS (in mod-ule
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 126--127
-[]\T1/pplj/m/n/10 M_MAX_X_FIT_ITERATIONS (in mod-ule
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 128--129
-[]\T1/pplj/m/n/10 make_symmetric_lower() (in mod-ule
- []
-
-
-Underfull \hbox (badness 5548) in paragraph at lines 140--141
-[]\T1/pplj/m/n/10 number_of_parameters (kafe.minuit.Minuit at-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 163--164
-[]\T1/pplj/m/n/10 print_rounded_fit_parameters() (kafe.fit.Fit
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 164--165
-[]\T1/pplj/m/n/10 project_x_covariance_matrix() (kafe.fit.Fit
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 178--179
-[]\T1/pplj/m/n/10 set_parameter_errors() (kafe.minuit.Minuit
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 179--180
-[]\T1/pplj/m/n/10 set_parameter_names() (kafe.minuit.Minuit
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 180--181
-[]\T1/pplj/m/n/10 set_parameter_values() (kafe.minuit.Minuit
- []
-
-[22]
-Underfull \hbox (badness 10000) in paragraph at lines 196--197
-[]\T1/pplj/m/n/10 write_timestamp() (kafe.stream.StreamDup
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 198--199
-[]\T1/pplj/m/n/10 write_to_stdout() (kafe.stream.StreamDup
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 210--211
-[]\T1/pplj/m/n/10 zero_pad_lower_triangle() (in mod-ule
  []
 
 [23
 
+]
+Underfull \hbox (badness 10000) in paragraph at lines 133--134
+[]\T1/pplj/m/n/10 M_CONFIDENCE_LEVEL (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 134--135
+[]\T1/pplj/m/n/10 M_MAX_ITERATIONS (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 135--136
+[]\T1/pplj/m/n/10 M_MAX_X_FIT_ITERATIONS (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 137--138
+[]\T1/pplj/m/n/10 make_symmetric_lower() (in mod-ule
+ []
+
+[24]
+Underfull \hbox (badness 10000) in paragraph at lines 232--233
+[]\T1/pplj/m/n/10 zero_pad_lower_triangle() (in mod-ule
+ []
+
+[25
+
 ])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1876.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1876.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 2250.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 2250.
  (./kafe.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1876.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1876.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 2250.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 2250.
 
 Package rerunfilecheck Info: File `kafe.out' has not changed.
-(rerunfilecheck)             Checksum: 08DF6DA607FA5ADCB3C08DFA38402D71;252.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1876.
+(rerunfilecheck)             Checksum: 8A38BCABEA5FC4AC528985A5FBC946B3;252.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 2250.
  ) 
 Here is how much of TeX's memory you used:
- 9445 strings out of 494714
- 133745 string characters out of 3174124
- 225769 words of memory out of 3000000
- 12238 multiletter control sequences out of 15000+200000
- 92780 words of font info for 130 fonts, out of 3000000 for 9000
+ 9493 strings out of 494714
+ 135121 string characters out of 3174124
+ 228099 words of memory out of 3000000
+ 12264 multiletter control sequences out of 15000+200000
+ 97187 words of font info for 133 fonts, out of 3000000 for 9000
  221 hyphenation exceptions out of 8191
- 42i,18n,45p,575b,578s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 41i,18n,45p,577b,542s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/share/texliv
 e/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}</usr/share/texlive/texmf-dist/fonts/
 type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/
@@ -1202,22 +1099,22 @@ public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
 sfonts/euler/eufm7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
 ts/euler/eurm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
 euler/eurm7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/eule
-r/eusm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/fpl/fplbj8a.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/public/fpl/fplrc8a.pfb></usr/share/t
-exlive/texmf-dist/fonts/type1/public/fpl/fplrij8a.pfb></usr/share/texlive/texmf
--dist/fonts/type1/public/lm/lmtk10.pfb></usr/share/texlive/texmf-dist/fonts/typ
-e1/public/lm/lmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lm
-tt9.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></us
-r/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvbo8a.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texlive/texmf-d
-ist/fonts/type1/urw/palatino/uplb8a.pfb></usr/share/texlive/texmf-dist/fonts/ty
-pe1/urw/palatino/uplbi8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/pal
-atino/uplr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/palatino/uplri8
-a.pfb>
-Output written on kafe.pdf (27 pages, 281137 bytes).
+r/eusm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/fpl/fplbij8a.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/public/fpl/fplbj8a.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/public/fpl/fplrc8a.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/public/fpl/fplrij8a.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/lm/lmtk10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm
+/lmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmtt9.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texl
+ive/texmf-dist/fonts/type1/urw/helvetic/uhvbo8a.pfb></usr/share/texlive/texmf-d
+ist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texlive/texmf-dist/fonts/ty
+pe1/urw/palatino/uplb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/pala
+tino/uplbi8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/palatino/uplr8a
+.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/palatino/uplri8a.pfb>
+Output written on kafe.pdf (29 pages, 290143 bytes).
 PDF statistics:
- 588 PDF objects out of 1000 (max. 8388607)
- 533 compressed objects within 6 object streams
- 181 named destinations out of 1000 (max. 500000)
+ 646 PDF objects out of 1000 (max. 8388607)
+ 588 compressed objects within 6 object streams
+ 203 named destinations out of 1000 (max. 500000)
  41 words of extra memory for PDF output out of 10000 (max. 10000000)
 
