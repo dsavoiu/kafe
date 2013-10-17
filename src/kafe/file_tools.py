@@ -134,6 +134,8 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
             # for Dataset constructor
             if key in axes:
                 dataset_kwargs[key+'data'] = np.asarray(fields[key])
+            elif key == 'ignore':
+                pass
             else:
                 dataset_kwargs[key] = np.asarray(fields[key])
 
@@ -175,6 +177,7 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
                        title=title)
 
     else:   # if not covariance matrices given, build dataset without them
+
         return build_dataset(**dataset_kwargs)
 
 

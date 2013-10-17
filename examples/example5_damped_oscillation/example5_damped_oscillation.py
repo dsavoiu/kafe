@@ -19,6 +19,7 @@ from kafe import *
 # import some functions from numpy
 from numpy import exp, cos
 
+
 #############################
 # Model function definition #
 #############################
@@ -26,7 +27,7 @@ from numpy import exp, cos
 # Set an ASCII expression for this function
 @ASCII(x_name="t", expression="A0*exp(-t/tau)*cos(omega*t+phi)")
 # Set some LaTeX-related parameters for this function
-@LaTeX(name='f', x_name="t", 
+@LaTeX(name='f', x_name="t",
        parameter_names=('a_0', '\\tau{}', '\\omega{}', '\\varphi{}'),
        expression="a_0\\,\\exp(-\\frac{t}{\\tau})\,"
                   "\cos(\\omega{}\\,t+\\varphi{})")

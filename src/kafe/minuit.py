@@ -20,6 +20,10 @@ import numpy as np
 import sys
 import os
 
+# import main logger for kafe
+import logging
+logger = logging.getLogger('kafe')
+
 # Constants
 ############
 
@@ -119,7 +123,7 @@ class Minuit:
     def update_parameter_data(self, show_warnings=False):
         """
         (Re-)Sets the parameter names, values and step size on the
-        C side of Minuit.
+        C++ side of Minuit.
         """
         error_code = Long(0)
         try:
@@ -129,7 +133,7 @@ class Minuit:
                                       self.current_parameters[i],
                                       0.1 * self.parameter_errors[i],
                                       0, 0, error_code)
-                # use 10% of the parameter 1-sigma errors as the initial step size
+                # use 10% of the par. 1-sigma errors as the initial step size
         except AttributeError, e:
             if show_warnings:
                 logger.warn("Cannot update Minuit data on the C++ side. "
@@ -190,7 +194,7 @@ class Minuit:
             self.parameter_names = parameter_names
         else:
             raise Exception("Cannot set param names. Tuple length mismatch.")
-        
+
         self.update_parameter_data()
 
     def set_parameter_errors(self, parameter_errors=None):
@@ -209,7 +213,7 @@ class Minuit:
                             Tuple length mismatch.")
         else:
             self.parameter_errors = parameter_errors
-            
+
         self.update_parameter_data()
 
     # Get methods
@@ -395,7 +399,34 @@ class Minuit:
     # Other methods
     ################
 
+    def fix_parameter(self, parameter_number):
+        '''
+        Fix parameter number <`parameter_number`>.
+
+        **parameter_number** : int
+            Number of the parameter to fix.
+        '''
+        error_code = Long(0)
+        logger.info("Fixing parameter %d in Minuit" % (parameter_number,))
+        # execute FIX command
+        self.__gMinuit.mnexcm("FIX",
+                              arr('d', [parameter_number+1]), 1, error_code)
+
+    def release_parameter(self, parameter_number):
+        '''
+        Release parameter number <`parameter_number`>.
+
+        **parameter_number** : int
+            Number of the parameter to release.
+        '''
+        error_code = Long(0)
+        logger.info("Releasing parameter %d in Minuit" % (parameter_number,))
+        # execute RELEASE command
+        self.__gMinuit.mnexcm("RELEASE",
+                              arr('d', [parameter_number+1]), 1, error_code)
+
     def reset(self):
+        '''Execute TMinuit's `mnrset` method.'''
         self.__gMinuit.mnrset(0)  # reset TMinuit
 
     def FCN_wrapper(self, number_of_parameters, derivatives,
@@ -448,6 +479,7 @@ class Minuit:
         # time the minimize method is called because of
         # the implementation of SetFCN, which is not
         # object-oriented but sets a global pointer!!!
+        logger.debug("Updating current FCN")
         self.__gMinuit.SetFCN(self.FCN_wrapper)
 
         # Run minimization algorithm (MIGRAD + HESSE)
@@ -470,9 +502,11 @@ class Minuit:
         os.dup2(self.out_file.fileno(), sys.stdout.fileno())
 
         self.__gMinuit.SetPrintLevel(log_print_level)  # set Minuit print level
+        logger.debug("Running MIGRAD")
         self.__gMinuit.mnexcm("MIGRAD",
                               arr('d', [self.max_iterations, self.tolerance]),
                               2, error_code)
+        logger.debug("Running HESSE")
         self.__gMinuit.mnexcm("HESSE", arr('d', [6000]), 1, error_code)
         # return to normal print level
         self.__gMinuit.SetPrintLevel(self.print_level)

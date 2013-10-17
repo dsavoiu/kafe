@@ -247,7 +247,16 @@ class Dataset(object):
 
         the name of the `Dataset`. If omitted, the `Dataset` will be given the
         generic name 'Untitled Dataset'.
+        
+    *axis_labels* : list of strings (optional)
 
+        labels for the `x` and `y` axes. If omitted, these will be set to ``'x'``
+        and ``'y'``, respectively.
+    
+    *axis_units* : list of strings (optional)
+
+        units for the `x` and `y` axes. If omitted, these will be assumed to be
+        dimensionless, i.e. the unit will be an empty string.
     '''
 
     def __init__(self, **kwargs):
@@ -265,8 +274,9 @@ class Dataset(object):
         self.cov_mats = [None, None]      #: list of covariance matrices
 
         # Metadata
-        self.axis_labels = ['x', 'y']       #: axis labels
-        self.axis_units = ['', '']          #: units to assume for axis
+        #: axis labels
+        self.axis_labels = list(kwargs.get('axis_labels', ['x', 'y']))
+        self.axis_units = list(kwargs.get('axis_units', ['', '']))
 
         #: dictionary to get axis id from an alias
         self.__axis_alias = {0: 0, 1: 1, 'x': 0, 'y': 1, '0': 0, '1': 1}
@@ -855,5 +865,37 @@ class Dataset(object):
 
                 # update row number
                 tmp_rownumber += 1
+
+        # If EOF has been reached, commit data, if any
+        if tmp_reading_data_block:
+
+            # Commit the parsed data to the object
+            #######################################
+
+            # commit measurement data
+            self.set_data(tmp_axis, tmp_data)
+
+            if tmp_has_syst_errors:  # if there is a correlation matrix
+                # Turn the lists into a lower triangle matrix
+                tmp_cormat = zero_pad_lower_triangle(tmp_cormat)
+
+                # Symmetrize: copy the lower triangle to the upper half
+                tmp_cormat = make_symmetric_lower(tmp_cormat)
+
+                # commit covariance matrix
+                self.set_cov_mat(
+                    tmp_axis,
+                    cor_to_cov(tmp_cormat, tmp_errors)
+                )
+
+            # if there are just statistical errors
+            elif tmp_has_stat_errors:
+                # commit covariance matrix
+                self.set_cov_mat(
+                    tmp_axis,
+                    np.asmatrix(np.diag(tmp_errors)**2)
+                )
+            else:  # if there are no errors
+                self.set_cov_mat(tmp_axis, None)  # unset cov mat
 
         return True

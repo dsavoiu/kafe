@@ -226,7 +226,7 @@ class Plot(object):
             # set unit in brackets (if available)
             for label_id, _ in enumerate(self.axis_labels):
                 unit = self.fits[0].dataset.axis_units[label_id]
-                if unit != '':
+                if unit:
                     self.axis_labels[label_id] += " [\\textrm{%s}]" % (unit,)
         else:
             self.axis_labels = ('$x$', '$y$')  # set default axis names

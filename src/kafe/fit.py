@@ -52,7 +52,6 @@ def chi2(xdata, ydata, cov_mat, fit_function, parameter_values):
 
     **parameter_values** : list/tuple
         The values of the parameters at which :math:`f(x)` should be evaluated.
-
     '''
 
     # since the parameter_values are constants, the
@@ -87,9 +86,11 @@ def round_to_significance(value, error, significance=F_SIGNIFICANCE):
 
     '''
     # round error to F_SIGNIFICANCE significant digits
-    significant_digits = int(-floor(log(error)/log(10))) + significance - 1
-    error = round(error, significant_digits)
-    value = round(value, significant_digits)
+    if error:
+        significant_digits = int(-floor(log(error)/log(10))) + significance - 1
+        error = round(error, significant_digits)
+        value = round(value, significant_digits)
+
     return (value, error)
 
 
@@ -153,17 +154,21 @@ class Fit(object):
         self.external_fcn = external_fcn
 
         try:
-            #: the number of parameters
+            #: the total number of parameters
             self.number_of_parameters = self.fit_function.number_of_parameters
 
             self.set_parameters(self.fit_function.parameter_defaults,
-                                        None, no_warning=True)
-            
+                                None, no_warning=True)
+
             #: the names of the parameters
             self.parameter_names = self.fit_function.parameter_names
             #: :math:`\LaTeX` parameter names
             self.latex_parameter_names = \
                 self.fit_function.latex_parameter_names
+
+            # store a dictionary to lookup whether a parameter is fixed
+            self._fixed_parameters = np.ones(self.number_of_parameters,
+                                             dtype=bool)
 
             # store the full function definition
             self.function_equation_full = \
@@ -175,35 +180,11 @@ class Fit(object):
 
             self.fit_label = fit_label
 
-            #~ if fit_label is None:
-                #~ # let the function equation serve as the function label
-                #~ #self.fit_label = self.fit_function.latex_name
-                #~ self.fit_label = self.function_equation
-            #~ else:
-                #~ # override function label
-                #~ self.fit_label = fit_label
-
         except AttributeError:
             raise AttributeError("Fit-function object %s does not have "
                                  "the required attributes. Did you maybe "
                                  " forget the `@FitFunction` decorator?"
                                  % (self.fit_function.name))
-            ##: the number of parameters
-            #self.number_of_parameters = self.fit_function.number_of_parameters
-            ##: the current values of the parameters
-            #self.current_parameter_values = \
-            #    self.fit_function.parameter_defaults
-            ##: the names of the parameters
-            #self.parameter_names = self.fit_function.parameter_names
-            ##: :math:`\LaTeX` parameter names
-            #self.latex_parameter_names = \
-            #    self.fit_function.latex_parameter_names
-
-            #self.function_equation = \
-            #    self.fit_function.get_function_equation('latex', 'full')
-
-            ## get the function name in LaTeX
-            #self.fit_label = self.fit_function.latex_name
 
         # check if the dataset has any y errors at all
         if self.dataset.has_errors('y'):
@@ -319,53 +300,193 @@ class Fit(object):
 
         return tuple(output)
 
-    def set_parameters(self, par_values, par_errors=None,
-                       no_warning=False):
+    def set_parameters(self, *args, **kwargs):
         '''
         Sets the parameter values (and optionally errors) for this fit.
         This is usually called just before the fit is done, to establish
-        the initial parameters. If `par_errors` is omitted, the errors
-        are set to about 1/1000th of the parameter values.
-        '''
-        if len(par_values) == self.number_of_parameters:
-            #: the current values of the parameters
-            self.current_parameter_values = par_values
-        else:
-            raise Exception("Cannot set parameters. Number of given "
-                            "parameters (%d) doesn't match the Fit's "
-                            "parameter number (%d)."
-                            % (len(par_values), self.number_of_parameters))
+        the initial parameters. If a parameter error is omitted, it is
+        set to 1/1000th of the parameter values themselves. If the default
+        value of the parameter is 0, it is set, by exception, to 0.001.
 
-        if par_errors is not None:
-            if len(par_values) == self.number_of_parameters:
-                #: the current uncertainties of the parameters
-                self.current_parameter_errors = par_errors
+        This method accepts up to two positional arguments and several
+        keyword arguments.
+
+        *args[0]* : tuple/list of floats (optional)
+            The first positional argument is expected to be
+            a tuple/list containing the parameter values.
+
+        *args[1]* : tuple/list of floats (optional)
+            The second positional argument is expected to be a
+            tuple/list of parameter errors, which can also be set as an
+            approximate estimate of the problem's uncertainty.
+
+        *no_warning* : boolean (optional)
+            Whether to issue warnings (``False``) or not (``True``) when
+            communicating with the minimizer fails. Defaults to ``False``.
+
+        Valid keyword argument names are parameter names. The keyword arguments
+        themselves may be floats (parameter values) or 2-tuples containing the
+        parameter values and the parameter error in that order:
+
+        *<parameter_name>* : float or 2-tuple of floats (optional)
+            Set the parameter with the name <'parameter_name'> to the value
+            given. If a 2-tuple is given, the first element is understood
+            to be the value and the second to be the parameter error.
+        '''
+
+        # Process arguments
+
+        # get global keyword argument
+        no_warning = kwargs.pop("no_warning", False)
+
+        if args:  # if positional arguents provided
+            if len(args) == 1:
+                par_values, par_errors = args[0], None
+            elif len(args) == 2:
+                par_values, par_errors = args[0], args[1]
             else:
-                raise Exception("Cannot set parameter errors. Number of given "
-                                "parameter errors (%d) doesn't match the "
-                                "Fit's parameter number (%d)."
-                                % (len(par_errors), self.number_of_parameters))
-        else:
-            #: the current uncertainties of the parameters
-            if not no_warning:
-                logger.warn("Parameter errors not given. Setting to "
-                            "1/1000th of the parameter values.")
-            # TODO: find sensible starting values for parameter errors
-            self.current_parameter_errors = [val/1000.0
-                                             for val
-                                             in self.current_parameter_values]
-        
+                raise Exception("Error setting parameters. The argument "
+                                "pattern for method `set_parameters` could "
+                                "not be parsed.")
+
+            if len(par_values) == self.number_of_parameters:
+                #: the current values of the parameters
+                self.current_parameter_values = list(par_values)
+            else:
+                raise Exception("Cannot set parameters. Number of given "
+                                "parameters (%d) doesn't match the Fit's "
+                                "parameter number (%d)."
+                                % (len(par_values), self.number_of_parameters))
+
+            if par_errors is not None:
+                if len(par_values) == self.number_of_parameters:
+                    #: the current uncertainties of the parameters
+                    self.current_parameter_errors = list(par_errors)
+                else:
+                    raise Exception("Cannot set parameter errors. Number of "
+                                    "given parameter errors (%d) doesn't "
+                                    "match the Fit's parameter number (%d)."
+                                    % (len(par_errors),
+                                       self.number_of_parameters))
+            else:
+                # TODO: find sensible starting values for parameter errors
+                if not no_warning:
+                    logger.warn("Parameter errors not given. Setting to "
+                                "1/1000th of the parameter values.")
+                #: the current uncertainties of the parameters
+                self.current_parameter_errors = [
+                    val/1000.0 if val else 0.001
+                    for val in self.current_parameter_values
+                ]
+        else:  # if no positional arguments, rely on keywords
+
+            for param_name, param_spec in kwargs.iteritems():
+                par_id = self._find_parameter(param_name)
+                if par_id is None:
+                    raise ValueError("Cannot set parameter. `%s` not "
+                                     "a valid ID or parameter name."
+                                     % param_name)
+                try:
+                    # try to read both parameter value and error
+                    param_val, param_err = param_spec
+                except TypeError:
+                    # if param_spec is not iterable, then only value
+                    # was given
+                    if not no_warning:
+                        logger.warn("Parameter error not given for %s. "
+                                    "Setting to 1/1000th of the parameter "
+                                    "value given." % (param_name,))
+                    param_val, param_err = param_spec, param_spec * 0.001
+
+                self.current_parameter_values[par_id] = param_val
+                self.current_parameter_errors[par_id] = param_err
+
         # try to update the minimizer's parameters
         # (fails is minimizer not yet initialized)
         try:
             # set Minuit's start parameters and parameter errors
-            self.minimizer.set_parameter_values(self.current_parameter_values)
-            self.minimizer.set_parameter_errors(self.current_parameter_errors)
+            self.minimizer.set_parameter_values(
+                self.current_parameter_values)
+            self.minimizer.set_parameter_errors(
+                self.current_parameter_errors)
         except AttributeError:
             if not no_warning:
                 logger.warn("Failed to set the minimizer's parameters. "
                             "Maybe minimizer not initialized for this Fit "
                             "yet?")
+
+    def fix_parameters(self, *parameters_to_fix):
+        '''
+        Fix the given parameters so that the minimizer works without them
+        when `do_fit` is called next. Parameters can be given by their names
+        or by their IDs.
+        '''
+        for parameter in parameters_to_fix:
+            # turn names into IDs, if needed
+            par_id = self._find_parameter(parameter)
+            if par_id is None:
+                raise ValueError("Cannot fix parameter. `%s` not "
+                                 "a valid ID or parameter name."
+                                 % parameter)
+
+            # Fix found parameter
+            self.minimizer.fix_parameter(par_id)
+            logger.info("Fixed parameter %d (%s)"
+                        % (par_id, self.parameter_names[par_id]))
+
+    def release_parameters(self, *parameters_to_fix):
+        '''
+        Release the given parameters so that the minimizer begins to work with
+        them when `do_fit` is called next. Parameters can be given by their
+        names or by their IDs. If no arguments are provied, then release all
+        parameters.
+        '''
+        if parameters_to_fix:
+            for parameter in parameters_to_fix:
+                # turn names into IDs, if needed
+                par_id = self._find_parameter(parameter)
+                if par_id is None:
+                    raise ValueError("Cannot release parameter. `%s` not "
+                                     "a valid ID or parameter name."
+                                     % parameter)
+
+                # Release found parameter
+                self.minimizer.release_parameter(par_id)
+                logger.info("Released parameter %d (%s)"
+                            % (par_id, self.parameter_names[par_id]))
+        else:
+            # go through all parameter IDs
+            for par_id in xrange(self.number_of_parameters):
+                # Release parameter
+                self.minimizer.release_parameter(par_id)
+
+            # Inform about release
+            logger.info("Released all parameters")
+
+    # Private Methods
+    ##################
+
+    def _find_parameter(self, lookup_string):
+        '''
+        Accepts a parameter's name or ID and returns its ID. If not found,
+        returns ``None``.
+        '''
+        # Try to find the parameter by its ID
+        try:
+            self.current_parameter_values[lookup_string]
+        except TypeError:
+            # ID invalid. Try to lookup by name.
+                try:
+                    found_id = self.parameter_names.index(lookup_string)
+                except ValueError:
+                    return None
+        else:
+            found_id = lookup_string
+
+        return found_id
+
+    # Fit Workflow
+    ###############
 
     def do_fit(self, quiet=False, verbose=False):
         '''
@@ -417,23 +538,28 @@ class Fit(object):
 
         iter_nr = 0
         while iter_nr < initial_iterations:
+            logger.debug("Fit iteration %d" % (iter_nr,))
             self.fit_one_iteration(verbose)
             iter_nr += 1
+        logger.debug("Fit iterations done")
 
         # if the dataset has x errors, project onto the current error matrix
         if self.dataset.has_errors('x'):
-
+            logger.debug("Dataset has `x` errors. Iterating for `x` error.")
             iter_nr = 0
             while iter_nr < max_x_iterations:
                 old_matrix = copy(self.current_cov_mat)
 
                 self.project_x_covariance_matrix()
+                logger.debug("`x` fit iteration %d" % (iter_nr,))
                 self.fit_one_iteration(verbose)
 
                 new_matrix = self.current_cov_mat
 
                 # if the matrix has not changed in this iteration
+                # (within reasonable tolerance)
                 if np.allclose(old_matrix, new_matrix, atol=1e-10, rtol=1e-8):
+                    logger.debug("Matrix for `x` fit iteration has converged.")
                     break   # interrupt iteration
 
                 iter_nr += 1
@@ -448,11 +574,11 @@ class Fit(object):
         Instructs the minimizer to do a minimization.
         '''
 
+        logger.debug("Calling minimizer")
         self.minimizer.minimize()
+        logger.debug("Retrieving data from minimizer")
         self.current_parameter_values = self.minimizer.get_parameter_values()
         self.current_parameter_errors = self.minimizer.get_parameter_errors()
-
-        #par_cov_mat = self.get_error_matrix()
 
     def project_x_covariance_matrix(self):
         r'''
@@ -466,25 +592,33 @@ class Fit(object):
             C_{\text{tot}, ij} = C_{y, ij} + C_{x, ij}
             \frac{\partial f}{\partial x_i}  \frac{\partial f}{\partial x_j}
         '''
-         # use 1/100th of the smallest parameter error as spacing for df/dp
+
+        # Log projection (DEBUG)
+        logger.debug("Projecting `x` covariance matrix.")
+
+        # use 1/100th of the smallest parameter error as spacing for df/dx
         derivative_spacing = 0.01 * np.sqrt(
             min(
-                np.diag(self.get_error_matrix())
+                np.diag(self.current_cov_mat)
             )
         )
 
-        proj_xcov_mat = np.asarray(self.dataset.get_cov_mat('x')) * \
-            outer_product(
-                self.fit_function.derive_by_x(self.dataset.get_data('x'),
-                                              derivative_spacing,
-                                              self.current_parameter_values
-                                              )
-            )
+        # if the derivative spacing is zero
+        # (this shouldn't happen, but making it larger does no damage)
+        # then set it to 0.001
+        if not derivative_spacing:
+            derivative_spacing = 0.001
+
+        outer_prod = outer_product(
+            self.fit_function.derive_by_x(self.dataset.get_data('x'),
+                                          derivative_spacing,
+                                          self.current_parameter_values)
+        )
+
+        proj_xcov_mat = np.asarray(self.dataset.get_cov_mat('x')) * outer_prod
 
         self.current_cov_mat = self.dataset.get_cov_mat('y') + \
             np.asmatrix(proj_xcov_mat)
-
-        ##print self.current_cov_mat
 
     # Output functions
     ###################
