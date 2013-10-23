@@ -20,7 +20,7 @@
 
 
 \title{kafe Documentation}
-\date{October 17, 2013}
+\date{October 23, 2013}
 \release{}
 \author{Daniel Savoiu}
 \newcommand{\sphinxlogo}{}
@@ -314,9 +314,9 @@ y\_2  sigma\_y\_2  cor\_y\_12
 y\_N  sigma\_y\_N  cor\_y\_1N  ...  cor\_y\_NN
 \end{Verbatim}
 
-Here, the \emph{sigma\_...} represents the statistical error of the data point
-and \emph{cor\_...\_ij} is the correlation coefficient between the \emph{i}-th and
-\emph{j}-th data point.
+Here, the \emph{sigma\_...} represents the fully uncorrelated error of the data
+point and \emph{cor\_...\_ij} is the correlation coefficient between the \emph{i}-th
+and \emph{j}-th data point.
 
 Alternatively, field data can be set by passing iterables as keyword
 arguments. Available keywords for this purpose are:
@@ -657,7 +657,7 @@ A delimiter used to separate columns in the output.
 \index{build\_dataset() (in module kafe.dataset)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.dataset.build_dataset}\pysiglinewithargsret{\bfcode{build\_dataset}}{\emph{xdata}, \emph{ydata}, \emph{**kwargs}}{}
+\phantomsection\label{index:kafe.dataset.build_dataset}\pysiglinewithargsret{\bfcode{build\_dataset}}{\emph{xdata}, \emph{ydata}, \emph{cov\_mats=None}, \emph{**kwargs}}{}
 This helper function creates a \emph{Dataset} from a series of keyword
 arguments.
 
@@ -667,32 +667,41 @@ Valid keyword arguments are:
 These keyword arguments are mandatory and should be iterables
 containing the measurement data.
 
+\item[{\emph{cov\_mats}}] \leavevmode{[}\code{None} or 2-tuple (optional){]}
+This argument defaults to \code{None}, which means no covariance matrices
+are used. If covariance matrices are needed, a tuple with two entries
+(the first for \emph{x} covariance matrices, the second for \emph{y}) must be
+passed.
+
+Each element of this tuple may be either \code{None} or a NumPy matrix
+object containing a covariance matrix for the respective axis.
+
 \item[{\emph{error specification keywords}}] \leavevmode{[}iterable or numeric (see below){]}
-A valid keyword is composed of an axis (\emph{x} or \emph{y}), an error
+In addition to covariance matrices, errors can be specified for each
+axis (\emph{x} or \emph{y}) according to a simplified error model.
+
+In this respect, a valid keyword is composed of an axis, an error
 relativity specification (\emph{abs} or \emph{rel}) and error correlation type
-(\emph{stat} or \emph{syst}). The errors are then set as follows:
+(\emph{err} or \emph{cor}). The errors are then set as follows:
 \begin{enumerate}
 \item {} \begin{description}
-\item[{For statistical errors:}] \leavevmode\begin{itemize}
+\item[{For totally uncorrelated errors (\emph{err}):}] \leavevmode\begin{itemize}
 \item {} 
-if keyword argument is iterable, the error list is set to
+if keyword argument is iterable, the error list is set to that
+
+\item {} 
+if keyword argument is a number, an error list with identical entries is generated
 
 \end{itemize}
-
-that
-- if keyword argument is a number, an error list with identical
-entries is generated
 
 \end{description}
 
 \item {} \begin{description}
-\item[{For systematic errors:}] \leavevmode\begin{itemize}
+\item[{For fully correlated errors (\emph{cor}):}] \leavevmode\begin{itemize}
 \item {} 
-keyword argument \emph{must} be a single number. The global
+keyword argument \emph{must} be a single number. The global correlated error for the axis is then set to that.
 
 \end{itemize}
-
-correlated error for the axis is then set to that.
 
 \end{description}
 
@@ -701,11 +710,11 @@ correlated error for the axis is then set to that.
 So, for example:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\textgreater{}\textgreater{}\textgreater{} }\PYG{n}{myDataset} \PYG{o}{=} \PYG{n}{build\PYGZus{}dataset}\PYG{p}{(}\PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{,} \PYG{n}{yabsstat}\PYG{o}{=}\PYG{l+m+mf}{0.3}\PYG{p}{,} \PYG{n}{yrelsyst}\PYG{o}{=}\PYG{l+m+mf}{0.1}\PYG{p}{)}
+\PYG{g+gp}{\textgreater{}\textgreater{}\textgreater{} }\PYG{n}{myDataset} \PYG{o}{=} \PYG{n}{build\PYGZus{}dataset}\PYG{p}{(}\PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{,} \PYG{n}{yabserr}\PYG{o}{=}\PYG{l+m+mf}{0.3}\PYG{p}{,} \PYG{n}{yrelcor}\PYG{o}{=}\PYG{l+m+mf}{0.1}\PYG{p}{)}
 \end{Verbatim}
 
-creates a dataset where the statistical error of each \emph{y} coordinate is
-set to 0.3 and the overall systematic error of \emph{y} is set to 0.1.
+creates a Dataset with an uncorrelated error of 0.3 for each \emph{y}
+coordinate and a fully correlated (systematic) error of \emph{y} of 0.1.
 
 \end{description}
 
@@ -720,19 +729,25 @@ set to 0.3 and the overall systematic error of \emph{y} is set to 0.1.
 \phantomsection\label{index:kafe.file_tools.parse_column_data}\pysiglinewithargsret{\bfcode{parse\_column\_data}}{\emph{file\_to\_parse}, \emph{field\_order='x}, \emph{y'}, \emph{delimiter=' `}, \emph{cov\_mat\_files=None}, \emph{title='Untitled Dataset'}}{}
 Parses a file which contains measurement data in a one-measurement-per-row
 format. The field (column) order can be specified. It defaults to \emph{x,y'.
-Valid field names are {}`x}, \emph{y}, \emph{xabsstat}, \emph{yabsstat}, \emph{xrelstat},
-\emph{yrelstat}. Another valid field name is \emph{ignore} which can be used to skip
+Valid field names are {}`x}, \emph{y}, \emph{xabserr}, \emph{yabserr}, \emph{xrelerr},
+\emph{yrelerr}. Another valid field name is \emph{ignore} which can be used to skip
 a field.
 
+A certain type of field can appear several times. If this is the case, all
+specified errors are added in quadrature:
+\begin{gather}
+\begin{split}\sigma_{\text{tot}} = \sqrt{{\sigma_1}^2+{\sigma_2}^2+\dots}\end{split}\notag
+\end{gather}
 Every valid measurement data file \emph{must} have an \emph{x} and a \emph{y} field.
+
+For more complex error models, errors and correlations may be specified as
+covariance matrices. If this is desired, then any number of covariance
+matrices (stored in separate files) may be specified for an axis by
+using the \emph{cov\_mat\_files} argument.
 
 Additionally, a delimiter can be specified. If this is a whitespace
 character or omitted, any sequence of whitespace characters is assumed to
 separate the data.
-
-If the measurement errors and correlations are given as covariance matrices
-(in a separate file), these files can be specified using the
-\emph{cov\_mat\_files} argument.
 \begin{description}
 \item[{\textbf{file\_to\_parse}}] \leavevmode{[}file-like object or string containing a file path{]}
 The file to parse.
@@ -744,9 +759,17 @@ in the file. Defaults to \code{'x,y'}.
 \item[{\emph{delimiter}}] \leavevmode{[}string (optional){]}
 The field delimiter used in the file. Defaults to any whitespace.
 
-\item[{\emph{cov\_mat\_files}}] \leavevmode{[}\code{None} or tuple of strings/file-like objects (optional){]}
-Files which contain x- and y-covariance matrices, in that order.
-Defaults to \code{None}.
+\item[{\emph{cov\_mat\_files}}] \leavevmode{[}\emph{several} (see below, optional){]}
+This argument defaults to \code{None}, which means no covariance matrices
+are used. If covariance matrices are needed, a tuple with two entries
+(the first for \emph{x} covariance matrices, the second for \emph{y}) must be
+passed.
+
+Each element of this tuple may be either \code{None}, a file or file-like
+object, or an iterable containing files and file-like objects. Each
+file should contain a covariance matrix for the respective axis.
+
+When creating the \emph{Dataset}, all given matrices are summed over.
 
 \item[{\textbf{return}}] \leavevmode{[}\emph{Dataset}{]}
 A Dataset built from the parsed file.
@@ -786,7 +809,7 @@ meaning any whitespace.
 \label{index:fit-module}\label{index:module-kafe.fit}\index{kafe.fit (module)}\phantomsection\label{index:module-fit}\index{fit (module)}\index{Fit (class in kafe.fit)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x366a5f0\textgreater{}}, \emph{fit\_label=None}}{}
+\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x1eee5f0\textgreater{}}, \emph{fit\_label=None}}{}
 Bases: \code{object}
 
 Object representing a fit. This object references the fitted \emph{Dataset},

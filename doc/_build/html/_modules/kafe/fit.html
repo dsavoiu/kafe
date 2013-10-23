@@ -51,436 +51,708 @@
   <h1>Source code for kafe.fit</h1><div class="highlight"><pre>
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">.. module:: fit</span>
-<span class="sd">   :platform: Unix</span>
-<span class="sd">   :synopsis: This submodule defines a `Fit` object which performs the actual fitting given a `Dataset` and a fit function.</span>
+<span class="sd">    :platform: Unix</span>
+<span class="sd">    :synopsis: This submodule defines a `Fit` object which performs the actual</span>
+<span class="sd">        fitting given a `Dataset` and a fit function.</span>
 
 <span class="sd">.. moduleauthor:: Daniel Savoiu &lt;danielsavoiu@gmail.com&gt;</span>
 
 <span class="sd">&#39;&#39;&#39;</span>
 
 <span class="kn">from</span> <span class="nn">minuit</span> <span class="kn">import</span> <span class="n">Minuit</span>
-<span class="kn">from</span> <span class="nn">function_tools</span> <span class="kn">import</span> <span class="n">get_function_property</span><span class="p">,</span> <span class="n">outer_product</span><span class="p">,</span> <span class="n">derive_by_x</span>
+<span class="kn">from</span> <span class="nn">function_tools</span> <span class="kn">import</span> <span class="n">outer_product</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
 
-<span class="kn">from</span> <span class="nn">numeric_tools</span> <span class="kn">import</span> <span class="o">*</span>                 <span class="c"># automatically includes numpy as np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numeric_tools</span> <span class="kn">import</span> <span class="n">cov_to_cor</span><span class="p">,</span> <span class="n">extract_statistical_errors</span>
+
 <span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="n">F_SIGNIFICANCE</span><span class="p">,</span> <span class="n">M_CONFIDENCE_LEVEL</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">floor</span><span class="p">,</span> <span class="n">log</span>
 
 <span class="kn">from</span> <span class="nn">stream</span> <span class="kn">import</span> <span class="n">StreamDup</span>
-<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span> 
+
+<span class="c"># import main logger for kafe</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;kafe&#39;</span><span class="p">)</span>
+
 
 <span class="c"># The default FCN</span>
-<div class="viewcode-block" id="chi2"><a class="viewcode-back" href="../../index.html#kafe.fit.chi2">[docs]</a><span class="k">def</span> <span class="nf">chi2</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">cov_mat</span><span class="p">,</span> <span class="n">fit_function</span><span class="p">,</span> <span class="n">param_values</span><span class="p">):</span>
+<div class="viewcode-block" id="chi2"><a class="viewcode-back" href="../../index.html#kafe.fit.chi2">[docs]</a><span class="k">def</span> <span class="nf">chi2</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">cov_mat</span><span class="p">,</span> <span class="n">fit_function</span><span class="p">,</span> <span class="n">parameter_values</span><span class="p">):</span>
     <span class="sd">r&#39;&#39;&#39;</span>
-<span class="sd">    A simple :math:`\chi^2` implementation. Calculates :math:`\chi^2` according to the formula:</span>
-<span class="sd">    </span>
+<span class="sd">    A simple :math:`\chi^2` implementation. Calculates :math:`\chi^2` according</span>
+<span class="sd">    to the formula:</span>
+
 <span class="sd">    .. math::</span>
-<span class="sd">    </span>
+
 <span class="sd">        \chi^2 = \lambda^T C^{-1} \lambda</span>
-<span class="sd">    </span>
-<span class="sd">    Here, :math:`\lambda` is the residual vector :math:`\lambda = \vec{y} - \vec{f}(\vec{x})` and</span>
-<span class="sd">    :math:`C` is the covariance matrix.</span>
-<span class="sd">    </span>
+
+<span class="sd">    Here, :math:`\lambda` is the residual vector :math:`\lambda = \vec{y} -</span>
+<span class="sd">    \vec{f}(\vec{x})` and :math:`C` is the covariance matrix.</span>
+
 <span class="sd">    **xdata** : iterable</span>
 <span class="sd">        The *x* measurement data</span>
-<span class="sd">        </span>
+
 <span class="sd">    **ydata** : iterable</span>
 <span class="sd">        The *y* measurement data</span>
-<span class="sd">        </span>
+
 <span class="sd">    **cov_mat** : `numpy.matrix`</span>
 <span class="sd">        The total covariance matrix</span>
-<span class="sd">        </span>
+
 <span class="sd">    **fit_function** : function</span>
 <span class="sd">        The fit function :math:`f(x)`</span>
-<span class="sd">        </span>
-<span class="sd">    **param_values** : list/tuple</span>
+
+<span class="sd">    **parameter_values** : list/tuple</span>
 <span class="sd">        The values of the parameters at which :math:`f(x)` should be evaluated.</span>
-<span class="sd">    </span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    
-    <span class="c"># since the param_values are constants, the</span>
+
+    <span class="c"># since the parameter_values are constants, the</span>
     <span class="c"># fit function is a function of only one</span>
     <span class="c"># variable: `x&#39;. To apply it elementwise using</span>
     <span class="c"># Python&#39;s `map&#39; method, make a temporary</span>
     <span class="c"># function where `x&#39; is the only variable:</span>
     <span class="k">def</span> <span class="nf">tmp_fit_function</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">fit_function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">param_values</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fit_function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">parameter_values</span><span class="p">)</span>
 
-    <span class="n">fdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">tmp_fit_function</span><span class="p">,</span> <span class="n">xdata</span><span class="p">))</span>        <span class="c"># calculate f(x) for all x in xdata</span>
-    <span class="n">residual</span> <span class="o">=</span> <span class="n">ydata</span> <span class="o">-</span> <span class="n">fdata</span>                                <span class="c"># calculate residual vector</span>
+    <span class="c"># calculate f(x) for all x in xdata</span>
+    <span class="n">fdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">tmp_fit_function</span><span class="p">,</span> <span class="n">xdata</span><span class="p">))</span>
+    <span class="c"># calculate residual vector</span>
+    <span class="n">residual</span> <span class="o">=</span> <span class="n">ydata</span> <span class="o">-</span> <span class="n">fdata</span>
 
-    <span class="k">return</span> <span class="p">(</span><span class="n">residual</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">cov_mat</span><span class="o">.</span><span class="n">I</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">residual</span><span class="p">))[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>          <span class="c"># return the chi^2</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">residual</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">cov_mat</span><span class="o">.</span><span class="n">I</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">residual</span><span class="p">))[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c"># return the chi^2</span>
+
 </div>
 <div class="viewcode-block" id="round_to_significance"><a class="viewcode-back" href="../../index.html#kafe.fit.round_to_significance">[docs]</a><span class="k">def</span> <span class="nf">round_to_significance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">significance</span><span class="o">=</span><span class="n">F_SIGNIFICANCE</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Rounds the error to the established number of significant digits, then rounds the value to the same</span>
-<span class="sd">    order of magnitude as the error.</span>
-<span class="sd">    </span>
+<span class="sd">    Rounds the error to the established number of significant digits, then</span>
+<span class="sd">    rounds the value to the same order of magnitude as the error.</span>
+
 <span class="sd">    **value** : float</span>
 <span class="sd">        value to round to significance</span>
-<span class="sd">        </span>
+
 <span class="sd">    **error** : float</span>
 <span class="sd">        uncertainty of the value</span>
-<span class="sd">        </span>
+
 <span class="sd">    *significance* : int (optional)</span>
 <span class="sd">        number of significant digits of the error to consider</span>
-<span class="sd">        </span>
+
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c"># round error to F_SIGNIFICANCE significant digits</span>
-    <span class="n">significant_digits</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">floor</span><span class="p">(</span><span class="n">log</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">/</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)))</span> <span class="o">+</span> <span class="n">significance</span> <span class="o">-</span> <span class="mi">1</span>
-    <span class="n">error</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">significant_digits</span><span class="p">)</span>
-    <span class="n">value</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">significant_digits</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+        <span class="n">significant_digits</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">floor</span><span class="p">(</span><span class="n">log</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">/</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)))</span> <span class="o">+</span> <span class="n">significance</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">significant_digits</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">significant_digits</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
-    
+
 </div>
-<div class="viewcode-block" id="Fit"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit">[docs]</a><span class="k">class</span> <span class="nc">Fit</span><span class="p">:</span>
+<div class="viewcode-block" id="Fit"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit">[docs]</a><span class="k">class</span> <span class="nc">Fit</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Object representing a fit. This object references the fitted `Dataset`, the fit function and the resulting fit parameters.</span>
-<span class="sd">    </span>
-<span class="sd">    Necessary arguments are a `Dataset` object and a fit function (which should be fitted to the `Dataset`).</span>
-<span class="sd">    Optionally, an external function `FCN` (whose minima should be located to find the best fit) can be specified.</span>
-<span class="sd">    If not given, the `FCN` function defaults to :math:`\chi^2`.</span>
-<span class="sd">    </span>
+<span class="sd">    Object representing a fit. This object references the fitted `Dataset`,</span>
+<span class="sd">    the fit function and the resulting fit parameters.</span>
+
+<span class="sd">    Necessary arguments are a `Dataset` object and a fit function (which should</span>
+<span class="sd">    be fitted to the `Dataset`). Optionally, an external function `FCN` (whose</span>
+<span class="sd">    minima should be located to find the best fit) can be specified. If not</span>
+<span class="sd">    given, the `FCN` function defaults to :math:`\chi^2`.</span>
+
 <span class="sd">    **dataset** : `Dataset`</span>
 <span class="sd">        A `Dataset` object containing all information about the data</span>
-<span class="sd">    </span>
+
 <span class="sd">    **fit_function** : function</span>
-<span class="sd">        A user-defined Python function to be fitted to the data. This function&#39;s first argument must be the </span>
-<span class="sd">        independent variable `x`. All other arguments *must* be named and have default values given. These</span>
-<span class="sd">        defaults are used as a starting point for the actual minimization. For example, a simple linear function</span>
-<span class="sd">        would be defined like:</span>
-<span class="sd">        </span>
+<span class="sd">        A user-defined Python function to be fitted to the data. This</span>
+<span class="sd">        function&#39;s first argument must be the independent variable `x`. All</span>
+<span class="sd">        other arguments *must* be named and have default values given. These</span>
+<span class="sd">        defaults are used as a starting point for the actual minimization. For</span>
+<span class="sd">        example, a simple linear function would be defined like:</span>
+
 <span class="sd">        &gt;&gt;&gt; def linear_2par(x, slope=1, y_intercept=0):</span>
 <span class="sd">        ...     return slope * x + y_intercept</span>
-<span class="sd">        </span>
-<span class="sd">        Be aware that choosing sensible initial values for the parameters is often crucial for a succesful fit,</span>
-<span class="sd">        particularly for functions of many parameters.</span>
+
+<span class="sd">        Be aware that choosing sensible initial values for the parameters is</span>
+<span class="sd">        often crucial for a succesful fit, particularly for functions of many</span>
+<span class="sd">        parameters.</span>
 
 <span class="sd">    *external_fcn* : function (optional)</span>
-<span class="sd">        An external `FCN` (function to minimize). This function must have the following call signature:</span>
-<span class="sd">        </span>
-<span class="sd">        &gt;&gt;&gt; FCN(xdata, ydata, cov_mat, fit_function, param_values)</span>
-<span class="sd">        </span>
-<span class="sd">        It should return a float. If not specified, the default :math:`\chi^2` `FCN` is used. This should</span>
-<span class="sd">        be sufficient for most fits.</span>
+<span class="sd">        An external `FCN` (function to minimize). This function must have the</span>
+<span class="sd">        following call signature:</span>
 
-<span class="sd">    *function_label* : :math:`\LaTeX`-formatted string (optional)</span>
-<span class="sd">        A name/label/short description of the fit function. This appears in the legend describing the fitter curve.</span>
-<span class="sd">        If omitted, this defaults to the function&#39;s Python name.</span>
-<span class="sd">        </span>
-<span class="sd">    *function_equation* : :math:`\LaTeX`-formatted string (optional)</span>
-<span class="sd">        The fit function&#39;s equation.</span>
+<span class="sd">        &gt;&gt;&gt; FCN(xdata, ydata, cov_mat, fit_function, parameter_values)</span>
+
+<span class="sd">        It should return a float. If not specified, the default :math:`\chi^2`</span>
+<span class="sd">        `FCN` is used. This should be sufficient for most fits.</span>
+
+<span class="sd">    *fit_label* : :math:`\LaTeX`-formatted string (optional)</span>
+<span class="sd">        A name/label/short description of the fit function. This appears in the</span>
+<span class="sd">        legend describing the fitter curve. If omitted, this defaults to the</span>
+<span class="sd">        fit function&#39;s :math:`\LaTeX` expression.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">fit_function</span><span class="p">,</span> <span class="n">external_fcn</span><span class="o">=</span><span class="n">chi2</span><span class="p">,</span> <span class="n">function_label</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">function_equation</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">fit_function</span><span class="p">,</span> <span class="n">external_fcn</span><span class="o">=</span><span class="n">chi2</span><span class="p">,</span>
+                 <span class="n">fit_label</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Construct a fit. </span>
+<span class="sd">        Construct a fit.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        
+
         <span class="c"># Initialize instance variables</span>
         <span class="c">################################</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span>  <span class="c">#: this Fit instance&#39;s child `Dataset`</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span> <span class="o">=</span> <span class="n">fit_function</span>    <span class="c">#: the fit function used for this `Fit`</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">external_fcn</span> <span class="o">=</span> <span class="n">external_fcn</span>    <span class="c">#: the (external) function to be minimized for this `Fit`</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span> <span class="o">=</span> <span class="n">get_function_property</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="p">,</span> <span class="s">&#39;number of parameters&#39;</span><span class="p">)</span>    <span class="c">#: the number of parameters</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">current_param_values</span> <span class="o">=</span> <span class="n">get_function_property</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="p">,</span> <span class="s">&#39;parameter defaults&#39;</span><span class="p">)</span>      <span class="c">#: the current values of the parameters</span>
-        <span class="c"># TODO: find sensible starting values for parameter errors</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">current_param_errors</span> <span class="o">=</span> <span class="p">[</span><span class="n">val</span><span class="o">/</span><span class="mf">1000.0</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_param_values</span><span class="p">]</span>                   <span class="c">#: the current uncertainties of the parameters</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">param_names</span> <span class="o">=</span> <span class="n">get_function_property</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="p">,</span> <span class="s">&#39;parameter names&#39;</span><span class="p">)</span>                  <span class="c">#: the names of the parameters</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">param_names_latex</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">tmp_string</span><span class="p">:</span> <span class="s">r&#39;\verb!&#39;</span><span class="o">+</span><span class="n">tmp_string</span><span class="o">+</span><span class="s">&#39;!&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_names</span><span class="p">)</span>     <span class="c">#: :math:`\LaTeX` parameter names</span>
-        
-        <span class="k">if</span> <span class="n">function_equation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="c">#: :math:`\LaTeX` function equation</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">function_equation</span> <span class="o">=</span> <span class="n">function_equation</span> <span class="c"># get the function equation from the arguments  </span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">function_equation</span> <span class="o">=</span> <span class="s">r&#39;\verb!</span><span class="si">%s</span><span class="s">!&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">get_function_property</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">),</span> <span class="p">)</span>   <span class="c"># get the function name and wrap it in LaTeX</span>
-        
-        <span class="k">if</span> <span class="n">function_label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="c">#: a label to use in the legend when plotting</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">function_label</span> <span class="o">=</span> <span class="n">function_label</span>     <span class="c"># get the function name from the arguments</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">function_label</span> <span class="o">=</span> <span class="s">r&#39;\verb!</span><span class="si">%s</span><span class="s">!&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">get_function_property</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">),</span> <span class="p">)</span>   <span class="c"># get the function name and wrap it in LaTeX</span>
-        
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">has_errors</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">):</span>                                                            <span class="c"># check if the dataset has any y errors at all</span>
-            <span class="c">#self.current_cov_mat = self.dataset.get_cov_mat(&#39;y&#39;, fallback_on_singular=&#39;identity&#39;)  # set the y cov_mat as starting cov_mat for the fit (use identity matrix if singular)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">current_cov_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_cov_mat</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">fallback_on_singular</span><span class="o">=</span><span class="s">&#39;report&#39;</span><span class="p">)</span>     <span class="c"># set the y cov_mat as starting cov_mat for the fit (report if singular matrix)</span>
+
+        <span class="c">#: the fit function used for this `Fit`</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span> <span class="o">=</span> <span class="n">fit_function</span>
+
+        <span class="c">#: the (external) function to be minimized for this `Fit`</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">external_fcn</span> <span class="o">=</span> <span class="n">external_fcn</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c">#: the total number of parameters</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">number_of_parameters</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">parameter_defaults</span><span class="p">,</span>
+                                <span class="bp">None</span><span class="p">,</span> <span class="n">no_warning</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+            <span class="c">#: the names of the parameters</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">parameter_names</span>
+            <span class="c">#: :math:`\LaTeX` parameter names</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">latex_parameter_names</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">latex_parameter_names</span>
+
+            <span class="c"># store a dictionary to lookup whether a parameter is fixed</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_parameters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">,</span>
+                                             <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+
+            <span class="c"># store the full function definition</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">function_equation_full</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">get_function_equation</span><span class="p">(</span><span class="s">&#39;latex&#39;</span><span class="p">,</span> <span class="s">&#39;full&#39;</span><span class="p">)</span>
+
+            <span class="c"># store a short version of the function&#39;s equation</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">function_equation</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">get_function_equation</span><span class="p">(</span><span class="s">&#39;latex&#39;</span><span class="p">,</span> <span class="s">&#39;short&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">fit_label</span> <span class="o">=</span> <span class="n">fit_label</span>
+
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;Fit-function object </span><span class="si">%s</span><span class="s"> does not have &quot;</span>
+                                 <span class="s">&quot;the required attributes. Did you maybe &quot;</span>
+                                 <span class="s">&quot; forget the `@FitFunction` decorator?&quot;</span>
+                                 <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+        <span class="c"># check if the dataset has any y errors at all</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">has_errors</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">):</span>
+            <span class="c"># set the y cov_mat as starting cov_mat for the fit</span>
+            <span class="c"># and report if singular matrix</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_cov_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_cov_mat</span><span class="p">(</span>
+                <span class="s">&#39;y&#39;</span><span class="p">,</span>
+                <span class="n">fallback_on_singular</span><span class="o">=</span><span class="s">&#39;report&#39;</span>
+            <span class="p">)</span>
             <span class="sd">&#39;&#39;&#39;the current covariance matrix used for the `Fit`&#39;&#39;&#39;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">current_cov_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_size</span><span class="p">())</span> <span class="p">)</span>                   <span class="c"># set the identity matrix as starting cov_mat for the fit</span>
-        
-        
+            <span class="c"># set the identity matrix as starting cov_mat for the fit</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_cov_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_size</span><span class="p">()))</span>
+
         <span class="c">#: this `Fit`&#39;s minimizer (`Minuit`)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span> <span class="o">=</span> <span class="n">Minuit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_external_fcn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_param_values</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>   <span class="c"># initialize minimizer for fit</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">set_parameter_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_param_values</span><span class="p">)</span>        <span class="c"># set Minuit&#39;s start parameters</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">set_parameter_errors</span><span class="p">()</span>                                 <span class="c"># set Minuit&#39;s parameter errors</span>
-        
-        <span class="c"># Store measurement data locally in Fit object</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">xdata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span> <span class="c">#: the `x` coordinates of the data points used for this `Fit`</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ydata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">)</span> <span class="c">#: the `y` coordinates of the data points used for this `Fit`</span>
-        
+        <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span> <span class="o">=</span> <span class="n">Minuit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">call_external_fcn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_values</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+        <span class="c"># set Minuit&#39;s start parameters and parameter errors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">set_parameter_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_values</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">set_parameter_errors</span><span class="p">()</span>
+
+        <span class="c"># store measurement data locally in Fit object</span>
+        <span class="c">#: the `x` coordinates of the data points used for this `Fit`</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xdata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
+        <span class="c">#: the `y` coordinates of the data points used for this `Fit`</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ydata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">)</span>
+
         <span class="c"># Define a stream for storing the output</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span> <span class="o">=</span> <span class="n">StreamDup</span><span class="p">(</span><span class="s">&#39;fit.log&#39;</span><span class="p">)</span>
-        
+
         <span class="c"># Do the fit (Should the fit be done in __init__?)</span>
         <span class="c">#self.do_fit()</span>
-        
-    
-<div class="viewcode-block" id="Fit.call_external_fcn"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.call_external_fcn">[docs]</a>    <span class="k">def</span> <span class="nf">call_external_fcn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">param_values</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Fit.call_external_fcn"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.call_external_fcn">[docs]</a>    <span class="k">def</span> <span class="nf">call_external_fcn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">parameter_names</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Wrapper for the external `FCN`. Since the actual fit process depends on finding the right parameter</span>
-<span class="sd">        values and keeping everything else constant, we can use the `Dataset` object to pass known, fixed</span>
-<span class="sd">        information to the external `FCN`, varying only the parameter values.</span>
-<span class="sd">        </span>
-<span class="sd">        **param_values** : sequence of values</span>
+<span class="sd">        Wrapper for the external `FCN`. Since the actual fit process depends on</span>
+<span class="sd">        finding the right parameter values and keeping everything else constant</span>
+<span class="sd">        we can use the `Dataset` object to pass known, fixed information to the</span>
+<span class="sd">        external `FCN`, varying only the parameter values.</span>
+
+<span class="sd">        **parameter_names** : sequence of values</span>
 <span class="sd">            the parameter values at which `FCN` is to be evaluated</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
-        
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_fcn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xdata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ydata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_cov_mat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="p">,</span> <span class="n">param_values</span><span class="p">)</span> 
-        </div>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_fcn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xdata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ydata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_cov_mat</span><span class="p">,</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="p">,</span> <span class="n">parameter_names</span><span class="p">)</span>
+</div>
 <div class="viewcode-block" id="Fit.get_current_fit_function"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.get_current_fit_function">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_fit_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        This method returns a function object corresponding to the fit function</span>
-<span class="sd">        for the current parameter values. The returned function is a function of</span>
-<span class="sd">        a single variable.</span>
+<span class="sd">        for the current parameter values. The returned function is a function</span>
+<span class="sd">        of a single variable.</span>
 
 <span class="sd">        returns : function</span>
-<span class="sd">            A function of a single variable corresponding to the fit function at the</span>
-<span class="sd">            current parameter values.</span>
+<span class="sd">            A function of a single variable corresponding to the fit function</span>
+<span class="sd">            at the current parameter values.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        
+
         <span class="k">def</span> <span class="nf">current_fit_function</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">current_param_values</span><span class="p">)</span>
-        
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_values</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">current_fit_function</span>
-    </div>
+</div>
 <div class="viewcode-block" id="Fit.get_error_matrix"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.get_error_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_error_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        This method returns the covariance matrix of the fit parameters which is obtained</span>
-<span class="sd">        by querying the minimizer object for this fit</span>
-<span class="sd">        </span>
+<span class="sd">        This method returns the covariance matrix of the fit parameters which</span>
+<span class="sd">        is obtained by querying the minimizer object for this `Fit`</span>
+
 <span class="sd">        returns : `numpy.matrix`</span>
 <span class="sd">            The covariance matrix of the parameters.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_error_matrix</span><span class="p">()</span>
-    </div>
+</div>
 <div class="viewcode-block" id="Fit.get_parameter_errors"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.get_parameter_errors">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameter_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rounding</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get the current parameter uncertainties from the minimizer.</span>
-<span class="sd">        </span>
+
 <span class="sd">        *rounding* : boolean (optional)</span>
 <span class="sd">            Whether or not to round the returned values to significance.</span>
-<span class="sd">        </span>
+
 <span class="sd">        returns : tuple</span>
 <span class="sd">            A tuple of the parameter uncertainties</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">error</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_parameter_info</span><span class="p">():</span>
-            
+
             <span class="k">if</span> <span class="n">rounding</span><span class="p">:</span>
                 <span class="n">value</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">round_to_significance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
             <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-            
+
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-    </div>
+</div>
 <div class="viewcode-block" id="Fit.get_parameter_values"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.get_parameter_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameter_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rounding</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get the current parameter values from the minimizer.</span>
-<span class="sd">        </span>
+
 <span class="sd">        *rounding* : boolean (optional)</span>
 <span class="sd">            Whether or not to round the returned values to significance.</span>
-<span class="sd">        </span>
+
 <span class="sd">        returns : tuple</span>
 <span class="sd">            A tuple of the parameter values</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        
+
         <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">error</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_parameter_info</span><span class="p">():</span>
-            
+
             <span class="k">if</span> <span class="n">rounding</span><span class="p">:</span>
                 <span class="n">value</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">round_to_significance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
             <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-            
+
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-    </div>
+</div>
+<div class="viewcode-block" id="Fit.set_parameters"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.set_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">set_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Sets the parameter values (and optionally errors) for this fit.</span>
+<span class="sd">        This is usually called just before the fit is done, to establish</span>
+<span class="sd">        the initial parameters. If a parameter error is omitted, it is</span>
+<span class="sd">        set to 1/1000th of the parameter values themselves. If the default</span>
+<span class="sd">        value of the parameter is 0, it is set, by exception, to 0.001.</span>
+
+<span class="sd">        This method accepts up to two positional arguments and several</span>
+<span class="sd">        keyword arguments.</span>
+
+<span class="sd">        *args[0]* : tuple/list of floats (optional)</span>
+<span class="sd">            The first positional argument is expected to be</span>
+<span class="sd">            a tuple/list containing the parameter values.</span>
+
+<span class="sd">        *args[1]* : tuple/list of floats (optional)</span>
+<span class="sd">            The second positional argument is expected to be a</span>
+<span class="sd">            tuple/list of parameter errors, which can also be set as an</span>
+<span class="sd">            approximate estimate of the problem&#39;s uncertainty.</span>
+
+<span class="sd">        *no_warning* : boolean (optional)</span>
+<span class="sd">            Whether to issue warnings (``False``) or not (``True``) when</span>
+<span class="sd">            communicating with the minimizer fails. Defaults to ``False``.</span>
+
+<span class="sd">        Valid keyword argument names are parameter names. The keyword arguments</span>
+<span class="sd">        themselves may be floats (parameter values) or 2-tuples containing the</span>
+<span class="sd">        parameter values and the parameter error in that order:</span>
+
+<span class="sd">        *&lt;parameter_name&gt;* : float or 2-tuple of floats (optional)</span>
+<span class="sd">            Set the parameter with the name &lt;&#39;parameter_name&#39;&gt; to the value</span>
+<span class="sd">            given. If a 2-tuple is given, the first element is understood</span>
+<span class="sd">            to be the value and the second to be the parameter error.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="c"># Process arguments</span>
+
+        <span class="c"># get global keyword argument</span>
+        <span class="n">no_warning</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&quot;no_warning&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">args</span><span class="p">:</span>  <span class="c"># if positional arguents provided</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">par_values</span><span class="p">,</span> <span class="n">par_errors</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">None</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">par_values</span><span class="p">,</span> <span class="n">par_errors</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Error setting parameters. The argument &quot;</span>
+                                <span class="s">&quot;pattern for method `set_parameters` could &quot;</span>
+                                <span class="s">&quot;not be parsed.&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">par_values</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">:</span>
+                <span class="c">#: the current values of the parameters</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">par_values</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot set parameters. Number of given &quot;</span>
+                                <span class="s">&quot;parameters (</span><span class="si">%d</span><span class="s">) doesn&#39;t match the Fit&#39;s &quot;</span>
+                                <span class="s">&quot;parameter number (</span><span class="si">%d</span><span class="s">).&quot;</span>
+                                <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">par_values</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">par_errors</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">par_values</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">:</span>
+                    <span class="c">#: the current uncertainties of the parameters</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_errors</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">par_errors</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot set parameter errors. Number of &quot;</span>
+                                    <span class="s">&quot;given parameter errors (</span><span class="si">%d</span><span class="s">) doesn&#39;t &quot;</span>
+                                    <span class="s">&quot;match the Fit&#39;s parameter number (</span><span class="si">%d</span><span class="s">).&quot;</span>
+                                    <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">par_errors</span><span class="p">),</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c"># TODO: find sensible starting values for parameter errors</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">no_warning</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;Parameter errors not given. Setting to &quot;</span>
+                                <span class="s">&quot;1/1000th of the parameter values.&quot;</span><span class="p">)</span>
+                <span class="c">#: the current uncertainties of the parameters</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_errors</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">val</span><span class="o">/</span><span class="mf">1000.0</span> <span class="k">if</span> <span class="n">val</span> <span class="k">else</span> <span class="mf">0.001</span>
+                    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_values</span>
+                <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c"># if no positional arguments, rely on keywords</span>
+
+            <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">param_spec</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="n">par_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_parameter</span><span class="p">(</span><span class="n">param_name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">par_id</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Cannot set parameter. `</span><span class="si">%s</span><span class="s">` not &quot;</span>
+                                     <span class="s">&quot;a valid ID or parameter name.&quot;</span>
+                                     <span class="o">%</span> <span class="n">param_name</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c"># try to read both parameter value and error</span>
+                    <span class="n">param_val</span><span class="p">,</span> <span class="n">param_err</span> <span class="o">=</span> <span class="n">param_spec</span>
+                <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                    <span class="c"># if param_spec is not iterable, then only value</span>
+                    <span class="c"># was given</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">no_warning</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;Parameter error not given for </span><span class="si">%s</span><span class="s">. &quot;</span>
+                                    <span class="s">&quot;Setting to 1/1000th of the parameter &quot;</span>
+                                    <span class="s">&quot;value given.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">param_name</span><span class="p">,))</span>
+                    <span class="n">param_val</span><span class="p">,</span> <span class="n">param_err</span> <span class="o">=</span> <span class="n">param_spec</span><span class="p">,</span> <span class="n">param_spec</span> <span class="o">*</span> <span class="mf">0.001</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_values</span><span class="p">[</span><span class="n">par_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">param_val</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_errors</span><span class="p">[</span><span class="n">par_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">param_err</span>
+
+        <span class="c"># try to update the minimizer&#39;s parameters</span>
+        <span class="c"># (fails is minimizer not yet initialized)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c"># set Minuit&#39;s start parameters and parameter errors</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">set_parameter_values</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_values</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">set_parameter_errors</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_errors</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">no_warning</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;Failed to set the minimizer&#39;s parameters. &quot;</span>
+                            <span class="s">&quot;Maybe minimizer not initialized for this Fit &quot;</span>
+                            <span class="s">&quot;yet?&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Fit.fix_parameters"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.fix_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">fix_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">parameters_to_fix</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Fix the given parameters so that the minimizer works without them</span>
+<span class="sd">        when `do_fit` is called next. Parameters can be given by their names</span>
+<span class="sd">        or by their IDs.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">parameters_to_fix</span><span class="p">:</span>
+            <span class="c"># turn names into IDs, if needed</span>
+            <span class="n">par_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_parameter</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">par_id</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Cannot fix parameter. `</span><span class="si">%s</span><span class="s">` not &quot;</span>
+                                 <span class="s">&quot;a valid ID or parameter name.&quot;</span>
+                                 <span class="o">%</span> <span class="n">parameter</span><span class="p">)</span>
+
+            <span class="c"># Fix found parameter</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">fix_parameter</span><span class="p">(</span><span class="n">par_id</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Fixed parameter </span><span class="si">%d</span><span class="s"> (</span><span class="si">%s</span><span class="s">)&quot;</span>
+                        <span class="o">%</span> <span class="p">(</span><span class="n">par_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span><span class="p">[</span><span class="n">par_id</span><span class="p">]))</span>
+</div>
+<div class="viewcode-block" id="Fit.release_parameters"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.release_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">release_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">parameters_to_fix</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Release the given parameters so that the minimizer begins to work with</span>
+<span class="sd">        them when `do_fit` is called next. Parameters can be given by their</span>
+<span class="sd">        names or by their IDs. If no arguments are provied, then release all</span>
+<span class="sd">        parameters.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">parameters_to_fix</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">parameters_to_fix</span><span class="p">:</span>
+                <span class="c"># turn names into IDs, if needed</span>
+                <span class="n">par_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_parameter</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">par_id</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Cannot release parameter. `</span><span class="si">%s</span><span class="s">` not &quot;</span>
+                                     <span class="s">&quot;a valid ID or parameter name.&quot;</span>
+                                     <span class="o">%</span> <span class="n">parameter</span><span class="p">)</span>
+
+                <span class="c"># Release found parameter</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">release_parameter</span><span class="p">(</span><span class="n">par_id</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Released parameter </span><span class="si">%d</span><span class="s"> (</span><span class="si">%s</span><span class="s">)&quot;</span>
+                            <span class="o">%</span> <span class="p">(</span><span class="n">par_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span><span class="p">[</span><span class="n">par_id</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># go through all parameter IDs</span>
+            <span class="k">for</span> <span class="n">par_id</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">):</span>
+                <span class="c"># Release parameter</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">release_parameter</span><span class="p">(</span><span class="n">par_id</span><span class="p">)</span>
+
+            <span class="c"># Inform about release</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Released all parameters&quot;</span><span class="p">)</span>
+
+    <span class="c"># Private Methods</span>
+    <span class="c">##################</span>
+</div>
+    <span class="k">def</span> <span class="nf">_find_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lookup_string</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Accepts a parameter&#39;s name or ID and returns its ID. If not found,</span>
+<span class="sd">        returns ``None``.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c"># Try to find the parameter by its ID</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_values</span><span class="p">[</span><span class="n">lookup_string</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="c"># ID invalid. Try to lookup by name.</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">found_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">lookup_string</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">found_id</span> <span class="o">=</span> <span class="n">lookup_string</span>
+
+        <span class="k">return</span> <span class="n">found_id</span>
+
+    <span class="c"># Fit Workflow</span>
+    <span class="c">###############</span>
+
 <div class="viewcode-block" id="Fit.do_fit"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.do_fit">[docs]</a>    <span class="k">def</span> <span class="nf">do_fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Runs the fit algorithm for this `Fit` object.</span>
-<span class="sd">        </span>
-<span class="sd">        First, the `Dataset` is fitted considering only uncertainties in the `y` direction.</span>
-<span class="sd">        If the `Dataset` has no uncertainties in the `y` direction, they are assumed to be </span>
-<span class="sd">        equal to 1.0 for this preliminary fit, as there is no better information available.</span>
-<span class="sd">        </span>
-<span class="sd">        Next, the fit errors in the `x` direction (if they exist) are taken into account by</span>
-<span class="sd">        projecting the covariance matrix for the `x` errors onto the `y` covariance matrix.</span>
-<span class="sd">        This is done by taking the first derivative of the fit function in each point and</span>
-<span class="sd">        &quot;projecting&quot; the `x` error onto the resulting tangent to the curve.</span>
-<span class="sd">        </span>
-<span class="sd">        This last step is repeater until the change in the error matrix caused by the projection</span>
-<span class="sd">        becomes negligible.</span>
-<span class="sd">        </span>
+
+<span class="sd">        First, the `Dataset` is fitted considering only uncertainties in the</span>
+<span class="sd">        `y` direction. If the `Dataset` has no uncertainties in the `y`</span>
+<span class="sd">        direction, they are assumed to be equal to 1.0 for this preliminary</span>
+<span class="sd">        fit, as there is no better information available.</span>
+
+<span class="sd">        Next, the fit errors in the `x` direction (if they exist) are taken</span>
+<span class="sd">        into account by projecting the covariance matrix for the `x` errors</span>
+<span class="sd">        onto the `y` covariance matrix. This is done by taking the first</span>
+<span class="sd">        derivative of the fit function in each point and &quot;projecting&quot; the `x`</span>
+<span class="sd">        error onto the resulting tangent to the curve.</span>
+
+<span class="sd">        This last step is repeater until the change in the error matrix caused</span>
+<span class="sd">        by the projection becomes negligible.</span>
+
 <span class="sd">        *quiet* : boolean (optional)</span>
 <span class="sd">            Set to ``True`` if no output should be printed.</span>
-<span class="sd">            </span>
+
 <span class="sd">        *verbose* : boolean (optional)</span>
 <span class="sd">            Set to ``True`` if more output should be printed.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="c"># insert timestamp</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="o">.</span><span class="n">write_timestamp</span><span class="p">(</span><span class="s">&#39;Fit from&#39;</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
             <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;###########&quot;</span>
             <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;# Dataset #&quot;</span>
             <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;###########&quot;</span>
             <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
             <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_formatted</span><span class="p">()</span>
-            
+
             <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;################&quot;</span>
             <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;# Fit function #&quot;</span>
             <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;################&quot;</span>
             <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
-            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="n">get_function_property</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">)</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">get_function_equation</span><span class="p">(</span>
+                <span class="s">&#39;ascii&#39;</span><span class="p">,</span>
+                <span class="s">&#39;full&#39;</span>
+            <span class="p">)</span>
             <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
-            
-        <span class="n">initial_iterations</span> <span class="o">=</span> <span class="mi">2</span> 
+
+        <span class="n">initial_iterations</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="n">max_x_iterations</span> <span class="o">=</span> <span class="mi">12</span>
-        
+
         <span class="n">iter_nr</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="n">iter_nr</span> <span class="o">&lt;</span> <span class="n">initial_iterations</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Fit iteration </span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">iter_nr</span><span class="p">,))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fit_one_iteration</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span>
             <span class="n">iter_nr</span> <span class="o">+=</span> <span class="mi">1</span>
-            
-            
-        <span class="c"># if the dataset has x errors, project them onto the current error matrix</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Fit iterations done&quot;</span><span class="p">)</span>
+
+        <span class="c"># if the dataset has x errors, project onto the current error matrix</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">has_errors</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">):</span>
-        
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Dataset has `x` errors. Iterating for `x` error.&quot;</span><span class="p">)</span>
             <span class="n">iter_nr</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">while</span> <span class="n">iter_nr</span> <span class="o">&lt;</span> <span class="n">max_x_iterations</span><span class="p">:</span>    
+            <span class="k">while</span> <span class="n">iter_nr</span> <span class="o">&lt;</span> <span class="n">max_x_iterations</span><span class="p">:</span>
                 <span class="n">old_matrix</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_cov_mat</span><span class="p">)</span>
-                
+
                 <span class="bp">self</span><span class="o">.</span><span class="n">project_x_covariance_matrix</span><span class="p">()</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;`x` fit iteration </span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">iter_nr</span><span class="p">,))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">fit_one_iteration</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span>
-                
+
                 <span class="n">new_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_cov_mat</span>
-                
+
                 <span class="c"># if the matrix has not changed in this iteration</span>
+                <span class="c"># (within reasonable tolerance)</span>
                 <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">old_matrix</span><span class="p">,</span> <span class="n">new_matrix</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Matrix for `x` fit iteration has converged.&quot;</span><span class="p">)</span>
                     <span class="k">break</span>   <span class="c"># interrupt iteration</span>
-                
+
                 <span class="n">iter_nr</span> <span class="o">+=</span> <span class="mi">1</span>
-        
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">print_fit_results</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">print_rounded_fit_parameters</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">print_fit_details</span><span class="p">()</span>
-        </div>
+</div>
 <div class="viewcode-block" id="Fit.fit_one_iteration"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.fit_one_iteration">[docs]</a>    <span class="k">def</span> <span class="nf">fit_one_iteration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Instructs the minimizer to do a minimization.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Calling minimizer&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">minimize</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">current_param_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_parameter_values</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">current_param_errors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_parameter_errors</span><span class="p">()</span>
-        
-        <span class="n">par_cov_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_error_matrix</span><span class="p">()</span>
-      </div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Retrieving data from minimizer&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_parameter_values</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_errors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_parameter_errors</span><span class="p">()</span>
+</div>
 <div class="viewcode-block" id="Fit.project_x_covariance_matrix"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.project_x_covariance_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">project_x_covariance_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">r&#39;&#39;&#39;</span>
-<span class="sd">        Project the `x` errors from the `x` covariance matrix onto the total matrix.</span>
-<span class="sd">        </span>
+<span class="sd">        Project the `x` errors from the `x` covariance matrix onto the total</span>
+<span class="sd">        matrix.</span>
+
 <span class="sd">        This is done elementwise, according to the formula:</span>
-<span class="sd">        </span>
+
 <span class="sd">        .. math ::</span>
-<span class="sd">            </span>
-<span class="sd">            C_{\text{tot},ij} = C_{y,ij} + C_{x,ij}  \frac{\partial f}{\partial x_i}  \frac{\partial f}{\partial x_j} </span>
+
+<span class="sd">            C_{\text{tot}, ij} = C_{y, ij} + C_{x, ij}</span>
+<span class="sd">            \frac{\partial f}{\partial x_i}  \frac{\partial f}{\partial x_j}</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        
-        <span class="n">derivative_spacing</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_error_matrix</span><span class="p">())))</span>    <span class="c"># use 1/100th of the smallest parameter error as spacing for df/dp</span>
-        <span class="n">proj_xcov_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_cov_mat</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">))</span> <span class="o">*</span> <span class="n">outer_product</span><span class="p">(</span> <span class="n">derive_by_x</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_param_values</span><span class="p">,</span> <span class="n">derivative_spacing</span><span class="p">)</span> <span class="p">)</span> 
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">current_cov_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_cov_mat</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span><span class="n">proj_xcov_mat</span><span class="p">)</span>
-        
-                
-        <span class="c">##print self.current_cov_mat</span>
-    
+
+        <span class="c"># Log projection (DEBUG)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Projecting `x` covariance matrix.&quot;</span><span class="p">)</span>
+
+        <span class="c"># use 1/100th of the smallest parameter error as spacing for df/dx</span>
+        <span class="n">derivative_spacing</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+            <span class="nb">min</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_cov_mat</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c"># if the derivative spacing is zero</span>
+        <span class="c"># (this shouldn&#39;t happen, but making it larger does no damage)</span>
+        <span class="c"># then set it to 0.001</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">derivative_spacing</span><span class="p">:</span>
+            <span class="n">derivative_spacing</span> <span class="o">=</span> <span class="mf">0.001</span>
+
+        <span class="n">outer_prod</span> <span class="o">=</span> <span class="n">outer_product</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">derive_by_x</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">),</span>
+                                          <span class="n">derivative_spacing</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_values</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">proj_xcov_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_cov_mat</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">))</span> <span class="o">*</span> <span class="n">outer_prod</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_cov_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_cov_mat</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">)</span> <span class="o">+</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span><span class="n">proj_xcov_mat</span><span class="p">)</span>
+
     <span class="c"># Output functions</span>
     <span class="c">###################</span>
-    </div>
+</div>
 <div class="viewcode-block" id="Fit.print_rounded_fit_parameters"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.print_rounded_fit_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">print_rounded_fit_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;prints the fit parameters&#39;&#39;&#39;</span>
-        
+
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;########################&quot;</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;# Final fit parameters #&quot;</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;########################&quot;</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
-        
+
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">error</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_parameter_info</span><span class="p">():</span>
-            
+
             <span class="n">tmp_rounded</span> <span class="o">=</span> <span class="n">round_to_significance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">F_SIGNIFICANCE</span><span class="p">)</span>
-            
-            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> = </span><span class="si">%g</span><span class="s"> +- </span><span class="si">%g</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">tmp_rounded</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tmp_rounded</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        
+
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> = </span><span class="si">%g</span><span class="s"> +- </span><span class="si">%g</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">tmp_rounded</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                        <span class="n">tmp_rounded</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
-    </div>
+</div>
 <div class="viewcode-block" id="Fit.print_fit_details"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.print_fit_details">[docs]</a>    <span class="k">def</span> <span class="nf">print_fit_details</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;prints some fit goodness details&#39;&#39;&#39;</span>
-        
-        <span class="n">chi2prob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_chi2_probability</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">)</span>
+
+        <span class="n">chi2prob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_chi2_probability</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">chi2prob</span> <span class="o">&lt;</span> <span class="n">M_CONFIDENCE_LEVEL</span><span class="p">:</span>
-            <span class="n">hypothesis_status</span> <span class="o">=</span> <span class="s">&#39;rejected (CL </span><span class="si">%d%s</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">M_CONFIDENCE_LEVEL</span><span class="o">*</span><span class="mi">100</span><span class="p">),</span><span class="s">&#39;%&#39;</span><span class="p">)</span>
+            <span class="n">hypothesis_status</span> <span class="o">=</span> <span class="s">&#39;rejected (CL </span><span class="si">%d%s</span><span class="s">)&#39;</span> \
+                <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">M_CONFIDENCE_LEVEL</span><span class="o">*</span><span class="mi">100</span><span class="p">),</span> <span class="s">&#39;%&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">hypothesis_status</span> <span class="o">=</span> <span class="s">&#39;accepted (CL </span><span class="si">%d%s</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">M_CONFIDENCE_LEVEL</span><span class="o">*</span><span class="mi">100</span><span class="p">),</span><span class="s">&#39;%&#39;</span><span class="p">)</span>
-            
+            <span class="n">hypothesis_status</span> <span class="o">=</span> <span class="s">&#39;accepted (CL </span><span class="si">%d%s</span><span class="s">)&#39;</span> \
+                <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">M_CONFIDENCE_LEVEL</span><span class="o">*</span><span class="mi">100</span><span class="p">),</span> <span class="s">&#39;%&#39;</span><span class="p">)</span>
+
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;###############&#39;</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;# Fit details #&quot;</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;###############&quot;</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
-        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;FCN     &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;fcn&#39;</span><span class="p">)</span>
-        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;FCN/ndf &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;fcn&#39;</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">)</span>
-        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;EdM     &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;edm&#39;</span><span class="p">)</span>
-        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;UP      &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;err_def&#39;</span><span class="p">)</span>
-        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;STA     &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;status_code&#39;</span><span class="p">)</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;FCN     &#39;</span><span class="p">,</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;fcn&#39;</span><span class="p">)</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;FCN/ndf &#39;</span><span class="p">,</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;fcn&#39;</span><span class="p">)</span><span class="o">/</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span>
+            <span class="p">)</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;EdM     &#39;</span><span class="p">,</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;edm&#39;</span><span class="p">)</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;UP      &#39;</span><span class="p">,</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;err_def&#39;</span><span class="p">)</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;STA     &#39;</span><span class="p">,</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;status_code&#39;</span><span class="p">)</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;chi2prob&#39;</span><span class="p">,</span> <span class="n">chi2prob</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;H0      &#39;</span><span class="p">,</span> <span class="n">hypothesis_status</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
-        
-        </div>
+</div>
 <div class="viewcode-block" id="Fit.print_fit_results"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.print_fit_results">[docs]</a>    <span class="k">def</span> <span class="nf">print_fit_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;prints fit results&#39;&#39;&#39;</span>
-        
+
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;##############&#39;</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;# Fit result #&#39;</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;##############&#39;</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
-        
+
         <span class="n">par_cov_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_error_matrix</span><span class="p">()</span>
         <span class="n">par_err</span> <span class="o">=</span> <span class="n">extract_statistical_errors</span><span class="p">(</span><span class="n">par_cov_mat</span><span class="p">)</span>
         <span class="n">par_cor_mat</span> <span class="o">=</span> <span class="n">cov_to_cor</span><span class="p">(</span><span class="n">par_cov_mat</span><span class="p">)</span>
-        
-        
-        <span class="k">for</span> <span class="n">par_nr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_param_values</span><span class="p">)):</span>
-            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;# &#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">param_names</span><span class="p">[</span><span class="n">par_nr</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">par_nr</span><span class="p">,</span> <span class="n">par_val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_values</span><span class="p">):</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;# &#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span><span class="p">[</span><span class="n">par_nr</span><span class="p">]</span>
             <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;# value        stat. err.    &#39;</span><span class="p">,</span>
             <span class="k">if</span> <span class="n">par_nr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;correlations&#39;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
-            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_param_values</span><span class="p">[</span><span class="n">par_nr</span><span class="p">],</span> <span class="s">&#39;.06e&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;  &#39;</span><span class="p">,</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="n">format</span><span class="p">(</span><span class="n">par_val</span><span class="p">,</span> <span class="s">&#39;.06e&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;  &#39;</span><span class="p">,</span>
             <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="n">format</span><span class="p">(</span><span class="n">par_err</span><span class="p">[</span><span class="n">par_nr</span><span class="p">],</span> <span class="s">&#39;.06e&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;  &#39;</span><span class="p">,</span>
             <span class="k">if</span> <span class="n">par_nr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">par_nr</span><span class="p">):</span>
-                    <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="n">format</span><span class="p">(</span><span class="n">par_cor_mat</span><span class="p">[</span><span class="n">par_nr</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="s">&#39;.06e&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;  &#39;</span><span class="p">,</span>
-                    
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">par_nr</span><span class="p">):</span>
+                    <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="n">format</span><span class="p">(</span><span class="n">par_cor_mat</span><span class="p">[</span><span class="n">par_nr</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span>
+                                                    <span class="s">&#39;.06e&#39;</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;  &#39;</span><span class="p">,</span>
+
             <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
-            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
-    </div></div>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span></div></div>
 </pre></div>
 
           </div>

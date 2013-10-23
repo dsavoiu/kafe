@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.13 (TeX Live 2013/dev) (format=pdflatex 2013.4.11)  17 OCT 2013 11:41
+This is pdfTeX, Version 3.1415926-2.5-1.40.13 (TeX Live 2013/dev) (format=pdflatex 2013.4.11)  23 OCT 2013 17:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1073,15 +1073,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 232--233
 [25
 
 ])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 2250.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 2250.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 2273.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 2273.
  (./kafe.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 2250.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 2250.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 2273.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 2273.
 
 Package rerunfilecheck Info: File `kafe.out' has not changed.
 (rerunfilecheck)             Checksum: 8A38BCABEA5FC4AC528985A5FBC946B3;252.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 2250.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 2273.
  ) 
 Here is how much of TeX's memory you used:
  9493 strings out of 494714
@@ -1090,7 +1090,7 @@ Here is how much of TeX's memory you used:
  12264 multiletter control sequences out of 15000+200000
  97187 words of font info for 133 fonts, out of 3000000 for 9000
  221 hyphenation exceptions out of 8191
- 41i,18n,45p,577b,542s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 41i,18n,45p,577b,534s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/share/texliv
 e/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}</usr/share/texlive/texmf-dist/fonts/
 type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/
@@ -1111,7 +1111,7 @@ ist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texlive/texmf-dist/fonts/ty
 pe1/urw/palatino/uplb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/pala
 tino/uplbi8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/palatino/uplr8a
 .pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on kafe.pdf (29 pages, 290143 bytes).
+Output written on kafe.pdf (29 pages, 291516 bytes).
 PDF statistics:
  646 PDF objects out of 1000 (max. 8388607)
  588 compressed objects within 6 object streams

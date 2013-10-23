@@ -52,219 +52,355 @@
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">.. module:: function_tools</span>
 <span class="sd">   :platform: Unix</span>
-<span class="sd">   :synopsis: This submodule contains several useful tools for getting information about a function, including the number, names and default values of its parameters and its derivatives with respect to the independent variable or the parameters.</span>
+<span class="sd">   :synopsis: This submodule contains several useful tools for getting</span>
+<span class="sd">   information about a function, including the number, names and default</span>
+<span class="sd">   values of its parameters and its derivatives with respect to the independent</span>
+<span class="sd">   variable or the parameters.</span>
 
 <span class="sd">.. moduleauthor:: Daniel Savoiu &lt;danielsavoiu@gmail.com&gt;</span>
 
 <span class="sd">&#39;&#39;&#39;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>                                  <span class="c"># import NumPy</span>
-<span class="kn">from</span> <span class="nn">scipy.misc</span> <span class="kn">import</span> <span class="n">derivative</span> <span class="k">as</span> <span class="n">scipy_der</span>      <span class="c"># get a numerical derivative calculating function from SciPy</span>
-<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>                               <span class="c"># needed to make shallow copies of objects instead of references</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="c"># get a numerical derivative calculating function from SciPy</span>
+<span class="kn">from</span> <span class="nn">scipy.misc</span> <span class="kn">import</span> <span class="n">derivative</span> <span class="k">as</span> <span class="n">scipy_der</span>
+<span class="kn">from</span> <span class="nn">latex_tools</span> <span class="kn">import</span> <span class="n">ascii_to_latex_math</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">getsourcelines</span>
+
+<span class="c"># import main logger for kafe</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;kafe&#39;</span><span class="p">)</span>
+
+
+<span class="c">##################</span>
+<span class="c"># Useful methods #</span>
+<span class="c">##################</span>
+
 
 <div class="viewcode-block" id="derivative"><a class="viewcode-back" href="../../index.html#kafe.function_tools.derivative">[docs]</a><span class="k">def</span> <span class="nf">derivative</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">derive_by_index</span><span class="p">,</span> <span class="n">variables_tuple</span><span class="p">,</span> <span class="n">derivative_spacing</span><span class="p">):</span>
     <span class="sd">r&#39;&#39;&#39;</span>
-<span class="sd">    Gives :math:`\frac{\partial f}{\partial x_k}` for :math:`f = f(x_0, x_1, \ldots)`. `func` is :math:`f`, `variables_tuple` is :math:`\{x_i\}` and `derive_by_index` is :math:`k`.</span>
+<span class="sd">    Gives :math:`\frac{\partial f}{\partial x_k}` for :math:`f = f(x_0, x_1,</span>
+<span class="sd">    \ldots)`. `func` is :math:`f`, `variables_tuple` is :math:`\{x_i\}` and</span>
+<span class="sd">    `derive_by_index` is :math:`k`.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    
-    <span class="c"># define a dummy function, so that the variable by which f is to be derived is the only variable</span>
+
+    <span class="c"># define a dummy function, so that the variable</span>
+    <span class="c"># by which f is to be derived is the only variable</span>
     <span class="k">def</span> <span class="nf">tmp_func</span><span class="p">(</span><span class="n">derive_by_var</span><span class="p">):</span>
         <span class="n">argument_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">arg_nr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">variables_tuple</span><span class="p">)):</span>
-            <span class="k">if</span> <span class="n">arg_nr</span><span class="o">==</span><span class="n">derive_by_index</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">arg_nr</span><span class="p">,</span> <span class="n">arg_val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">variables_tuple</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">arg_nr</span> <span class="o">==</span> <span class="n">derive_by_index</span><span class="p">:</span>
                 <span class="n">argument_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">derive_by_var</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">argument_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">variables_tuple</span><span class="p">[</span><span class="n">arg_nr</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">argument_list</span><span class="p">)</span>    
-    
+                <span class="n">argument_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arg_val</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">argument_list</span><span class="p">)</span>
+
     <span class="c"># return the derivative of that function</span>
-    <span class="k">return</span> <span class="n">scipy_der</span><span class="p">(</span><span class="n">tmp_func</span><span class="p">,</span> <span class="n">variables_tuple</span><span class="p">[</span><span class="n">derive_by_index</span><span class="p">],</span> <span class="n">dx</span><span class="o">=</span><span class="n">derivative_spacing</span><span class="p">)</span>
-</div>
-<div class="viewcode-block" id="get_function_property"><a class="viewcode-back" href="../../index.html#kafe.function_tools.get_function_property">[docs]</a><span class="k">def</span> <span class="nf">get_function_property</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">prop</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns a specific property of the function. This assumes that the function is defined as</span>
-<span class="sd">    </span>
-<span class="sd">        &gt;&gt;&gt; def func(x, par1=1.0, par2=3.14, par3=2.71, ...): ...</span>
-<span class="sd">    </span>
-<span class="sd">    **func** : function</span>
-<span class="sd">        A function object from which to extract the property.</span>
-<span class="sd">    </span>
-<span class="sd">    **prop** : any of ``&#39;name&#39;``, ``&#39;parameter names&#39;``, ``&#39;parameter defaults&#39;``, ``&#39;number of parameters&#39;``</span>
-<span class="sd">        A string representing a property.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    
-    <span class="k">if</span> <span class="n">prop</span> <span class="o">==</span> <span class="s">&#39;name&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">func</span><span class="o">.</span><span class="n">__name__</span>                    <span class="c"># get the function name from the Python function</span>
-    <span class="k">elif</span> <span class="n">prop</span> <span class="o">==</span> <span class="s">&#39;number of parameters&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">func</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_argcount</span><span class="o">-</span><span class="mi">1</span>     <span class="c"># number of parameters is the argument number - 1</span>
-    <span class="k">elif</span> <span class="n">prop</span> <span class="o">==</span> <span class="s">&#39;parameter names&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">func</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_varnames</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">func</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">]</span>   <span class="c"># get list of parameter names</span>
-    <span class="k">elif</span> <span class="n">prop</span> <span class="o">==</span> <span class="s">&#39;parameter defaults&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">func</span><span class="o">.</span><span class="n">func_defaults</span>               <span class="c"># get list of parameter defaults</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">,</span> <span class="s">&quot;Error: Unknown function property `</span><span class="si">%s</span><span class="s">&#39;.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">prop</span><span class="p">,)</span>
-</div>
-<div class="viewcode-block" id="derive_by_x"><a class="viewcode-back" href="../../index.html#kafe.function_tools.derive_by_x">[docs]</a><span class="k">def</span> <span class="nf">derive_by_x</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x_0</span><span class="p">,</span> <span class="n">param_list</span><span class="p">,</span> <span class="n">derivative_spacing</span><span class="p">):</span>
-    <span class="sd">r&#39;&#39;&#39;</span>
-<span class="sd">    If `x_0` is iterable, gives the array of derivatives of a function :math:`f(x, par_1, par_2, \ldots)`</span>
-<span class="sd">    around :math:`x = x_i` at every :math:`x_i` in :math:`\vec{x}`.</span>
-<span class="sd">    If `x_0` is not iterable, gives the derivative of a function :math:`f(x, par_1, par_2, \ldots)` around :math:`x = \verb!x_0!`.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">iterator_over_x_0</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">x_0</span><span class="p">)</span> <span class="c"># try to get an iterator object</span>
-    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="n">te</span><span class="p">:</span>
-        <span class="c"># object is not iterable, return the derivative in x_0 (float)</span>
-        <span class="k">return</span> <span class="n">scipy_der</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x_0</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">param_list</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">derivative_spacing</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="c"># object is iterable, go through it and derive at each x_0 in it</span>
-        <span class="n">output_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">iterator_over_x_0</span><span class="p">:</span>
-            <span class="n">output_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">derive_by_x</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">param_list</span><span class="p">,</span> <span class="n">derivative_spacing</span><span class="p">))</span> <span class="c"># call recursively</span>
-            
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">output_list</span><span class="p">)</span>
-</div>
-<div class="viewcode-block" id="derive_by_parameters"><a class="viewcode-back" href="../../index.html#kafe.function_tools.derive_by_parameters">[docs]</a><span class="k">def</span> <span class="nf">derive_by_parameters</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x_0</span><span class="p">,</span> <span class="n">param_list</span><span class="p">,</span> <span class="n">derivative_spacing</span><span class="p">):</span>
-    <span class="sd">r&#39;&#39;&#39;</span>
-<span class="sd">    Returns the gradient of `func` with respect to its parameters, i.e. with respect to every variable</span>
-<span class="sd">    of `func` except the first one.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">output_list</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">variables_tuple</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">x_0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">param_list</span><span class="p">))</span>   <span class="c"># compile all function arguments into a variables tuple</span>
-    
-    <span class="k">for</span> <span class="n">derive_by_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">func</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">):</span> <span class="c"># go through all arguments except the first one</span>
-        <span class="n">output_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">derivative</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">derive_by_index</span><span class="p">,</span> <span class="n">variables_tuple</span><span class="p">,</span> <span class="n">derivative_spacing</span><span class="p">))</span>
-    
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">output_list</span><span class="p">)</span>
-    
+    <span class="k">return</span> <span class="n">scipy_der</span><span class="p">(</span><span class="n">tmp_func</span><span class="p">,</span> <span class="n">variables_tuple</span><span class="p">[</span><span class="n">derive_by_index</span><span class="p">],</span>
+                     <span class="n">dx</span><span class="o">=</span><span class="n">derivative_spacing</span><span class="p">)</span>
+
 </div>
 <div class="viewcode-block" id="outer_product"><a class="viewcode-back" href="../../index.html#kafe.function_tools.outer_product">[docs]</a><span class="k">def</span> <span class="nf">outer_product</span><span class="p">(</span><span class="n">input_array</span><span class="p">):</span>
     <span class="sd">r&#39;&#39;&#39;</span>
-<span class="sd">    Takes a `NumPy` array and returns the outer (dyadic, Kronecker) product with itself.</span>
-<span class="sd">    If `input_array` is a vector :math:`\mathbf{x}`, this returns :math:`\mathbf{x}\mathbf{x}^T`.</span>
-<span class="sd">    &#39;&#39;&#39;</span> 
-    <span class="n">la</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_array</span><span class="p">)</span>                                       <span class="c"># get vector size</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">kron</span><span class="p">(</span><span class="n">input_array</span><span class="p">,</span> <span class="n">input_array</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">la</span><span class="p">,</span> <span class="n">la</span><span class="p">)</span>    <span class="c"># return outer product as numpy array</span>
+<span class="sd">    Takes a `NumPy` array and returns the outer (dyadic, Kronecker) product</span>
+<span class="sd">    with itself. If `input_array` is a vector :math:`\mathbf{x}`, this returns</span>
+<span class="sd">    :math:`\mathbf{x}\mathbf{x}^T`.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">la</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_array</span><span class="p">)</span>
+
+    <span class="c"># return outer product as numpy array</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">kron</span><span class="p">(</span><span class="n">input_array</span><span class="p">,</span> <span class="n">input_array</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">la</span><span class="p">,</span> <span class="n">la</span><span class="p">)</span>
+
+<span class="c">##############</span>
+<span class="c"># Decorators #</span>
+<span class="c">##############</span>
+
+
+<span class="c"># Main decorator for fit functions</span></div>
+<div class="viewcode-block" id="FitFunction"><a class="viewcode-back" href="../../index.html#kafe.function_tools.FitFunction">[docs]</a><span class="k">class</span> <span class="nc">FitFunction</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator class for fit functions. If a function definition is decorated</span>
+<span class="sd">    using this class, some information is collected about the function which is</span>
+<span class="sd">    relevant to the fitting process, such as the number of parameters, their</span>
+<span class="sd">    names and default values. Some details pertaining to display and</span>
+<span class="sd">    representation are also set, such as :math:`\LaTeX{}` representations of</span>
+<span class="sd">    the parameter names and the function name. Other decorators can be applied</span>
+<span class="sd">    to a function object to specify things such as a :math:`\LaTeX{}` or</span>
+<span class="sd">    plain-text expression for the fit function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">f</span>
+
+        <span class="c"># Numeric properties of the function</span>
+        <span class="c">#: The number of parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_argcount</span><span class="o">-</span><span class="mi">1</span>
+
+        <span class="c">#: The default values of the parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameter_defaults</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">func_defaults</span>
+
+        <span class="c">#: string object holding the source code for the fit-function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sourcelines</span> <span class="o">=</span> <span class="n">getsourcelines</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>  <span class="c"># (for REALLY explicit docs)</span>
+
+        <span class="c"># String properties in ASCII/plaintext format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">__name__</span>  <span class="c">#: The name of the function</span>
+
+        <span class="c"># Check if all parameters have default values</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameter_defaults</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span>
+                <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameter_defaults</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">(</span><span class="s">&quot;Number of default parameters given for &quot;</span>
+                              <span class="s">&quot;function &lt;</span><span class="si">%s</span><span class="s">&gt; does not match total parameter &quot;</span>
+                              <span class="s">&quot;number. Did you provide default values for all &quot;</span>
+                              <span class="s">&quot;parameters?&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c">#: The names of the parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_varnames</span><span class="p">[</span>
+            <span class="mi">1</span><span class="p">:</span><span class="n">f</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_argcount</span>
+        <span class="p">]</span>
+        <span class="c">#: The name given to the independent variable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_name</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_varnames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c">#: a math expression (string) representing the function&#39;s result</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expression</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="c"># String properties in LaTeX format</span>
+        <span class="c">#: The function&#39;s name in :math:`\LaTeX{}`</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latex_name</span> <span class="o">=</span> <span class="n">ascii_to_latex_math</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="c">#: A list of parameter names in :math:`\LaTeX{}`</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latex_parameter_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">ascii_to_latex_math</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                                      <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span><span class="p">]</span>
+        <span class="c">#: A :math:`\LaTeX{}` symbol for the independent variable.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latex_x_name</span> <span class="o">=</span> <span class="n">ascii_to_latex_math</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_name</span><span class="p">,</span> <span class="n">monospace</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="c">#: a :math:`\LaTeX{}` math expression, the function&#39;s result</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latex_expression</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FitFunction.derive_by_x"><a class="viewcode-back" href="../../index.html#kafe.function_tools.FitFunction.derive_by_x">[docs]</a>    <span class="k">def</span> <span class="nf">derive_by_x</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_0</span><span class="p">,</span> <span class="n">derivative_spacing</span><span class="p">,</span> <span class="n">parameter_list</span><span class="p">):</span>
+        <span class="sd">r&#39;&#39;&#39;</span>
+<span class="sd">        If `x_0` is iterable, gives the array of derivatives of a function</span>
+<span class="sd">        :math:`f(x, par_1, par_2, \ldots)` around :math:`x = x_i` at every</span>
+<span class="sd">        :math:`x_i` in :math:`\vec{x}`. If `x_0` is not iterable, gives the</span>
+<span class="sd">        derivative of a function :math:`f(x, par_1, par_2, \ldots)` around</span>
+<span class="sd">        :math:`x = \verb!x_0!`.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">iterator_over_x_0</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">x_0</span><span class="p">)</span>  <span class="c"># try to get an iterator object</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="c"># object is not iterable, return the derivative in x_0 (float)</span>
+            <span class="k">return</span> <span class="n">scipy_der</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">,</span> <span class="n">x_0</span><span class="p">,</span>
+                             <span class="n">args</span><span class="o">=</span><span class="n">parameter_list</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">derivative_spacing</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># object is iterable, go through it and derive at each x_0 in it</span>
+            <span class="n">output_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">iterator_over_x_0</span><span class="p">:</span>
+                <span class="c"># call recursively</span>
+                <span class="n">output_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">derive_by_x</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">derivative_spacing</span><span class="p">,</span>
+                                     <span class="n">parameter_list</span><span class="p">)</span>
+                <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">output_list</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="FitFunction.derive_by_parameters"><a class="viewcode-back" href="../../index.html#kafe.function_tools.FitFunction.derive_by_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">derive_by_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_0</span><span class="p">,</span> <span class="n">derivative_spacing</span><span class="p">,</span> <span class="n">parameter_list</span><span class="p">):</span>
+        <span class="sd">r&#39;&#39;&#39;</span>
+<span class="sd">        Returns the gradient of `func` with respect to its parameters, i.e.</span>
+<span class="sd">        with respect to every variable of `func` except the first one.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">output_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c"># compile all function arguments into a variables tuple</span>
+        <span class="n">variables_tuple</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">x_0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">))</span>
+
+        <span class="c"># go through all arguments except the first one</span>
+        <span class="k">for</span> <span class="n">derive_by_index</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">):</span>
+            <span class="n">output_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">derivative</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">,</span> <span class="n">derive_by_index</span><span class="p">,</span>
+                           <span class="n">variables_tuple</span><span class="p">,</span> <span class="n">derivative_spacing</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">output_list</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="FitFunction.get_function_equation"><a class="viewcode-back" href="../../index.html#kafe.function_tools.FitFunction.get_function_equation">[docs]</a>    <span class="k">def</span> <span class="nf">get_function_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">equation_format</span><span class="o">=</span><span class="s">&#39;latex&#39;</span><span class="p">,</span>
+                              <span class="n">equation_type</span><span class="o">=</span><span class="s">&#39;full&#39;</span><span class="p">,</span> <span class="n">ensuremath</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="sd">r&#39;&#39;&#39;</span>
+<span class="sd">        Returns a string representing the function equation. Supported formats</span>
+<span class="sd">        are :math:`\LaTeX{}` and ASCII inline math. Note that :math:`\LaTeX{}`</span>
+<span class="sd">        math is wrapped by default in an ``\ensuremath{}`` expression. If this</span>
+<span class="sd">        is not desired behaviour, the flag ``ensuremath`` can be set to</span>
+<span class="sd">        ``False``.</span>
+
+<span class="sd">        *equation_format* : string (optional)</span>
+<span class="sd">            Can be either &quot;latex&quot; (default) or &quot;ascii&quot;.</span>
+
+<span class="sd">        *equation_type* : string (optional)</span>
+<span class="sd">            Can be either &quot;full&quot; (default), &quot;short&quot; or &quot;name&quot;. A &quot;name&quot;-type</span>
+<span class="sd">            equation returns a representation of the function name::</span>
+
+<span class="sd">                f</span>
+
+<span class="sd">            A &quot;short&quot;-type equation limits itself to the function name and</span>
+<span class="sd">            variables::</span>
+
+<span class="sd">                f(x, par1, par2)</span>
+
+<span class="sd">            A &quot;full&quot;-type equation includes the expression which the function</span>
+<span class="sd">            calculates::</span>
+
+<span class="sd">                f(x, par1, par2) = par1 * x + par2</span>
+
+<span class="sd">        *ensuremath* : boolean (optional)</span>
+<span class="sd">            If a :math:`\LaTeX{}` math equation is requested, ``True``</span>
+<span class="sd">            (default) will wrap the resulting expression in an</span>
+<span class="sd">            ``\ensuremath{}`` tag. Otherwise, no wrapping is done.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">if</span> <span class="n">equation_format</span> <span class="o">==</span> <span class="s">&#39;latex&#39;</span><span class="p">:</span>
+            <span class="n">tmp_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latex_name</span><span class="p">,</span> <span class="s">&#39;xname&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latex_x_name</span><span class="p">,</span>
+                        <span class="s">&#39;paramstring&#39;</span><span class="p">:</span> <span class="s">&quot;,\,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">latex_parameter_names</span><span class="p">),</span>
+                        <span class="s">&#39;expr&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latex_expression</span><span class="p">,</span>
+                        <span class="s">&#39;hspc&#39;</span><span class="p">:</span> <span class="s">&quot;</span><span class="se">\\</span><span class="s">,&quot;</span><span class="p">}</span>
+        <span class="k">elif</span> <span class="n">equation_format</span> <span class="o">==</span> <span class="s">&#39;ascii&#39;</span><span class="p">:</span>
+            <span class="n">tmp_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s">&#39;xname&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_name</span><span class="p">,</span>
+                        <span class="s">&#39;paramstring&#39;</span><span class="p">:</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span><span class="p">),</span>
+                        <span class="s">&#39;expr&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">expression</span><span class="p">,</span>
+                        <span class="s">&#39;hspc&#39;</span><span class="p">:</span> <span class="s">&quot; &quot;</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Unknown function equation format: &quot;</span>
+                            <span class="s">&quot;Expected `latex` or `ascii`, got `</span><span class="si">%s</span><span class="s">`&quot;</span>
+                            <span class="o">%</span> <span class="p">(</span><span class="n">equation_format</span><span class="p">,))</span>
+
+        <span class="k">if</span> <span class="n">equation_type</span> <span class="o">==</span> <span class="s">&#39;full&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tmp_dict</span><span class="p">[</span><span class="s">&#39;expr&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">equation_format</span> <span class="o">==</span> <span class="s">&#39;ascii&#39;</span><span class="p">:</span>
+                <span class="n">tmp_dict</span><span class="p">[</span><span class="s">&#39;expr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;&lt;expression not specified&gt;&quot;</span>
+            <span class="k">elif</span> <span class="n">tmp_dict</span><span class="p">[</span><span class="s">&#39;expr&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">equation_format</span> <span class="o">==</span> <span class="s">&#39;latex&#39;</span><span class="p">:</span>
+                <span class="n">tmp_dict</span><span class="p">[</span><span class="s">&#39;expr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;\,?&quot;</span>
+            <span class="k">if</span> <span class="n">equation_format</span> <span class="o">==</span> <span class="s">&#39;latex&#39;</span> <span class="ow">and</span> <span class="n">ensuremath</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s">&quot;</span><span class="se">\\</span><span class="s">ensuremath{</span><span class="si">%(name)s</span><span class="s">(</span><span class="si">%(xname)s</span><span class="s">;</span><span class="si">%(hspc)s</span><span class="s">&quot;</span>\
+                       <span class="s">&quot;</span><span class="si">%(paramstring)s</span><span class="s">) = </span><span class="si">%(expr)s</span><span class="s">}&quot;</span> <span class="o">%</span> <span class="n">tmp_dict</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s">&quot;</span><span class="si">%(name)s</span><span class="s">(</span><span class="si">%(xname)s</span><span class="s">;</span><span class="si">%(hspc)s%(paramstring)s</span><span class="s">) &quot;</span>\
+                       <span class="s">&quot;= </span><span class="si">%(expr)s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">tmp_dict</span>
+        <span class="k">elif</span> <span class="n">equation_type</span> <span class="o">==</span> <span class="s">&#39;short&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">equation_format</span> <span class="o">==</span> <span class="s">&#39;latex&#39;</span> <span class="ow">and</span> <span class="n">ensuremath</span><span class="p">:</span>
+                <span class="k">return</span> \
+                    <span class="s">&quot;</span><span class="se">\\</span><span class="s">ensuremath{</span><span class="si">%(name)s</span><span class="s">(</span><span class="si">%(xname)s</span><span class="s">;</span><span class="si">%(hspc)s</span><span class="s">&quot;</span>\
+                    <span class="s">&quot;</span><span class="si">%(paramstring)s</span><span class="s">)}&quot;</span> <span class="o">%</span> <span class="n">tmp_dict</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s">&quot;</span><span class="si">%(name)s</span><span class="s">(</span><span class="si">%(xname)s</span><span class="s">;</span><span class="si">%(hspc)s%(paramstring)s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="n">tmp_dict</span>
+        <span class="k">elif</span> <span class="n">equation_type</span> <span class="o">==</span> <span class="s">&#39;name&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">equation_format</span> <span class="o">==</span> <span class="s">&#39;latex&#39;</span> <span class="ow">and</span> <span class="n">ensuremath</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s">&quot;</span><span class="se">\\</span><span class="s">ensuremath{</span><span class="si">%(name)s</span><span class="s">}&quot;</span> <span class="o">%</span> <span class="n">tmp_dict</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s">&quot;</span><span class="si">%(name)s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">tmp_dict</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Unknown function equation type: &quot;</span>
+                            <span class="s">&quot;Expected `full`, `short` or `name`, got `</span><span class="si">%s</span><span class="s">`.&quot;</span>
+                            <span class="o">%</span> <span class="p">(</span><span class="n">equation_type</span><span class="p">,))</span>
+
+</div></div>
+<div class="viewcode-block" id="LaTeX"><a class="viewcode-back" href="../../index.html#kafe.function_tools.LaTeX">[docs]</a><span class="k">def</span> <span class="nf">LaTeX</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Optional decorator for fit functions. This overrides a FitFunction&#39;s</span>
+<span class="sd">    `latex_` attributes. The new values for the `latex_` attributes must be</span>
+<span class="sd">    passed as keyword arguments to the decorator. Possible arguments:</span>
+
+<span class="sd">    *name* : string</span>
+<span class="sd">        :math:`\LaTeX{}` representation of the function name.</span>
+
+<span class="sd">    *parameter_names* : list of strings</span>
+<span class="sd">        List of :math:`\LaTeX{}` representations of the function&#39;s arguments.</span>
+<span class="sd">        The length of this list must be equal to the function&#39;s argument</span>
+<span class="sd">        number. The argument names should be in the same order as in the</span>
+<span class="sd">        function definition.</span>
+
+<span class="sd">    *x_name* : string</span>
+<span class="sd">        :math:`\LaTeX{}` representation of the independent variable&#39;s name.</span>
+
+<span class="sd">    *expression* : string</span>
+<span class="sd">        :math:`\LaTeX{}`-formatted expression representing the</span>
+<span class="sd">        function&#39;s formula.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># retrieve values from the dictionary</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">parameter_names</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&quot;parameter_names&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">x_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&quot;x_name&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">expression</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&quot;expression&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;Unknown keyword arguments for decorator LaTeX ignored: </span><span class="si">%r</span><span class="s">&quot;</span>
+                    <span class="o">%</span> <span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">(),))</span>
+
+    <span class="c"># override initial LaTeX-related parameters with the ones provided</span>
+    <span class="k">def</span> <span class="nf">override</span><span class="p">(</span><span class="n">fit_function</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">fit_function</span><span class="o">.</span><span class="n">latex_name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">if</span> <span class="n">parameter_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c"># check if list has the right length</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parameter_names</span><span class="p">)</span> <span class="o">==</span> <span class="n">fit_function</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">:</span>
+                <span class="n">fit_function</span><span class="o">.</span><span class="n">latex_parameter_names</span> <span class="o">=</span> <span class="n">parameter_names</span>
+        <span class="k">if</span> <span class="n">x_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">fit_function</span><span class="o">.</span><span class="n">latex_x_name</span> <span class="o">=</span> <span class="n">x_name</span>
+        <span class="k">if</span> <span class="n">expression</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">fit_function</span><span class="o">.</span><span class="n">latex_expression</span> <span class="o">=</span> <span class="n">expression</span>
+
+        <span class="k">return</span> <span class="n">fit_function</span>
+
+    <span class="k">return</span> <span class="n">override</span>
 
 </div>
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">test_function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">par0</span><span class="o">=</span><span class="mf">3.14</span><span class="p">,</span> <span class="n">par1</span><span class="o">=</span><span class="mf">1.11</span><span class="p">,</span> <span class="n">par2</span><span class="o">=</span><span class="mf">2.71</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">par0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">par1</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">par2</span>
-    
-    <span class="k">def</span> <span class="nf">test_function_grad</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">par0</span><span class="o">=</span><span class="mf">3.14</span><span class="p">,</span> <span class="n">par1</span><span class="o">=</span><span class="mf">1.11</span><span class="p">,</span> <span class="n">par2</span><span class="o">=</span><span class="mf">2.71</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span>
-                 <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">par0</span><span class="p">)</span> <span class="o">-</span> <span class="n">par1</span><span class="p">,</span> <span class="c"># derivative by x</span>
-                <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">par0</span><span class="p">),</span>        <span class="c"># derivative by par0</span>
-                <span class="o">-</span><span class="n">x</span><span class="p">,</span>                     <span class="c"># derivative by par1</span>
-                <span class="mi">1</span><span class="p">)</span>                      <span class="c"># derivative by par2</span>
+<div class="viewcode-block" id="ASCII"><a class="viewcode-back" href="../../index.html#kafe.function_tools.ASCII">[docs]</a><span class="k">def</span> <span class="nf">ASCII</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Optional decorator for fit functions. This overrides a FitFunction&#39;s</span>
+<span class="sd">    plain-text (ASCII) attributes. The new values for these attributes must be</span>
+<span class="sd">    passed as keyword arguments to the decorator. Possible arguments:</span>
 
-        
-    <span class="n">x_array</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">]</span>
-    
-    <span class="k">print</span> <span class="s">&#39;    df/dx|x=0 : &#39;</span><span class="p">,</span> <span class="n">derive_by_x</span><span class="p">(</span><span class="n">test_function</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
-    <span class="k">print</span> <span class="s">&#39;df/dx_vec|x=0..3 : &#39;</span><span class="p">,</span> <span class="n">derive_by_x</span><span class="p">(</span><span class="n">test_function</span><span class="p">,</span> <span class="n">x_array</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
-    
-    <span class="c">#print outer_product(derive_by_x(test_function, x_array, (1,-1,0)))</span>
-    
-    <span class="k">print</span> <span class="n">outer_product</span><span class="p">(</span><span class="n">derive_by_parameters</span><span class="p">(</span><span class="n">test_function</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)))</span>
+<span class="sd">    *name* : string</span>
+<span class="sd">        Plain-text representation of the function name.</span>
 
+<span class="sd">    *parameter_names* : list of strings</span>
+<span class="sd">        List of plain-text representations of the function&#39;s arguments.</span>
+<span class="sd">        The length of this list must be equal to the function&#39;s argument</span>
+<span class="sd">        number. The argument names should be in the same order as in the</span>
+<span class="sd">        function definition.</span>
 
+<span class="sd">    *x_name* : string</span>
+<span class="sd">        Plain-text representation of the independent variable&#39;s name.</span>
 
-<span class="c"># class Function:</span>
-<span class="c">#     &#39;&#39;&#39;A class representing a 1D function on the reals.&#39;&#39;&#39;</span>
-<span class="c"># </span>
-<span class="c">#     def __init__(self, function_pointer):</span>
-<span class="c">#         &#39;&#39;&#39;</span>
-<span class="c">#             Construct the Function object. Arguments:</span>
-<span class="c">#             </span>
-<span class="c">#                 function_pointer:    the Python function to be used as a 1D function on the reals.</span>
-<span class="c">#             </span>
-<span class="c">#             It is assumed that the first argument of this function is the indenpendent variable.</span>
-<span class="c">#             All other arguments are parameters. These MUST have a default value.</span>
-<span class="c">#         &#39;&#39;&#39;</span>
-<span class="c">#         </span>
-<span class="c">#         self.function_pointer = function_pointer    # get the Python function</span>
-<span class="c">#         </span>
-<span class="c">#         # magic: use the Python function object to extract some info about the function</span>
-<span class="c">#         self.name = self.function_pointer.__name__                                  # get the function name from the Python function</span>
-<span class="c">#         self.number_of_parameters = self.function_pointer.func_code.co_argcount-1   # number of parameters is the argument number - 1</span>
-<span class="c">#         self.parameters = self.function_pointer.func_code.co_varnames[1:self.number_of_parameters+1] # get list of parameter names</span>
-<span class="c">#         self.parameter_defaults = self.function_pointer.func_defaults               # get list of parameter defaults</span>
-<span class="c">#         </span>
-<span class="c">#         # verify that each parameter has a default value and fail if this is not the case</span>
-<span class="c">#         if len(self.parameters) != len(self.parameter_defaults):</span>
-<span class="c">#             raise SyntaxError, &#39;One ore more default parameter values not specified for function %s&#39; % (self.name,)</span>
-<span class="c">#         </span>
-<span class="c">#     def __call__(self, *args, **kwargs):</span>
-<span class="c">#         &#39;&#39;&#39;Call the function object. This just forwards the call to the original Python function.&#39;&#39;&#39;</span>
-<span class="c">#         return self.function_pointer(*args, **kwargs)</span>
-<span class="c">#     </span>
-<span class="c">#     def elementwise(self, x_array, *args, **kwargs):</span>
-<span class="c">#         &#39;&#39;&#39;Call the function for every element of x_array and return an array of results.&#39;&#39;&#39;</span>
-<span class="c">#         output_list = []</span>
-<span class="c">#         for x in x_array:</span>
-<span class="c">#             output_list.append(self.__call__(x, *args, **kwargs))</span>
-<span class="c">#         return np.array(output_list)</span>
-<span class="c">#     </span>
-<span class="c">#     def derivatives(self, x_array, *args):</span>
-<span class="c">#         &#39;&#39;&#39;Get the derivative of the function at every point in x_array and return an array of results.&#39;&#39;&#39;</span>
-<span class="c">#         output_list = []</span>
-<span class="c">#         for x in x_array:</span>
-<span class="c">#             tmp_arg_list = [x] + list(args) # add the x as &quot;zeroth variable&quot;</span>
-<span class="c">#             output_list.append(derivative(self.function_pointer, 0, tmp_arg_list)) # get the derivative in this zeroth (independent) variable</span>
-<span class="c">#         return np.array(output_list)</span>
-<span class="c"># </span>
-<span class="c">#     def derivatives_by_parameters(self, x_0, *args):</span>
-<span class="c">#         &#39;&#39;&#39;Return an array of derivatives df/dp_i (p_i runs through parameters) at a certain point x_0&#39;&#39;&#39;</span>
-<span class="c">#         output_list = []</span>
-<span class="c">#         tmp_arg_list = [x_0] + list(args) # add the x as &quot;zeroth variable&quot;</span>
-<span class="c">#         for arg_index in range(1, len(args) + 1):</span>
-<span class="c">#             output_list.append(derivative(self.function_pointer, arg_index, tmp_arg_list)) # get the derivatives in the arguments</span>
-<span class="c">#         return np.array(output_list)</span>
-<span class="c">#         </span>
-<span class="c">#     def derivatives_outer_product(self, x_array, *args):</span>
-<span class="c">#         &#39;&#39;&#39;Returns a matrix A for which A[i][j] = f&#39;(x[i])*f&#39;(x[j])&#39;&#39;&#39;</span>
-<span class="c">#         fp = self.derivatives(x_array, *args)   # calculate the derivative vector</span>
-<span class="c">#         la = len(x_array)                       # get vector size</span>
-<span class="c">#         return np.kron(fp,fp).reshape(la, la)   # return outer product as numpy array</span>
-<span class="c">#     </span>
-<span class="c">#     def derivatives_by_parameters_outer_product(self, x_0, *args):</span>
-<span class="c">#         &#39;&#39;&#39;Returns a matrix A for which A[i][j] = df/dp_i * df/dp_j at a point x_0&#39;&#39;&#39;</span>
-<span class="c">#         fp = self.derivatives_by_parameters(x_0, *args) # calculate the derivative vector</span>
-<span class="c">#         la = len(args) # get vector size</span>
-<span class="c">#         return np.kron(fp,fp).reshape(la, la)           # return outer product as numpy array</span>
+<span class="sd">    *expression* : string</span>
+<span class="sd">        Plain-text-formatted expression representing the</span>
+<span class="sd">        function&#39;s formula.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="c"># retrieve values from the dictionary</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">parameter_names</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&quot;parameter_names&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">x_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&quot;x_name&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">expression</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&quot;expression&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">myf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
-        <span class="n">latex</span> <span class="o">=</span> <span class="s">&#39;x^2 + y^3 - y z + x z^2&#39;</span>
-        <span class="k">return</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">y</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">z</span><span class="o">**</span><span class="mi">2</span>
-    
-        <span class="c"># df/dx =  2x + z^2</span>
-        <span class="c"># df/dy =  2y - z</span>
-        <span class="c"># df/dz = 2zx - y</span>
- 
-    <span class="k">def</span> <span class="nf">function_info</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
-  
-        <span class="n">y_code</span> <span class="o">=</span> \
-        <span class="n">y</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_nlocals</span><span class="p">,</span> \
-        <span class="n">y</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_stacksize</span><span class="p">,</span> \
-        <span class="n">y</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_flags</span><span class="p">,</span> \
-        <span class="n">y</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_code</span><span class="p">,</span> \
-        <span class="n">y</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_consts</span><span class="p">,</span> \
-        <span class="n">y</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_names</span><span class="p">,</span> \
-        <span class="n">y</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_varnames</span><span class="p">,</span> \
-        <span class="n">y</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_filename</span><span class="p">,</span> \
-        <span class="n">y</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_firstlineno</span><span class="p">,</span> \
-        <span class="n">y</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_lnotab</span>
- 
-        <span class="k">print</span> <span class="n">y_code</span>
-         
-    <span class="c">#print get_function_property(myf, &#39;latex&#39;)</span>
-    <span class="n">function_info</span><span class="p">(</span><span class="n">myf</span><span class="p">)</span>
-    
-    
+    <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;Unknown keyword arguments for decorator ASCII ignored: </span><span class="si">%r</span><span class="s">&quot;</span>
+                    <span class="o">%</span> <span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">(),))</span>
+
+    <span class="c"># override initial LaTeX-related parameters with the ones provided</span>
+    <span class="k">def</span> <span class="nf">override</span><span class="p">(</span><span class="n">fit_function</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">fit_function</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">if</span> <span class="n">parameter_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c"># check if list has the right length</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parameter_names</span><span class="p">)</span> <span class="o">==</span> <span class="n">fit_function</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">:</span>
+                <span class="n">fit_function</span><span class="o">.</span><span class="n">parameter_names</span> <span class="o">=</span> <span class="n">parameter_names</span>
+        <span class="k">if</span> <span class="n">x_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">fit_function</span><span class="o">.</span><span class="n">x_name</span> <span class="o">=</span> <span class="n">x_name</span>
+        <span class="k">if</span> <span class="n">expression</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">fit_function</span><span class="o">.</span><span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span>
+
+        <span class="k">return</span> <span class="n">fit_function</span>
+
+    <span class="k">return</span> <span class="n">override</span></div>
 </pre></div>
 
           </div>

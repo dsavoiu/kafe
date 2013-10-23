@@ -52,421 +52,518 @@
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">.. module:: minuit</span>
 <span class="sd">   :platform: Unix</span>
-<span class="sd">   :synopsis: A submodule providing the `Minuit` object, which communicates with CERN *ROOT*&#39;s function minimizer *Minuit*.</span>
-<span class="sd">   </span>
+<span class="sd">   :synopsis: A submodule providing the `Minuit` object, which communicates</span>
+<span class="sd">        with CERN *ROOT*&#39;s function minimizer *Minuit*.</span>
+
 <span class="sd">.. moduleauthor:: Daniel Savoiu &lt;danielsavoiu@gmail.com&gt;</span>
 <span class="sd">&#39;&#39;&#39;</span>
 
-<span class="kn">from</span> <span class="nn">ROOT</span> <span class="kn">import</span> <span class="n">gROOT</span><span class="p">,</span> <span class="n">TMinuit</span><span class="p">,</span> <span class="n">Double</span><span class="p">,</span> <span class="n">Long</span> <span class="c"># ROOT&#39;s data types needed to use TMinuit</span>
+<span class="c"># ROOT&#39;s data types needed to use TMinuit:</span>
+<span class="kn">from</span> <span class="nn">ROOT</span> <span class="kn">import</span> <span class="n">TMinuit</span><span class="p">,</span> <span class="n">Double</span><span class="p">,</span> <span class="n">Long</span>
 <span class="kn">from</span> <span class="nn">ROOT</span> <span class="kn">import</span> <span class="n">TMath</span>  <span class="c"># for uning ROOT&#39;s chi2prob function</span>
-<span class="kn">from</span> <span class="nn">array</span> <span class="kn">import</span> <span class="n">array</span> <span class="k">as</span> <span class="n">arr</span> <span class="c"># array needed for TMinuit arguments</span>
-<span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">array</span> <span class="kn">import</span> <span class="n">array</span> <span class="k">as</span> <span class="n">arr</span>  <span class="c"># array needed for TMinuit arguments</span>
+
+<span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="n">M_MAX_ITERATIONS</span><span class="p">,</span> <span class="n">M_TOLERANCE</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">gmtime</span><span class="p">,</span> <span class="n">strftime</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
-<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">gmtime</span><span class="p">,</span> <span class="n">strftime</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c"># import main logger for kafe</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;kafe&#39;</span><span class="p">)</span>
 
 <span class="c"># Constants</span>
 <span class="c">############</span>
 
 <span class="c"># And define some constants to pass to TMinuit functions</span>
-<span class="n">P_DETAIL_LEVEL</span> <span class="o">=</span> <span class="mi">1</span>          <span class="c"># default level of detail for TMinuit&#39;s output (typical range: -1 to 3, default: 1)</span>
-
+<span class="n">P_DETAIL_LEVEL</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="sd">&quot;&quot;&quot;default level of detail for TMinuit&#39;s output</span>
+<span class="sd">(typical range: -1 to 3, default: 1)&quot;&quot;&quot;</span>
 
 <span class="c"># dictionary lookup for error codes</span>
-<span class="n">D_MATRIX_ERROR</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span> <span class="p">:</span> <span class="s">&quot;Error matrix not calculated&quot;</span><span class="p">,</span>
-                  <span class="mi">1</span> <span class="p">:</span> <span class="s">&quot;Error matrix approximate!&quot;</span><span class="p">,</span>
-                  <span class="mi">2</span> <span class="p">:</span> <span class="s">&quot;Error matrix forced positive definite!&quot;</span><span class="p">,</span>
-                  <span class="mi">3</span> <span class="p">:</span> <span class="s">&quot;Error matrix accurate&quot;</span> <span class="p">}</span> <span class="c">#: Error matrix status codes</span>
+<span class="n">D_MATRIX_ERROR</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s">&quot;Error matrix not calculated&quot;</span><span class="p">,</span>
+                  <span class="mi">1</span><span class="p">:</span> <span class="s">&quot;Error matrix approximate!&quot;</span><span class="p">,</span>
+                  <span class="mi">2</span><span class="p">:</span> <span class="s">&quot;Error matrix forced positive definite!&quot;</span><span class="p">,</span>
+                  <span class="mi">3</span><span class="p">:</span> <span class="s">&quot;Error matrix accurate&quot;</span><span class="p">}</span>  <span class="c">#: Error matrix status codes</span>
+
 
 <div class="viewcode-block" id="Minuit"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit">[docs]</a><span class="k">class</span> <span class="nc">Minuit</span><span class="p">:</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    A class for communicating with ROOT&#39;s function minimizer tool Minuit.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number_of_parameters</span><span class="p">,</span> <span class="n">function_to_minimize</span><span class="p">,</span> <span class="n">par_names</span><span class="p">,</span> <span class="n">start_params</span><span class="p">,</span> <span class="n">param_errors</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span> <span class="c"># number_of_parameters, </span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number_of_parameters</span><span class="p">,</span> <span class="n">function_to_minimize</span><span class="p">,</span>
+                 <span class="n">parameter_names</span><span class="p">,</span> <span class="n">start_parameters</span><span class="p">,</span> <span class="n">parameter_errors</span><span class="p">,</span>
+                 <span class="n">quiet</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Create a Minuit minimizer for a function `function_to_minimize`. Necessary arguments are [the </span>
-<span class="sd">        number of parameters and] the function to be minimized `function_to_minimize`. The function</span>
-<span class="sd">        `function_to_minimize`&#39;s arguments must be numerical values. The same goes for its output.</span>
-<span class="sd">        </span>
-<span class="sd">        Another requirement is for every parameter of `function_to_minimize` to have a default value.</span>
-<span class="sd">        These are then used to initialize Minuit. </span>
-<span class="sd">        </span>
-<span class="sd">        **number_of_parameters** : int </span>
+<span class="sd">        Create a Minuit minimizer for a function `function_to_minimize`.</span>
+<span class="sd">        Necessary arguments are the number of parameters and the function to be</span>
+<span class="sd">        minimized `function_to_minimize`. The function `function_to_minimize`&#39;s</span>
+<span class="sd">        arguments must be numerical values. The same goes for its output.</span>
+
+<span class="sd">        Another requirement is for every parameter of `function_to_minimize` to</span>
+<span class="sd">        have a default value. These are then used to initialize Minuit.</span>
+
+<span class="sd">        **number_of_parameters** : int</span>
 <span class="sd">            The number of parameters of the function to minimize.</span>
-<span class="sd">        </span>
+
 <span class="sd">        **function_to_minimize** : function</span>
-<span class="sd">            The function which `Minuit` should minimize. This must be a Python function with &lt;``number_of_parameters``&gt; arguments.</span>
-<span class="sd">        </span>
-<span class="sd">        **par_names** : tuple/list of strings</span>
-<span class="sd">            The parameter names. These are used to keep track of the parameters in `Minuit`&#39;s output.</span>
-<span class="sd">            </span>
-<span class="sd">        **start_params** : tuple/list of floats</span>
-<span class="sd">            The start values of the parameters. It is important to have a good, if rough, estimate of</span>
-<span class="sd">            the parameters at the minimum before starting the minimization. Wrong initial parameters can</span>
-<span class="sd">            yield a local minimum instead of a global one.</span>
-<span class="sd">            </span>
-<span class="sd">        **param_errors** : tuple/list of floats</span>
-<span class="sd">            An initial guess of the parameter errors. These errors are used to define the initial step size.</span>
-<span class="sd">            </span>
+<span class="sd">            The function which `Minuit` should minimize. This must be a Python</span>
+<span class="sd">            function with &lt;``number_of_parameters``&gt; arguments.</span>
+
+<span class="sd">        **parameter_names** : tuple/list of strings</span>
+<span class="sd">            The parameter names. These are used to keep track of the parameters</span>
+<span class="sd">            in `Minuit`&#39;s output.</span>
+
+<span class="sd">        **start_parameters** : tuple/list of floats</span>
+<span class="sd">            The start values of the parameters. It is important to have a good,</span>
+<span class="sd">            if rough, estimate of the parameters at the minimum before starting</span>
+<span class="sd">            the minimization. Wrong initial parameters can yield a local</span>
+<span class="sd">            minimum instead of a global one.</span>
+
+<span class="sd">        **parameter_errors** : tuple/list of floats</span>
+<span class="sd">            An initial guess of the parameter errors. These errors are used to</span>
+<span class="sd">            define the initial step size.</span>
+
 <span class="sd">        *quiet* : boolean (optional, default: ``True``)</span>
 <span class="sd">            If ``True``, suppresses all output from ``TMinuit``.</span>
-<span class="sd">            </span>
+
 <span class="sd">        *verbose* : boolean (optional, default: ``False``)</span>
-<span class="sd">            If ``True``, sets ``TMinuit``&#39;s print level to a high value, so that all output is logged.</span>
-<span class="sd">            </span>
+<span class="sd">            If ``True``, sets ``TMinuit``&#39;s print level to a high value, so</span>
+<span class="sd">            that all output is logged.</span>
+
 <span class="sd">        &#39;&#39;&#39;</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">function_to_minimize</span> <span class="o">=</span> <span class="n">function_to_minimize</span>      <span class="c">#: the actual `FCN` called in ``FCN_wrapper``</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span> <span class="o">=</span> <span class="n">number_of_parameters</span>      <span class="c">#: number of parameters to minimize for</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span> <span class="s">&quot;minuit.log&quot;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">)</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span> <span class="o">=</span> <span class="n">TMinuit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">)</span>   <span class="c"># create a TMinuit instance for that number of parameters</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">SetFCN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FCN_wrapper</span><span class="p">)</span>               <span class="c"># instruct Minuit to use this class&#39;s FCN_wrapper method as a FCN</span>
-        
+        <span class="c">#: the actual `FCN` called in ``FCN_wrapper``</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">function_to_minimize</span> <span class="o">=</span> <span class="n">function_to_minimize</span>
+
+        <span class="c">#: number of parameters to minimize for</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span> <span class="o">=</span> <span class="n">number_of_parameters</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;minuit.log&quot;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">)</span>
+
+        <span class="c"># create a TMinuit instance for that number of parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span> <span class="o">=</span> <span class="n">TMinuit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">)</span>
+
+        <span class="c"># instruct Minuit to use this class&#39;s FCN_wrapper method as a FCN</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">SetFCN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FCN_wrapper</span><span class="p">)</span>
+
         <span class="c"># set print level according to flag</span>
         <span class="k">if</span> <span class="n">quiet</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_print_level</span><span class="p">(</span><span class="o">-</span><span class="mi">1000</span><span class="p">)</span> <span class="c"># suppress output</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_print_level</span><span class="p">(</span><span class="o">-</span><span class="mi">1000</span><span class="p">)</span>  <span class="c"># suppress output</span>
         <span class="k">elif</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_print_level</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>    <span class="c"># detailed output</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_print_level</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>     <span class="c"># detailed output</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_print_level</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>     <span class="c"># frugal output</span>
-            
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_print_level</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>      <span class="c"># frugal output</span>
+
+        <span class="c"># initialize minimizer</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_err</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_strategy</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_parameter_values</span><span class="p">(</span><span class="n">start_params</span><span class="p">)</span>                                                             <span class="c"># set the current parameter values</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_parameter_errors</span><span class="p">(</span><span class="n">param_errors</span><span class="p">)</span>                                                             <span class="c"># set the current parameter errorss</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_parameter_names</span><span class="p">(</span><span class="n">par_names</span><span class="p">)</span>
-        
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_parameter_values</span><span class="p">(</span><span class="n">start_parameters</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_parameter_errors</span><span class="p">(</span><span class="n">parameter_errors</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_parameter_names</span><span class="p">(</span><span class="n">parameter_names</span><span class="p">)</span>
+
+        <span class="c">#: maximum number of iterations until ``TMinuit`` gives up</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span> <span class="o">=</span> <span class="n">M_MAX_ITERATIONS</span>
+
+        <span class="c">#: ``TMinuit`` tolerance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span> <span class="o">=</span> <span class="n">M_TOLERANCE</span>
+
+<div class="viewcode-block" id="Minuit.update_parameter_data"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.update_parameter_data">[docs]</a>    <span class="k">def</span> <span class="nf">update_parameter_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_warnings</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        (Re-)Sets the parameter names, values and step size on the</span>
+<span class="sd">        C++ side of Minuit.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">error_code</span> <span class="o">=</span> <span class="n">Long</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="c"># Set up the starting fit parameters in TMinuit</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnparm</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_parameters</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_errors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span>
-            <span class="c"># use 10% of the parameter 1-sigma errors as the initial step size</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span> <span class="o">=</span> <span class="n">M_MAX_ITERATIONS</span>  <span class="c">#: maximum number of iterations until ``TMinuit`` gives up</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span> <span class="o">=</span> <span class="n">M_TOLERANCE</span>        <span class="c">#: ``TMinuit`` tolerance</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c"># Set up the starting fit parameters in TMinuit</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnparm</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">current_parameters</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                      <span class="mf">0.1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_errors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                      <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span>
+                <span class="c"># use 10% of the par. 1-sigma errors as the initial step size</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">show_warnings</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;Cannot update Minuit data on the C++ side. &quot;</span>
+                            <span class="s">&quot;AttributeError: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="p">))</span>
+        <span class="k">return</span> <span class="n">error_code</span>
 
     <span class="c"># Set methods</span>
     <span class="c">##############</span>
-    
+</div>
 <div class="viewcode-block" id="Minuit.set_print_level"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.set_print_level">[docs]</a>    <span class="k">def</span> <span class="nf">set_print_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">print_level</span><span class="o">=</span><span class="n">P_DETAIL_LEVEL</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Sets the print level for Minuit.</span>
-<span class="sd">        </span>
+
 <span class="sd">        *print_level* : int (optional, default: 1 (frugal output))</span>
-<span class="sd">            Tells ``TMinuit`` how much output to generate. The higher this value, the</span>
-<span class="sd">            more output it generates.</span>
+<span class="sd">            Tells ``TMinuit`` how much output to generate. The higher this</span>
+<span class="sd">            value, the more output it generates.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">SetPrintLevel</span><span class="p">(</span><span class="n">print_level</span><span class="p">)</span> <span class="c"># set Minuit print level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">SetPrintLevel</span><span class="p">(</span><span class="n">print_level</span><span class="p">)</span>  <span class="c"># set Minuit print level</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">print_level</span> <span class="o">=</span> <span class="n">print_level</span>
-        </div>
+</div>
 <div class="viewcode-block" id="Minuit.set_strategy"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.set_strategy">[docs]</a>    <span class="k">def</span> <span class="nf">set_strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strategy_id</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Sets the strategy Minuit.</span>
-<span class="sd">        </span>
+
 <span class="sd">        *strategy_id* : int (optional, default: 1 (optimized))</span>
 <span class="sd">            Tells ``TMinuit`` to use a certain strategy. Refer to ``TMinuit``&#39;s</span>
 <span class="sd">            documentation for available strategies.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">error_code</span> <span class="o">=</span> <span class="n">Long</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnexcm</span><span class="p">(</span><span class="s">&quot;SET STRATEGY&quot;</span><span class="p">,</span> <span class="n">arr</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">strategy_id</span><span class="p">]),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span> <span class="c"># execute SET STRATEGY command</span>
-    </div>
+        <span class="c"># execute SET STRATEGY command</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnexcm</span><span class="p">(</span><span class="s">&quot;SET STRATEGY&quot;</span><span class="p">,</span>
+                              <span class="n">arr</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">strategy_id</span><span class="p">]),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span>
+</div>
 <div class="viewcode-block" id="Minuit.set_err"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.set_err">[docs]</a>    <span class="k">def</span> <span class="nf">set_err</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">up_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Sets the ``UP`` value for Minuit.</span>
-<span class="sd">        </span>
+
 <span class="sd">        *up_value* : float (optional, default: 1.0)</span>
 <span class="sd">            This is the value by which `FCN` is expected to change.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c"># Tell TMinuit to use an up-value of 1.0</span>
         <span class="n">error_code</span> <span class="o">=</span> <span class="n">Long</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnexcm</span><span class="p">(</span><span class="s">&quot;SET ERR&quot;</span><span class="p">,</span> <span class="n">arr</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">up_value</span><span class="p">]),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span> <span class="c"># execute SET ERR command</span>
-    
-        </div>
-<div class="viewcode-block" id="Minuit.set_parameter_values"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.set_parameter_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_parameter_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_values</span><span class="p">):</span> <span class="c">#=None):</span>
-        <span class="sd">&#39;&#39;&#39;Sets the fit parameters. If param_values=`None`, tries to infer defaults from the function_to_minimize.&#39;&#39;&#39;</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_values</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">current_parameters</span> <span class="o">=</span> <span class="n">param_values</span>
+        <span class="c"># execute SET ERR command</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnexcm</span><span class="p">(</span><span class="s">&quot;SET ERR&quot;</span><span class="p">,</span> <span class="n">arr</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">up_value</span><span class="p">]),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minuit.set_parameter_values"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.set_parameter_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_parameter_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter_values</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Sets the fit parameters. If parameter_values=`None`, tries to infer</span>
+<span class="sd">        defaults from the function_to_minimize.&#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parameter_values</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_parameters</span> <span class="o">=</span> <span class="n">parameter_values</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">,</span> <span class="s">&quot;Cannot get default parameter values from the FCN. Not all parameters have default values given.&quot;</span>
-        </div>
-<div class="viewcode-block" id="Minuit.set_parameter_names"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.set_parameter_names">[docs]</a>    <span class="k">def</span> <span class="nf">set_parameter_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_names</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Sets the fit parameters. If param_values=`None`, tries to infer defaults from the function_to_minimize.&#39;&#39;&#39;</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_names</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span> <span class="o">=</span> <span class="n">param_names</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot get default parameter values from the </span><span class="se">\</span>
+<span class="s">            FCN. Not all parameters have default values given.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_parameter_data</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Minuit.set_parameter_names"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.set_parameter_names">[docs]</a>    <span class="k">def</span> <span class="nf">set_parameter_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter_names</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Sets the fit parameters. If parameter_values=`None`, tries to infer</span>
+<span class="sd">        defaults from the function_to_minimize.&#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parameter_names</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span> <span class="o">=</span> <span class="n">parameter_names</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">,</span> <span class="s">&quot;Cannot set param names. Tuple length mismatch.&quot;</span>    
-    </div>
-<div class="viewcode-block" id="Minuit.set_parameter_errors"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.set_parameter_errors">[docs]</a>    <span class="k">def</span> <span class="nf">set_parameter_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_errors</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Sets the fit parameter errors. If param_values=`None`, sets the error to 1% of the parameter value.&#39;&#39;&#39;</span>
-    
-        <span class="k">if</span> <span class="n">param_errors</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span> <span class="c"># set to 1% of the parameter value</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot set param names. Tuple length mismatch.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_parameter_data</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Minuit.set_parameter_errors"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.set_parameter_errors">[docs]</a>    <span class="k">def</span> <span class="nf">set_parameter_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter_errors</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Sets the fit parameter errors. If parameter_values=`None`, sets the</span>
+<span class="sd">        error to 1% of the parameter value.&#39;&#39;&#39;</span>
+
+        <span class="k">if</span> <span class="n">parameter_errors</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>  <span class="c"># set to 0.1% of the parameter value</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_parameters</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">parameter_errors</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="n">par</span><span class="p">)</span> <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_parameters</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parameter_errors</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.001</span> <span class="o">*</span> <span class="n">par</span><span class="p">)</span>
+                                         <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_parameters</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">,</span> <span class="s">&quot;Cannot set parameter errors. No errors provided and no parameters initialized.&quot;</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_errors</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_parameters</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">,</span> <span class="s">&quot;Cannot set parameter errors. Tuple length mismatch.&quot;</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot set parameter errors. No errors </span><span class="se">\</span>
+<span class="s">                                provided and no parameters initialized.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">parameter_errors</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_parameters</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot set parameter errors. </span><span class="se">\</span>
+<span class="s">                            Tuple length mismatch.&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">parameter_errors</span> <span class="o">=</span> <span class="n">param_errors</span>
-    
-    
+            <span class="bp">self</span><span class="o">.</span><span class="n">parameter_errors</span> <span class="o">=</span> <span class="n">parameter_errors</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_parameter_data</span><span class="p">()</span>
+
     <span class="c"># Get methods</span>
     <span class="c">##############</span>
-    </div>
+</div>
 <div class="viewcode-block" id="Minuit.get_error_matrix"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.get_error_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_error_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Retrieves the parameter error matrix from TMinuit.</span>
-<span class="sd">        </span>
+
 <span class="sd">        return : `numpy.matrix`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        
-        <span class="n">tmp_array</span> <span class="o">=</span> <span class="n">arr</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="c"># setup an array of type `double&#39; to pass to TMinuit</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnemat</span><span class="p">(</span><span class="n">tmp_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">)</span> <span class="c"># get parameter covariance matrix from TMinuit</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tmp_array</span><span class="p">,(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">))</span> <span class="p">)</span> <span class="c"># reshape into 2D array</span>
-    
-    </div>
+
+        <span class="c"># set up an array of type `double&#39; to pass to TMinuit</span>
+        <span class="n">tmp_array</span> <span class="o">=</span> <span class="n">arr</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+        <span class="c"># get parameter covariance matrix from TMinuit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnemat</span><span class="p">(</span><span class="n">tmp_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">)</span>
+        <span class="c"># reshape into 2D array</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                <span class="n">tmp_array</span><span class="p">,</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+</div>
 <div class="viewcode-block" id="Minuit.get_parameter_values"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.get_parameter_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameter_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Retrieves the parameter values from TMinuit.</span>
-<span class="sd">        </span>
+
 <span class="sd">        return : tuple</span>
 <span class="sd">            Current `Minuit` parameter values</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        
+
         <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c"># retrieve fit parameters</span>
         <span class="n">p</span><span class="p">,</span> <span class="n">pe</span> <span class="o">=</span> <span class="n">Double</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">Double</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">):</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">GetParameter</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pe</span><span class="p">)</span>  <span class="c"># retrieve fitresult</span>
-            
+
             <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
-        
+
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-    </div>
+</div>
 <div class="viewcode-block" id="Minuit.get_parameter_errors"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.get_parameter_errors">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameter_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Retrieves the parameter errors from TMinuit.</span>
-<span class="sd">        </span>
+
 <span class="sd">        return : tuple</span>
 <span class="sd">            Current `Minuit` parameter errors</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        
+
         <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c"># retrieve fit parameters</span>
         <span class="n">p</span><span class="p">,</span> <span class="n">pe</span> <span class="o">=</span> <span class="n">Double</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">Double</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">):</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">GetParameter</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pe</span><span class="p">)</span>  <span class="c"># retrieve fitresult</span>
-            
+
             <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">pe</span><span class="p">))</span>
-        
+
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-    </div>
+</div>
 <div class="viewcode-block" id="Minuit.get_parameter_info"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.get_parameter_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameter_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Retrieves parameter information from TMinuit.</span>
-<span class="sd">        </span>
+
 <span class="sd">        return : list of tuples</span>
-<span class="sd">            ``(param_name, param_val, param_error)``</span>
+<span class="sd">            ``(parameter_name, parameter_val, parameter_error)``</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        
+
         <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c"># retrieve fit parameters</span>
         <span class="n">p</span><span class="p">,</span> <span class="n">pe</span> <span class="o">=</span> <span class="n">Double</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">Double</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">):</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">GetParameter</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pe</span><span class="p">)</span>  <span class="c"># retrieve fitresult</span>
-            
-            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_parameter_name</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">pe</span><span class="p">))</span> <span class="p">)</span>
-        
+
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">get_parameter_name</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">pe</span><span class="p">)))</span>
+
         <span class="k">return</span> <span class="n">result</span>
 </div>
-<div class="viewcode-block" id="Minuit.get_parameter_name"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.get_parameter_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameter_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_nr</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Gets the name of parameter number ``param_nr``</span>
-<span class="sd">        </span>
-<span class="sd">        **param_nr** : int</span>
+<div class="viewcode-block" id="Minuit.get_parameter_name"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.get_parameter_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameter_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter_nr</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Gets the name of parameter number ``parameter_nr``</span>
+
+<span class="sd">        **parameter_nr** : int</span>
 <span class="sd">            Number of the parameter whose name to get.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="c">#if param_values is None: # infer parameters from FCN</span>
-        <span class="c">#    if len(self.function_to_minimize.func_defaults) == self.number_of_parameters:    # only if all defaults given</span>
-        <span class="c">#        self.current_parameters = self.function_to_minimize.func_defaults   # get defaults from FCN</span>
-        <span class="c">#    else:</span>
-        <span class="c">#        raise Exception, &quot;Cannot get default parameter values from the FCN. Not all parameters have default values given.&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span><span class="p">[</span><span class="n">param_nr</span><span class="p">]</span>    
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span><span class="p">[</span><span class="n">parameter_nr</span><span class="p">]</span>
 </div>
 <div class="viewcode-block" id="Minuit.get_fit_info"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.get_fit_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_fit_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Retrieves other info from `Minuit`. </span>
-<span class="sd">        </span>
+        <span class="sd">&#39;&#39;&#39;Retrieves other info from `Minuit`.</span>
+
 <span class="sd">        **info** : string</span>
-<span class="sd">            Information about the fit to retrieve. This can be any of the following:</span>
+<span class="sd">            Information about the fit to retrieve.</span>
+<span class="sd">            This can be any of the following:</span>
 <span class="sd">                - ``&#39;fcn&#39;``: `FCN` value at minimum,</span>
 <span class="sd">                - ``&#39;edm&#39;``: estimated distance to minimum</span>
 <span class="sd">                - ``&#39;err_def&#39;``: `Minuit` error matrix status code</span>
 <span class="sd">                - ``&#39;status_code&#39;``: `Minuit` general status code</span>
-<span class="sd">            </span>
+
 <span class="sd">        &#39;&#39;&#39;</span>
-        
+
         <span class="c"># declare vars in which to retrieve other info</span>
-        
         <span class="n">fcn_at_min</span> <span class="o">=</span> <span class="n">Double</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">edm</span> <span class="o">=</span> <span class="n">Double</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">err_def</span> <span class="o">=</span> <span class="n">Double</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">n_var_param</span> <span class="o">=</span> <span class="n">Long</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">n_tot_param</span> <span class="o">=</span> <span class="n">Long</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">status_code</span> <span class="o">=</span> <span class="n">Long</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        
+
         <span class="c"># Tell TMinuit to update the variables declared above</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnstat</span><span class="p">(</span><span class="n">fcn_at_min</span><span class="p">,</span> 
-                              <span class="n">edm</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnstat</span><span class="p">(</span><span class="n">fcn_at_min</span><span class="p">,</span>
+                              <span class="n">edm</span><span class="p">,</span>
                               <span class="n">err_def</span><span class="p">,</span>
-                              <span class="n">n_var_param</span><span class="p">,</span> 
-                              <span class="n">n_tot_param</span><span class="p">,</span> 
+                              <span class="n">n_var_param</span><span class="p">,</span>
+                              <span class="n">n_tot_param</span><span class="p">,</span>
                               <span class="n">status_code</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="n">info</span><span class="o">==</span><span class="s">&#39;fcn&#39;</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">info</span> <span class="o">==</span> <span class="s">&#39;fcn&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">fcn_at_min</span>
-        
-        <span class="k">elif</span> <span class="n">info</span><span class="o">==</span><span class="s">&#39;edm&#39;</span><span class="p">:</span>
+
+        <span class="k">elif</span> <span class="n">info</span> <span class="o">==</span> <span class="s">&#39;edm&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">edm</span>
-        
-        <span class="k">elif</span> <span class="n">info</span><span class="o">==</span><span class="s">&#39;err_def&#39;</span><span class="p">:</span>
+
+        <span class="k">elif</span> <span class="n">info</span> <span class="o">==</span> <span class="s">&#39;err_def&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">err_def</span>
-        
-        <span class="k">elif</span> <span class="n">info</span><span class="o">==</span><span class="s">&#39;status_code&#39;</span><span class="p">:</span>
+
+        <span class="k">elif</span> <span class="n">info</span> <span class="o">==</span> <span class="s">&#39;status_code&#39;</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">D_MATRIX_ERROR</span><span class="p">[</span><span class="n">status_code</span><span class="p">]</span>
             <span class="k">except</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">status_code</span>
-        </div>
+</div>
 <div class="viewcode-block" id="Minuit.get_chi2_probability"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.get_chi2_probability">[docs]</a>    <span class="k">def</span> <span class="nf">get_chi2_probability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_deg_of_freedom</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns the probability that an observed :math:`\chi^2` exceeds</span>
-<span class="sd">        the calculated value of :math:`\chi^2` for this fit by chance, even for a correct model.</span>
-<span class="sd">        In other words, returns the probability that a worse fit of the model to the data exists.</span>
-<span class="sd">        If this is a small value (typically &lt;5%), this means the fit is pretty bad. For</span>
-<span class="sd">        values below this threshold, the model very probably does not fit the data.</span>
-<span class="sd">        </span>
+<span class="sd">        the calculated value of :math:`\chi^2` for this fit by chance,</span>
+<span class="sd">        even for a correct model. In other words, returns the probability that</span>
+<span class="sd">        a worse fit of the model to the data exists. If this is a small value</span>
+<span class="sd">        (typically &lt;5%), this means the fit is pretty bad. For values below</span>
+<span class="sd">        this threshold, the model very probably does not fit the data.</span>
+
 <span class="sd">        n_def_of_freedom : int</span>
-<span class="sd">            The number of degrees of freedom. This is typically :math:`n_\text{datapoints} - n_\text{parameters}`.</span>
+<span class="sd">            The number of degrees of freedom. This is typically</span>
+<span class="sd">            :math:`n_\text{datapoints} - n_\text{parameters}`.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">chi2</span> <span class="o">=</span> <span class="n">Double</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;fcn&#39;</span><span class="p">))</span>
         <span class="n">ndf</span> <span class="o">=</span> <span class="n">Long</span><span class="p">(</span><span class="n">n_deg_of_freedom</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">TMath</span><span class="o">.</span><span class="n">Prob</span><span class="p">(</span><span class="n">chi2</span><span class="p">,</span> <span class="n">ndf</span><span class="p">)</span>
-        </div>
+</div>
 <div class="viewcode-block" id="Minuit.get_contour"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.get_contour">[docs]</a>    <span class="k">def</span> <span class="nf">get_contour</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter1</span><span class="p">,</span> <span class="n">parameter2</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a list of points (2-tuples) representing a sampling of</span>
 <span class="sd">        the :math:`1\\sigma` contour of the TMinuit fit. The ``FCN`` has to be</span>
 <span class="sd">        minimized before calling this.</span>
-<span class="sd">        </span>
+
 <span class="sd">        **parameter1** : int</span>
 <span class="sd">            ID of the parameter to be displayed on the `x`-axis.</span>
-<span class="sd">            </span>
+
 <span class="sd">        **parameter2** : int</span>
 <span class="sd">            ID of the parameter to be displayed on the `y`-axis.</span>
-<span class="sd">            </span>
+
 <span class="sd">        *n_points* : int (optional)</span>
 <span class="sd">            number of points used to draw the contour. Default is 20.</span>
-<span class="sd">        </span>
+
 <span class="sd">        *returns* : 2-tuple of tuples</span>
 <span class="sd">            a 2-tuple (x, y) containing ``n_points+1`` points sampled</span>
 <span class="sd">            along the contour. The first point is repeated at the end</span>
 <span class="sd">            of the list to generate a closed contour.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        
+
         <span class="c"># get the TGraph object from ROOT</span>
         <span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">Contour</span><span class="p">(</span><span class="n">n_points</span><span class="p">,</span> <span class="n">parameter1</span><span class="p">,</span> <span class="n">parameter2</span><span class="p">)</span>
-        
+
         <span class="c"># extract point data into buffers</span>
         <span class="n">xbuf</span><span class="p">,</span> <span class="n">ybuf</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">GetX</span><span class="p">(),</span> <span class="n">g</span><span class="o">.</span><span class="n">GetY</span><span class="p">()</span>
         <span class="n">N</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">GetN</span><span class="p">()</span>
-        
+
         <span class="c"># generate tuples from buffers</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">xbuf</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">ybuf</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
-        
+
         <span class="c">#</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-    
+
     <span class="c"># Other methods</span>
     <span class="c">################</span>
-    </div>
-<div class="viewcode-block" id="Minuit.reset"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnrset</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c"># reset TMinuit</span>
-        </div>
-<div class="viewcode-block" id="Minuit.FCN_wrapper"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.FCN_wrapper">[docs]</a>    <span class="k">def</span> <span class="nf">FCN_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number_of_parameters</span><span class="p">,</span> <span class="n">derivatives</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">internal_flag</span><span class="p">):</span>
+</div>
+<div class="viewcode-block" id="Minuit.fix_parameter"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.fix_parameter">[docs]</a>    <span class="k">def</span> <span class="nf">fix_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter_number</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        This is actually a function called in *ROOT* and acting as a C wrapper </span>
+<span class="sd">        Fix parameter number &lt;`parameter_number`&gt;.</span>
+
+<span class="sd">        **parameter_number** : int</span>
+<span class="sd">            Number of the parameter to fix.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">error_code</span> <span class="o">=</span> <span class="n">Long</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Fixing parameter </span><span class="si">%d</span><span class="s"> in Minuit&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">parameter_number</span><span class="p">,))</span>
+        <span class="c"># execute FIX command</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnexcm</span><span class="p">(</span><span class="s">&quot;FIX&quot;</span><span class="p">,</span>
+                              <span class="n">arr</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">parameter_number</span><span class="o">+</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minuit.release_parameter"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.release_parameter">[docs]</a>    <span class="k">def</span> <span class="nf">release_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter_number</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Release parameter number &lt;`parameter_number`&gt;.</span>
+
+<span class="sd">        **parameter_number** : int</span>
+<span class="sd">            Number of the parameter to release.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">error_code</span> <span class="o">=</span> <span class="n">Long</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Releasing parameter </span><span class="si">%d</span><span class="s"> in Minuit&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">parameter_number</span><span class="p">,))</span>
+        <span class="c"># execute RELEASE command</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnexcm</span><span class="p">(</span><span class="s">&quot;RELEASE&quot;</span><span class="p">,</span>
+                              <span class="n">arr</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">parameter_number</span><span class="o">+</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minuit.reset"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Execute TMinuit&#39;s `mnrset` method.&#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnrset</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c"># reset TMinuit</span>
+</div>
+<div class="viewcode-block" id="Minuit.FCN_wrapper"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.FCN_wrapper">[docs]</a>    <span class="k">def</span> <span class="nf">FCN_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number_of_parameters</span><span class="p">,</span> <span class="n">derivatives</span><span class="p">,</span>
+                    <span class="n">f</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">internal_flag</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        This is actually a function called in *ROOT* and acting as a C wrapper</span>
 <span class="sd">        for our `FCN`, which is implemented in Python.</span>
-<span class="sd">        </span>
-<span class="sd">        This function is called by `Minuit` several times during a fit. It doesn&#39;t return</span>
-<span class="sd">        anything but modifies one of its arguments (*f*). This is *ugly*, but it&#39;s how *ROOT*&#39;s</span>
-<span class="sd">        ``TMinuit`` works. Its argument structure is fixed and determined by `Minuit`:</span>
-<span class="sd">        </span>
+
+<span class="sd">        This function is called by `Minuit` several times during a fit. It</span>
+<span class="sd">        doesn&#39;t return anything but modifies one of its arguments (*f*).</span>
+<span class="sd">        This is *ugly*, but it&#39;s how *ROOT*&#39;s ``TMinuit`` works. Its argument</span>
+<span class="sd">        structure is fixed and determined by `Minuit`:</span>
+
 <span class="sd">        **number_of_parameters** : int</span>
 <span class="sd">            The number of parameters of the current fit</span>
-<span class="sd">        </span>
-<span class="sd">        </span>
-<span class="sd">        **derivatives** : ?? </span>
-<span class="sd">            Computed gradient (??)</span>
-<span class="sd">        </span>
+
+<span class="sd">        **derivatives** : C array</span>
+<span class="sd">            If the user chooses to calculate the first derivative of the</span>
+<span class="sd">            function inside the `FCN`, this value should be written here. This</span>
+<span class="sd">            interface to `Minuit` ignores this derivative, however, so</span>
+<span class="sd">            calculating this inside the `FCN` has no effect (yet).</span>
+
 <span class="sd">        **f** : C array</span>
 <span class="sd">            The desired function value is in f[0] after execution.</span>
-<span class="sd">        </span>
+
 <span class="sd">        **parameters** : C array</span>
 <span class="sd">            A C array of parameters. Is cast to a Python list</span>
-<span class="sd">        </span>
+
 <span class="sd">        **internal_flag** : int</span>
 <span class="sd">            A flag allowing for different behaviour of the function.</span>
-<span class="sd">            Can be any integer from 1 (initial run) to 4(normal run). See `Minuit`&#39;s specification.</span>
+<span class="sd">            Can be any integer from 1 (initial run) to 4(normal run). See</span>
+<span class="sd">            `Minuit`&#39;s specification.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        
-        <span class="k">if</span> <span class="n">internal_flag</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>    <span class="c"># the internal flag is 1 for the initial run (NOT TRUE -&gt; CHECK)</span>
-            <span class="k">pass</span>                <span class="c"># do something before the FCN is called for the first time</span>
-        
+
         <span class="c"># Retrieve the parameters from the C side of ROOT and</span>
         <span class="c"># store them in a Python list -- resource-intensive</span>
         <span class="c"># for many calls, but can&#39;t be improved (yet?)</span>
-        <span class="n">parameter_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">)</span>
-         
-        <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">function_to_minimize</span><span class="p">(</span><span class="o">*</span><span class="n">parameter_list</span><span class="p">)</span> <span class="c"># call the Python implementation of FCN.</span>
+        <span class="n">parameter_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                                       <span class="n">count</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">)</span>
+
+        <span class="c"># call the Python implementation of FCN.</span>
+        <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">function_to_minimize</span><span class="p">(</span><span class="o">*</span><span class="n">parameter_list</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="Minuit.minimize"><a class="viewcode-back" href="../../index.html#kafe.minuit.Minuit.minimize">[docs]</a>    <span class="k">def</span> <span class="nf">minimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_print_level</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Do the minimization. This calls `Minuit`&#39;s algorithms ``MIGRAD`` for minimization</span>
-<span class="sd">        and ``HESSE`` for computing/checking the parameter error matrix.&#39;&#39;&#39;</span>
-        
+        <span class="sd">&#39;&#39;&#39;Do the minimization. This calls `Minuit`&#39;s algorithms ``MIGRAD`` for</span>
+<span class="sd">        minimization and ``HESSE`` for computing/checking the parameter error</span>
+<span class="sd">        matrix.&#39;&#39;&#39;</span>
+
         <span class="c"># Set the FCN again. This HAS to be done EVERY</span>
         <span class="c"># time the minimize method is called because of</span>
         <span class="c"># the implementation of SetFCN, which is not</span>
         <span class="c"># object-oriented but sets a global pointer!!!</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">SetFCN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FCN_wrapper</span><span class="p">)</span>               <span class="c"># instruct Minuit to use this class&#39;s FCN_wrapper method as a FCN</span>
-        
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Updating current FCN&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">SetFCN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FCN_wrapper</span><span class="p">)</span>
+
         <span class="c"># Run minimization algorithm (MIGRAD + HESSE)</span>
         <span class="n">error_code</span> <span class="o">=</span> <span class="n">Long</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        
-        <span class="n">prefix</span> <span class="o">=</span> <span class="s">&quot;Minuit run at&quot;</span> <span class="c"># set the timestamp prefix</span>
-        
+
+        <span class="n">prefix</span> <span class="o">=</span> <span class="s">&quot;Minuit run at&quot;</span>  <span class="c"># set the timestamp prefix</span>
+
         <span class="c"># insert timestamp</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;#&#39;</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span><span class="o">+</span><span class="mi">4</span><span class="o">+</span><span class="mi">20</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;# </span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">prefix</span><span class="p">,)</span> <span class="o">+</span> <span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%Y-%m-</span><span class="si">%d</span><span class="s"> %H:%M:%S #</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">gmtime</span><span class="p">()))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;# </span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">prefix</span><span class="p">,)</span> <span class="o">+</span>
+                            <span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%Y-%m-</span><span class="si">%d</span><span class="s"> %H:%M:%S #</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">gmtime</span><span class="p">()))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;#&#39;</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span><span class="o">+</span><span class="mi">4</span><span class="o">+</span><span class="mi">20</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n\n</span><span class="s">&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-        
+
         <span class="c"># save the old stdout stream</span>
-        <span class="n">old_out_stream</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">dup</span><span class="p">(</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">fileno</span><span class="p">()</span> <span class="p">)</span>
+        <span class="n">old_out_stream</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">dup</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">fileno</span><span class="p">())</span>
         <span class="n">os</span><span class="o">.</span><span class="n">dup2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">fileno</span><span class="p">(),</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">fileno</span><span class="p">())</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">SetPrintLevel</span><span class="p">(</span><span class="n">log_print_level</span><span class="p">)</span> <span class="c"># set Minuit print level</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnexcm</span><span class="p">(</span><span class="s">&quot;MIGRAD&quot;</span><span class="p">,</span> <span class="n">arr</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span><span class="p">]),</span> <span class="mi">2</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnexcm</span><span class="p">(</span><span class="s">&quot;HESSE&quot;</span><span class="p">,</span> <span class="n">arr</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">6000</span><span class="p">]),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span> <span class="c"># Call HESSE with max. 6000 calls</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">SetPrintLevel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">print_level</span><span class="p">)</span> <span class="c"># return to normal print level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">SetPrintLevel</span><span class="p">(</span><span class="n">log_print_level</span><span class="p">)</span>  <span class="c"># set Minuit print level</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Running MIGRAD&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnexcm</span><span class="p">(</span><span class="s">&quot;MIGRAD&quot;</span><span class="p">,</span>
+                              <span class="n">arr</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span><span class="p">]),</span>
+                              <span class="mi">2</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Running HESSE&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">mnexcm</span><span class="p">(</span><span class="s">&quot;HESSE&quot;</span><span class="p">,</span> <span class="n">arr</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">6000</span><span class="p">]),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span>
+        <span class="c"># return to normal print level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gMinuit</span><span class="o">.</span><span class="n">SetPrintLevel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">print_level</span><span class="p">)</span>
 
         <span class="c"># restore the previous output stream</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">dup2</span><span class="p">(</span> <span class="n">old_out_stream</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">fileno</span><span class="p">()</span> <span class="p">)</span>
-    </div></div>
+        <span class="n">os</span><span class="o">.</span><span class="n">dup2</span><span class="p">(</span><span class="n">old_out_stream</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">fileno</span><span class="p">())</span></div></div>
 </pre></div>
 
           </div>

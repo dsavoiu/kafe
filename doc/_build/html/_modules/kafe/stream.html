@@ -51,14 +51,15 @@
   <h1>Source code for kafe.stream</h1><div class="highlight"><pre>
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">.. module:: stream</span>
-<span class="sd">   :platform: Unix</span>
-<span class="sd">   :synopsis: A submodule containing an object for simultaneous output to file and to ``sys.stdout``.</span>
-<span class="sd">.. moduleauthor:: Daniel Savoiu &lt;danielsavoiu@gmail.com&gt;</span>
+<span class="sd">    :platform: Unix</span>
+<span class="sd">    :synopsis: A submodule containing an object for simultaneous output to file</span>
+<span class="sd">        and to ``sys.stdout``.</span>
+<span class="sd">..  moduleauthor:: Daniel Savoiu &lt;danielsavoiu@gmail.com&gt;</span>
 <span class="sd">&#39;&#39;&#39;</span>
-
 
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">gmtime</span><span class="p">,</span> <span class="n">strftime</span>
+
 
 <div class="viewcode-block" id="StreamDup"><a class="viewcode-back" href="../../index.html#kafe.stream.StreamDup">[docs]</a><span class="k">class</span> <span class="nc">StreamDup</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
@@ -71,29 +72,30 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span> <span class="o">=</span> <span class="n">out_file</span>
-        
+
 <div class="viewcode-block" id="StreamDup.write"><a class="viewcode-back" href="../../index.html#kafe.stream.StreamDup.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
         <span class="c"># write to log file AND to stdout</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-    </div>
+</div>
 <div class="viewcode-block" id="StreamDup.write_to_file"><a class="viewcode-back" href="../../index.html#kafe.stream.StreamDup.write_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-    </div>
+</div>
 <div class="viewcode-block" id="StreamDup.write_to_stdout"><a class="viewcode-back" href="../../index.html#kafe.stream.StreamDup.write_to_stdout">[docs]</a>    <span class="k">def</span> <span class="nf">write_to_stdout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-    </div>
+</div>
 <div class="viewcode-block" id="StreamDup.write_timestamp"><a class="viewcode-back" href="../../index.html#kafe.stream.StreamDup.write_timestamp">[docs]</a>    <span class="k">def</span> <span class="nf">write_timestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;#&#39;</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span><span class="o">+</span><span class="mi">4</span><span class="o">+</span><span class="mi">20</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;# </span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">prefix</span><span class="p">,)</span> <span class="o">+</span> <span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%Y-%m-</span><span class="si">%d</span><span class="s"> %H:%M:%S #</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">gmtime</span><span class="p">()))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;# </span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">prefix</span><span class="p">,)</span> <span class="o">+</span>
+                            <span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%Y-%m-</span><span class="si">%d</span><span class="s"> %H:%M:%S #</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">gmtime</span><span class="p">()))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;#&#39;</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span><span class="o">+</span><span class="mi">4</span><span class="o">+</span><span class="mi">20</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n\n</span><span class="s">&#39;</span><span class="p">)</span>
-    </div>
+</div>
 <div class="viewcode-block" id="StreamDup.fileno"><a class="viewcode-back" href="../../index.html#kafe.stream.StreamDup.fileno">[docs]</a>    <span class="k">def</span> <span class="nf">fileno</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">fileno</span><span class="p">()</span>
-    </div>
+</div>
 <div class="viewcode-block" id="StreamDup.flush"><a class="viewcode-back" href="../../index.html#kafe.stream.StreamDup.flush">[docs]</a>    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div></div>

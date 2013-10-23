@@ -13,8 +13,8 @@
 \contentsline {subsection}{\numberline {2.1.8}\texttt {function\_tools} Module}{13}{subsection.2.1.8}
 \contentsline {subsection}{\numberline {2.1.9}\texttt {latex\_tools} Module}{15}{subsection.2.1.9}
 \contentsline {subsection}{\numberline {2.1.10}\texttt {minuit} Module}{15}{subsection.2.1.10}
-\contentsline {subsection}{\numberline {2.1.11}\texttt {numeric\_tools} Module}{17}{subsection.2.1.11}
-\contentsline {subsection}{\numberline {2.1.12}\texttt {plot} Module}{18}{subsection.2.1.12}
+\contentsline {subsection}{\numberline {2.1.11}\texttt {numeric\_tools} Module}{18}{subsection.2.1.11}
+\contentsline {subsection}{\numberline {2.1.12}\texttt {plot} Module}{19}{subsection.2.1.12}
 \contentsline {subsection}{\numberline {2.1.13}\texttt {stream} Module}{20}{subsection.2.1.13}
 \contentsline {subsection}{\numberline {2.1.14}Indices and tables}{20}{subsection.2.1.14}
 \contentsline {chapter}{Python Module Index}{21}{section*.155}

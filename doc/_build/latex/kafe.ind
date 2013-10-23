@@ -5,7 +5,7 @@
   \item ASCII() (in module kafe.function\_tools), \hyperpage{13}
   \item ascii\_to\_latex\_math() (in module kafe.latex\_tools), \hyperpage{15}
   \item axis\_labels (Dataset attribute), \hyperpage{7}
-  \item axis\_labels (Plot attribute), \hyperpage{18}
+  \item axis\_labels (Plot attribute), \hyperpage{19}
 
   \indexspace
   \bigletter B
@@ -13,11 +13,11 @@
 
   \indexspace
   \bigletter C
-  \item call\_external\_fcn() (Fit method), \hyperpage{10}
+  \item call\_external\_fcn() (Fit method), \hyperpage{11}
   \item chi2() (in module kafe.fit), \hyperpage{13}
-  \item compute\_plot\_range() (Plot method), \hyperpage{18}
+  \item compute\_plot\_range() (Plot method), \hyperpage{19}
   \item constants (module), \hyperpage{5}
-  \item cor\_to\_cov() (in module kafe.numeric\_tools), \hyperpage{17}
+  \item cor\_to\_cov() (in module kafe.numeric\_tools), \hyperpage{18}
   \item cov\_mat\_is\_regular() (Dataset method), \hyperpage{7}
   \item cov\_mats (Dataset attribute), \hyperpage{7}
   \item cov\_to\_cor() (in module kafe.numeric\_tools), \hyperpage{18}
@@ -30,16 +30,16 @@
   \item dataset (Fit attribute), \hyperpage{11}
   \item dataset (module), \hyperpage{6}
   \item derivative() (in module kafe.function\_tools), \hyperpage{15}
-  \item derive\_by\_parameters() (FitFunction method), \hyperpage{13}
-  \item derive\_by\_x() (FitFunction method), \hyperpage{13}
+  \item derive\_by\_parameters() (FitFunction method), \hyperpage{14}
+  \item derive\_by\_x() (FitFunction method), \hyperpage{14}
   \item do\_fit() (Fit method), \hyperpage{11}
-  \item draw\_fit\_parameters\_box() (Plot method), \hyperpage{18}
-  \item draw\_legend() (Plot method), \hyperpage{18}
+  \item draw\_fit\_parameters\_box() (Plot method), \hyperpage{19}
+  \item draw\_legend() (Plot method), \hyperpage{19}
 
   \indexspace
   \bigletter E
-  \item expression (FitFunction attribute), \hyperpage{13}
-  \item extend\_span() (Plot method), \hyperpage{18}
+  \item expression (FitFunction attribute), \hyperpage{14}
+  \item extend\_span() (Plot method), \hyperpage{19}
   \item external\_fcn (Fit attribute), \hyperpage{11}
   \item extract\_statistical\_errors() (in module kafe.numeric\_tools), \hyperpage{18}
 
@@ -53,13 +53,13 @@
   \item fit (module), \hyperpage{10}
   \item fit\_function (Fit attribute), \hyperpage{11}
   \item fit\_one\_iteration() (Fit method), \hyperpage{11}
-  \item FitFunction (class in kafe.function\_tools), \hyperpage{13}
+  \item FitFunction (class in kafe.function\_tools), \hyperpage{14}
   \item fits (Plot attribute), \hyperpage{19}
-  \item fix\_parameter() (Minuit method), \hyperpage{15}
+  \item fix\_parameter() (Minuit method), \hyperpage{16}
   \item fix\_parameters() (Fit method), \hyperpage{11}
   \item flush() (StreamDup method), \hyperpage{20}
   \item function\_library (module), \hyperpage{13}
-  \item function\_to\_minimize (Minuit attribute), \hyperpage{15}
+  \item function\_to\_minimize (Minuit attribute), \hyperpage{16}
 
   \indexspace
   \bigletter G
@@ -73,22 +73,22 @@
   \item get\_current\_fit\_function() (Fit method), \hyperpage{11}
   \item get\_data() (Dataset method), \hyperpage{7}
   \item get\_data\_span() (Dataset method), \hyperpage{7}
-  \item get\_error\_matrix() (Fit method), \hyperpage{11}
+  \item get\_error\_matrix() (Fit method), \hyperpage{12}
   \item get\_error\_matrix() (Minuit method), \hyperpage{16}
   \item get\_fit\_info() (Minuit method), \hyperpage{16}
   \item get\_formatted() (Dataset method), \hyperpage{7}
   \item get\_function\_equation() (FitFunction method), \hyperpage{14}
   \item get\_line() (PlotStyle method), \hyperpage{19}
   \item get\_linecolor() (PlotStyle method), \hyperpage{19}
-  \item get\_marker() (PlotStyle method), \hyperpage{19}
-  \item get\_markercolor() (PlotStyle method), \hyperpage{19}
-  \item get\_parameter\_errors() (Fit method), \hyperpage{11}
+  \item get\_marker() (PlotStyle method), \hyperpage{20}
+  \item get\_markercolor() (PlotStyle method), \hyperpage{20}
+  \item get\_parameter\_errors() (Fit method), \hyperpage{12}
   \item get\_parameter\_errors() (Minuit method), \hyperpage{16}
-  \item get\_parameter\_info() (Minuit method), \hyperpage{16}
-  \item get\_parameter\_name() (Minuit method), \hyperpage{16}
-  \item get\_parameter\_values() (Fit method), \hyperpage{11}
-  \item get\_parameter\_values() (Minuit method), \hyperpage{16}
-  \item get\_pointsize() (PlotStyle method), \hyperpage{19}
+  \item get\_parameter\_info() (Minuit method), \hyperpage{17}
+  \item get\_parameter\_name() (Minuit method), \hyperpage{17}
+  \item get\_parameter\_values() (Fit method), \hyperpage{12}
+  \item get\_parameter\_values() (Minuit method), \hyperpage{17}
+  \item get\_pointsize() (PlotStyle method), \hyperpage{20}
   \item get\_size() (Dataset method), \hyperpage{8}
 
   \indexspace
@@ -113,17 +113,17 @@
   \item kafe.function\_tools (module), \hyperpage{13}
   \item kafe.latex\_tools (module), \hyperpage{15}
   \item kafe.minuit (module), \hyperpage{15}
-  \item kafe.numeric\_tools (module), \hyperpage{17}
-  \item kafe.plot (module), \hyperpage{18}
+  \item kafe.numeric\_tools (module), \hyperpage{18}
+  \item kafe.plot (module), \hyperpage{19}
   \item kafe.stream (module), \hyperpage{20}
 
   \indexspace
   \bigletter L
-  \item label\_to\_latex() (in module kafe.plot), \hyperpage{19}
-  \item LaTeX() (in module kafe.function\_tools), \hyperpage{14}
+  \item label\_to\_latex() (in module kafe.plot), \hyperpage{20}
+  \item LaTeX() (in module kafe.function\_tools), \hyperpage{15}
   \item latex\_expression (FitFunction attribute), \hyperpage{14}
   \item latex\_name (FitFunction attribute), \hyperpage{14}
-  \item latex\_parameter\_names (Fit attribute), \hyperpage{11}
+  \item latex\_parameter\_names (Fit attribute), \hyperpage{12}
   \item latex\_parameter\_names (FitFunction attribute), \hyperpage{14}
   \item latex\_tools (module), \hyperpage{15}
   \item latex\_x\_name (FitFunction attribute), \hyperpage{14}
@@ -135,8 +135,8 @@
   \item M\_MAX\_X\_FIT\_ITERATIONS (in module kafe.constants), \hyperpage{5}
   \item M\_TOLERANCE (in module kafe.constants), \hyperpage{6}
   \item make\_symmetric\_lower() (in module kafe.numeric\_tools), \hyperpage{18}
-  \item max\_iterations (Minuit attribute), \hyperpage{16}
-  \item minimize() (Minuit method), \hyperpage{16}
+  \item max\_iterations (Minuit attribute), \hyperpage{17}
+  \item minimize() (Minuit method), \hyperpage{17}
   \item minimizer (Fit attribute), \hyperpage{12}
   \item Minuit (class in kafe.minuit), \hyperpage{15}
   \item minuit (module), \hyperpage{15}
@@ -149,7 +149,7 @@
   \item number\_of\_parameters (Fit attribute), \hyperpage{12}
   \item number\_of\_parameters (FitFunction attribute), \hyperpage{14}
   \item number\_of\_parameters (Minuit attribute), \hyperpage{17}
-  \item numeric\_tools (module), \hyperpage{17}
+  \item numeric\_tools (module), \hyperpage{18}
 
   \indexspace
   \bigletter O
@@ -157,15 +157,15 @@
 
   \indexspace
   \bigletter P
-  \item P\_DETAIL\_LEVEL (in module kafe.minuit), \hyperpage{17}
-  \item pad\_span() (in module kafe.plot), \hyperpage{19}
-  \item parameter\_defaults (FitFunction attribute), \hyperpage{14}
+  \item P\_DETAIL\_LEVEL (in module kafe.minuit), \hyperpage{18}
+  \item pad\_span() (in module kafe.plot), \hyperpage{20}
+  \item parameter\_defaults (FitFunction attribute), \hyperpage{15}
   \item parameter\_names (Fit attribute), \hyperpage{12}
-  \item parameter\_names (FitFunction attribute), \hyperpage{14}
+  \item parameter\_names (FitFunction attribute), \hyperpage{15}
   \item parse\_column\_data() (in module kafe.file\_tools), \hyperpage{9}
   \item parse\_matrix\_file() (in module kafe.file\_tools), \hyperpage{10}
-  \item Plot (class in kafe.plot), \hyperpage{18}
-  \item plot (module), \hyperpage{18}
+  \item Plot (class in kafe.plot), \hyperpage{19}
+  \item plot (module), \hyperpage{19}
   \item plot() (Plot method), \hyperpage{19}
   \item plot\_all() (Plot method), \hyperpage{19}
   \item plot\_range (Plot attribute), \hyperpage{19}
@@ -198,7 +198,7 @@
   \item set\_strategy() (Minuit method), \hyperpage{17}
   \item show() (Plot method), \hyperpage{19}
   \item show\_legend (Plot attribute), \hyperpage{19}
-  \item sourcelines (FitFunction attribute), \hyperpage{14}
+  \item sourcelines (FitFunction attribute), \hyperpage{15}
   \item stream (module), \hyperpage{20}
   \item StreamDup (class in kafe.stream), \hyperpage{20}
 
@@ -208,7 +208,7 @@
 
   \indexspace
   \bigletter U
-  \item update\_parameter\_data() (Minuit method), \hyperpage{17}
+  \item update\_parameter\_data() (Minuit method), \hyperpage{18}
 
   \indexspace
   \bigletter W
@@ -220,12 +220,12 @@
 
   \indexspace
   \bigletter X
-  \item x\_name (FitFunction attribute), \hyperpage{14}
-  \item xdata (Fit attribute), \hyperpage{12}
+  \item x\_name (FitFunction attribute), \hyperpage{15}
+  \item xdata (Fit attribute), \hyperpage{13}
 
   \indexspace
   \bigletter Y
-  \item ydata (Fit attribute), \hyperpage{12}
+  \item ydata (Fit attribute), \hyperpage{13}
 
   \indexspace
   \bigletter Z
