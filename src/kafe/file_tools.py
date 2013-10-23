@@ -22,19 +22,27 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
     '''
     Parses a file which contains measurement data in a one-measurement-per-row
     format. The field (column) order can be specified. It defaults to `x,y'.
-    Valid field names are `x`, `y`, `xabsstat`, `yabsstat`, `xrelstat`,
-    `yrelstat`. Another valid field name is `ignore` which can be used to skip
+    Valid field names are `x`, `y`, `xabserr`, `yabserr`, `xrelerr`,
+    `yrelerr`. Another valid field name is `ignore` which can be used to skip
     a field.
 
+    A certain type of field can appear several times. If this is the case, all
+    specified errors are added in quadrature:
+
+    .. math::
+
+        \\sigma_{\\text{tot}} = \\sqrt{{\\sigma_1}^2+{\\sigma_2}^2+\\dots}
+
     Every valid measurement data file *must* have an `x` and a `y` field.
+
+    For more complex error models, errors and correlations may be specified as
+    covariance matrices. If this is desired, then any number of covariance
+    matrices (stored in separate files) may be specified for an axis by
+    using the `cov_mat_files` argument.
 
     Additionally, a delimiter can be specified. If this is a whitespace
     character or omitted, any sequence of whitespace characters is assumed to
     separate the data.
-
-    If the measurement errors and correlations are given as covariance matrices
-    (in a separate file), these files can be specified using the
-    `cov_mat_files` argument.
 
     **file_to_parse** : file-like object or string containing a file path
         The file to parse.
@@ -46,9 +54,17 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
     *delimiter* : string (optional)
         The field delimiter used in the file. Defaults to any whitespace.
 
-    *cov_mat_files* : ``None`` or tuple of strings/file-like objects (optional)
-        Files which contain x- and y-covariance matrices, in that order.
-        Defaults to ``None``.
+    *cov_mat_files* : *several* (see below, optional)
+        This argument defaults to ``None``, which means no covariance matrices
+        are used. If covariance matrices are needed, a tuple with two entries
+        (the first for `x` covariance matrices, the second for `y`) must be
+        passed.
+
+        Each element of this tuple may be either ``None``, a file or file-like
+        object, or an iterable containing files and file-like objects. Each
+        file should contain a covariance matrix for the respective axis.
+
+        When creating the `Dataset`, all given matrices are summed over.
 
     **return** : `Dataset`
         A Dataset built from the parsed file.
@@ -73,10 +89,10 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
     # define a dictionary of fields (lists) to populate
     fields = {'x': [],
               'y': [],
-              'xabsstat': [],
-              'yabsstat': [],
-              'xrelstat': [],
-              'yrelstat': [],
+              'xabserr': [],
+              'yabserr': [],
+              'xrelerr': [],
+              'yrelerr': [],
               'ignore': []}
 
     # define a list of axes
@@ -126,7 +142,7 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
         for idx, field_name in enumerate(field_order_list):
             fields[field_name].append(float(tmp_fields[idx]))
 
-    # construct Dataset object
+    # gather kwargs for Dataset object
     dataset_kwargs = {}
     for key in fields.keys():
         if fields[key]:           # if the field is not empty
@@ -141,44 +157,63 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
 
     dataset_kwargs.update({'title': title})
 
-    # parse additional covariance matrix file, if necessary
+    # parse additional covariance matrix files, if necessary
     if cov_mat_files is not None:
         try:
             if len(cov_mat_files) != len(axes):
-                print "Warning: cov_mat_files specification has \
-                    invalid length (%d), ignoring... " % (len(cov_mat_files),)
+                raise SyntaxError(
+                    "cov_mat_files tuple length (%d) doesn't match "
+                    "number of axes, ignoring... " % (len(cov_mat_files),)
+                )
         except:
-            print "Warning: Invalid cov_mat_files specification, \
-                ignoring... Expected 2-tuple of strings/file objects \
-                instead of %r." % (cov_mat_files,)
+            raise SyntaxError(
+                "Invalid cov_mat_files specification, "
+                "ignoring... Expected 2-tuple of strings/file objects "
+                "instead of %r." % (cov_mat_files,)
+            )
         else:
             cov_mats = []
             for axis_id, axis_name in enumerate(axes):
                 if cov_mat_files[axis_id] is not None:
-                    # if cov mat is given, check for other
-                    # errors on the same axis and warn
-                    if (
-                        set(dataset_kwargs) &
-                        set([axis_name+'absstat', axis_name+'relstat'])
-                    ):
-                        print "Warning: Errors provided for axis `%s` \
-                            along with covariance matrix. Ignoring \
-                            errors..." % (axis_name)
+                    # if cov mat is given, check for iterability ( == more
+                    # than one covariance matrix)
+                    # (need to check explicitly if tuple or list,
+                    # because strings and files are also iterable)
 
-                    # parse the given matrix file into cov mat
-                    cov_mats.append(parse_matrix_file(cov_mat_files[axis_id]))
+                    if (
+                        isinstance(cov_mat_files[axis_id], tuple) or
+                        isinstance(cov_mat_files[axis_id], list)
+                    ):
+                        # we have more than one cov_mat
+                        current_cov_mat = None # initialize to None, for now
+
+                        # go through each matrix file for this axis
+                        for tmp_mat_file in cov_mat_files[axis_id]:
+                            # read the matrix
+                            tmp_mat = parse_matrix_file(tmp_mat_file)
+                            # add to previous cov_mats for this axis
+                            if current_cov_mat is None:
+                                current_cov_mat = tmp_mat
+                            else:
+                                current_cov_mat += tmp_mat
+                    else:
+                        # ony one cov_mat for the axis:
+                        # parse the given matrix file into cov mat
+                        current_cov_mat = parse_matrix_file(
+                            cov_mat_files[axis_id]
+                        )
+
+                    # append to cov_mats to pass to `Dataset`
+                    cov_mats.append(current_cov_mat)
+
                 else:
                     # don't load any cov mat for that axis
                     cov_mats.append(None)
 
-        print cov_mats
-        return Dataset(data=(dataset_kwargs['xdata'], dataset_kwargs['ydata']),
-                       cov_mats=cov_mats,
-                       title=title)
+                dataset_kwargs['cov_mats'] = cov_mats
 
-    else:   # if not covariance matrices given, build dataset without them
-
-        return build_dataset(**dataset_kwargs)
+    #return dataset_kwargs
+    return build_dataset(**dataset_kwargs)
 
 
 def parse_matrix_file(file_like, delimiter=None):

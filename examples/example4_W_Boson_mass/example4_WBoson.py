@@ -31,7 +31,7 @@ myDataset_CM = parse_column_data('w_mittelung.dat',
                                  title="W-Boson-Mass (mit KMen)")
 
 myDataset_YE = parse_column_data('w_mittelung.dat',
-                                 field_order='x,y,yabsstat',
+                                 field_order='x,y,yabserr',
                                  title="W-Boson-Masse (ohne KMen)")
 
 # Create and do the Fits

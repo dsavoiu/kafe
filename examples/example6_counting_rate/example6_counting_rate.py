@@ -33,7 +33,7 @@ from numpy import exp, cos
 # load the experimental data from a file
 my_dataset = parse_column_data(
     'counting_rate.dat',
-    field_order="x,y,yabsstat",
+    field_order="x,y,yabserr",
     title="Counting Rate per Angle"
 )
 

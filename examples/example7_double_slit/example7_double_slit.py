@@ -44,7 +44,7 @@ def double_slit(alpha, I=1, b=1, g=1, k=1):
 # load the experimental data from a file
 my_dataset = parse_column_data(
     'double_slit.dat',
-    field_order="x,y,xabsstat,yabsstat",
+    field_order="x,y,xabserr,yabserr",
     title="Double Slit Data"
 )
 

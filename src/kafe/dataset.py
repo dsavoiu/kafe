@@ -21,7 +21,7 @@ import logging
 logger = logging.getLogger('kafe')
 
 
-def build_dataset(xdata, ydata, **kwargs):
+def build_dataset(xdata, ydata, cov_mats=None, **kwargs):
     '''
     This helper function creates a `Dataset` from a series of keyword
     arguments.
@@ -32,26 +32,40 @@ def build_dataset(xdata, ydata, **kwargs):
         These keyword arguments are mandatory and should be iterables
         containing the measurement data.
 
-    *error specification keywords* : iterable or numeric (see below)
-        A valid keyword is composed of an axis (*x* or *y*), an error
-        relativity specification (*abs* or *rel*) and error correlation type
-        (*stat* or *syst*). The errors are then set as follows:
+    *cov_mats* : ``None`` or 2-tuple (optional)
+        This argument defaults to ``None``, which means no covariance matrices
+        are used. If covariance matrices are needed, a tuple with two entries
+        (the first for `x` covariance matrices, the second for `y`) must be
+        passed.
 
-            1. For statistical errors:
-                - if keyword argument is iterable, the error list is set to
-                that
-                - if keyword argument is a number, an error list with identical
-                entries is generated
-            2. For systematic errors:
-                - keyword argument *must* be a single number. The global
-                correlated error for the axis is then set to that.
+        Each element of this tuple may be either ``None`` or a NumPy matrix
+        object containing a covariance matrix for the respective axis.
+
+    *error specification keywords* : iterable or numeric (see below)
+        In addition to covariance matrices, errors can be specified for each
+        axis (*x* or *y*) according to a simplified error model.
+
+        In this respect, a valid keyword is composed of an axis, an error
+        relativity specification (*abs* or *rel*) and error correlation type
+        (*err* or *cor*). The errors are then set as follows:
+
+            1. For totally uncorrelated errors (*err*):
+                - if keyword argument is iterable, the error list is set to \
+that
+                - if keyword argument is a number, an error list with \
+identical entries is generated
+            2. For fully correlated errors (*cor*):
+                - keyword argument *must* be a single number. The global \
+correlated error for the axis is then set to that.
 
         So, for example:
 
-        >>> myDataset = build_dataset(..., yabsstat=0.3, yrelsyst=0.1)
+        >>> myDataset = build_dataset(..., yabserr=0.3, yrelcor=0.1)
 
-        creates a dataset where the statistical error of each `y` coordinate is
-        set to 0.3 and the overall systematic error of `y` is set to 0.1.
+        creates a Dataset with an uncorrelated error of 0.3 for each `y`
+        coordinate and a fully correlated (systematic) error of `y` of 0.1.
+
+
 
     '''
 
@@ -66,11 +80,19 @@ def build_dataset(xdata, ydata, **kwargs):
             % (size, len(ydata))
         )
 
-    # initialize cov_mats with zero matrices
-    cov_mats = [
-        np.asmatrix(np.zeros((size, size))),
-        np.asmatrix(np.zeros((size, size)))
-    ]
+    # if no cov_mats specifies
+    if cov_mats is None:
+        # initialize cov_mats with zero matrices
+        cov_mats = [
+            np.asmatrix(np.zeros((size, size))),
+            np.asmatrix(np.zeros((size, size)))
+        ]
+    else:
+        # go through cov_mat specification
+        for mat_id, mat in enumerate(cov_mats):
+            # If `None` is specified, substitute zero matrix
+            if mat is None:
+                cov_mats[mat_id] = np.asmatrix(np.zeros((size, size)))
 
     kwargs_to_transmit = {}
 
@@ -84,7 +106,9 @@ def build_dataset(xdata, ydata, **kwargs):
             err_val = val
 
         # check that the error specification has required length
-        if len(err_spec) != 8:
+        # TODO:   If more error types allowed, this check is no good,
+        # TODO:   so implement dictionary lookup here if that should change.
+        if len(err_spec) != 7:
             raise SyntaxError(
                 "Cannot interpret error specification `%s'."
                 % (err_spec,)
@@ -104,10 +128,10 @@ def build_dataset(xdata, ydata, **kwargs):
                 "Expected `abs' or `rel'."
                 % (relativity, )
             )
-        if correlation not in ('stat', 'syst'):
+        if correlation not in ('err', 'cor'):
             raise SyntaxError(
                 "Unknown correlation specification `%s'. "
-                "Expected `stat' or `syst'."
+                "Expected `err' or `cor'."
                 % (correlation, )
             )
 
@@ -119,12 +143,12 @@ def build_dataset(xdata, ydata, **kwargs):
             # cast err_val to a float
             err_val = 1.0 * err_val
 
-        if correlation == 'syst':
+        if correlation == 'cor':
             # systematic errors should be floats
             if not isinstance(err_val, float):
                 # if not, raise error
                 raise SyntaxError(
-                    "Error setting systematic error `%s', "
+                    "Error setting correlated error `%s', "
                     "expected number." % (err_spec,)
                 )
 
@@ -142,7 +166,7 @@ def build_dataset(xdata, ydata, **kwargs):
                     np.ones((size, size)) * err_val**2
                 )
 
-        elif correlation == 'stat':
+        elif correlation == 'err':
             # statistical errors should be error lists
             if isinstance(err_val, float):  # if a float value is given
                 # turn float value into array of identical values
@@ -201,9 +225,9 @@ class Dataset(object):
         ...  ...        ...       ...
         y_N  sigma_y_N  cor_y_1N  ...  cor_y_NN
 
-    Here, the `sigma_...` represents the statistical error of the data point
-    and `cor_..._ij` is the correlation coefficient between the *i*-th and
-    *j*-th data point.
+    Here, the `sigma_...` represents the fully uncorrelated error of the data
+    point and `cor_..._ij` is the correlation coefficient between the *i*-th
+    and *j*-th data point.
 
     Alternatively, field data can be set by passing iterables as keyword
     arguments. Available keywords for this purpose are:
@@ -247,12 +271,12 @@ class Dataset(object):
 
         the name of the `Dataset`. If omitted, the `Dataset` will be given the
         generic name 'Untitled Dataset'.
-        
+
     *axis_labels* : list of strings (optional)
 
         labels for the `x` and `y` axes. If omitted, these will be set to ``'x'``
         and ``'y'``, respectively.
-    
+
     *axis_units* : list of strings (optional)
 
         units for the `x` and `y` axes. If omitted, these will be assumed to be
@@ -676,7 +700,7 @@ class Dataset(object):
             # if the dataset has stat errors
             if self.__query_has_errors[axis]:
                 # add a heading for second column
-                helper_list[-1].append('stat. err.')
+                helper_list[-1].append('uncor. err.')
                 # if there are also correlations (syst errors)
                 if self.__query_has_correlations[axis]:
                     # add a heading for the correlation matrix

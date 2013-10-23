@@ -43,7 +43,7 @@ def damped_oscillator(t, a0=1, tau=1, omega=1, phi=0):
 # load the experimental data from a file
 my_dataset = parse_column_data(
     'damped_oscillation.dat',
-    field_order="x,y,xabsstat,yabsstat",
+    field_order="x,y,xabserr,yabserr",
     title="Damped Oscillator"
 )
 
