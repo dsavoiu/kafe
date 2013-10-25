@@ -258,14 +258,14 @@ class Dataset(object):
         points.
 
         >>> my_dataset = Dataset(data=([0., 1., 2.], [1.23, 3.45, 5.62]), \
-            cov_mats=(my_cov_mat_x, my_cov_mat_y))
+cov_mats=(my_cov_mat_x, my_cov_mat_y))
 
         This keyword argument can be omitted, in which case covariance matrices
         of zero are assumed. To specify a covariance matrix for a single axis,
         replace the other with ``None``.
 
         >>> my_dataset = Dataset(data=([0., 1., 2.], [1.23, 3.45, 5.62]), \
-            cov_mats=(None, my_cov_mat_y))
+cov_mats=(None, my_cov_mat_y))
 
     *title* : string (optional)
 
@@ -274,8 +274,8 @@ class Dataset(object):
 
     *axis_labels* : list of strings (optional)
 
-        labels for the `x` and `y` axes. If omitted, these will be set to ``'x'``
-        and ``'y'``, respectively.
+        labels for the `x` and `y` axes. If omitted, these will be set to
+        ``'x'`` and ``'y'``, respectively.
 
     *axis_units* : list of strings (optional)
 
