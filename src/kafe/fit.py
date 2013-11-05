@@ -688,7 +688,7 @@ class Fit(object):
 
         for par_nr, par_val in enumerate(self.current_parameter_values):
             print >>self.out_stream, '# '+self.parameter_names[par_nr]
-            print >>self.out_stream, '# value        stat. err.    ',
+            print >>self.out_stream, '# value        uncor. err.   ',
             if par_nr > 0:
                 print >>self.out_stream, 'correlations'
             else:
