@@ -1,3 +1,3 @@
 major = 0
 minor = 4
-revision = 7
+revision = 8
