@@ -261,10 +261,12 @@ class Plot(object):
 
         self.compute_plot_range()
 
-    def plot_all(self, show_info_for='all', show_data_for='all'):
+    def plot_all(self, show_info_for='all', show_data_for='all',
+                 show_function_for='all'):
         '''
         Plot every `Fit` object to its figure.
         '''
+        _show_data_flags = []
         for p_id, _ in enumerate(self.fits):
             if show_data_for != 'all':
                 try:
@@ -273,11 +275,31 @@ class Plot(object):
                     show_data_for = (show_data_for,)  # wrap value in tuple
 
                 if p_id in show_data_for:
-                    self.plot(p_id, show_data=True)
+                    _show_data_flags.append(True)
+                    #self.plot(p_id, show_data=True)
                 else:
-                    self.plot(p_id, show_data=False)
+                    _show_data_flags.append(False)
+                    #self.plot(p_id, show_data=False)
             else:
-                self.plot(p_id, show_data=True)
+                _show_data_flags.append(True)
+                #self.plot(p_id, show_data=True)
+
+            if show_function_for != 'all':
+                try:
+                    iter(show_function_for)
+                except:
+                    # wrap value in tuple
+                    show_function_for = (show_function_for,)
+
+                if p_id in show_function_for:
+                    self.plot(p_id, show_data=_show_data_flags[p_id],
+                              show_function=True)
+                else:
+                    self.plot(p_id, show_data=_show_data_flags[p_id],
+                              show_function=False)
+            else:
+                self.plot(p_id, show_data=_show_data_flags[p_id],
+                          show_function=True)
 
         if self.show_legend:
             self.draw_legend()
@@ -332,7 +354,7 @@ class Plot(object):
         ) - offset)[0]
 
         # TODO: allow localized text (German)?
-        text_content = "\\textbf{Fit Parameters}\n"
+        text_content = "\\textbf{Fit Info}\n"
 
         try:
             fit = self.fits[plot_spec]  # try to find the specified plot
@@ -433,7 +455,7 @@ class Plot(object):
             # if plot range in None (undefined), take the new values directly
             self.plot_range[axis] = new_span
 
-    def plot(self, p_id, show_data=True):
+    def plot(self, p_id, show_data=True, show_function=True):
         '''
         Plot the `Fit` object with the number `p_id` to its figure.
         '''
@@ -550,12 +572,15 @@ class Plot(object):
                                        yerr=error_bar_data['y'],
                                        xerr=error_bar_data['x'], **_pdata_kw)
 
-        # shade confidence band
-        cband = self.axes.fill_between(fxdata, lower_cb, upper_cb,
-                                       alpha='0.1', color=_fdata_kw['color'])
+        # plot fit function and confidence band
+        if show_function:
+            # shade confidence band
+            cband = self.axes.fill_between(fxdata, lower_cb, upper_cb,
+                                           alpha='0.1',
+                                           color=_fdata_kw['color'])
 
-        # plot fit function
-        fplot = self.axes.plot(fxdata, fydata, **_fdata_kw)
+            # plot fit function
+            fplot = self.axes.plot(fxdata, fydata, **_fdata_kw)
 
         # set the plot range
         self.axes.set_xlim(self.plot_range['x'])
