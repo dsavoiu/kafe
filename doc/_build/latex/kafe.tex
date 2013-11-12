@@ -20,7 +20,7 @@
 
 
 \title{kafe Documentation}
-\date{October 23, 2013}
+\date{November 12, 2013}
 \release{}
 \author{Daniel Savoiu}
 \newcommand{\sphinxlogo}{}
@@ -724,6 +724,24 @@ So, for example:
 creates a Dataset with an uncorrelated error of 0.3 for each \emph{y}
 coordinate and a fully correlated (systematic) error of \emph{y} of 0.1.
 
+\item[{\emph{title}}] \leavevmode{[}string (optional){]}
+The title of the \emph{Dataset}.
+
+\item[{\emph{basename}}] \leavevmode{[}string or \code{None} (optional){]}
+A basename for the \emph{Dataset}. All output files related to this dataset
+will use this as a basename. If this is \code{None} (default), the
+basename will be inferred from the filename.
+
+\item[{\emph{axis\_labels}}] \leavevmode{[}2-tuple of strings (optional){]}
+a 2-tuple containing the axis labels for the \emph{Dataset}. This is
+relevant when plotting \emph{Fits} of the \emph{Dataset}, but is ignored when
+plotting more than one \emph{Fit} in the same \emph{Plot}.
+
+\item[{\emph{axis\_units}}] \leavevmode{[}2-tuple of strings (optional){]}
+a 2-tuple containing the axis units for the \emph{Dataset}. This is
+relevant when plotting \emph{Fits} of the \emph{Dataset}, but is ignored when
+plotting more than one \emph{Fit} in the same \emph{Plot}.
+
 \end{description}
 
 \end{fulllineitems}
@@ -734,7 +752,7 @@ coordinate and a fully correlated (systematic) error of \emph{y} of 0.1.
 \label{index:file-tools-module}\label{index:module-kafe.file_tools}\index{kafe.file\_tools (module)}\phantomsection\label{index:module-file_tools}\index{file\_tools (module)}\index{parse\_column\_data() (in module kafe.file\_tools)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.file_tools.parse_column_data}\pysiglinewithargsret{\bfcode{parse\_column\_data}}{\emph{file\_to\_parse}, \emph{field\_order='x}, \emph{y'}, \emph{delimiter=' `}, \emph{cov\_mat\_files=None}, \emph{title='Untitled Dataset'}}{}
+\phantomsection\label{index:kafe.file_tools.parse_column_data}\pysiglinewithargsret{\bfcode{parse\_column\_data}}{\emph{file\_to\_parse, field\_order='x,y', delimiter=' `, cov\_mat\_files=None, title='Untitled Dataset', basename=None, axis\_labels={[}'x', `y'{]}, axis\_units={[}'`, `'{]}}}{}
 Parses a file which contains measurement data in a one-measurement-per-row
 format. The field (column) order can be specified. It defaults to \emph{x,y'.
 Valid field names are {}`x}, \emph{y}, \emph{xabserr}, \emph{yabserr}, \emph{xrelerr},
@@ -779,6 +797,24 @@ file should contain a covariance matrix for the respective axis.
 
 When creating the \emph{Dataset}, all given matrices are summed over.
 
+\item[{\emph{title}}] \leavevmode{[}string (optional){]}
+The title of the \emph{Dataset}.
+
+\item[{\emph{basename}}] \leavevmode{[}string or \code{None} (optional){]}
+A basename for the \emph{Dataset}. All output files related to this dataset
+will use this as a basename. If this is \code{None} (default), the
+basename will be inferred from the filename.
+
+\item[{\emph{axis\_labels}}] \leavevmode{[}2-tuple of strings (optional){]}
+a 2-tuple containing the axis labels for the \emph{Dataset}. This is
+relevant when plotting \emph{Fits} of the \emph{Dataset}, but is ignored when
+plotting more than one \emph{Fit} in the same \emph{Plot}.
+
+\item[{\emph{axis\_units}}] \leavevmode{[}2-tuple of strings (optional){]}
+a 2-tuple containing the axis units for the \emph{Dataset}. This is
+relevant when plotting \emph{Fits} of the \emph{Dataset}, but is ignored when
+plotting more than one \emph{Fit} in the same \emph{Plot}.
+
 \item[{\textbf{return}}] \leavevmode{[}\emph{Dataset}{]}
 A Dataset built from the parsed file.
 
@@ -817,7 +853,7 @@ meaning any whitespace.
 \label{index:fit-module}\label{index:module-kafe.fit}\index{kafe.fit (module)}\phantomsection\label{index:module-fit}\index{fit (module)}\index{Fit (class in kafe.fit)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x398f5f0\textgreater{}}, \emph{fit\_label=None}}{}
+\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x27c76e0\textgreater{}}, \emph{fit\_label=None}}{}
 Bases: \code{object}
 
 Object representing a fit. This object references the fitted \emph{Dataset},
@@ -2020,7 +2056,7 @@ Initialize the plots for each fit.
 \index{plot() (Plot method)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.plot.Plot.plot}\pysiglinewithargsret{\bfcode{plot}}{\emph{p\_id}, \emph{show\_data=True}}{}
+\phantomsection\label{index:kafe.plot.Plot.plot}\pysiglinewithargsret{\bfcode{plot}}{\emph{p\_id}, \emph{show\_data=True}, \emph{show\_function=True}}{}
 Plot the \emph{Fit} object with the number \emph{p\_id} to its figure.
 
 \end{fulllineitems}
@@ -2028,7 +2064,7 @@ Plot the \emph{Fit} object with the number \emph{p\_id} to its figure.
 \index{plot\_all() (Plot method)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.plot.Plot.plot_all}\pysiglinewithargsret{\bfcode{plot\_all}}{\emph{show\_info\_for='all'}, \emph{show\_data\_for='all'}}{}
+\phantomsection\label{index:kafe.plot.Plot.plot_all}\pysiglinewithargsret{\bfcode{plot\_all}}{\emph{show\_info\_for='all'}, \emph{show\_data\_for='all'}, \emph{show\_function\_for='all'}}{}
 Plot every \emph{Fit} object to its figure.
 
 \end{fulllineitems}
@@ -2171,14 +2207,29 @@ shorten it (move the interval end towards the interval's center).
 \label{index:stream-module}\label{index:module-kafe.stream}\index{kafe.stream (module)}\phantomsection\label{index:module-stream}\index{stream (module)}\index{StreamDup (class in kafe.stream)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.stream.StreamDup}\pysiglinewithargsret{\strong{class }\bfcode{StreamDup}}{\emph{out\_file}}{}
+\phantomsection\label{index:kafe.stream.StreamDup}\pysiglinewithargsret{\strong{class }\bfcode{StreamDup}}{\emph{out\_file}, \emph{suppress\_stdout=False}}{}
 Bases: \code{object}
 
-Object for simultaneous logging to stdout and a file.
+Object for simultaneous logging to stdout and files.
+This object provides a file/like object for the outout to be written to.
+Writing to this object will write to stdout (usually the console) and to
+a file.
+\begin{description}
+\item[{\textbf{out\_file}}] \leavevmode{[}file path or file-like object or list of file paths ...{]}
+File(s) to which to log the output, along with stdout. If a file exists
+on disk, it will be appended to.
+
+\item[{\emph{suppress\_stdout}}] \leavevmode{[}boolean{]}
+Whether to log to stdout simultaneously (\code{False}) or suppress output
+to stdout (\code{True}). Default to \code{False}.
+
+\end{description}
 \index{fileno() (StreamDup method)}
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.stream.StreamDup.fileno}\pysiglinewithargsret{\bfcode{fileno}}{}{}
+Returns the file handler id of the main (first) output file.
+
 \end{fulllineitems}
 
 \index{flush() (StreamDup method)}
@@ -2208,7 +2259,12 @@ Object for simultaneous logging to stdout and a file.
 \index{write\_to\_stdout() (StreamDup method)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.stream.StreamDup.write_to_stdout}\pysiglinewithargsret{\bfcode{write\_to\_stdout}}{\emph{message}}{}
+\phantomsection\label{index:kafe.stream.StreamDup.write_to_stdout}\pysiglinewithargsret{\bfcode{write\_to\_stdout}}{\emph{message}, \emph{check\_if\_suppressed=False}}{}
+Explicitly write to stdout. This method will not check by default
+whether \code{suppress\_stdout} is set for this \emph{StreamDup}. If
+\code{check\_if\_suppressed} is explicitly set to \code{True}, then this
+check occurs.
+
 \end{fulllineitems}
 
 

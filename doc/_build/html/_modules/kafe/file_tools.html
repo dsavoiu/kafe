@@ -56,6 +56,7 @@
 <span class="sd">&#39;&#39;&#39;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">split</span>
 <span class="kn">from</span> <span class="nn">dataset</span> <span class="kn">import</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">build_dataset</span>
@@ -66,7 +67,9 @@
 
 
 <div class="viewcode-block" id="parse_column_data"><a class="viewcode-back" href="../../index.html#kafe.file_tools.parse_column_data">[docs]</a><span class="k">def</span> <span class="nf">parse_column_data</span><span class="p">(</span><span class="n">file_to_parse</span><span class="p">,</span> <span class="n">field_order</span><span class="o">=</span><span class="s">&#39;x,y&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39; &#39;</span><span class="p">,</span>
-                      <span class="n">cov_mat_files</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Untitled Dataset&quot;</span><span class="p">):</span>
+                      <span class="n">cov_mat_files</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Untitled Dataset&quot;</span><span class="p">,</span>
+                      <span class="n">basename</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">axis_labels</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">],</span>
+                      <span class="n">axis_units</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">]):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Parses a file which contains measurement data in a one-measurement-per-row</span>
 <span class="sd">    format. The field (column) order can be specified. It defaults to `x,y&#39;.</span>
@@ -114,6 +117,24 @@
 
 <span class="sd">        When creating the `Dataset`, all given matrices are summed over.</span>
 
+<span class="sd">    *title* : string (optional)</span>
+<span class="sd">        The title of the `Dataset`.</span>
+
+<span class="sd">    *basename* : string or ``None`` (optional)</span>
+<span class="sd">        A basename for the `Dataset`. All output files related to this dataset</span>
+<span class="sd">        will use this as a basename. If this is ``None`` (default), the</span>
+<span class="sd">        basename will be inferred from the filename.</span>
+
+<span class="sd">    *axis_labels* : 2-tuple of strings (optional)</span>
+<span class="sd">        a 2-tuple containing the axis labels for the `Dataset`. This is</span>
+<span class="sd">        relevant when plotting `Fits` of the `Dataset`, but is ignored when</span>
+<span class="sd">        plotting more than one `Fit` in the same `Plot`.</span>
+
+<span class="sd">    *axis_units* : 2-tuple of strings (optional)</span>
+<span class="sd">        a 2-tuple containing the axis units for the `Dataset`. This is</span>
+<span class="sd">        relevant when plotting `Fits` of the `Dataset`, but is ignored when</span>
+<span class="sd">        plotting more than one `Fit` in the same `Plot`.</span>
+
 <span class="sd">    **return** : `Dataset`</span>
 <span class="sd">        A Dataset built from the parsed file.</span>
 
@@ -126,6 +147,11 @@
                     <span class="o">%</span> <span class="p">(</span><span class="n">field_order</span><span class="p">,</span> <span class="n">file_to_parse</span><span class="p">))</span>
         <span class="c"># this will fail if a file path string was passed, so alternatively:</span>
     <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">basename</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c"># get the basename from the path</span>
+            <span class="n">_basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file_to_parse</span><span class="p">)</span>
+            <span class="c"># remove the last extension (usually &#39;.dat&#39;)</span>
+            <span class="n">basename</span> <span class="o">=</span> <span class="s">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_basename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="c"># open the file pointed to by the path</span>
         <span class="n">tmp_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_to_parse</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Reading column data (</span><span class="si">%s</span><span class="s">) from file: </span><span class="si">%s</span><span class="s">&quot;</span>
@@ -133,6 +159,10 @@
         <span class="c"># and then read the lines of the file</span>
         <span class="n">tmp_lines</span> <span class="o">=</span> <span class="n">tmp_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
         <span class="n">tmp_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c"># if basename still unset, set it to &#39;untitled&#39;</span>
+    <span class="k">if</span> <span class="n">basename</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">basename</span> <span class="o">=</span> <span class="s">&#39;untitled&#39;</span>
 
     <span class="c"># define a dictionary of fields (lists) to populate</span>
     <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:</span> <span class="p">[],</span>
@@ -203,7 +233,9 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">dataset_kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
 
-    <span class="n">dataset_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="n">title</span><span class="p">})</span>
+    <span class="n">dataset_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="n">title</span><span class="p">,</span> <span class="s">&#39;basename&#39;</span><span class="p">:</span> <span class="n">basename</span><span class="p">,</span>
+                           <span class="s">&#39;axis_labels&#39;</span><span class="p">:</span> <span class="n">axis_labels</span><span class="p">,</span>
+                           <span class="s">&#39;axis_units&#39;</span><span class="p">:</span> <span class="n">axis_units</span><span class="p">})</span>
 
     <span class="c"># parse additional covariance matrix files, if necessary</span>
     <span class="k">if</span> <span class="n">cov_mat_files</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
@@ -233,7 +265,7 @@
                         <span class="nb">isinstance</span><span class="p">(</span><span class="n">cov_mat_files</span><span class="p">[</span><span class="n">axis_id</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span>
                     <span class="p">):</span>
                         <span class="c"># we have more than one cov_mat</span>
-                        <span class="n">current_cov_mat</span> <span class="o">=</span> <span class="bp">None</span> <span class="c"># initialize to None, for now</span>
+                        <span class="n">current_cov_mat</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c"># initialize to None, for now</span>
 
                         <span class="c"># go through each matrix file for this axis</span>
                         <span class="k">for</span> <span class="n">tmp_mat_file</span> <span class="ow">in</span> <span class="n">cov_mat_files</span><span class="p">[</span><span class="n">axis_id</span><span class="p">]:</span>
@@ -370,7 +402,7 @@
     
     <div class="footer">
         &copy; Copyright 2013, Daniel Savoiu.
-      Last updated on 23 Oct, 2013.
+      Last updated on 12 Nov, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
     <!-- <div class="footer">

@@ -58,6 +58,7 @@
 <span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">join</span><span class="p">,</span> <span class="n">split</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">from</span> <span class="nn">numeric_tools</span> <span class="kn">import</span> <span class="n">cov_to_cor</span><span class="p">,</span> <span class="n">cor_to_cov</span><span class="p">,</span> <span class="n">extract_statistical_errors</span><span class="p">,</span> \
     <span class="n">zero_pad_lower_triangle</span><span class="p">,</span> <span class="n">make_symmetric_lower</span>
@@ -113,7 +114,23 @@
 <span class="sd">        creates a Dataset with an uncorrelated error of 0.3 for each `y`</span>
 <span class="sd">        coordinate and a fully correlated (systematic) error of `y` of 0.1.</span>
 
+<span class="sd">    *title* : string (optional)</span>
+<span class="sd">        The title of the `Dataset`.</span>
 
+<span class="sd">    *basename* : string or ``None`` (optional)</span>
+<span class="sd">        A basename for the `Dataset`. All output files related to this dataset</span>
+<span class="sd">        will use this as a basename. If this is ``None`` (default), the</span>
+<span class="sd">        basename will be inferred from the filename.</span>
+
+<span class="sd">    *axis_labels* : 2-tuple of strings (optional)</span>
+<span class="sd">        a 2-tuple containing the axis labels for the `Dataset`. This is</span>
+<span class="sd">        relevant when plotting `Fits` of the `Dataset`, but is ignored when</span>
+<span class="sd">        plotting more than one `Fit` in the same `Plot`.</span>
+
+<span class="sd">    *axis_units* : 2-tuple of strings (optional)</span>
+<span class="sd">        a 2-tuple containing the axis units for the `Dataset`. This is</span>
+<span class="sd">        relevant when plotting `Fits` of the `Dataset`, but is ignored when</span>
+<span class="sd">        plotting more than one `Fit` in the same `Plot`.</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
 
@@ -146,7 +163,7 @@
 
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>   <span class="c"># go through the keyword arguments</span>
 
-        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;title&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;title&#39;</span><span class="p">,</span> <span class="s">&#39;basename&#39;</span><span class="p">,</span> <span class="s">&#39;axis_labels&#39;</span><span class="p">,</span> <span class="s">&#39;axis_units&#39;</span><span class="p">):</span>
             <span class="n">kwargs_to_transmit</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">key</span><span class="p">:</span> <span class="n">val</span><span class="p">})</span>
             <span class="k">continue</span>
         <span class="k">else</span><span class="p">:</span>
@@ -306,14 +323,14 @@
 <span class="sd">        points.</span>
 
 <span class="sd">        &gt;&gt;&gt; my_dataset = Dataset(data=([0., 1., 2.], [1.23, 3.45, 5.62]), \</span>
-<span class="sd">            cov_mats=(my_cov_mat_x, my_cov_mat_y))</span>
+<span class="sd">cov_mats=(my_cov_mat_x, my_cov_mat_y))</span>
 
 <span class="sd">        This keyword argument can be omitted, in which case covariance matrices</span>
 <span class="sd">        of zero are assumed. To specify a covariance matrix for a single axis,</span>
 <span class="sd">        replace the other with ``None``.</span>
 
 <span class="sd">        &gt;&gt;&gt; my_dataset = Dataset(data=([0., 1., 2.], [1.23, 3.45, 5.62]), \</span>
-<span class="sd">            cov_mats=(None, my_cov_mat_y))</span>
+<span class="sd">cov_mats=(None, my_cov_mat_y))</span>
 
 <span class="sd">    *title* : string (optional)</span>
 
@@ -322,8 +339,8 @@
 
 <span class="sd">    *axis_labels* : list of strings (optional)</span>
 
-<span class="sd">        labels for the `x` and `y` axes. If omitted, these will be set to ``&#39;x&#39;``</span>
-<span class="sd">        and ``&#39;y&#39;``, respectively.</span>
+<span class="sd">        labels for the `x` and `y` axes. If omitted, these will be set to</span>
+<span class="sd">        ``&#39;x&#39;`` and ``&#39;y&#39;``, respectively.</span>
 
 <span class="sd">    *axis_units* : list of strings (optional)</span>
 
@@ -369,6 +386,9 @@
 
         <span class="c"># name the Dataset</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_label</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;title&#39;</span><span class="p">,</span> <span class="s">&quot;Untitled Dataset&quot;</span><span class="p">)</span>
+
+        <span class="c"># set the basename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">basename</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;basename&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
 
         <span class="c"># check for an input file</span>
         <span class="k">if</span> <span class="s">&#39;input_file&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
@@ -469,10 +489,10 @@
             <span class="n">mat</span><span class="o">.</span><span class="n">I</span>  <span class="c"># try to invert it</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="c"># if that fails, mat is singular</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__query_cov_mats_regular</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__query_cov_mats_regular</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c"># else, mat is regular</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__query_cov_mats_regular</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__query_cov_mats_regular</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
 
         <span class="c"># check if the matrix is zero or None and set/unset a flag accordingly</span>
         <span class="k">if</span> <span class="n">mat</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="p">(</span><span class="n">mat</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
@@ -822,6 +842,12 @@
             <span class="n">tmp_lines</span> <span class="o">=</span> <span class="n">input_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
         <span class="c"># this will fail if a file path string was passed, so alternatively:</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="c"># if not basename was provided in the arguments</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">basename</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="c"># get the basename from the path</span>
+                <span class="n">_basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
+                <span class="c"># remove the last extension (usually &#39;.dat&#39;)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">basename</span> <span class="o">=</span> <span class="s">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_basename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
             <span class="c"># open the file pointed to by the path</span>
             <span class="n">tmp_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
             <span class="c"># and then read the lines of the file</span>
@@ -1026,7 +1052,7 @@
     
     <div class="footer">
         &copy; Copyright 2013, Daniel Savoiu.
-      Last updated on 23 Oct, 2013.
+      Last updated on 12 Nov, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
     <!-- <div class="footer">

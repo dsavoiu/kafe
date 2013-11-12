@@ -466,6 +466,20 @@ relativity specification (<em>abs</em> or <em>rel</em>) and error correlation ty
 <p class="last">creates a Dataset with an uncorrelated error of 0.3 for each <cite>y</cite>
 coordinate and a fully correlated (systematic) error of <cite>y</cite> of 0.1.</p>
 </dd>
+<dt><em>title</em> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
+<dd>The title of the <cite>Dataset</cite>.</dd>
+<dt><em>basename</em> <span class="classifier-delimiter">:</span> <span class="classifier">string or <tt class="docutils literal"><span class="pre">None</span></tt> (optional)</span></dt>
+<dd>A basename for the <cite>Dataset</cite>. All output files related to this dataset
+will use this as a basename. If this is <tt class="docutils literal"><span class="pre">None</span></tt> (default), the
+basename will be inferred from the filename.</dd>
+<dt><em>axis_labels</em> <span class="classifier-delimiter">:</span> <span class="classifier">2-tuple of strings (optional)</span></dt>
+<dd>a 2-tuple containing the axis labels for the <cite>Dataset</cite>. This is
+relevant when plotting <cite>Fits</cite> of the <cite>Dataset</cite>, but is ignored when
+plotting more than one <cite>Fit</cite> in the same <cite>Plot</cite>.</dd>
+<dt><em>axis_units</em> <span class="classifier-delimiter">:</span> <span class="classifier">2-tuple of strings (optional)</span></dt>
+<dd>a 2-tuple containing the axis units for the <cite>Dataset</cite>. This is
+relevant when plotting <cite>Fits</cite> of the <cite>Dataset</cite>, but is ignored when
+plotting more than one <cite>Fit</cite> in the same <cite>Plot</cite>.</dd>
 </dl>
 </dd></dl>
 
@@ -474,7 +488,7 @@ coordinate and a fully correlated (systematic) error of <cite>y</cite> of 0.1.</
 <span id="file-tools-module"></span><h2><a class="reference internal" href="../index.html#module-file_tools" title="file_tools: This submodule provides a set of helper functions for parsing files (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">file_tools</span></tt></a> Module<a class="headerlink" href="#module-kafe.file_tools" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-file_tools"></span><dl class="function">
 <dt id="kafe.file_tools.parse_column_data">
-<tt class="descname">parse_column_data</tt><big>(</big><em>file_to_parse</em>, <em>field_order='x</em>, <em>y'</em>, <em>delimiter=' '</em>, <em>cov_mat_files=None</em>, <em>title='Untitled Dataset'</em><big>)</big><a class="reference internal" href="../_modules/kafe/file_tools.html#parse_column_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.file_tools.parse_column_data" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">parse_column_data</tt><big>(</big><em>file_to_parse, field_order='x,y', delimiter=' ', cov_mat_files=None, title='Untitled Dataset', basename=None, axis_labels=['x', 'y'], axis_units=['', '']</em><big>)</big><a class="reference internal" href="../_modules/kafe/file_tools.html#parse_column_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.file_tools.parse_column_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses a file which contains measurement data in a one-measurement-per-row
 format. The field (column) order can be specified. It defaults to <cite>x,y&#8217;.
 Valid field names are `x</cite>, <cite>y</cite>, <cite>xabserr</cite>, <cite>yabserr</cite>, <cite>xrelerr</cite>,
@@ -510,6 +524,20 @@ object, or an iterable containing files and file-like objects. Each
 file should contain a covariance matrix for the respective axis.</p>
 <p class="last">When creating the <cite>Dataset</cite>, all given matrices are summed over.</p>
 </dd>
+<dt><em>title</em> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
+<dd>The title of the <cite>Dataset</cite>.</dd>
+<dt><em>basename</em> <span class="classifier-delimiter">:</span> <span class="classifier">string or <tt class="docutils literal"><span class="pre">None</span></tt> (optional)</span></dt>
+<dd>A basename for the <cite>Dataset</cite>. All output files related to this dataset
+will use this as a basename. If this is <tt class="docutils literal"><span class="pre">None</span></tt> (default), the
+basename will be inferred from the filename.</dd>
+<dt><em>axis_labels</em> <span class="classifier-delimiter">:</span> <span class="classifier">2-tuple of strings (optional)</span></dt>
+<dd>a 2-tuple containing the axis labels for the <cite>Dataset</cite>. This is
+relevant when plotting <cite>Fits</cite> of the <cite>Dataset</cite>, but is ignored when
+plotting more than one <cite>Fit</cite> in the same <cite>Plot</cite>.</dd>
+<dt><em>axis_units</em> <span class="classifier-delimiter">:</span> <span class="classifier">2-tuple of strings (optional)</span></dt>
+<dd>a 2-tuple containing the axis units for the <cite>Dataset</cite>. This is
+relevant when plotting <cite>Fits</cite> of the <cite>Dataset</cite>, but is ignored when
+plotting more than one <cite>Fit</cite> in the same <cite>Plot</cite>.</dd>
 <dt><strong>return</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><cite>Dataset</cite></span></dt>
 <dd>A Dataset built from the parsed file.</dd>
 </dl>
@@ -539,7 +567,7 @@ meaning any whitespace.</dd>
 <span id="fit-module"></span><h2><a class="reference internal" href="../index.html#module-fit" title="fit: This submodule defines a `Fit` object which performs the actual fitting given a `Dataset` and a fit function. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">fit</span></tt></a> Module<a class="headerlink" href="#module-kafe.fit" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-fit"></span><dl class="class">
 <dt id="kafe.fit.Fit">
-<em class="property">class </em><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x398f5f0&gt;</em>, <em>fit_label=None</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x27c76e0&gt;</em>, <em>fit_label=None</em><big>)</big><a class="reference internal" href="../_modules/kafe/fit.html#Fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Object representing a fit. This object references the fitted <cite>Dataset</cite>,
 the fit function and the resulting fit parameters.</p>
@@ -1476,13 +1504,13 @@ nothing.</dd>
 
 <dl class="method">
 <dt id="kafe.plot.Plot.plot">
-<tt class="descname">plot</tt><big>(</big><em>p_id</em>, <em>show_data=True</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#Plot.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.plot.Plot.plot" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">plot</tt><big>(</big><em>p_id</em>, <em>show_data=True</em>, <em>show_function=True</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#Plot.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.plot.Plot.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the <cite>Fit</cite> object with the number <cite>p_id</cite> to its figure.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="kafe.plot.Plot.plot_all">
-<tt class="descname">plot_all</tt><big>(</big><em>show_info_for='all'</em>, <em>show_data_for='all'</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#Plot.plot_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.plot.Plot.plot_all" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">plot_all</tt><big>(</big><em>show_info_for='all'</em>, <em>show_data_for='all'</em>, <em>show_function_for='all'</em><big>)</big><a class="reference internal" href="../_modules/kafe/plot.html#Plot.plot_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.plot.Plot.plot_all" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot every <cite>Fit</cite> object to its figure.</p>
 </dd></dl>
 
@@ -1594,13 +1622,25 @@ shorten it (move the interval end towards the interval&#8217;s center).</p>
 <span id="stream-module"></span><h2><a class="reference internal" href="../index.html#module-stream" title="stream: A submodule containing an object for simultaneous output to file and to ``sys.stdout``. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">stream</span></tt></a> Module<a class="headerlink" href="#module-kafe.stream" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-stream"></span><dl class="class">
 <dt id="kafe.stream.StreamDup">
-<em class="property">class </em><tt class="descname">StreamDup</tt><big>(</big><em>out_file</em><big>)</big><a class="reference internal" href="../_modules/kafe/stream.html#StreamDup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.stream.StreamDup" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descname">StreamDup</tt><big>(</big><em>out_file</em>, <em>suppress_stdout=False</em><big>)</big><a class="reference internal" href="../_modules/kafe/stream.html#StreamDup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.stream.StreamDup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>Object for simultaneous logging to stdout and a file.</p>
+<p>Object for simultaneous logging to stdout and files.
+This object provides a file/like object for the outout to be written to.
+Writing to this object will write to stdout (usually the console) and to
+a file.</p>
+<dl class="docutils">
+<dt><strong>out_file</strong> <span class="classifier-delimiter">:</span> <span class="classifier">file path or file-like object or list of file paths ...</span></dt>
+<dd>File(s) to which to log the output, along with stdout. If a file exists
+on disk, it will be appended to.</dd>
+<dt><em>suppress_stdout</em> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
+<dd>Whether to log to stdout simultaneously (<tt class="docutils literal"><span class="pre">False</span></tt>) or suppress output
+to stdout (<tt class="docutils literal"><span class="pre">True</span></tt>). Default to <tt class="docutils literal"><span class="pre">False</span></tt>.</dd>
+</dl>
 <dl class="method">
 <dt id="kafe.stream.StreamDup.fileno">
 <tt class="descname">fileno</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/kafe/stream.html#StreamDup.fileno"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.stream.StreamDup.fileno" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the file handler id of the main (first) output file.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="kafe.stream.StreamDup.flush">
@@ -1624,8 +1664,12 @@ shorten it (move the interval end towards the interval&#8217;s center).</p>
 
 <dl class="method">
 <dt id="kafe.stream.StreamDup.write_to_stdout">
-<tt class="descname">write_to_stdout</tt><big>(</big><em>message</em><big>)</big><a class="reference internal" href="../_modules/kafe/stream.html#StreamDup.write_to_stdout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.stream.StreamDup.write_to_stdout" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">write_to_stdout</tt><big>(</big><em>message</em>, <em>check_if_suppressed=False</em><big>)</big><a class="reference internal" href="../_modules/kafe/stream.html#StreamDup.write_to_stdout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kafe.stream.StreamDup.write_to_stdout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Explicitly write to stdout. This method will not check by default
+whether <tt class="docutils literal"><span class="pre">suppress_stdout</span></tt> is set for this <cite>StreamDup</cite>. If
+<tt class="docutils literal"><span class="pre">check_if_suppressed</span></tt> is explicitly set to <tt class="docutils literal"><span class="pre">True</span></tt>, then this
+check occurs.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1708,7 +1752,7 @@ shorten it (move the interval end towards the interval&#8217;s center).</p>
     
     <div class="footer">
         &copy; Copyright 2013, Daniel Savoiu.
-      Last updated on 23 Oct, 2013.
+      Last updated on 12 Nov, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
     <!-- <div class="footer">

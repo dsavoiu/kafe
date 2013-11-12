@@ -66,6 +66,7 @@
 <span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="n">F_SIGNIFICANCE</span><span class="p">,</span> <span class="n">M_CONFIDENCE_LEVEL</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">floor</span><span class="p">,</span> <span class="n">log</span>
 
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">stream</span> <span class="kn">import</span> <span class="n">StreamDup</span>
 
 <span class="c"># import main logger for kafe</span>
@@ -229,6 +230,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">fit_label</span> <span class="o">=</span> <span class="n">fit_label</span>
 
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="c"># TODO: silent cast to Fit-function</span>
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;Fit-function object </span><span class="si">%s</span><span class="s"> does not have &quot;</span>
                                  <span class="s">&quot;the required attributes. Did you maybe &quot;</span>
                                  <span class="s">&quot; forget the `@FitFunction` decorator?&quot;</span>
@@ -246,6 +248,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="c"># set the identity matrix as starting cov_mat for the fit</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">current_cov_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_size</span><span class="p">()))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;No `y`-errors provided for dataset. Assuming all &quot;</span>
+                        <span class="s">&quot;data points have the `y`-error 1.0&quot;</span><span class="p">)</span>
 
         <span class="c">#: this `Fit`&#39;s minimizer (`Minuit`)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span> <span class="o">=</span> <span class="n">Minuit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">,</span>
@@ -263,7 +267,27 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ydata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">)</span>
 
         <span class="c"># Define a stream for storing the output</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span> <span class="o">=</span> <span class="n">StreamDup</span><span class="p">(</span><span class="s">&#39;fit.log&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">basename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">_basename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">basename</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_basename</span> <span class="o">=</span> <span class="s">&#39;untitled&#39;</span>
+        <span class="n">_basenamelog</span> <span class="o">=</span> <span class="n">_basename</span><span class="o">+</span><span class="s">&#39;.log&#39;</span>
+
+        <span class="c"># check for old logs</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">_basenamelog</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&#39;Old log files found for fit `</span><span class="si">%s</span><span class="s">`. kafe will not &#39;</span>
+                           <span class="s">&#39;delete these files, but it is recommended to do &#39;</span>
+                           <span class="s">&#39;so, in order to reduce clutter.&#39;</span><span class="p">)</span>
+
+            <span class="c"># find first incremental name for which no file exists</span>
+            <span class="n">_id</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">while</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">_basename</span><span class="o">+</span><span class="s">&#39;.&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">_id</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;.log&#39;</span><span class="p">):</span>
+                <span class="n">_id</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c"># move existing log to that location</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">_basenamelog</span><span class="p">,</span> <span class="n">_basename</span><span class="o">+</span><span class="s">&#39;.&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">_id</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;.log&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span> <span class="o">=</span> <span class="n">StreamDup</span><span class="p">([</span><span class="s">&#39;fit.log&#39;</span><span class="p">,</span> <span class="n">_basenamelog</span><span class="p">])</span>
 
         <span class="c"># Do the fit (Should the fit be done in __init__?)</span>
         <span class="c">#self.do_fit()</span>
@@ -419,11 +443,11 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="c"># TODO: find sensible starting values for parameter errors</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">no_warning</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;Parameter errors not given. Setting to &quot;</span>
-                                <span class="s">&quot;1/1000th of the parameter values.&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;Parameter starting errors not given. Setting &quot;</span>
+                                <span class="s">&quot;to 1/1000th of the parameter values.&quot;</span><span class="p">)</span>
                 <span class="c">#: the current uncertainties of the parameters</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_errors</span> <span class="o">=</span> <span class="p">[</span>
-                    <span class="n">val</span><span class="o">/</span><span class="mf">1000.0</span> <span class="k">if</span> <span class="n">val</span> <span class="k">else</span> <span class="mf">0.001</span>
+                    <span class="n">val</span><span class="o">/</span><span class="mf">1000.0</span> <span class="k">if</span> <span class="n">val</span> <span class="k">else</span> <span class="mf">0.001</span>  <span class="c"># handle the case val = 0</span>
                     <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_values</span>
                 <span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c"># if no positional arguments, rely on keywords</span>
@@ -562,7 +586,7 @@
 <span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="c"># insert timestamp</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="o">.</span><span class="n">write_timestamp</span><span class="p">(</span><span class="s">&#39;Fit from&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="o">.</span><span class="n">write_timestamp</span><span class="p">(</span><span class="s">&#39;Fit performed on&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
             <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;###########&quot;</span>
@@ -719,7 +743,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;status_code&#39;</span><span class="p">)</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;chi2prob&#39;</span><span class="p">,</span> <span class="n">chi2prob</span>
-        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;H0      &#39;</span><span class="p">,</span> <span class="n">hypothesis_status</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;HYPTEST &#39;</span><span class="p">,</span> <span class="n">hypothesis_status</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
 </div>
 <div class="viewcode-block" id="Fit.print_fit_results"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.print_fit_results">[docs]</a>    <span class="k">def</span> <span class="nf">print_fit_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -736,7 +760,7 @@
 
         <span class="k">for</span> <span class="n">par_nr</span><span class="p">,</span> <span class="n">par_val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_parameter_values</span><span class="p">):</span>
             <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;# &#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span><span class="p">[</span><span class="n">par_nr</span><span class="p">]</span>
-            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;# value        stat. err.    &#39;</span><span class="p">,</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;# value        uncor. err.   &#39;</span><span class="p">,</span>
             <span class="k">if</span> <span class="n">par_nr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;correlations&#39;</span>
             <span class="k">else</span><span class="p">:</span>
@@ -805,7 +829,7 @@
     
     <div class="footer">
         &copy; Copyright 2013, Daniel Savoiu.
-      Last updated on 23 Oct, 2013.
+      Last updated on 12 Nov, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
     <!-- <div class="footer">
