@@ -10,12 +10,13 @@ You can browse the HTML documentation in:
 
     kafe-<version>/doc/_build/html/index.html
 
-Requirements for kafe are:
+The recommended requirements for kafe are as follows.
+The version numbers between parentheses refer to the minimum requirements:
 
 Python packages:
-    * SciPy >= 0.12.0, which includes
-        - NumPy >= 1.7.1 and 
-        - matplotlib >= 1.2.0
+    * SciPy >= 0.12.0 (0.9.0), which includes
+        - NumPy >= 1.7.1 (1.6.1) and 
+        - matplotlib >= 1.2.0 (1.1.1)
 
 Other dependencies:
     * ROOT >= 5.34 (http://root.cern.ch)
