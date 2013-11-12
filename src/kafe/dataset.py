@@ -10,6 +10,7 @@
 from string import join, split
 
 import numpy as np
+import os
 
 from numeric_tools import cov_to_cor, cor_to_cov, extract_statistical_errors, \
     zero_pad_lower_triangle, make_symmetric_lower
@@ -65,7 +66,23 @@ correlated error for the axis is then set to that.
         creates a Dataset with an uncorrelated error of 0.3 for each `y`
         coordinate and a fully correlated (systematic) error of `y` of 0.1.
 
+    *title* : string (optional)
+        The title of the `Dataset`.
 
+    *basename* : string or ``None`` (optional)
+        A basename for the `Dataset`. All output files related to this dataset
+        will use this as a basename. If this is ``None`` (default), the
+        basename will be inferred from the filename.
+
+    *axis_labels* : 2-tuple of strings (optional)
+        a 2-tuple containing the axis labels for the `Dataset`. This is
+        relevant when plotting `Fits` of the `Dataset`, but is ignored when
+        plotting more than one `Fit` in the same `Plot`.
+
+    *axis_units* : 2-tuple of strings (optional)
+        a 2-tuple containing the axis units for the `Dataset`. This is
+        relevant when plotting `Fits` of the `Dataset`, but is ignored when
+        plotting more than one `Fit` in the same `Plot`.
 
     '''
 
@@ -98,7 +115,7 @@ correlated error for the axis is then set to that.
 
     for key, val in kwargs.iteritems():   # go through the keyword arguments
 
-        if key in ('title'):
+        if key in ('title', 'basename', 'axis_labels', 'axis_units'):
             kwargs_to_transmit.update({key: val})
             continue
         else:
@@ -322,6 +339,9 @@ cov_mats=(None, my_cov_mat_y))
         # name the Dataset
         self.data_label = kwargs.get('title', "Untitled Dataset")
 
+        # set the basename
+        self.basename = kwargs.get('basename', None)
+
         # check for an input file
         if 'input_file' in kwargs:
             self.read_from_file(kwargs['input_file'])
@@ -421,10 +441,10 @@ cov_mats=(None, my_cov_mat_y))
             mat.I  # try to invert it
         except:
             # if that fails, mat is singular
-            self.__query_cov_mats_regular[axis] = True
+            self.__query_cov_mats_regular[axis] = False
         else:
             # else, mat is regular
-            self.__query_cov_mats_regular[axis] = False
+            self.__query_cov_mats_regular[axis] = True
 
         # check if the matrix is zero or None and set/unset a flag accordingly
         if mat is None or (mat == 0).all():
@@ -774,6 +794,12 @@ cov_mats=(None, my_cov_mat_y))
             tmp_lines = input_file.readlines()
         # this will fail if a file path string was passed, so alternatively:
         except AttributeError:
+            # if not basename was provided in the arguments
+            if self.basename is None:
+                # get the basename from the path
+                _basename = os.path.basename(input_file)
+                # remove the last extension (usually '.dat')
+                self.basename = '.'.join(_basename.split('.')[:-1])
             # open the file pointed to by the path
             tmp_file = open(input_file, 'r')
             # and then read the lines of the file

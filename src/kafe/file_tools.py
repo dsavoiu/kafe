@@ -8,6 +8,7 @@
 '''
 
 import numpy as np
+import os
 
 from string import split
 from dataset import Dataset, build_dataset
@@ -18,7 +19,9 @@ logger = logging.getLogger('kafe')
 
 
 def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
-                      cov_mat_files=None, title="Untitled Dataset"):
+                      cov_mat_files=None, title="Untitled Dataset",
+                      basename=None, axis_labels=['x', 'y'],
+                      axis_units=['', '']):
     '''
     Parses a file which contains measurement data in a one-measurement-per-row
     format. The field (column) order can be specified. It defaults to `x,y'.
@@ -66,6 +69,24 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
 
         When creating the `Dataset`, all given matrices are summed over.
 
+    *title* : string (optional)
+        The title of the `Dataset`.
+
+    *basename* : string or ``None`` (optional)
+        A basename for the `Dataset`. All output files related to this dataset
+        will use this as a basename. If this is ``None`` (default), the
+        basename will be inferred from the filename.
+
+    *axis_labels* : 2-tuple of strings (optional)
+        a 2-tuple containing the axis labels for the `Dataset`. This is
+        relevant when plotting `Fits` of the `Dataset`, but is ignored when
+        plotting more than one `Fit` in the same `Plot`.
+
+    *axis_units* : 2-tuple of strings (optional)
+        a 2-tuple containing the axis units for the `Dataset`. This is
+        relevant when plotting `Fits` of the `Dataset`, but is ignored when
+        plotting more than one `Fit` in the same `Plot`.
+
     **return** : `Dataset`
         A Dataset built from the parsed file.
 
@@ -78,6 +99,11 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
                     % (field_order, file_to_parse))
         # this will fail if a file path string was passed, so alternatively:
     except AttributeError:
+        if basename is None:
+            # get the basename from the path
+            _basename = os.path.basename(file_to_parse)
+            # remove the last extension (usually '.dat')
+            basename = '.'.join(_basename.split('.')[:-1])
         # open the file pointed to by the path
         tmp_file = open(file_to_parse, 'r')
         logger.info("Reading column data (%s) from file: %s"
@@ -85,6 +111,10 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
         # and then read the lines of the file
         tmp_lines = tmp_file.readlines()
         tmp_file.close()
+
+    # if basename still unset, set it to 'untitled'
+    if basename is None:
+        basename = 'untitled'
 
     # define a dictionary of fields (lists) to populate
     fields = {'x': [],
@@ -155,7 +185,9 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
             else:
                 dataset_kwargs[key] = np.asarray(fields[key])
 
-    dataset_kwargs.update({'title': title})
+    dataset_kwargs.update({'title': title, 'basename': basename,
+                           'axis_labels': axis_labels,
+                           'axis_units': axis_units})
 
     # parse additional covariance matrix files, if necessary
     if cov_mat_files is not None:
@@ -185,7 +217,7 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
                         isinstance(cov_mat_files[axis_id], list)
                     ):
                         # we have more than one cov_mat
-                        current_cov_mat = None # initialize to None, for now
+                        current_cov_mat = None  # initialize to None, for now
 
                         # go through each matrix file for this axis
                         for tmp_mat_file in cov_mat_files[axis_id]:

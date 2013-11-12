@@ -485,7 +485,7 @@ class Minuit:
         # Run minimization algorithm (MIGRAD + HESSE)
         error_code = Long(0)
 
-        prefix = "Minuit run at"  # set the timestamp prefix
+        prefix = "Minuit run on"  # set the timestamp prefix
 
         # insert timestamp
         self.out_file.write('\n')

@@ -18,6 +18,7 @@ from numeric_tools import cov_to_cor, extract_statistical_errors
 from constants import F_SIGNIFICANCE, M_CONFIDENCE_LEVEL
 from math import floor, log
 
+import os
 from stream import StreamDup
 
 # import main logger for kafe
@@ -181,6 +182,7 @@ class Fit(object):
             self.fit_label = fit_label
 
         except AttributeError:
+            # TODO: silent cast to Fit-function
             raise AttributeError("Fit-function object %s does not have "
                                  "the required attributes. Did you maybe "
                                  " forget the `@FitFunction` decorator?"
@@ -198,6 +200,8 @@ class Fit(object):
         else:
             # set the identity matrix as starting cov_mat for the fit
             self.current_cov_mat = np.asmatrix(np.eye(self.dataset.get_size()))
+            logger.info("No `y`-errors provided for dataset. Assuming all "
+                        "data points have the `y`-error 1.0")
 
         #: this `Fit`'s minimizer (`Minuit`)
         self.minimizer = Minuit(self.number_of_parameters,
@@ -215,7 +219,27 @@ class Fit(object):
         self.ydata = self.dataset.get_data('y')
 
         # Define a stream for storing the output
-        self.out_stream = StreamDup('fit.log')
+        if self.dataset.basename is not None:
+            _basename = self.dataset.basename
+        else:
+            _basename = 'untitled'
+        _basenamelog = _basename+'.log'
+
+        # check for old logs
+        if os.path.exists(_basenamelog):
+            logger.warning('Old log files found for fit `%s`. kafe will not '
+                           'delete these files, but it is recommended to do '
+                           'so, in order to reduce clutter.')
+
+            # find first incremental name for which no file exists
+            _id = 1
+            while os.path.exists(_basename+'.'+str(_id)+'.log'):
+                _id += 1
+
+            # move existing log to that location
+            os.rename(_basenamelog, _basename+'.'+str(_id)+'.log')
+
+        self.out_stream = StreamDup(['fit.log', _basenamelog])
 
         # Do the fit (Should the fit be done in __init__?)
         #self.do_fit()
@@ -371,11 +395,11 @@ class Fit(object):
             else:
                 # TODO: find sensible starting values for parameter errors
                 if not no_warning:
-                    logger.warn("Parameter errors not given. Setting to "
-                                "1/1000th of the parameter values.")
+                    logger.warn("Parameter starting errors not given. Setting "
+                                "to 1/1000th of the parameter values.")
                 #: the current uncertainties of the parameters
                 self.current_parameter_errors = [
-                    val/1000.0 if val else 0.001
+                    val/1000.0 if val else 0.001  # handle the case val = 0
                     for val in self.current_parameter_values
                 ]
         else:  # if no positional arguments, rely on keywords
@@ -514,7 +538,7 @@ class Fit(object):
         '''
 
         # insert timestamp
-        self.out_stream.write_timestamp('Fit from')
+        self.out_stream.write_timestamp('Fit performed on')
 
         if not quiet:
             print >>self.out_stream, "###########"
@@ -671,7 +695,7 @@ class Fit(object):
             self.minimizer.get_fit_info('status_code')
         print >>self.out_stream, ''
         print >>self.out_stream, 'chi2prob', chi2prob
-        print >>self.out_stream, 'H0      ', hypothesis_status
+        print >>self.out_stream, 'HYPTEST ', hypothesis_status
         print >>self.out_stream, ''
 
     def print_fit_results(self):

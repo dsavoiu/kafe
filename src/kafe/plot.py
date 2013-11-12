@@ -229,6 +229,10 @@ class Plot(object):
                 if unit:
                     self.axis_labels[label_id] += " [\\textrm{%s}]" % (unit,)
         else:
+            logger.warning("More than one Fit in the same Plot "
+                           "detected. In this case, axis labels default to "
+                           "`x` and `y` and must be set explicitly if "
+                           "something different is desired.")
             self.axis_labels = ('$x$', '$y$')  # set default axis names
 
         self.init_plots()               # initialize the plots

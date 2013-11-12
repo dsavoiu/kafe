@@ -40,13 +40,17 @@ from constants import D_DEBUG_MODE
 
 logger = logging.getLogger('kafe')  # create logger
 ch = logging.StreamHandler()  # create console handler (ch)
-
+fmt = "%(name)s %(asctime)s :: " \
+      "%(levelname)s :: %(message)s"
+                           
 if D_DEBUG_MODE:
     logger.setLevel(logging.DEBUG)
     ch.setLevel(logging.DEBUG)
+    logging.basicConfig(filename='kafe.log', level=logging.DEBUG, format=fmt)
 else:
     logger.setLevel(logging.WARNING)
     ch.setLevel(logging.WARNING)
+    logging.basicConfig(filename='kafe.log', level=logging.WARNING, format=fmt)
 
 # create formatter
 formatter = logging.Formatter("%(name)s %(asctime)s :: "
