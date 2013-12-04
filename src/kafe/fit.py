@@ -667,9 +667,10 @@ class Fit(object):
     def print_fit_details(self):
         '''prints some fit goodness details'''
 
-        chi2prob = self.minimizer.get_chi2_probability(
-            self.dataset.get_size() - self.number_of_parameters
-        )
+        _ndf = self.dataset.get_size() - self.number_of_parameters
+
+
+        chi2prob = self.minimizer.get_chi2_probability(_ndf)
         if chi2prob < M_CONFIDENCE_LEVEL:
             hypothesis_status = 'rejected (CL %d%s)' \
                 % (int(M_CONFIDENCE_LEVEL*100), '%')
@@ -681,12 +682,28 @@ class Fit(object):
         print >>self.out_stream, "# Fit details #"
         print >>self.out_stream, "###############"
         print >>self.out_stream, ''
+
+        # Print a warning if NDF is zero
+        if not _ndf:
+            print >>self.out_stream, \
+                  "# WARNING: Number of degrees of freedom is zero!"
+            print >>self.out_stream, \
+                  "# Please review parametrization..."
+            print ''
+        elif _ndf < 0:
+            print >>self.out_stream, \
+                  "# WARNING: Number of degrees of freedom is negative!"
+            print >>self.out_stream, \
+                  "# Please review parametrization..."
+            print ''
+
         print >>self.out_stream, 'FCN     ', \
             self.minimizer.get_fit_info('fcn')
-        print >>self.out_stream, 'FCN/ndf ', \
-            self.minimizer.get_fit_info('fcn')/(
-                self.dataset.get_size() - self.number_of_parameters
-            )
+        if _ndf:
+            print >>self.out_stream, 'FCN/ndf ', \
+                self.minimizer.get_fit_info('fcn')/(_ndf)
+        else:
+            print >>self.out_stream, 'FCN/ndf ', "NaN"
         print >>self.out_stream, 'EdM     ', \
             self.minimizer.get_fit_info('edm')
         print >>self.out_stream, 'UP      ', \
