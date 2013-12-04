@@ -12,6 +12,8 @@ from minuit import Minuit
 from function_tools import outer_product
 from copy import copy
 
+from function_tools import FitFunction
+
 import numpy as np
 from numeric_tools import cov_to_cor, extract_statistical_errors
 
@@ -148,45 +150,46 @@ class Fit(object):
 
         self.dataset = dataset  #: this Fit instance's child `Dataset`
 
-        #: the fit function used for this `Fit`
-        self.fit_function = fit_function
+        if isinstance(fit_function, FitFunction):
+            #: the fit function used for this `Fit`
+            self.fit_function = fit_function
+        else:
+            # if not done alreasy, apply the FitFunction
+            # decorator to fit_function ("silent cast")
+            self.fit_function = FitFunction(fit_function)
+
+            # and report
+            logger.info("Custom fit function not decorated with "
+                        "FitFunction decorator; doing a silent cast.")
 
         #: the (external) function to be minimized for this `Fit`
-        self.external_fcn = external_fcn
+        self.external_fcn = external_fcn            
 
-        try:
-            #: the total number of parameters
-            self.number_of_parameters = self.fit_function.number_of_parameters
+        #: the total number of parameters
+        self.number_of_parameters = self.fit_function.number_of_parameters
 
-            self.set_parameters(self.fit_function.parameter_defaults,
-                                None, no_warning=True)
+        self.set_parameters(self.fit_function.parameter_defaults,
+                            None, no_warning=True)
 
-            #: the names of the parameters
-            self.parameter_names = self.fit_function.parameter_names
-            #: :math:`\LaTeX` parameter names
-            self.latex_parameter_names = \
-                self.fit_function.latex_parameter_names
+        #: the names of the parameters
+        self.parameter_names = self.fit_function.parameter_names
+        #: :math:`\LaTeX` parameter names
+        self.latex_parameter_names = \
+            self.fit_function.latex_parameter_names
 
-            # store a dictionary to lookup whether a parameter is fixed
-            self._fixed_parameters = np.ones(self.number_of_parameters,
-                                             dtype=bool)
+        # store a dictionary to lookup whether a parameter is fixed
+        self._fixed_parameters = np.ones(self.number_of_parameters,
+                                         dtype=bool)
 
-            # store the full function definition
-            self.function_equation_full = \
-                self.fit_function.get_function_equation('latex', 'full')
+        # store the full function definition
+        self.function_equation_full = \
+            self.fit_function.get_function_equation('latex', 'full')
 
-            # store a short version of the function's equation
-            self.function_equation = \
-                self.fit_function.get_function_equation('latex', 'short')
+        # store a short version of the function's equation
+        self.function_equation = \
+            self.fit_function.get_function_equation('latex', 'short')
 
-            self.fit_label = fit_label
-
-        except AttributeError:
-            # TODO: silent cast to Fit-function
-            raise AttributeError("Fit-function object %s does not have "
-                                 "the required attributes. Did you maybe "
-                                 " forget the `@FitFunction` decorator?"
-                                 % (self.fit_function.name))
+        self.fit_label = fit_label            
 
         # check if the dataset has any y errors at all
         if self.dataset.has_errors('y'):
