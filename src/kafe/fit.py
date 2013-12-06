@@ -232,7 +232,8 @@ class Fit(object):
         if os.path.exists(_basenamelog):
             logger.warning('Old log files found for fit `%s`. kafe will not '
                            'delete these files, but it is recommended to do '
-                           'so, in order to reduce clutter.')
+                           'so, in order to reduce clutter.'
+                           % (_basename,))
 
             # find first incremental name for which no file exists
             _id = 1

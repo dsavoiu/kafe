@@ -96,12 +96,26 @@ class FitFunction:
         self.name = f.__name__  #: The name of the function
 
         # Check if all parameters have default values
-        if (self.parameter_defaults is None or
-                len(self.parameter_defaults) != self.number_of_parameters):
-            raise SyntaxError("Number of default parameters given for "
-                              "function <%s> does not match total parameter "
-                              "number. Did you provide default values for all "
-                              "parameters?" % self.name)
+        if self.parameter_defaults is None:
+            # no parameters have a default value
+            logger.warn("Default values not provided for any parameters "
+                        "of function <%s>. Setting all default parameter "
+                        "values to 1.0." % (self.name,))
+            self.parameter_defaults = tuple(self.number_of_parameters * [1.0])
+        elif len(self.parameter_defaults) != self.number_of_parameters:
+            # only the last few parameters have a default value
+            # -> pad the default parameter tuple with zeros
+            logger.warn("Number of default parameters given for "
+                        "function <%s> does not match total "
+                        "parameter number " % (self.name,))
+            logger.info("Setting default parameter values for function <%s> "
+                        "to 1.0 where omitted." % (self.name,))
+            N = self.number_of_parameters  # shortcut
+            # get default parameters as list
+            defpar = list(self.parameter_defaults)
+            # pad the list with 1.0 to the left
+            defpar = [1.0]*(N-len(defpar))+defpar
+            self.parameter_defaults = tuple(defpar)  # cast back to tuple
 
         #: The names of the parameters
         self.parameter_names = f.func_code.co_varnames[
