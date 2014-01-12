@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>kafe.fit &mdash; kafe  documentation</title>
+    <title>kafe.fit &mdash; kafe 0.4.10 documentation</title>
     
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '',
+        VERSION:     '0.4.10',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,8 +24,8 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="kafe  documentation" href="../../index.html" />
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="kafe 0.4.10 documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" /> 
   </head>
   <body>
@@ -35,7 +35,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="../../index.html">kafe  documentation</a> &raquo;</li>
+        <li><a href="../../index.html">kafe 0.4.10 documentation</a> &raquo;</li>
           <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -59,6 +59,8 @@
 <span class="kn">from</span> <span class="nn">minuit</span> <span class="kn">import</span> <span class="n">Minuit</span>
 <span class="kn">from</span> <span class="nn">function_tools</span> <span class="kn">import</span> <span class="n">outer_product</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
+
+<span class="kn">from</span> <span class="nn">function_tools</span> <span class="kn">import</span> <span class="n">FitFunction</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numeric_tools</span> <span class="kn">import</span> <span class="n">cov_to_cor</span><span class="p">,</span> <span class="n">extract_statistical_errors</span>
@@ -196,45 +198,46 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span>  <span class="c">#: this Fit instance&#39;s child `Dataset`</span>
 
-        <span class="c">#: the fit function used for this `Fit`</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span> <span class="o">=</span> <span class="n">fit_function</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fit_function</span><span class="p">,</span> <span class="n">FitFunction</span><span class="p">):</span>
+            <span class="c">#: the fit function used for this `Fit`</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span> <span class="o">=</span> <span class="n">fit_function</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># if not done alreasy, apply the FitFunction</span>
+            <span class="c"># decorator to fit_function (&quot;silent cast&quot;)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span> <span class="o">=</span> <span class="n">FitFunction</span><span class="p">(</span><span class="n">fit_function</span><span class="p">)</span>
+
+            <span class="c"># and report</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Custom fit function not decorated with &quot;</span>
+                        <span class="s">&quot;FitFunction decorator; doing a silent cast.&quot;</span><span class="p">)</span>
 
         <span class="c">#: the (external) function to be minimized for this `Fit`</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">external_fcn</span> <span class="o">=</span> <span class="n">external_fcn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">external_fcn</span> <span class="o">=</span> <span class="n">external_fcn</span>            
 
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c">#: the total number of parameters</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">number_of_parameters</span>
+        <span class="c">#: the total number of parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">number_of_parameters</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">parameter_defaults</span><span class="p">,</span>
-                                <span class="bp">None</span><span class="p">,</span> <span class="n">no_warning</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">parameter_defaults</span><span class="p">,</span>
+                            <span class="bp">None</span><span class="p">,</span> <span class="n">no_warning</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-            <span class="c">#: the names of the parameters</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">parameter_names</span>
-            <span class="c">#: :math:`\LaTeX` parameter names</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">latex_parameter_names</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">latex_parameter_names</span>
+        <span class="c">#: the names of the parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameter_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">parameter_names</span>
+        <span class="c">#: :math:`\LaTeX` parameter names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latex_parameter_names</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">latex_parameter_names</span>
 
-            <span class="c"># store a dictionary to lookup whether a parameter is fixed</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_parameters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">,</span>
-                                             <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="c"># store a dictionary to lookup whether a parameter is fixed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_parameters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span><span class="p">,</span>
+                                         <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
 
-            <span class="c"># store the full function definition</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">function_equation_full</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">get_function_equation</span><span class="p">(</span><span class="s">&#39;latex&#39;</span><span class="p">,</span> <span class="s">&#39;full&#39;</span><span class="p">)</span>
+        <span class="c"># store the full function definition</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">function_equation_full</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">get_function_equation</span><span class="p">(</span><span class="s">&#39;latex&#39;</span><span class="p">,</span> <span class="s">&#39;full&#39;</span><span class="p">)</span>
 
-            <span class="c"># store a short version of the function&#39;s equation</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">function_equation</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">get_function_equation</span><span class="p">(</span><span class="s">&#39;latex&#39;</span><span class="p">,</span> <span class="s">&#39;short&#39;</span><span class="p">)</span>
+        <span class="c"># store a short version of the function&#39;s equation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">function_equation</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">get_function_equation</span><span class="p">(</span><span class="s">&#39;latex&#39;</span><span class="p">,</span> <span class="s">&#39;short&#39;</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">fit_label</span> <span class="o">=</span> <span class="n">fit_label</span>
-
-        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-            <span class="c"># TODO: silent cast to Fit-function</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;Fit-function object </span><span class="si">%s</span><span class="s"> does not have &quot;</span>
-                                 <span class="s">&quot;the required attributes. Did you maybe &quot;</span>
-                                 <span class="s">&quot; forget the `@FitFunction` decorator?&quot;</span>
-                                 <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_label</span> <span class="o">=</span> <span class="n">fit_label</span>            
 
         <span class="c"># check if the dataset has any y errors at all</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">has_errors</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">):</span>
@@ -277,7 +280,8 @@
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">_basenamelog</span><span class="p">):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&#39;Old log files found for fit `</span><span class="si">%s</span><span class="s">`. kafe will not &#39;</span>
                            <span class="s">&#39;delete these files, but it is recommended to do &#39;</span>
-                           <span class="s">&#39;so, in order to reduce clutter.&#39;</span><span class="p">)</span>
+                           <span class="s">&#39;so, in order to reduce clutter.&#39;</span>
+                           <span class="o">%</span> <span class="p">(</span><span class="n">_basename</span><span class="p">,))</span>
 
             <span class="c"># find first incremental name for which no file exists</span>
             <span class="n">_id</span> <span class="o">=</span> <span class="mi">1</span>
@@ -715,9 +719,10 @@
 <div class="viewcode-block" id="Fit.print_fit_details"><a class="viewcode-back" href="../../index.html#kafe.fit.Fit.print_fit_details">[docs]</a>    <span class="k">def</span> <span class="nf">print_fit_details</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;prints some fit goodness details&#39;&#39;&#39;</span>
 
-        <span class="n">chi2prob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_chi2_probability</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span>
-        <span class="p">)</span>
+        <span class="n">_ndf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span>
+
+
+        <span class="n">chi2prob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_chi2_probability</span><span class="p">(</span><span class="n">_ndf</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">chi2prob</span> <span class="o">&lt;</span> <span class="n">M_CONFIDENCE_LEVEL</span><span class="p">:</span>
             <span class="n">hypothesis_status</span> <span class="o">=</span> <span class="s">&#39;rejected (CL </span><span class="si">%d%s</span><span class="s">)&#39;</span> \
                 <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">M_CONFIDENCE_LEVEL</span><span class="o">*</span><span class="mi">100</span><span class="p">),</span> <span class="s">&#39;%&#39;</span><span class="p">)</span>
@@ -729,12 +734,28 @@
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;# Fit details #&quot;</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&quot;###############&quot;</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
+
+        <span class="c"># Print a warning if NDF is zero</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_ndf</span><span class="p">:</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> \
+                  <span class="s">&quot;# WARNING: Number of degrees of freedom is zero!&quot;</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> \
+                  <span class="s">&quot;# Please review parametrization...&quot;</span>
+            <span class="k">print</span> <span class="s">&#39;&#39;</span>
+        <span class="k">elif</span> <span class="n">_ndf</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> \
+                  <span class="s">&quot;# WARNING: Number of degrees of freedom is negative!&quot;</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> \
+                  <span class="s">&quot;# Please review parametrization...&quot;</span>
+            <span class="k">print</span> <span class="s">&#39;&#39;</span>
+
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;FCN     &#39;</span><span class="p">,</span> \
             <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;fcn&#39;</span><span class="p">)</span>
-        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;FCN/ndf &#39;</span><span class="p">,</span> \
-            <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;fcn&#39;</span><span class="p">)</span><span class="o">/</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_parameters</span>
-            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">_ndf</span><span class="p">:</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;FCN/ndf &#39;</span><span class="p">,</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;fcn&#39;</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">_ndf</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;FCN/ndf &#39;</span><span class="p">,</span> <span class="s">&quot;NaN&quot;</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;EdM     &#39;</span><span class="p">,</span> \
             <span class="bp">self</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_fit_info</span><span class="p">(</span><span class="s">&#39;edm&#39;</span><span class="p">)</span>
         <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">out_stream</span><span class="p">,</span> <span class="s">&#39;UP      &#39;</span><span class="p">,</span> \
@@ -822,14 +843,14 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="../../index.html">kafe  documentation</a> &raquo;</li>
+        <li><a href="../../index.html">kafe 0.4.10 documentation</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     
     <div class="footer">
         &copy; Copyright 2013, Daniel Savoiu.
-      Last updated on 12 Nov, 2013.
+      Last updated on 12 Jan, 2014.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
     <!-- <div class="footer">

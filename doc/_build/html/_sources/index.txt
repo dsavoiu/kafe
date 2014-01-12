@@ -35,8 +35,6 @@ and "projecting" it onto the `y` error matrix. If the fit function
 is approximated in each point by its tangent line, the `Gaussian` errors in
 the `x` direction are not warped by this projection.
 
-:math:`\ldots`
-
 For examples on how to use **kafe**, see the ``examples`` folder. Consulting
 the `API`_ can also be helpful. 
 
