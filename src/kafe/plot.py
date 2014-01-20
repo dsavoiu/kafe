@@ -209,6 +209,8 @@ class Plot(object):
         #: plot style
         self.plot_style = PlotStyle()
 
+        ### TODO ###
+        # Move this bit to routine doing the actual plotting (i.e. plot_all)
         plt.rcParams.update(self.plot_style.rcparams_kw)
         plt.rc('font', **self.plot_style.rcfont_kw)
 
@@ -587,7 +589,7 @@ class Plot(object):
         self.axes.set_ylim(self.plot_range['y'])
 
         # draw everything so positions are known
-        plt.draw()
+        self.figure.canvas.draw()
 
     def show(self):
         '''
@@ -601,4 +603,4 @@ class Plot(object):
         Save the `Plot` to a file.
         '''
 
-        plt.savefig(output_file)
+        self.figure.savefig(output_file)
