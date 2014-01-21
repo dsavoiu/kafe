@@ -245,8 +245,10 @@ class Plot(object):
         '''
 
         self.figure = plt.figure()
-
+        """A matplotlib figure object."""
         self.axes = self.figure.add_subplot(121)
+        """A matplotlib axes object. Use this to modify the `axes` object
+           from matplotlib directly."""
         #self.axes = self.figure.add_axes([.07, .15, .6, .8])
 
         self.figure.subplots_adjust(

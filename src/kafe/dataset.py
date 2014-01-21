@@ -22,7 +22,10 @@ import logging
 logger = logging.getLogger('kafe')
 
 
-def build_dataset(xdata, ydata, cov_mats=None, **kwargs):
+def build_dataset(xdata, ydata, cov_mats=None, 
+                  xabserr=0.0, xrelerr=0.0, xabscor=0.0, xrelcor=0.0,
+                  yabserr=0.0, yrelerr=0.0, yabscor=0.0, yrelcor=0.0,
+                  title=None, basename=None, axis_labels=None, axis_units=None):
     '''
     This helper function creates a `Dataset` from a series of keyword
     arguments.
@@ -110,26 +113,18 @@ correlated error for the axis is then set to that.
             # If `None` is specified, substitute zero matrix
             if mat is None:
                 cov_mats[mat_id] = np.asmatrix(np.zeros((size, size)))
+    
+    #
+    # Construct cor mats from error specifications
+    #
 
-    kwargs_to_transmit = {}
+    error_keywords = {'xabserr': xabserr, 'xrelerr': xrelerr, 'xabscor': xabscor, 'xrelcor': xrelcor,
+                      'yabserr': yabserr, 'yrelerr': yrelerr, 'yabscor': yabscor, 'yrelcor': yrelcor}
 
-    for key, val in kwargs.iteritems():   # go through the keyword arguments
+    for key, val in error_keywords.iteritems():   # go through the keyword arguments
 
-        if key in ('title', 'basename', 'axis_labels', 'axis_units'):
-            kwargs_to_transmit.update({key: val})
-            continue
-        else:
-            err_spec = key
-            err_val = val
-
-        # check that the error specification has required length
-        # TODO:   If more error types allowed, this check is no good,
-        # TODO:   so implement dictionary lookup here if that should change.
-        if len(err_spec) != 7:
-            raise SyntaxError(
-                "Cannot interpret error specification `%s'."
-                % (err_spec,)
-            )
+        err_spec = key
+        err_val = val
 
         # interpret the error specification
         axis = err_spec[0]  # extract the axis from the error specification
@@ -207,7 +202,9 @@ correlated error for the axis is then set to that.
 
             cov_mats[axis] += np.asmatrix(np.diag(err_val)**2)
 
-    return Dataset(data=data, cov_mats=cov_mats, **kwargs_to_transmit)
+    return Dataset(data=data, cov_mats=cov_mats,
+                   title=title, basename=basename,
+                   axis_labels=axis_labels, axis_units=axis_units)
 
 
 class Dataset(object):
@@ -217,7 +214,7 @@ class Dataset(object):
     `data`, which is used for storing the measurement data, and another field
     `cov_mats`, used for storing the covariance matrix for each axis.
 
-    There are several ways a `Dataset` can be constructed. The most
+    There are two ways a `Dataset` can be constructed. The most
     straightforward way is to specify an input file containing a plain-text
     representation of the dataset:
 
@@ -227,8 +224,9 @@ class Dataset(object):
 
     >>> my_dataset = Dataset(input_file=my_file_object)
 
-    If an `input_file` keyword is provided, all other input is ignored. The
-    `Dataset` plain-text representation format is as follows::
+    If an `input_file` argument is provided, the `data` and `cov_mats`
+    arguments are ignored. The `Dataset` plain-text representation format
+    is as follows::
 
         # x data
         x_1  sigma_x_1
@@ -246,8 +244,8 @@ class Dataset(object):
     point and `cor_..._ij` is the correlation coefficient between the *i*-th
     and *j*-th data point.
 
-    Alternatively, field data can be set by passing iterables as keyword
-    arguments. Available keywords for this purpose are:
+    Alternatively, field data can be set by passing iterables as arguments.
+    Available arguments for this purpose are:
 
     **data** : tuple/list of tuples/lists/arrays of floats
 
@@ -300,8 +298,17 @@ cov_mats=(None, my_cov_mat_y))
         dimensionless, i.e. the unit will be an empty string.
     '''
 
-    def __init__(self, **kwargs):
+    def __init__(self, input_file=None,  # Either this
+                       data=None, cov_mats=None,  # or these
+                       title="Untitled Dataset",
+                       basename=None,
+                       axis_labels=['x', 'y'], axis_units=['', '']):
+
         '''Construct the Dataset'''
+
+        kwargs = {'input_file': input_file, 'data': data, 'cov_mats': cov_mats,
+                  'axis_labels': axis_labels, 'axis_units': axis_units,
+                  'basename': basename, 'title': title}
 
         # Definitions
         ##############
@@ -316,8 +323,15 @@ cov_mats=(None, my_cov_mat_y))
 
         # Metadata
         #: axis labels
-        self.axis_labels = list(kwargs.get('axis_labels', ['x', 'y']))
-        self.axis_units = list(kwargs.get('axis_units', ['', '']))
+        if axis_labels is not None:
+            self.axis_labels = list(axis_labels)
+        else:
+            self.axis_labels = ['x', 'y']
+            
+        if axis_units is not None:
+            self.axis_units = list(axis_units)
+        else:
+            self.axis_units = ['', '']
 
         #: dictionary to get axis id from an alias
         self.__axis_alias = {0: 0, 1: 1, 'x': 0, 'y': 1, '0': 0, '1': 1}
@@ -337,40 +351,40 @@ cov_mats=(None, my_cov_mat_y))
         #############################
 
         # name the Dataset
-        self.data_label = kwargs.get('title', "Untitled Dataset")
+        self.data_label = title
 
         # set the basename
-        self.basename = kwargs.get('basename', None)
+        self.basename = basename
 
         # check for an input file
-        if 'input_file' in kwargs:
-            self.read_from_file(kwargs['input_file'])
+        if input_file is not None:
+            self.read_from_file(input_file)
             return   # exit constructor after loading input file
 
         # Load data
         ############
 
         # preliminary checks
-        if not 'data' in kwargs:
+        if data is None:
             raise Exception("No data provided for Dataset.")
         else:
-            if len(kwargs['data']) != NUMBER_OF_AXES:
+            if len(data) != NUMBER_OF_AXES:
                 # in case of xy value pairs, transpose
-                data = np.asarray(kwargs['data']).T.tolist()
+                data = np.asarray(data).T.tolist()
                 if len(data) != NUMBER_OF_AXES:
                     raise Exception(
                         "Unsupported number of axes: %d"
-                        % (len(kwargs['data']),)
+                        % (len(data),)
                     )
                 else:
                     # set the transposed data as the read data
-                    kwargs['data'] = data
+                    data = data
 
         for axis in xrange(self.n_axes):  # go through the axes
-            self.set_data(axis, kwargs['data'][axis])  # load data for axis
-            if 'cov_mats' in kwargs:
+            self.set_data(axis, data[axis])  # load data for axis
+            if cov_mats is not None:
                 # load cov mat for axis
-                self.set_cov_mat(axis, kwargs['cov_mats'][axis])
+                self.set_cov_mat(axis, cov_mats[axis])
             else:
                 # don't load cov mat for axis
                 self.set_cov_mat(axis, None)

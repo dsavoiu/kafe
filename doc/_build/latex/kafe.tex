@@ -20,8 +20,8 @@
 
 
 \title{kafe Documentation}
-\date{January 12, 2014}
-\release{0.4.10}
+\date{January 21, 2014}
+\release{0.4.11}
 \author{Daniel Savoiu}
 \newcommand{\sphinxlogo}{}
 \renewcommand{\releasename}{Release}
@@ -281,7 +281,7 @@ Maximum additional iterations for \emph{x} fit
 \label{index:dataset-module}\label{index:module-kafe.dataset}\index{kafe.dataset (module)}\phantomsection\label{index:module-dataset}\index{dataset (module)}\index{Dataset (class in kafe.dataset)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.dataset.Dataset}\pysiglinewithargsret{\strong{class }\bfcode{Dataset}}{\emph{**kwargs}}{}
+\phantomsection\label{index:kafe.dataset.Dataset}\pysiglinewithargsret{\strong{class }\bfcode{Dataset}}{\emph{input\_file=None, data=None, cov\_mats=None, title='Untitled Dataset', basename=None, axis\_labels={[}'x', `y'{]}, axis\_units={[}'`, `'{]}}}{}
 Bases: \code{object}
 
 The \emph{Dataset} object is a data structure for storing measurement and error
@@ -289,7 +289,7 @@ data. In this implementation, the \emph{Dataset} has the compulsory field
 \emph{data}, which is used for storing the measurement data, and another field
 \emph{cov\_mats}, used for storing the covariance matrix for each axis.
 
-There are several ways a \emph{Dataset} can be constructed. The most
+There are two ways a \emph{Dataset} can be constructed. The most
 straightforward way is to specify an input file containing a plain-text
 representation of the dataset:
 
@@ -303,8 +303,9 @@ or
 \PYG{g+gp}{\textgreater{}\textgreater{}\textgreater{} }\PYG{n}{my\PYGZus{}dataset} \PYG{o}{=} \PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{input\PYGZus{}file}\PYG{o}{=}\PYG{n}{my\PYGZus{}file\PYGZus{}object}\PYG{p}{)}
 \end{Verbatim}
 
-If an \emph{input\_file} keyword is provided, all other input is ignored. The
-\emph{Dataset} plain-text representation format is as follows:
+If an \emph{input\_file} argument is provided, the \emph{data} and \emph{cov\_mats}
+arguments are ignored. The \emph{Dataset} plain-text representation format
+is as follows:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \# x data
@@ -324,8 +325,8 @@ Here, the \emph{sigma\_...} represents the fully uncorrelated error of the data
 point and \emph{cor\_...\_ij} is the correlation coefficient between the \emph{i}-th
 and \emph{j}-th data point.
 
-Alternatively, field data can be set by passing iterables as keyword
-arguments. Available keywords for this purpose are:
+Alternatively, field data can be set by passing iterables as arguments.
+Available arguments for this purpose are:
 
 \textbf{data} : tuple/list of tuples/lists/arrays of floats
 \begin{quote}
@@ -392,14 +393,6 @@ labels for the \emph{x} and \emph{y} axes. If omitted, these will be set to
 units for the \emph{x} and \emph{y} axes. If omitted, these will be assumed to be
 dimensionless, i.e. the unit will be an empty string.
 \end{quote}
-\index{axis\_labels (Dataset attribute)}
-
-\begin{fulllineitems}
-\phantomsection\label{index:kafe.dataset.Dataset.axis_labels}\pysigline{\bfcode{axis\_labels}\strong{ = None}}
-axis labels
-
-\end{fulllineitems}
-
 \index{cov\_mat\_is\_regular() (Dataset method)}
 
 \begin{fulllineitems}
@@ -663,7 +656,7 @@ A delimiter used to separate columns in the output.
 \index{build\_dataset() (in module kafe.dataset)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.dataset.build_dataset}\pysiglinewithargsret{\bfcode{build\_dataset}}{\emph{xdata}, \emph{ydata}, \emph{cov\_mats=None}, \emph{**kwargs}}{}
+\phantomsection\label{index:kafe.dataset.build_dataset}\pysiglinewithargsret{\bfcode{build\_dataset}}{\emph{xdata}, \emph{ydata}, \emph{cov\_mats=None}, \emph{xabserr=0.0}, \emph{xrelerr=0.0}, \emph{xabscor=0.0}, \emph{xrelcor=0.0}, \emph{yabserr=0.0}, \emph{yrelerr=0.0}, \emph{yabscor=0.0}, \emph{yrelcor=0.0}, \emph{title=None}, \emph{basename=None}, \emph{axis\_labels=None}, \emph{axis\_units=None}}{}
 This helper function creates a \emph{Dataset} from a series of keyword
 arguments.
 
@@ -851,7 +844,7 @@ meaning any whitespace.
 \label{index:fit-module}\label{index:module-kafe.fit}\index{kafe.fit (module)}\phantomsection\label{index:module-fit}\index{fit (module)}\index{Fit (class in kafe.fit)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x2bacb18\textgreater{}}, \emph{fit\_label=None}}{}
+\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x300bb18\textgreater{}}, \emph{fit\_label=None}}{}
 Bases: \code{object}
 
 Object representing a fit. This object references the fitted \emph{Dataset},

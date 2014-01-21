@@ -4,7 +4,6 @@
   \bigletter A
   \item ASCII() (in module kafe.function\_tools), \hyperpage{14}
   \item ascii\_to\_latex\_math() (in module kafe.latex\_tools), \hyperpage{16}
-  \item axis\_labels (Dataset attribute), \hyperpage{7}
   \item axis\_labels (Plot attribute), \hyperpage{19}
 
   \indexspace

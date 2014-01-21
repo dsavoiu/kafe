@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>kafe.dataset &mdash; kafe 0.4.10 documentation</title>
+    <title>kafe.dataset &mdash; kafe 0.4.11 documentation</title>
     
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '0.4.10',
+        VERSION:     '0.4.11',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="kafe 0.4.10 documentation" href="../../index.html" />
+    <link rel="top" title="kafe 0.4.11 documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" /> 
   </head>
   <body>
@@ -35,7 +35,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="../../index.html">kafe 0.4.10 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">kafe 0.4.11 documentation</a> &raquo;</li>
           <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -70,7 +70,10 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;kafe&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="build_dataset"><a class="viewcode-back" href="../../index.html#kafe.dataset.build_dataset">[docs]</a><span class="k">def</span> <span class="nf">build_dataset</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">cov_mats</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="build_dataset"><a class="viewcode-back" href="../../index.html#kafe.dataset.build_dataset">[docs]</a><span class="k">def</span> <span class="nf">build_dataset</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">cov_mats</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> 
+                  <span class="n">xabserr</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xrelerr</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xabscor</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xrelcor</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                  <span class="n">yabserr</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">yrelerr</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">yabscor</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">yrelcor</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                  <span class="n">title</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">axis_labels</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">axis_units</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    This helper function creates a `Dataset` from a series of keyword</span>
 <span class="sd">    arguments.</span>
@@ -158,26 +161,18 @@
             <span class="c"># If `None` is specified, substitute zero matrix</span>
             <span class="k">if</span> <span class="n">mat</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="n">cov_mats</span><span class="p">[</span><span class="n">mat_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">)))</span>
+    
+    <span class="c">#</span>
+    <span class="c"># Construct cor mats from error specifications</span>
+    <span class="c">#</span>
 
-    <span class="n">kwargs_to_transmit</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">error_keywords</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;xabserr&#39;</span><span class="p">:</span> <span class="n">xabserr</span><span class="p">,</span> <span class="s">&#39;xrelerr&#39;</span><span class="p">:</span> <span class="n">xrelerr</span><span class="p">,</span> <span class="s">&#39;xabscor&#39;</span><span class="p">:</span> <span class="n">xabscor</span><span class="p">,</span> <span class="s">&#39;xrelcor&#39;</span><span class="p">:</span> <span class="n">xrelcor</span><span class="p">,</span>
+                      <span class="s">&#39;yabserr&#39;</span><span class="p">:</span> <span class="n">yabserr</span><span class="p">,</span> <span class="s">&#39;yrelerr&#39;</span><span class="p">:</span> <span class="n">yrelerr</span><span class="p">,</span> <span class="s">&#39;yabscor&#39;</span><span class="p">:</span> <span class="n">yabscor</span><span class="p">,</span> <span class="s">&#39;yrelcor&#39;</span><span class="p">:</span> <span class="n">yrelcor</span><span class="p">}</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>   <span class="c"># go through the keyword arguments</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">error_keywords</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>   <span class="c"># go through the keyword arguments</span>
 
-        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;title&#39;</span><span class="p">,</span> <span class="s">&#39;basename&#39;</span><span class="p">,</span> <span class="s">&#39;axis_labels&#39;</span><span class="p">,</span> <span class="s">&#39;axis_units&#39;</span><span class="p">):</span>
-            <span class="n">kwargs_to_transmit</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">key</span><span class="p">:</span> <span class="n">val</span><span class="p">})</span>
-            <span class="k">continue</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">err_spec</span> <span class="o">=</span> <span class="n">key</span>
-            <span class="n">err_val</span> <span class="o">=</span> <span class="n">val</span>
-
-        <span class="c"># check that the error specification has required length</span>
-        <span class="c"># TODO:   If more error types allowed, this check is no good,</span>
-        <span class="c"># TODO:   so implement dictionary lookup here if that should change.</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">err_spec</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">7</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">(</span>
-                <span class="s">&quot;Cannot interpret error specification `</span><span class="si">%s</span><span class="s">&#39;.&quot;</span>
-                <span class="o">%</span> <span class="p">(</span><span class="n">err_spec</span><span class="p">,)</span>
-            <span class="p">)</span>
+        <span class="n">err_spec</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="n">err_val</span> <span class="o">=</span> <span class="n">val</span>
 
         <span class="c"># interpret the error specification</span>
         <span class="n">axis</span> <span class="o">=</span> <span class="n">err_spec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c"># extract the axis from the error specification</span>
@@ -255,7 +250,9 @@
 
             <span class="n">cov_mats</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">err_val</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">cov_mats</span><span class="o">=</span><span class="n">cov_mats</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs_to_transmit</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">cov_mats</span><span class="o">=</span><span class="n">cov_mats</span><span class="p">,</span>
+                   <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="n">basename</span><span class="p">,</span>
+                   <span class="n">axis_labels</span><span class="o">=</span><span class="n">axis_labels</span><span class="p">,</span> <span class="n">axis_units</span><span class="o">=</span><span class="n">axis_units</span><span class="p">)</span>
 
 </div>
 <div class="viewcode-block" id="Dataset"><a class="viewcode-back" href="../../index.html#kafe.dataset.Dataset">[docs]</a><span class="k">class</span> <span class="nc">Dataset</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -265,7 +262,7 @@
 <span class="sd">    `data`, which is used for storing the measurement data, and another field</span>
 <span class="sd">    `cov_mats`, used for storing the covariance matrix for each axis.</span>
 
-<span class="sd">    There are several ways a `Dataset` can be constructed. The most</span>
+<span class="sd">    There are two ways a `Dataset` can be constructed. The most</span>
 <span class="sd">    straightforward way is to specify an input file containing a plain-text</span>
 <span class="sd">    representation of the dataset:</span>
 
@@ -275,8 +272,9 @@
 
 <span class="sd">    &gt;&gt;&gt; my_dataset = Dataset(input_file=my_file_object)</span>
 
-<span class="sd">    If an `input_file` keyword is provided, all other input is ignored. The</span>
-<span class="sd">    `Dataset` plain-text representation format is as follows::</span>
+<span class="sd">    If an `input_file` argument is provided, the `data` and `cov_mats`</span>
+<span class="sd">    arguments are ignored. The `Dataset` plain-text representation format</span>
+<span class="sd">    is as follows::</span>
 
 <span class="sd">        # x data</span>
 <span class="sd">        x_1  sigma_x_1</span>
@@ -294,8 +292,8 @@
 <span class="sd">    point and `cor_..._ij` is the correlation coefficient between the *i*-th</span>
 <span class="sd">    and *j*-th data point.</span>
 
-<span class="sd">    Alternatively, field data can be set by passing iterables as keyword</span>
-<span class="sd">    arguments. Available keywords for this purpose are:</span>
+<span class="sd">    Alternatively, field data can be set by passing iterables as arguments.</span>
+<span class="sd">    Available arguments for this purpose are:</span>
 
 <span class="sd">    **data** : tuple/list of tuples/lists/arrays of floats</span>
 
@@ -348,8 +346,17 @@
 <span class="sd">        dimensionless, i.e. the unit will be an empty string.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>  <span class="c"># Either this</span>
+                       <span class="n">data</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cov_mats</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>  <span class="c"># or these</span>
+                       <span class="n">title</span><span class="o">=</span><span class="s">&quot;Untitled Dataset&quot;</span><span class="p">,</span>
+                       <span class="n">basename</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                       <span class="n">axis_labels</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">],</span> <span class="n">axis_units</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">]):</span>
+
         <span class="sd">&#39;&#39;&#39;Construct the Dataset&#39;&#39;&#39;</span>
+
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;input_file&#39;</span><span class="p">:</span> <span class="n">input_file</span><span class="p">,</span> <span class="s">&#39;data&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span> <span class="s">&#39;cov_mats&#39;</span><span class="p">:</span> <span class="n">cov_mats</span><span class="p">,</span>
+                  <span class="s">&#39;axis_labels&#39;</span><span class="p">:</span> <span class="n">axis_labels</span><span class="p">,</span> <span class="s">&#39;axis_units&#39;</span><span class="p">:</span> <span class="n">axis_units</span><span class="p">,</span>
+                  <span class="s">&#39;basename&#39;</span><span class="p">:</span> <span class="n">basename</span><span class="p">,</span> <span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="n">title</span><span class="p">}</span>
 
         <span class="c"># Definitions</span>
         <span class="c">##############</span>
@@ -364,8 +371,15 @@
 
         <span class="c"># Metadata</span>
         <span class="c">#: axis labels</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">axis_labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;axis_labels&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">]))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">axis_units</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;axis_units&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">axis_labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">axis_labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">axis_labels</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">axis_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">]</span>
+            
+        <span class="k">if</span> <span class="n">axis_units</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">axis_units</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">axis_units</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">axis_units</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">]</span>
 
         <span class="c">#: dictionary to get axis id from an alias</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__axis_alias</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;x&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;0&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39;1&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
@@ -385,40 +399,40 @@
         <span class="c">#############################</span>
 
         <span class="c"># name the Dataset</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_label</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;title&#39;</span><span class="p">,</span> <span class="s">&quot;Untitled Dataset&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_label</span> <span class="o">=</span> <span class="n">title</span>
 
         <span class="c"># set the basename</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">basename</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;basename&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">basename</span> <span class="o">=</span> <span class="n">basename</span>
 
         <span class="c"># check for an input file</span>
-        <span class="k">if</span> <span class="s">&#39;input_file&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;input_file&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">input_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
             <span class="k">return</span>   <span class="c"># exit constructor after loading input file</span>
 
         <span class="c"># Load data</span>
         <span class="c">############</span>
 
         <span class="c"># preliminary checks</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="s">&#39;data&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;No data provided for Dataset.&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;data&#39;</span><span class="p">])</span> <span class="o">!=</span> <span class="n">NUMBER_OF_AXES</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">!=</span> <span class="n">NUMBER_OF_AXES</span><span class="p">:</span>
                 <span class="c"># in case of xy value pairs, transpose</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;data&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">!=</span> <span class="n">NUMBER_OF_AXES</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
                         <span class="s">&quot;Unsupported number of axes: </span><span class="si">%d</span><span class="s">&quot;</span>
-                        <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;data&#39;</span><span class="p">]),)</span>
+                        <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),)</span>
                     <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c"># set the transposed data as the read data</span>
-                    <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
 
         <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_axes</span><span class="p">):</span>  <span class="c"># go through the axes</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;data&#39;</span><span class="p">][</span><span class="n">axis</span><span class="p">])</span>  <span class="c"># load data for axis</span>
-            <span class="k">if</span> <span class="s">&#39;cov_mats&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">axis</span><span class="p">])</span>  <span class="c"># load data for axis</span>
+            <span class="k">if</span> <span class="n">cov_mats</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="c"># load cov mat for axis</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">set_cov_mat</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;cov_mats&#39;</span><span class="p">][</span><span class="n">axis</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_cov_mat</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">cov_mats</span><span class="p">[</span><span class="n">axis</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c"># don&#39;t load cov mat for axis</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">set_cov_mat</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
@@ -1045,14 +1059,14 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="../../index.html">kafe 0.4.10 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">kafe 0.4.11 documentation</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     
     <div class="footer">
         &copy; Copyright 2013, Daniel Savoiu.
-      Last updated on 12 Jan, 2014.
+      Last updated on 21 Jan, 2014.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
     <!-- <div class="footer">

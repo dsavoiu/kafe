@@ -17,5 +17,5 @@
 \contentsline {subsection}{\numberline {2.1.12}\texttt {plot} Module}{19}{subsection.2.1.12}
 \contentsline {subsection}{\numberline {2.1.13}\texttt {stream} Module}{20}{subsection.2.1.13}
 \contentsline {subsection}{\numberline {2.1.14}Indices and tables}{21}{subsection.2.1.14}
-\contentsline {chapter}{Python Module Index}{23}{section*.155}
-\contentsline {chapter}{Index}{25}{section*.156}
+\contentsline {chapter}{Python Module Index}{23}{section*.154}
+\contentsline {chapter}{Index}{25}{section*.155}
