@@ -163,7 +163,7 @@ class Fit(object):
                         "FitFunction decorator; doing a silent cast.")
 
         #: the (external) function to be minimized for this `Fit`
-        self.external_fcn = external_fcn            
+        self.external_fcn = external_fcn
 
         #: the total number of parameters
         self.number_of_parameters = self.fit_function.number_of_parameters
@@ -189,7 +189,7 @@ class Fit(object):
         self.function_equation = \
             self.fit_function.get_function_equation('latex', 'short')
 
-        self.fit_label = fit_label            
+        self.fit_label = fit_label
 
         # check if the dataset has any y errors at all
         if self.dataset.has_errors('y'):
@@ -262,6 +262,55 @@ class Fit(object):
 
         return self.external_fcn(self.xdata, self.ydata, self.current_cov_mat,
                                  self.fit_function, parameter_names)
+
+    def get_function_error(self, x):
+        r'''
+        This method uses the parameter error matrix of the fit to calculate
+        a symmetric (parabolic) error on the function value itself. Note that
+        this method takes the entire parameter error matrix into account, so
+        that it also accounts for correlations.
+
+        The method is useful if, e.g., you want to draw a confidence band
+        around the function in your plot routine.
+
+        **x** : `float` or sequence of `float`
+            the values at which the function error is to be estimated
+
+        returns : `float` or sequence of `float`
+            the estimated error at the given point(s)
+        '''
+
+        try:
+            iter(x)
+        except:
+            x = np.array([x])
+
+
+        errors = np.zeros_like(x)
+        # go through each data point and calculate the function error
+        for i, fval in enumerate(x):
+            # calculate the outer product of the gradient of f with itself
+            # (with respect to the parameters)
+            # use 1/100th of the smallest parameter error as spacing for df/dp
+            derivative_spacing = 0.01 * np.sqrt(
+                min(np.diag(self.get_error_matrix()))
+            )
+            par_deriv_outer_prod = outer_product(
+                self.fit_function.derive_by_parameters(
+                    fval,
+                    derivative_spacing,
+                    self.current_parameter_values
+                )
+            )
+
+            tmp_sum = np.sum(
+                par_deriv_outer_prod * np.asarray(
+                    self.get_error_matrix()
+                )
+            )
+            errors[i] = np.sqrt(tmp_sum)
+
+        return errors
 
     def get_current_fit_function(self):
         '''

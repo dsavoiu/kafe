@@ -522,34 +522,10 @@ class Plot(object):
         # compute the confidence band around the function
         ##################################################
 
-        # initialize conficence band data with zero
-        confidence_band_data = np.zeros(G_PLOT_POINTS)
-
         # go through each data point and calculate the confidence interval
-        for i, fval in enumerate(fxdata):
-            # calculate the outer product of the gradient of f with itself
-            # (with respect to the parameters)
-            # use 1/100th of the smallest parameter error as spacing for df/dp
-            derivative_spacing = 0.01 * np.sqrt(
-                min(np.diag(current_fit.get_error_matrix()))
-            )
-            par_deriv_outer_prod = outer_product(
-                current_fit.fit_function.derive_by_parameters(
-                    fval,
-                    derivative_spacing,
-                    current_fit.current_parameter_values
-                )
-            )
+        confidence_band_data = current_fit.get_function_error(fxdata)
 
-            tmp_sum = np.sum(
-                par_deriv_outer_prod * np.asarray(
-                    current_fit.get_error_matrix()
-                )
-            )
-            confidence_band_data[i] = np.sqrt(tmp_sum)
-
-        # store upper and lower confidence bands
-
+        # store upper and lower confidence band limits
         lower_cb = fydata - confidence_band_data
         upper_cb = fydata + confidence_band_data
 
