@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from function_tools import outer_product
 from numeric_tools import extract_statistical_errors
 
-from constants import G_PADDING_FACTOR_X, G_PADDING_FACTOR_Y, G_PLOT_POINTS
+from config import G_PADDING_FACTOR_X, G_PADDING_FACTOR_Y, G_PLOT_POINTS
 import re  # regular expressions
 from string import split, join, lower
 

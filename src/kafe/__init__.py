@@ -36,7 +36,7 @@ from kafe._version_info import major, minor, revision
 
 # Import and create logging tools and related stuff
 import logging
-from constants import D_DEBUG_MODE
+from config import D_DEBUG_MODE
 
 logger = logging.getLogger('kafe')  # create logger
 ch = logging.StreamHandler()  # create console handler (ch)

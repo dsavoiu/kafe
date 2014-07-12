@@ -1,5 +1,8 @@
 TODO for v0.5
 -------------
+
+% [FUNC] make config files more flexible
+% [FUNC] allow config files in fit directory
 % [NEW] `ErrorSource` object: Datasets no longer contain
   a single covariance matrix, but a list of ErrorSource
   objects. [ ]
@@ -8,7 +11,7 @@ TODO for v0.5
 % [THEO] Reviewed statistics terminology: Confidence Level (CL),
 Significance
 % [CODE] Most object attributes now accessible via get methods [ ]
-% [CODE] Prefixed "private" class methods and variables by "_"  [ ]
+% [CODE] Prefixed some "private" class methods and variables by "_"  [ ]
 % [LOOK] Solved some plotting issues like limiting legend size,
   cutting down on font size if necessary [ ]
 % [LOOK] Included more info in the fit info box, such as FCN/ndf [ ]
@@ -17,7 +20,5 @@ Significance
 % [CODE] Plot object is now less stiff, allowing for better
   customization of plot routines [ ]
 % [NEW] Support for log-scale plots added [ ]
-% [NEW] .kaferc config file in user directory used to
-  overwrite some constants [ ]
 % [NEW] model function parameters can now have a description
   which is shown in the output fit result

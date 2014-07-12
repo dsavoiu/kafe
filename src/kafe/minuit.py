@@ -12,7 +12,7 @@ from ROOT import TMinuit, Double, Long
 from ROOT import TMath  # for uning ROOT's chi2prob function
 from array import array as arr  # array needed for TMinuit arguments
 
-from constants import M_MAX_ITERATIONS, M_TOLERANCE
+from config import M_MAX_ITERATIONS, M_TOLERANCE
 from time import gmtime, strftime
 
 import numpy as np

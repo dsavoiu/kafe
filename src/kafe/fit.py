@@ -17,7 +17,7 @@ from function_tools import FitFunction
 import numpy as np
 from numeric_tools import cov_to_cor, extract_statistical_errors
 
-from constants import F_SIGNIFICANCE, M_CONFIDENCE_LEVEL
+from config import FORMAT_ERROR_SIGNIFICANT_PLACES, F_SIGNIFICANCE_LEVEL
 from math import floor, log
 
 import os
@@ -73,7 +73,7 @@ def chi2(xdata, ydata, cov_mat, fit_function, parameter_values):
     return (residual.T.dot(cov_mat.I).dot(residual))[0, 0]  # return the chi^2
 
 
-def round_to_significance(value, error, significance=F_SIGNIFICANCE):
+def round_to_significance(value, error, significance=FORMAT_ERROR_SIGNIFICANT_PLACES):
     '''
     Rounds the error to the established number of significant digits, then
     rounds the value to the same order of magnitude as the error.
@@ -88,7 +88,7 @@ def round_to_significance(value, error, significance=F_SIGNIFICANCE):
         number of significant digits of the error to consider
 
     '''
-    # round error to F_SIGNIFICANCE significant digits
+    # round error to FORMAT_ERROR_SIGNIFICANT_PLACES significant digits
     if error:
         significant_digits = int(-floor(log(error)/log(10))) + significance - 1
         error = round(error, significant_digits)
@@ -710,7 +710,7 @@ class Fit(object):
 
         for name, value, error in self.minimizer.get_parameter_info():
 
-            tmp_rounded = round_to_significance(value, error, F_SIGNIFICANCE)
+            tmp_rounded = round_to_significance(value, error, FORMAT_ERROR_SIGNIFICANT_PLACES)
 
             print >>self.out_stream, "%s = %g +- %g" % (name, tmp_rounded[0],
                                                         tmp_rounded[1])
@@ -724,12 +724,12 @@ class Fit(object):
 
 
         chi2prob = self.minimizer.get_chi2_probability(_ndf)
-        if chi2prob < M_CONFIDENCE_LEVEL:
-            hypothesis_status = 'rejected (CL %d%s)' \
-                % (int(M_CONFIDENCE_LEVEL*100), '%')
+        if chi2prob < F_SIGNIFICANCE_LEVEL:
+            hypothesis_status = 'rejected (sig. %d%s)' \
+                % (int(F_SIGNIFICANCE_LEVEL*100), '%')
         else:
-            hypothesis_status = 'accepted (CL %d%s)' \
-                % (int(M_CONFIDENCE_LEVEL*100), '%')
+            hypothesis_status = 'accepted (sig. %d%s)' \
+                % (int(F_SIGNIFICANCE_LEVEL*100), '%')
 
         print >>self.out_stream, '###############'
         print >>self.out_stream, "# Fit details #"
@@ -741,13 +741,13 @@ class Fit(object):
             print >>self.out_stream, \
                   "# WARNING: Number of degrees of freedom is zero!"
             print >>self.out_stream, \
-                  "# Please review parametrization..."
+                  "# Please review parameterization..."
             print ''
         elif _ndf < 0:
             print >>self.out_stream, \
                   "# WARNING: Number of degrees of freedom is negative!"
             print >>self.out_stream, \
-                  "# Please review parametrization..."
+                  "# Please review parameterization..."
             print ''
 
         print >>self.out_stream, 'FCN     ', \
