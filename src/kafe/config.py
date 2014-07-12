@@ -36,7 +36,12 @@ if not os.path.isfile(kafe_config_file):
 cp = ConfigParser.ConfigParser()
 cp.read(kafe_config_file)
 
-# Import "constants" from config file
+# Check for kafe.conf in local directory
+if os.path.isfile("kafe.conf"):
+    logger.info("Local 'kafe.conf' found in '%s'." % (os.getcwd()))
+    cp.read("kafe.conf")
+
+# Import "constants" from the configuration
 
 G_PADDING_FACTOR_X = cp.getfloat('Plot', 'padding_factor_x')
 G_PADDING_FACTOR_Y = cp.getfloat('Plot', 'padding_factor_y')
