@@ -11,12 +11,12 @@ import matplotlib as mpl
 mpl.use('Qt4AGG')    # use the Qt backend for mpl
 
 import matplotlib.pyplot as plt
-from function_tools import outer_product
 from numeric_tools import extract_statistical_errors
 
-from config import G_PADDING_FACTOR_X, G_PADDING_FACTOR_Y, G_PLOT_POINTS
+from config import (G_PADDING_FACTOR_X, G_PADDING_FACTOR_Y,
+                    G_PLOT_POINTS, G_FIT_INFOBOX_TITLE)
 import re  # regular expressions
-from string import split, join, lower
+from string import split, join, lower, replace
 
 # import main logger for kafe
 import logging
@@ -132,33 +132,37 @@ class PlotStyle:
 
         # Some default styles and offsets
         self.axis_label_styles = ('italic', 'italic')
-        self.axis_label_coords = ((.5, -.1), (-.12, .5))
+        self.axis_label_align = ('right', 'right')
+        #self.axis_label_coords = ((.5, -.1), (-.12, .5))
+        self.axis_label_coords = ((1.02, -.1), (-.12, 1.02))
         self.axis_label_pad = (7, 7)
 
         # Set legend parameters
         self.legendparams_kw = {
             'ncol': 1,
             #'fancybox': True,
-            'shadow': True,
+            'shadow': False,
             'numpoints': 1,
             'bbox_to_anchor': (1.05, 1.),
-            'borderaxespad': 0.,
-            'pad': 0.05
+            'borderaxespad': 0.
+            #'pad': 0.05
         }
 
         # Default keyword arguments to pass to rc('font',...)
         self.rcfont_kw = {
-            'family': 'serif',
-            'serif': ['CMU Classical Serif'],
-            'monospace': ['CMU Typewriter Text']
+            'family': 'sans-serif',
+            'serif':  ['Palatino', 'cm', 'CMU Classical Serif'],
+            'sans-serif':  ['Helvetica', 'CMU Bright'],
+            'monospace':  ['Monospace', 'CMU Typewriter Text']
         }
         self.rcparams_kw = {
             'axes.labelsize': 20,
             'text.fontsize': 14,
             'legend.fontsize': 18,
-            'xtick.labelsize': 24,
-            'ytick.labelsize': 24,
+            'xtick.labelsize': 20,
+            'ytick.labelsize': 20,
             'text.usetex': True,
+            #'text.latex.preamble': [r"\usepackage{sansmath}"],
             'axes.unicode_minus': True,
             #'legend.loc': 'best',
             'legend.loc': 'upper left',
@@ -265,6 +269,9 @@ class Plot(object):
 
         self.compute_plot_range()
 
+        # attach the custom callback function to the draw event
+        self.figure.canvas.mpl_connect('draw_event', self.on_draw)
+
     def plot_all(self, show_info_for='all', show_data_for='all',
                  show_function_for='all'):
         '''
@@ -310,6 +317,42 @@ class Plot(object):
 
         self.draw_fit_parameters_box(show_info_for)
 
+    def on_draw(self, event):
+        '''
+        Function to call when a draw event occurs.
+        '''
+        fig = event.canvas.figure
+        if not fig == self.figure:
+            return
+        else:
+            if hasattr(self, 'fitinfobox'):
+                # disable callbacks to avoid recursion when redrawing
+                tmp_callbacks = fig.canvas.callbacks.callbacks[event.name]
+                fig.canvas.callbacks.callbacks[event.name] = {}
+
+                # get the legend bounding box and extract some dimension info
+                legend_bbox = self.legend.legendPatch.get_bbox().inverse_transformed(
+                    self.axes.transAxes
+                )
+
+                viewport_limits = self.axes.transAxes.inverted().transform(
+                        self.figure.transFigure.transform((1, 1))
+                    )
+
+                fig.canvas.draw()
+                #print fig.subplotpars.__dict__
+                self.figure.subplots_adjust(right=1.1)
+                self.fitinfobox.set_width(legend_bbox.width)
+
+                if self.fitinfobox.get_height() > 1. - legend_bbox.height - 0.05:
+                    self.fitinfobox.set_height(1 - legend_bbox.height - 0.05)
+
+                # redraw
+                fig.canvas.draw()
+
+                # reenable callbacks
+                fig.canvas.callbacks.callbacks[event.name] = tmp_callbacks
+
     def draw_legend(self):
         '''Draw the plot legend to the canvas'''
         # show plot legend
@@ -340,29 +383,23 @@ class Plot(object):
             self.axes.transAxes
         )
 
-        # size of the legend box
-        # Use this to create the fit parameters text box below it.
-        legend_size_px = self.axes.transAxes.transform(
-            (legend_bbox.width, legend_bbox.height)
-        ) - offset
         legend_size = (legend_bbox.width, legend_bbox.height)
 
         # fit parameters box size
-        textbox_size = (legend_size[0], legend_size[1] - 0.05)
+        textbox_size = (legend_size[0], 1. - legend_size[1] - 0.05)
         textbox_size_px = self.axes.transAxes.transform(textbox_size) - offset
 
         # pad text in fit parameters box by this amount
-        pad_amount = self.plot_style.legendparams_kw['pad']
+        pad_amount = .05  #self.plot_style.legendparams_kw['pad']
         pad_amount_px = (self.axes.transAxes.transform(
-            (self.plot_style.legendparams_kw['pad'], 0)
+            (pad_amount, 0)
         ) - offset)[0]
 
-        # TODO: allow localized text (German)?
-        text_content = "\\textbf{Fit Info}\n"
+        text_content = "\\textbf{%s}\n" % (G_FIT_INFOBOX_TITLE,)
 
         try:
             fit = self.fits[plot_spec]  # try to find the specified plot
-        except:
+        except TypeError:
             if plot_spec == "all":   # if not found, check for keyword 'all'
                 # go through all fits
                 fits_with_parameter_box = self.fits
@@ -403,7 +440,22 @@ class Plot(object):
         text_content = re.sub(r'(-?\d*\.?\d+?)0*e\+?(-?[0-9]*[1-9]?)',
                               r'\1\\times10^{\2}', text_content)
 
-        self.textbox = self.axes.text(
+        # BUG: matplotlib LaTeX cannot handle certain substrings:
+        #      '\n~\n' = no text rendered
+        #      '\n\n'  = RuntimeError
+        # WORKAROUND: replace '\n~\n' with '\n|\n'
+        # (the pipe '|' renders as a dash)
+
+        text_content = replace(text_content, '\n~\n', '\n|\n')
+
+        self.fitinfobox = self.axes.add_patch(
+            mpl.patches.Rectangle((legend_bbox.xmin, 0.00),
+                textbox_size[0], textbox_size[1], facecolor='w',
+                transform=self.axes.transAxes, clip_on=False
+            )
+        )
+
+        self.fitinfotext = self.axes.text(
             legend_bbox.xmin+pad_amount/2, 0.00+pad_amount/2,
             text_content[:-1],
             transform=self.axes.transAxes,
@@ -411,11 +463,14 @@ class Plot(object):
             verticalalignment='bottom',
             horizontalalignment='left',
             bbox={
-                'facecolor': 'white',
+                'xy': (legend_bbox.xmin, 0.00),
+                'facecolor': (1., .9, .9, 0.),
+                'edgecolor': (1., .9, .9, 0.),
                 'width': textbox_size_px[0],
                 #'height': textbox_size_px[1],
                 'pad': pad_amount_px
-            }
+            },
+            clip_on=False
         )
 
         self.figure.canvas.draw()
@@ -534,10 +589,13 @@ class Plot(object):
 
         # set some properties inherited from plot_style
         self.axes.grid(self.plot_style.grid)
-        self.axes.set_xlabel(self.axis_labels[0],
-                             style=self.plot_style.axis_label_styles[0])
-        self.axes.set_ylabel(self.axis_labels[1],
-                             style=self.plot_style.axis_label_styles[1])
+        xlabel = self.axes.set_xlabel('\\bfseries '+self.axis_labels[0],
+                                      style=self.plot_style.axis_label_styles[0],
+                                      ha=self.plot_style.axis_label_align[0])
+
+        ylabel = self.axes.set_ylabel('\\bfseries '+self.axis_labels[1],
+                                      style=self.plot_style.axis_label_styles[1],
+                                      ha=self.plot_style.axis_label_align[1])
 
         self.axes.xaxis.set_label_coords(*self.plot_style.axis_label_coords[0])
         self.axes.yaxis.set_label_coords(*self.plot_style.axis_label_coords[1])

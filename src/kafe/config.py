@@ -56,3 +56,5 @@ F_SIGNIFICANCE_LEVEL = cp.getfloat('Fit', 'hyptest_significance')
 FORMAT_ERROR_SIGNIFICANT_PLACES = cp.getint('Formatting', 'significant_error_places')
 
 D_DEBUG_MODE = cp.getboolean('Debug', 'debug_mode')
+
+G_FIT_INFOBOX_TITLE = cp.get('Plot', 'fit_infobox_title')
