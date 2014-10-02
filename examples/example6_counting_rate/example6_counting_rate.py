@@ -7,7 +7,7 @@ Counting rate
     For this example, however, the independent variable is the cosine
     of the angle, so here we show that modification of the function
     is possible to reflect that.
-    
+
 '''
 
 ###########
@@ -49,7 +49,7 @@ my_fit.do_fit()
 my_plot = Plot(my_fit)
 
 # Set the axis labels
-my_plot.axis_labels = ['$\\cos(\\theta)$', '$y$']
+my_plot.axis_labels = ['$\\cos(\\theta)$', 'Counting rate']
 
 # Draw the plots
 my_plot.plot_all()
@@ -59,7 +59,7 @@ my_plot.plot_all()
 ###############
 
 # Save the plots
-my_plot.save('plot.pdf')
+my_plot.save('kafe_example6.pdf')
 
 # Show the plots
 my_plot.show()

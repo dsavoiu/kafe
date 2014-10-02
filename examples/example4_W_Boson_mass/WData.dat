@@ -1,0 +1,53 @@
+# Measurements of W boson mass (combined LEP2, 2013)
+# --------------------------------------------------
+
+# --
+# example to use parse_general_inputfile from kafe;
+#  covariance matrix build from common errors 
+# --
+
+#  Meta data for plotting
+*BASENAME WData
+*TITLE measurements of the W boson mass
+*xLabel number of measurement
+*yLabel $m_\mathrm{W}$
+*yUnit GeV/$c^2$
+
+# some x data 
+#*xData # uncommented here, as need not be given for averageing 
+#0
+#1
+#2
+#3
+#4
+#5
+#6
+#7
+
+# ------------------------------------------------------------
+## Measurements of W mass by ALEPH, DELPI, L3 and OPAL
+#                              from from LEP2 Report Feb. 2013
+#  common errors within channels 
+#                     2q2l: 0.021 GeV,
+#                       4q: 0.044 GeV,
+#     and between channels: 0.025 GeV
+# ------------------------------------------------------------
+
+*yData_SCOV  
+
+# W_mass err     correlated errors, as sqrt of covariance matrix elements
+
+# 2q2l channel
+  80.429  0.055    0.021
+  80.339  0.073    0.021 0.021 
+  80.217  0.068    0.021 0.021 0.021	
+  80.449  0.058    0.021 0.021 0.021 0.021 
+
+# 4q  channel
+  80.477  0.069    0.044 0.025 0.025 0.025 0.025 0.044
+  80.310  0.091    0.044 0.025 0.025 0.025 0.025 0.044 0.044
+  80.324  0.078    0.044 0.025 0.025 0.025 0.025 0.044 0.044 0.044
+  80.353  0.068    0.044 0.025 0.025 0.025 0.025 0.044 0.044 0.044 0.044
+
+## Result of official combination (uses more sub-classes ...)
+## M_w=80.375+/-0.033

@@ -1,8 +1,6 @@
 """
-kafe
-====
 
-A Python package for fitting and plotting for use in physics lab courses.
+**kafe** *-- a Python package for fitting and plotting for use in physics lab courses.*
 
 This Python package allows fitting of user-defined functions to data. A dataset
 is represented by a `Dataset` object which stores measurement data as `NumPy`
@@ -11,13 +9,13 @@ arrays. The uncertainties of the data are also stored in the `Dataset` as an
 accurately represented.
 
 The constructor of a `Dataset` object accepts several keyword arguments and can
-be used to construct a `Dataset` out of data which has been loaded into
-`Python` as `NumPy` arrays. Alternatively, a plain-text representation of a
+be used to construct a `Dataset` from input data which has been loaded into
+`Python` as `NumPy` arrays. Alternatively, a plain-text representations of a
 `Dataset` can be read from a file.
 
 Also provided are helper functions which construct a `Dataset` object from a
 file containing column data (one measurement per row, column order can be
-specified).
+specified), or from a keyword-driven input format.
 
 .. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
 
@@ -27,7 +25,8 @@ specified).
 from kafe.dataset import Dataset, build_dataset
 from kafe.fit import Fit, chi2
 from kafe.plot import Plot, PlotStyle
-from kafe.file_tools import parse_column_data,  parse_matrix_file
+from kafe.file_tools import (parse_column_data,
+    buildDataset_fromFile, buildFit_fromFile)
 from kafe.numeric_tools import cov_to_cor, cor_to_cov
 from function_tools import FitFunction, LaTeX, ASCII
 

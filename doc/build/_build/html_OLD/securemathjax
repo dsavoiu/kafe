@@ -1,0 +1,5 @@
+#!/bin/bash
+for file in *.html;
+do cat $file | sed -e 's/http:\/\/cdn.mathjax.org\/mathjax/https:\/\/c328740.ssl.cf1.rackcdn.com\/mathjax/g' > $file~ && mv $file~ $file && chmod 644 $file;
+done
+

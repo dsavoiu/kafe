@@ -1,0 +1,44 @@
+trunk
+=====
+
+
+v0.5.2
+======
+
+    % [NEW] get_function_error() method added to Fit object
+    % [CODE] Plot object now uses Fit.get_function_error() to draw
+      confidence bands
+    % [NEW] customization of program behaviour is now done via
+      config files in "~/.config/kafe/kafe.config"
+    % [NEW] changed default fonts to Palatino and Helvetica
+    % [NEW] moved axis labels to the ends of the axes and made
+      them default to bold
+    % [NEW] tinkered with the Fit Infobox: in iteractive view it now
+      resizes to fit the legend box width.
+    % [BUG] inserting blank lines in LaTeX with matplotlib doesn't
+      work. [WORKAROUND] replace them with em-dashes.
+    
+v0.5.1
+======
+
+    % [DOC] new documentation by Guenter Quast: restructured
+      documentation and added Makefiles to build
+    % [NEW] new chi2 implementation by Guenter Quast: chi2 can now
+      handle constrained parameters via penalty term
+    % [NEW] additions to dataset file format by Guenter Quast: file
+      format is now "intelligent"/keyword-driven, allowing for better
+      customization of fits. Also added relevant methods to
+    % [NEW] additions to the function library by Guenter Quast: now
+      includes relativistic Breit-Wigner, Lorentz, Voigt and nomalized
+      Gauss
+    % [BUGFIX] covariance/correlation matrix behavior corrected for the
+      case where some parameters are fixed.
+    % [BUGFIX] now running Minuit's HESSE method only after the last
+      fit in an iteration
+    % [FIX] better initial errors, in case no estimates are provided
+    % [GIT] repo now has working .gitignore
+
+v0.4.11
+=======
+
+    * [BUGFIX] saving plots now saves the correct figure

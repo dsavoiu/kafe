@@ -5,7 +5,14 @@
         with CERN *ROOT*'s function minimizer *Minuit*.
 
 .. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Guenter Quast <G.Quast@kit.edu>
 '''
+
+# ----------------------------------------------------------------
+# Changes:
+#  06-Aug-14  G.Q.  default parameter errors set to 10% (not 0.1%)
+#  10-Aug-14  G.Q.  mimimize(): allowed for initial fits w.o. HESSE
+# ----------------------------------------------------------------
 
 # ROOT's data types needed to use TMinuit:
 from ROOT import TMinuit, Double, Long
@@ -177,8 +184,10 @@ class Minuit:
         self.__gMinuit.mnexcm("SET ERR", arr('d', [up_value]), 1, error_code)
 
     def set_parameter_values(self, parameter_values):
-        '''Sets the fit parameters. If parameter_values=`None`, tries to infer
-        defaults from the function_to_minimize.'''
+        '''
+        Sets the fit parameters. If parameter_values=`None`, tries to infer
+          defaults from the function_to_minimize.
+        '''
         if len(parameter_values) == self.number_of_parameters:
             self.current_parameters = parameter_values
         else:
@@ -199,11 +208,11 @@ class Minuit:
 
     def set_parameter_errors(self, parameter_errors=None):
         '''Sets the fit parameter errors. If parameter_values=`None`, sets the
-        error to 1% of the parameter value.'''
+        error to 10% of the parameter value.'''
 
         if parameter_errors is None:  # set to 0.1% of the parameter value
             if not self.current_parameters is None:
-                self.parameter_errors = [max(0.001, 0.001 * par)
+                self.parameter_errors = [max(0.1, 0.1 * par)
                                          for par in self.current_parameters]
             else:
                 raise Exception("Cannot set parameter errors. No errors \
@@ -306,10 +315,11 @@ class Minuit:
         **info** : string
             Information about the fit to retrieve.
             This can be any of the following:
-                - ``'fcn'``: `FCN` value at minimum,
-                - ``'edm'``: estimated distance to minimum
-                - ``'err_def'``: `Minuit` error matrix status code
-                - ``'status_code'``: `Minuit` general status code
+
+              - ``'fcn'``: `FCN` value at minimum,
+              - ``'edm'``: estimated distance to minimum
+              - ``'err_def'``: `Minuit` error matrix status code
+              - ``'status_code'``: `Minuit` general status code
 
         '''
 
@@ -470,10 +480,10 @@ class Minuit:
         # call the Python implementation of FCN.
         f[0] = self.function_to_minimize(*parameter_list)
 
-    def minimize(self, log_print_level=3):
-        '''Do the minimization. This calls `Minuit`'s algorithms ``MIGRAD`` for
-        minimization and ``HESSE`` for computing/checking the parameter error
-        matrix.'''
+    def minimize(self, final_fit=True, log_print_level=2):
+        '''Do the minimization. This calls `Minuit`'s algorithms ``MIGRAD``
+        for minimization and, if `final_fit` is `True`, also ``HESSE``
+        for computing/checking the parameter error matrix.'''
 
         # Set the FCN again. This HAS to be done EVERY
         # time the minimize method is called because of
@@ -506,8 +516,9 @@ class Minuit:
         self.__gMinuit.mnexcm("MIGRAD",
                               arr('d', [self.max_iterations, self.tolerance]),
                               2, error_code)
-        logger.debug("Running HESSE")
-        self.__gMinuit.mnexcm("HESSE", arr('d', [6000]), 1, error_code)
+        if(final_fit):
+            logger.debug("Running HESSE")
+            self.__gMinuit.mnexcm("HESSE", arr('d', [6000]), 1, error_code)
         # return to normal print level
         self.__gMinuit.SetPrintLevel(self.print_level)
 

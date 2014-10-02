@@ -1,28 +1,42 @@
 '''
 .. module:: function_library
-    :platform: Unix
-    :synopsis: A submodule containing a collection of model functions.
+   :platform: Unix
+   :synopsis: A submodule containing a collection of model functions.
 .. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Guenter Quast <G.Quast@kit.edu>>
+
+Collection of model functions
 '''
 
+
 from function_tools import FitFunction, LaTeX, ASCII
-from numpy import exp
-from scipy.special import gamma
+from numpy import exp, sqrt, pi
+from scipy.special import gamma, wofz
+
+#######################################################################
+# Change-log:
+# GQ: 20-Aug-14: added relativistic Breit-Wigner, Lorentz, Voigt and
+#                and nomalized Gauss
+#######################################################################
+
 
 ##########################################
 # Constant, Linear and Polynomial Models #
 ##########################################
 
+'''
+- Constant Models
+'''
 
-# Constant Models
 @ASCII(expression='constant')
 @LaTeX(name='f', parameter_names=('c',), expression='c')
 @FitFunction
 def constant_1par(x, constant=1.0):
     return constant
 
-
-# Linear Models
+'''
+- Linear Models
+'''
 @ASCII(expression='slope * x')
 @LaTeX(name='f', parameter_names=('m',), expression='m\,x')
 @FitFunction
@@ -44,7 +58,9 @@ def linear_2par2(x, slope=1.0, x_offset=0.0):
     return slope * (x - x_offset)
 
 
-# Quadratic
+'''
+- Quadratic models
+'''
 @ASCII(expression='quad_coeff * x^2')
 @LaTeX(name='f', parameter_names=('a',), expression='a\\,x^2')
 @FitFunction
@@ -81,7 +97,9 @@ def quadratic_3par2(x, quad_coeff=1.0, x_offset=0.0, constant=0.0):
     return quad_coeff * (x - x_offset) ** 2 + constant
 
 
-# Other Polynomials
+'''
+- Other Polynomials
+'''
 @ASCII(expression='coeff3 * x^3 + coeff2 * x^2 + coeff1 * x + coeff0')
 @LaTeX(name='f', parameter_names=('a', 'b', 'c', 'd'),
        expression='a\\,x^3+b\\,x^2+c\\,x+d')
@@ -110,9 +128,9 @@ def poly5(x, coeff5=1.0, coeff4=0.0, coeff3=0.0,
         coeff1 * x + coeff0
 
 
-######################
-# Exponential Models #
-######################
+'''
+- Exponential Models #
+'''
 
 @ASCII(expression='exp(growth * x) * constant_factor')
 @LaTeX(name='f', parameter_names=('\\lambda{}', 'a_0'),
@@ -146,9 +164,9 @@ def exp_4par(x, growth=1.0, constant_factor=0.0, x_offset=0.0, y_offset=0.0):
     return exp(growth * (x - x_offset)) * constant_factor + y_offset
 
 
-###########################
-# Other Non-Linear Models #
-###########################
+'''
+- Other Non-Linear Models
+'''
 
 @ASCII(expression='scale * exp(-(x-mean)^2/(2 * sigma^2))')
 @LaTeX(name='f', parameter_names=('\\mu{}', '\\sigma{}', 'a_0'),
@@ -156,6 +174,14 @@ def exp_4par(x, growth=1.0, constant_factor=0.0, x_offset=0.0, y_offset=0.0):
 @FitFunction
 def gauss(x, mean=0.0, sigma=1.0, scale=1.0):
     return scale * exp(-(x-mean)**2/(2 * sigma ** 2))
+
+# normalized Gauss distribution
+@ASCII(expression='scale/(sqrt(2pi)*sigma)*exp(-(x-mean)^2/(2 * sigma^2))')
+@LaTeX(name='f', parameter_names=('\\mu{}', '\\sigma{}', 'a_0'),
+  expression='\\frac{a_0}{\\sqrt{2\\pi}\\,\\sigma}\\,\\exp(-\\frac{(x-\\mu)^2}{2\\sigma^2})')
+@FitFunction
+def normgauss(x, mean=0.0, sigma=1.0, scale=1.0):
+    return scale / sqrt(2.*pi)/sigma * exp(-(x-mean)**2/(2 * sigma ** 2))
 
 
 @ASCII(expression='scale * mean^x * exp(-mean) / Gamma(x+1)')
@@ -166,8 +192,45 @@ def poisson(x, mean=0.0, scale=1.0):
     return scale * mean ** x * exp(-mean) / gamma(x+1)
 
 
-# Breit-Wigner needs work...
-# @FitFunction
-# def breit_wigner(x, mean=0.0, width=1.0, scale=1.0):
-#     return scale * (x * width)**2 / \
-#        ((x**2 - mean**2)**2 + (x**2 * width / mean)**2)
+
+# Lorentz curve (or Cauchy-Distribution)
+#
+@ASCII(expression='scale * gamma / (pi *((x-x0)^2 + gamma^2)')
+@LaTeX(name='f', parameter_names=('x_0','\\gamma','scale'),
+              expression='\\frac{\\gamma}'
+              '{ \\pi\\,((x-x_0)^2 + \\gamma^2)}' ) 
+@FitFunction
+def lorentz(x, x0=0., gamma=1., scale=1.):
+  return scale * gamma / (pi * ((x-x0)*(x-x0) + gamma*gamma))            
+
+# relativistic Breit-Wigner: 
+#
+@ASCII(expression='s*M^2*G^2/[(x^2-M^2)^2+(G^2*M^2)]')
+@LaTeX(name='f', parameter_names=('\\sigma_0', 'M_Z','\\Gamma_Z'),
+expression='\\frac{\\sigma_0\\, M_Z^2\\Gamma^2}'
+           '{ ((x^2-M_Z^2)^2+(\\Gamma^2 \\cdot M_Z^2))}' ) 
+@FitFunction
+def breit_wigner(x, M=91.0, G=2.0, s0=40.0):
+   return s0*M*M*G*G/((x*x-M*M)**2+(G*G*M*M)) 
+
+# relativistic Breit-Wigner with s-dependent width
+#                   
+@ASCII(expression='s0*x^2*G^2/[(x^2-M^2)^2+(x^4*G^2/M^2)]')
+@LaTeX(name='f', parameter_names=('\\sigma_0', 'M_Z','\\Gamma_Z'),
+expression='\\frac{\\sigma_0\\, M_Z^2\\Gamma^2}'
+                 '{((x^2-M_Z^2)^2+(x^4\\Gamma^2 / M_Z^2))}') 
+@FitFunction
+def breit_wigner2(x, M=91.2, G=2.5, s0=41.0):
+   return s0*x*x*G*G/((x*x-M*M)**2+(x**4*G*G/(M*M)))
+
+# Voigt function (Lorentz folded with Gauss)
+@ASCII(expression='Lorentz(x,x0,gamma) folded w. Gauss(x,0,sigma)')
+@LaTeX(name='f', parameter_names=('scale', 'x_0','\\gamma,\\sigma'),
+       expression='{Lorentz(x,x_0,\\gamma) \\, \\oplus \\, Gauss(x\',0,\\sigma)}') 
+@FitFunction
+def voigt(x, x0=0., gamma=1., sigma=0.01, scale=1.):
+  if gamma!=0. and sigma/gamma < 1.e-16:
+      return lorentz(x, x0, gamma, scale)
+  else:
+    return scale*wofz(((x - x0)+1.j*gamma)/sqrt(2.)/sigma).real/(sqrt(2.*pi)*sigma)
+

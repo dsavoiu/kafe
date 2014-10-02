@@ -30,14 +30,14 @@ def generate_dataset(output_file_path):
 
     n_p = 10
     xmin, xmax = 1, 10
-    growth, constant = 0.12, 1.34
-    sigma_x, sigma_y = 0.1, 0.1
+    growth, constant = 0.15, 1.3
+    sigma_x, sigma_y = 0.3, 0.2
     xdata = np.linspace(xmin, xmax, n_p) + np.random.normal(0.0, sigma_x, n_p)
     ydata = map(lambda x: exp_2par(x, growth, constant), xdata)
     ydata += np.random.normal(0.0, sigma_y, n_p)
 
     my_dataset = build_dataset(xdata, ydata,
-                               xabsstat=sigma_x, yabsstat=sigma_y)
+                               xabserr=sigma_x, yabserr=sigma_y)
     my_dataset.write_formatted(output_file_path)
 
 
@@ -70,7 +70,7 @@ my_plot.plot_all(show_data_for=0)  # only show data once (it's the same data)
 ###############
 
 # Save the plots
-my_plot.save('plot.pdf')
+my_plot.save('kafe_example1.pdf')
 
 # Show the plots
 my_plot.show()

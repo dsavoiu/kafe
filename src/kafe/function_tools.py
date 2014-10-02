@@ -2,20 +2,29 @@
 .. module:: function_tools
    :platform: Unix
    :synopsis: This submodule contains several useful tools for getting
-   information about a function, including the number, names and default
-   values of its parameters and its derivatives with respect to the independent
-   variable or the parameters.
+     information about a function, including the number, names and default
+     values of its parameters and its derivatives with respect to the 
+     independent variable or the parameters.
 
 .. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
-
+.. moduleauthor:: Guenter Quast <G.Quast@kit.edu>
 '''
+# -----------------------------------------------------------------
+# Changes: 
+# GQ 140803: precision for derive_by_parameteres now takes
+#            as spacing 1% of error, or 1e-7 if error is 0;
+#            same done for derive_by_x (to account for large
+#             variations in input values and errors)
+# GQ 140815  removed `getsourcelines`, as this was not compatible
+#              with module import from a string
+# GQ 140817 addes method `evaluate` to FitFunction
 
 import numpy as np
 
 # get a numerical derivative calculating function from SciPy
 from scipy.misc import derivative as scipy_der
 from latex_tools import ascii_to_latex_math
-from inspect import getsourcelines
+#GQ from inspect import getsourcelines
 
 # import main logger for kafe
 import logging
@@ -35,7 +44,7 @@ def derivative(func, derive_by_index, variables_tuple, derivative_spacing):
     '''
 
     # define a dummy function, so that the variable
-    # by which f is to be derived is the only variable
+    #  by which f is to be derived is the only variable
     def tmp_func(derive_by_var):
         argument_list = []
         for arg_nr, arg_val in enumerate(variables_tuple):
@@ -47,7 +56,7 @@ def derivative(func, derive_by_index, variables_tuple, derivative_spacing):
 
     # return the derivative of that function
     return scipy_der(tmp_func, variables_tuple[derive_by_index],
-                     dx=derivative_spacing)
+                      dx=derivative_spacing )
 
 
 def outer_product(input_array):
@@ -70,12 +79,12 @@ def outer_product(input_array):
 class FitFunction:
     """
     Decorator class for fit functions. If a function definition is decorated
-    using this class, some information is collected about the function which is
-    relevant to the fitting process, such as the number of parameters, their
-    names and default values. Some details pertaining to display and
-    representation are also set, such as :math:`\LaTeX{}` representations of
+    using this class, some information is collected about the function which
+    is relevant to the fitting process, such as the number of parameters, 
+    their names and default values. Some details pertaining to display and
+    representation are also set, such as :math:`LaTeX` representations of
     the parameter names and the function name. Other decorators can be applied
-    to a function object to specify things such as a :math:`\LaTeX{}` or
+    to a function object to specify things such as a :math:`LaTeX` or
     plain-text expression for the fit function.
     """
 
@@ -90,7 +99,7 @@ class FitFunction:
         self.parameter_defaults = f.func_defaults
 
         #: string object holding the source code for the fit-function
-        self.sourcelines = getsourcelines(f)  # (for REALLY explicit docs)
+        #GQ self.sourcelines = getsourcelines(f)  # (for REALLY explicit docs)
 
         # String properties in ASCII/plaintext format
         self.name = f.__name__  #: The name of the function
@@ -128,20 +137,45 @@ class FitFunction:
         self.expression = None
 
         # String properties in LaTeX format
-        #: The function's name in :math:`\LaTeX{}`
+        #: The function's name in :math:`LaTeX`
         self.latex_name = ascii_to_latex_math(self.name)
-        #: A list of parameter names in :math:`\LaTeX{}`
+        #: A list of parameter names in :math:`LaTeX`
         self.latex_parameter_names = [ascii_to_latex_math(name)
                                       for name in self.parameter_names]
-        #: A :math:`\LaTeX{}` symbol for the independent variable.
+        #: A :math:`LaTeX` symbol for the independent variable.
         self.latex_x_name = ascii_to_latex_math(self.x_name, monospace=False)
-        #: a :math:`\LaTeX{}` math expression, the function's result
+        #: a :math:`LaTeX` math expression, the function's result
         self.latex_expression = None
 
     def __call__(self, *args, **kwargs):
         return self.f(*args, **kwargs)
 
-    def derive_by_x(self, x_0, derivative_spacing, parameter_list):
+    def evaluate(self, x_0, parameter_list):
+        r'''
+        Evaluate the fit function at an x-value or at an array of 
+        x-values for the parameter values in `prarameter_list`.
+        
+          **x_0** float or array of floats
+ 
+          **parameter_list** values of function parameters
+
+          **returns** function value(s)
+        '''
+
+        try:
+            iterator_over_x_0 = iter(x_0)  # try to get an iterator object
+        except TypeError:
+            # object is not iterable, return the function value at x_0 (float)
+            return self.f(x_0, *parameter_list)
+        else:
+            # object is iterable, return array
+            def tempf(x): # define helper function of x only to apply map()
+              return self.f(x, *parameter_list)
+            # use python map to calculate function values at each x
+            return np.asarray(map(tempf, x_0) )
+
+
+    def derive_by_x(self, x_0, precision_list, parameter_list):
         r'''
         If `x_0` is iterable, gives the array of derivatives of a function
         :math:`f(x, par_1, par_2, \ldots)` around :math:`x = x_i` at every
@@ -154,34 +188,45 @@ class FitFunction:
         except TypeError:
             # object is not iterable, return the derivative in x_0 (float)
             return scipy_der(self.f, x_0,
-                             args=parameter_list, dx=derivative_spacing)
+                             args=parameter_list, dx=precision_list)
         else:
             # object is iterable, go through it and derive at each x_0 in it
             output_list = []
-            for x in iterator_over_x_0:
-                # call recursively
+            for i, x in enumerate(x_0):
                 output_list.append(
-                    self.derive_by_x(x, derivative_spacing,
-                                     parameter_list)
-                )
+                    self.derive_by_x(x, precision_list[i], parameter_list) )
 
             return np.asarray(output_list)
 
-    def derive_by_parameters(self, x_0, derivative_spacing, parameter_list):
+    def derive_by_parameters(self, x_0, precision_spec, parameter_list):
         r'''
         Returns the gradient of `func` with respect to its parameters, i.e.
         with respect to every variable of `func` except the first one.
+        
+        **precision_spec** : ``float`` or iterable of ``floats``
+            An array of floats indicating the initial point spacing for
+            numerically evaluating the derivative. Can be a single float
+            value to use the same spacing for every derivation.
         '''
         output_list = []
+        
+        try:
+            iter(precision_spec)
+        except TypeError:
+            # precision_spec is not iterable, create array
+            precision_spec = np.ones(self.f.func_code.co_argcount - 1) * precision_spec
 
         # compile all function arguments into a variables tuple
         variables_tuple = tuple([x_0] + list(parameter_list))
 
         # go through all arguments except the first one
         for derive_by_index in xrange(1, self.f.func_code.co_argcount):
+            precision = precision_spec[derive_by_index-1]
+            if not precision:
+                precision = 1.e-7
             output_list.append(
                 derivative(self.f, derive_by_index,
-                           variables_tuple, derivative_spacing)
+                           variables_tuple, precision)
             )
 
         return np.asarray(output_list)
@@ -190,7 +235,7 @@ class FitFunction:
                               equation_type='full', ensuremath=True):
         r'''
         Returns a string representing the function equation. Supported formats
-        are :math:`\LaTeX{}` and ASCII inline math. Note that :math:`\LaTeX{}`
+        are :math:`LaTeX` and ASCII inline math. Note that :math:`LaTeX`
         math is wrapped by default in an ``\ensuremath{}`` expression. If this
         is not desired behaviour, the flag ``ensuremath`` can be set to
         ``False``.
@@ -215,7 +260,7 @@ class FitFunction:
                 f(x, par1, par2) = par1 * x + par2
 
         *ensuremath* : boolean (optional)
-            If a :math:`\LaTeX{}` math equation is requested, ``True``
+            If a :math:`LaTeX` math equation is requested, ``True``
             (default) will wrap the resulting expression in an
             ``\ensuremath{}`` tag. Otherwise, no wrapping is done.
         '''
@@ -271,19 +316,19 @@ def LaTeX(**kwargs):
     passed as keyword arguments to the decorator. Possible arguments:
 
     *name* : string
-        :math:`\LaTeX{}` representation of the function name.
+        :math:`LaTeX` representation of the function name.
 
     *parameter_names* : list of strings
-        List of :math:`\LaTeX{}` representations of the function's arguments.
+        List of :math:`LaTeX` representations of the function's arguments.
         The length of this list must be equal to the function's argument
         number. The argument names should be in the same order as in the
         function definition.
 
     *x_name* : string
-        :math:`\LaTeX{}` representation of the independent variable's name.
+        :math:`LaTeX` representation of the independent variable's name.
 
     *expression* : string
-        :math:`\LaTeX{}`-formatted expression representing the
+        :math:`LaTeX`-formatted expression representing the
         function's formula.
     """
 

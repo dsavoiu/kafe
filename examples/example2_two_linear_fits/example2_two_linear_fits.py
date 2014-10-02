@@ -32,25 +32,25 @@ def generate_datasets(output_file_path1, output_file_path2):
 
     n_p = 10
     xmin, xmax = 3, 4
-    slope, y_intercept = 3.44, 0.04
+    slope, y_intercept = 3.2, 0.08
     sigma_x, sigma_y = 0.1, 0.3
     xdata = np.linspace(xmin, xmax, n_p) + np.random.normal(0.0, sigma_x, n_p)
     ydata = slope * xdata + [y_intercept]*n_p
     ydata += np.random.normal(0.0, sigma_y, n_p)
 
     my_datasets.append(build_dataset(xdata, ydata,
-                       xabsstat=sigma_x, yabsstat=sigma_y))
+                       xabserr=sigma_x, yabserr=sigma_y))
 
     n_p = 10
     xmin, xmax = 2, 3
-    slope, y_intercept = 2.81, 0.13
+    slope, y_intercept = 2.9, 0.1
     sigma_x, sigma_y = 0.05, 0.5
     xdata = np.linspace(xmin, xmax, n_p) + np.random.normal(0.0, sigma_x, n_p)
     ydata = slope * xdata + [y_intercept]*n_p
     ydata += np.random.normal(0.0, sigma_y, n_p)
 
     my_datasets.append(build_dataset(xdata, ydata,
-                       xabsstat=sigma_x, yabsstat=sigma_y))
+                       xabserr=sigma_x, yabserr=sigma_y))
 
     my_datasets[0].write_formatted(output_file_path1)
     my_datasets[1].write_formatted(output_file_path2)
@@ -87,7 +87,7 @@ my_plot.plot_all()
 ###############
 
 # Save the plots
-my_plot.save('plot.pdf')
+my_plot.save('kafe_example2.pdf')
 
 # Show the plots
 my_plot.show()

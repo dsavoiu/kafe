@@ -1,11 +1,18 @@
 '''
 .. module:: dataset
    :platform: Unix
-   :synopsis: This submodule defines a `Dataset` object, a container class for
-        storing measurement data and error data.
+   :synopsis: This sub-module defines a `Dataset` object, a container class for
+        storing measurement data and error data. It also provides functions
+        to build a Dataset object from pyhton arrays or read from or export
+        data to a file
 
 .. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+
 '''
+
+# Changes: 
+# GQ 140724: fixed output format: uncor -> total
+# ---------------------------------------------
 
 from string import join, split
 
@@ -734,11 +741,13 @@ cov_mats=(None, my_cov_mat_y))
             # if the dataset has stat errors
             if self.__query_has_errors[axis]:
                 # add a heading for second column
-                helper_list[-1].append('uncor. err.')
                 # if there are also correlations (syst errors)
                 if self.__query_has_correlations[axis]:
                     # add a heading for the correlation matrix
+                    helper_list[-1].append('total err.')
                     helper_list[-1].append('correlation coefficients')
+                else:
+                    helper_list[-1].append('uncor. err.')
 
             for idx, val in enumerate(data):
                 # append a new "row" to the helper list

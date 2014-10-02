@@ -1,17 +1,23 @@
 '''
 .. module:: numeric_tools
    :platform: Unix
-   :synopsis: A submodule containing several numeric algorithms used by the fit
-        package, such as methods for converting beween covariance and
+   :synopsis: A submodule containing several numeric algorithms used by the 
+        fit package, such as methods for converting beween covariance and
         correlation matrices or extracting the statistical errors from a
         covariance matrix.
 
 .. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Guenter Quast <G.Quast@kit.edu>
 
 '''
 
-import numpy as np
+## Changes:
+#     07-Aug-14 GQ covariance matrix returned by Minuit contains zero-values 
+#                  for lines/colums corresponding to fixed parameters; 
+#                  made a special version of cov_to_cor,
+#                  MinuitCov_to_cor for this case
 
+import numpy as np
 
 def cov_to_cor(cov_mat):
     r'''
@@ -48,6 +54,28 @@ def cov_to_cor(cov_mat):
     # elementwise by the calculated matrix. Return a matrix.
     return np.asmatrix(np.asarray(cov_mat) / stat_err_outer_prod)
 
+
+
+def MinuitCov_to_cor(cov_mat):
+    r'''
+    Converts a covariance matrix as returned by Minuit to the 
+    corresponding correlation matrix; note that the Minuit
+    covariance matrix may contain lines/rows with zeroes if
+    parameters are fixed 
+
+    **cov_mat** : `numpy.matrix`
+        The Minuit covariance matrix to convert.
+    '''
+
+    err = np.sqrt(np.diag(cov_mat))  # extract the errors
+    dim=len(err)
+    cor_mat=np.zeros((dim,dim),np.float32)
+    for i in range(0,dim):
+      for j in range(0,dim):
+          e2=err[i]*err[j]
+          if e2 != 0. :
+            cor_mat[i,j]=cov_mat[i,j]/e2
+    return cor_mat
 
 def cor_to_cov(cor_mat, error_list):
     r'''

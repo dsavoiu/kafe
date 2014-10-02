@@ -27,7 +27,7 @@ from numpy import exp, cos
 # Set an ASCII expression for this function
 @ASCII(x_name="t", expression="A0*exp(-t/tau)*cos(omega*t+phi)")
 # Set some LaTeX-related parameters for this function
-@LaTeX(name='f', x_name="t",
+@LaTeX(name='A', x_name="t",
        parameter_names=('a_0', '\\tau{}', '\\omega{}', '\\varphi{}'),
        expression="a_0\\,\\exp(-\\frac{t}{\\tau})\,"
                   "\cos(\\omega{}\\,t+\\varphi{})")
@@ -44,8 +44,8 @@ def damped_oscillator(t, a0=1, tau=1, omega=1, phi=0):
 my_dataset = parse_column_data(
     'damped_oscillation.dat',
     field_order="x,y,xabserr,yabserr",
-    title="Damped Oscillator"
-)
+    title="Damped Oscillator",
+    axis_labels=['Time $t$','Amplitude'])
 
 # Create the Fit
 my_fit = Fit(my_dataset,
@@ -70,7 +70,7 @@ my_plot.plot_all()
 ###############
 
 # Save the plots
-my_plot.save('plot.pdf')
+my_plot.save('kafe_example5.pdf')
 
 # Show the plots
 my_plot.show()

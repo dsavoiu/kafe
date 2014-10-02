@@ -1,0 +1,72 @@
+# Measruements of hadronic Z cross sections a LEP
+# ------------------------------------------------
+# this file is to be parsed with 
+#          kafe.file_tools.buildFit_fromFile()
+
+#  Meta data for plotting
+*TITLE  LEP Hadronic Cross Section ($\sigma^0_\mathrm{had}$)
+*BASENAME example8_BreitWigner
+*xLabel $E_{CM}$
+*xUnit  $\mathrm{GeV}$
+*yLabel $\sigma^0_{\mathrm{had}}$
+*yUnit  $\mathrm{nb}$
+
+#----------------------------------------------------------------------
+# DATA: average of hadronic cross sections measured by
+#  ALEPH, DELPHI, L3 and OPAL around 7 energy points at the Z resonance
+#----------------------------------------------------------------------
+
+# CMenergy E err 
+*xData
+   88.387  0.005  
+   89.437  0.0015 
+   90.223  0.005  
+   91.238  0.003  
+   92.059  0.005  
+   93.004  0.0015 
+   93.916  0.005
+# Centre-of-mass energy has a common uncertainty  
+*xAbsCor 0.0017 
+
+# sig^0_h  sig err     #  rad.cor  sig_h measured
+*yData
+   6.803   0.036      #  1.7915    5.0114
+   13.965  0.013      #  4.0213    9.9442
+   26.113  0.075      #  7.867    18.2460
+   41.364  0.010      #  10.8617  30.5022
+   27.535  0.088      #  3.9164   23.6187
+   13.362  0.015      # -0.6933   14.0552
+    7.302  0.045      # -1.8181    9.1196
+# cross-sections have a common relative error
+*yRelCor 0.0007 
+
+*FITLABEL Breit-Wigner-Fit \, {\large{( with\,s-dependent\,width )}} 
+*FitFunction
+# Breit-Wigner with s-dependent width
+@ASCII(name='sigma', expression='s0*x^2*G^2/[(E^2-M^2)^2+(E^4*G^2/M^2)]')
+@LaTeX(name='\sigma', parameter_names=('\\sigma^0', 'M_Z','\\Gamma_Z'),
+expression='\\frac{\\sigma^0\\, M_Z^2\\Gamma^2}'
+                 '{((E^2-M_Z^2)^2+(E^4\\Gamma^2 / M_Z^2))}') 
+@FitFunction
+def fitf(E, M=91.2, G=2.5, s0=41.0):
+~~return s0*E*E*G*G/((E*E-M*M)**2+(E**4*G*G/(M*M)))
+
+# standard Breit-Wigner
+#@ASCII(expression='s*M^2*G^2/[(E^2-M^2)^2+(G^2*M^2)]')
+#@LaTeX(name='f', parameter_names=('\\sigma_0', 'M_Z','\\Gamma_Z'),
+#expression='\\frac{\\sigma_0\\, M_Z^2\\Gamma^2}'
+#           '{ ((E^2-M_Z^2)^2+(\\Gamma^2 \\cdot M_Z^2))}' ) 
+#@FitFunction
+#def breit_wigner(E, M=91.0, G=2.0, s0=40.0):
+#~~return s0*M*M*G*G/((E*E-M*M)**2+(G*G*M*M)) 
+
+*InitialParameters # initial values and range
+91.2 0.1 
+2.5  0.1
+41.  0.5
+
+#---------------------------------------------------------------------------
+#### official results (LEP Electroweak Working Group):
+#### s0=41.540+/-0.037nb  M=91.1875+/-0.0021GeV/c^2  G=2.4952+/-0.0023 GeV
+####  uses all decay modes of the Z and full cross-section list
+#---------------------------------------------------------------------------

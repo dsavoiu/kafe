@@ -1,0 +1,161 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>kafe.latex_tools &mdash; kafe 0.4.11 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.4.11',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="kafe 0.4.11 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../../index.html">kafe 0.4.11 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for kafe.latex_tools</h1><div class="highlight"><pre>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">.. module:: latex_tools</span>
+<span class="sd">    :platform: Unix</span>
+<span class="sd">    :synopsis: This submodule contains several useful tools for handling</span>
+<span class="sd">        :math:`LaTeX` expressions.</span>
+
+<span class="sd">.. moduleauthor:: Daniel Savoiu &lt;danielsavoiu@gmail.com&gt;</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="n">L_ESCAPE_FOR_MATH_MODE</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;^&#39;</span><span class="p">:</span> <span class="s">&quot;</span><span class="se">\\</span><span class="s">^{}&quot;</span><span class="p">,</span>
+                          <span class="s">&#39;_&#39;</span><span class="p">:</span> <span class="s">&quot;</span><span class="se">\\</span><span class="s">_{}&quot;</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="ascii_to_latex_math"><a class="viewcode-back" href="../../index.html#kafe.latex_tools.ascii_to_latex_math">[docs]</a><span class="k">def</span> <span class="nf">ascii_to_latex_math</span><span class="p">(</span><span class="n">str_ascii</span><span class="p">,</span> <span class="n">monospace</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ensuremath</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Escapes certain characters in an ASCII input string so that the result</span>
+<span class="sd">    can be included in math mode without error.</span>
+
+<span class="sd">    **str_ascii** : string</span>
+<span class="sd">        A plain-text string containing characters to be escaped for</span>
+<span class="sd">        :math:`\LaTeX{}` math mode.</span>
+
+<span class="sd">    *monospace* : boolean (optional)</span>
+<span class="sd">        Whether to render the whole expression as monospace. Defaults to</span>
+<span class="sd">        ``True``.</span>
+
+<span class="sd">    *ensuremath* : boolean (optional)</span>
+<span class="sd">        If this is ``True``, the resulting formula is wrapped in</span>
+<span class="sd">        an ``\ensuremath{}`` tag. Defaults to ``True``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">str_ascii</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;{&quot;</span><span class="p">,</span> <span class="s">&quot;(&quot;</span><span class="p">)</span>  <span class="c"># transform braces</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;}&quot;</span><span class="p">,</span> <span class="s">&quot;)&quot;</span><span class="p">)</span>  <span class="c"># transform braces</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\\</span><span class="s">&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>  <span class="c"># remove slashes</span>
+
+    <span class="k">for</span> <span class="n">from_ascii</span><span class="p">,</span> <span class="n">to_latex</span> <span class="ow">in</span> <span class="n">L_ESCAPE_FOR_MATH_MODE</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">from_ascii</span><span class="p">,</span> <span class="n">to_latex</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">monospace</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\\</span><span class="s">texttt{</span><span class="si">%s</span><span class="s">}&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,)</span>
+
+    <span class="k">if</span> <span class="n">ensuremath</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\\</span><span class="s">ensuremath{</span><span class="si">%s</span><span class="s">}&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,)</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+
+    
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+    <div id="impressum" style="text-align: justify;">
+        <h3>Project Info and Contact</h3>
+        <p style="font-size: 90%">
+        This project originated at the <a href="http://www.ekp.kit.edu/english/index.php">Institute of Experimental Nuclear Physics</a> (IENP) at the <a href="http://www.kit.edu/english/index.php">Karlsruhe Insitute of Technology</a> (KIT). The software was developed as part of a Bachelor's Thesis in Physics.
+        </p>
+        <p style="font-size: 90%">
+        The author may be contacted at:
+        </p>
+        <p style="font-size: 90%;">
+            <div style="padding: 0 10% 7% 10%;"><b>Daniel Săvoiu</b></div>
+            <div style="padding: 0 10%; text-align: right !important;">
+                <i>daniel</i> (dot) <i>savoiu</i><br />(at)<br /><i>student</i> (dot) <i>kit</i> (dot) <i>edu</i>
+            </div>
+        </p>
+    </div>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="../../index.html">kafe 0.4.11 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    
+    <div class="footer">
+        &copy; Copyright 2013, Daniel Savoiu.
+      Last updated on 21 Jan, 2014.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+    <!-- <div class="footer">
+        © Copyright 2013, Daniel Savoiu.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>-->
+
+  </body>
+</html>

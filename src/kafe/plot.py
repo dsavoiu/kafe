@@ -1,16 +1,35 @@
 '''
 .. module:: plot
    :platform: Unix
-   :synopsis: A submodule for plotting `Dataset`s with ``matplotib``.
+   :synopsis: A submodule for plotting `Dataset`s with ``matplotlib``.
 .. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Guenter Quast <G.Quast@kit.edu>
+
 '''
+# -----------------------------------------------------------------
+# Changes:
+# GQ 140304: inserted argument "borderpad" replacing "pad" in legend
+# GQ 140731: white spaces as beginning of line cause trouble in
+#            ver. 1.3.1 - reformatted parameter box
+# GQ 140807: parameter errors are 0. for fixed parameters; this
+#             needs a fix when determining `derivative_spacing`
+#             in `plot()`; now depends on individual errors
+# DS 141001: stylistic and esthetic changes
+#               - font choice now defaults to Palatino (serif)
+#                 and Helvetica (sans-serif)
+#               - axis labels moved to end of axis
+#               - fit info box now adjusts in size to be the same
+#                 width as the legend box
+# -----------------------------------------------------------------
 
 import numpy as np
+
 
 import matplotlib as mpl
 mpl.use('Qt4AGG')    # use the Qt backend for mpl
 
 import matplotlib.pyplot as plt
+from function_tools import outer_product
 from numeric_tools import extract_statistical_errors
 
 from config import (G_PADDING_FACTOR_X, G_PADDING_FACTOR_Y,
@@ -55,8 +74,8 @@ def pad_span(span, pad_coeff=1, additional_pad=None):
     `additional_pad` can also be a list of two floats which specifies an
     asymmetric amount by which to enlarge the span. Note that in this case,
     positive entries in `additional_pad` will enlarge the span (move the
-    interval end away from the interval's center) and negative amounts will
-    shorten it (move the interval end towards the interval's center).
+    interval end away from the interval center) and negative amounts will
+    shorten it (move the interval end towards the interval center).
     '''
 
     try:
@@ -144,8 +163,8 @@ class PlotStyle:
             'shadow': False,
             'numpoints': 1,
             'bbox_to_anchor': (1.05, 1.),
-            'borderaxespad': 0.
-            #'pad': 0.05
+            'borderaxespad': 0.,
+            #'borderpad': 0.05
         }
 
         # Default keyword arguments to pass to rc('font',...)
@@ -196,15 +215,13 @@ class PlotStyle:
 
 
 class Plot(object):
+    '''
+    The constuctor accepts a series of `Fit` objects as positional
+    arguments. Some keyword arguments can be provided to override
+    the defaults.
+    '''
 
     def __init__(self, *fits, **kwargs):
-        '''
-        Constuctor for the Plot object. This constuctor accepts a series of
-        `Fit` objects as positional arguments. Some keyword arguments can be
-        provided to override the defaults. A list of these keyword arguments
-        will be provided in the future...
-        '''
-
         # store the child Fit objects in an instance variable
         #: list of `Fit`s to plot
         self.fits = list(fits)

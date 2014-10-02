@@ -1,0 +1,20 @@
+################
+# Global rules #
+################
+
+*.pyc
+*.pyo
+*.log
+
+
+##########
+# Images #
+##########
+
+examples/example*/*.pdf
+
+#########
+# Other #
+#########
+
+src/MANIFEST

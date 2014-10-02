@@ -19,7 +19,7 @@ def ascii_to_latex_math(str_ascii, monospace=True, ensuremath=True):
 
     **str_ascii** : string
         A plain-text string containing characters to be escaped for
-        :math:`\LaTeX{}` math mode.
+        :math:`LaTeX` math mode.
 
     *monospace* : boolean (optional)
         Whether to render the whole expression as monospace. Defaults to

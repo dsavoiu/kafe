@@ -8,9 +8,9 @@ To install kafe, check out the installation instructions in:
 
 You can browse the HTML documentation in:
 
-    kafe-<version>/doc/_build/html/index.html
+    kafe-<version>/doc/html/index.html
 
-The recommended requirements for kafe are as follows.
+The recommended versions of external packages for kafe are as follows.
 The version numbers between parentheses refer to the minimum requirements:
 
 Python packages:
