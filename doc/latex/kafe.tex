@@ -13,7 +13,7 @@
 
 
 \title{kafe Documentation}
-\date{October 02, 2014}
+\date{October 03, 2014}
 \release{0.5.2}
 \author{D. Savoiu, G. Quast}
 \newcommand{\sphinxlogo}{}
@@ -117,7 +117,7 @@
 
 \maketitle
 \tableofcontents
-\phantomsection\label{kafe::doc}
+\phantomsection\label{index::doc}
 
 \begin{quote}
 
@@ -131,7 +131,7 @@ analysis framework \emph{ROOT}.
 
 
 \chapter{\texttt{kafe} Overview}
-\label{kafe:welcome-to-kafe-karlsruhe-fit-environment}\label{kafe:kafe-overview}\begin{figure}[htbp]\begin{flushright}
+\label{index:welcome-to-kafe-karlsruhe-fit-environment}\label{index:kafe-overview}\begin{figure}[htbp]\begin{flushright}
 \capstart
 
 \scalebox{1.000000}{\includegraphics{graph_example1.jpg}}
@@ -169,7 +169,7 @@ the model function.
 
 
 \section{Code Structure}
-\label{kafe:code-structure}\begin{figure}[htbp]\begin{flushright}
+\label{index:code-structure}\begin{figure}[htbp]\begin{flushright}
 \capstart
 
 \scalebox{0.800000}{\includegraphics{kafeDiagram.jpg}}
@@ -208,7 +208,7 @@ of the fit parameters, taking into account their correlations.
 
 
 \section{Example}
-\label{kafe:example}
+\label{index:example}
 Only very few lines of Python code are needed to perform fits with kafe.
 The sniplet of code shown below performs a fit of a quadratic
 function to some data points with uncertainties:
@@ -219,17 +219,17 @@ function to some data points with uncertainties:
 
 \PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} build a Dataset instance:}
 \PYG{n}{myDataset} \PYG{o}{=} \PYG{n}{build\PYGZus{}dataset}\PYG{p}{(}
- \PYG{p}{[}\PYG{l+m+mf}{0.05}\PYG{p}{,}\PYG{l+m+mf}{0.36}\PYG{p}{,}\PYG{l+m+mf}{0.68}\PYG{p}{,}\PYG{l+m+mf}{0.80}\PYG{p}{,}\PYG{l+m+mf}{1.09}\PYG{p}{,}\PYG{l+m+mf}{1.46}\PYG{p}{,}\PYG{l+m+mf}{1.71}\PYG{p}{,}\PYG{l+m+mf}{1.83}\PYG{p}{,}\PYG{l+m+mf}{2.44}\PYG{p}{,}\PYG{l+m+mf}{2.09}\PYG{p}{,}\PYG{l+m+mf}{3.72}\PYG{p}{,}\PYG{l+m+mf}{4.36}\PYG{p}{,}\PYG{l+m+mf}{4.60}\PYG{p}{]}\PYG{p}{,}
- \PYG{p}{[}\PYG{l+m+mf}{0.35}\PYG{p}{,}\PYG{l+m+mf}{0.26}\PYG{p}{,}\PYG{l+m+mf}{0.52}\PYG{p}{,}\PYG{l+m+mf}{0.44}\PYG{p}{,}\PYG{l+m+mf}{0.48}\PYG{p}{,}\PYG{l+m+mf}{0.55}\PYG{p}{,}\PYG{l+m+mf}{0.66}\PYG{p}{,}\PYG{l+m+mf}{0.48}\PYG{p}{,}\PYG{l+m+mf}{0.75}\PYG{p}{,}\PYG{l+m+mf}{0.70}\PYG{p}{,}\PYG{l+m+mf}{0.75}\PYG{p}{,}\PYG{l+m+mf}{0.80}\PYG{p}{,}\PYG{l+m+mf}{0.90}\PYG{p}{]}\PYG{p}{,}
- \PYG{n}{yabserr}\PYG{o}{=}\PYG{p}{[}\PYG{l+m+mf}{0.06}\PYG{p}{,}\PYG{l+m+mf}{0.07}\PYG{p}{,}\PYG{l+m+mf}{0.05}\PYG{p}{,}\PYG{l+m+mf}{0.05}\PYG{p}{,}\PYG{l+m+mf}{0.07}\PYG{p}{,}\PYG{l+m+mf}{0.07}\PYG{p}{,}\PYG{l+m+mf}{0.09}\PYG{p}{,}\PYG{l+m+mf}{0.1}\PYG{p}{,}\PYG{l+m+mf}{0.11}\PYG{p}{,}\PYG{l+m+mf}{0.1}\PYG{p}{,}\PYG{l+m+mf}{0.11}\PYG{p}{,}\PYG{l+m+mf}{0.12}\PYG{p}{,}\PYG{l+m+mf}{0.1}\PYG{p}{]}\PYG{p}{,}
- \PYG{n}{title}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{some data}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
- \PYG{n}{axis\PYGZus{}labels}\PYG{o}{=}\PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{x}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{y=f(x)}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]} \PYG{p}{)}
+    \PYG{p}{[}\PYG{l+m+mf}{0.05}\PYG{p}{,}\PYG{l+m+mf}{0.36}\PYG{p}{,}\PYG{l+m+mf}{0.68}\PYG{p}{,}\PYG{l+m+mf}{0.80}\PYG{p}{,}\PYG{l+m+mf}{1.09}\PYG{p}{,}\PYG{l+m+mf}{1.46}\PYG{p}{,}\PYG{l+m+mf}{1.71}\PYG{p}{,}\PYG{l+m+mf}{1.83}\PYG{p}{,}\PYG{l+m+mf}{2.44}\PYG{p}{,}\PYG{l+m+mf}{2.09}\PYG{p}{,}\PYG{l+m+mf}{3.72}\PYG{p}{,}\PYG{l+m+mf}{4.36}\PYG{p}{,}\PYG{l+m+mf}{4.60}\PYG{p}{]}\PYG{p}{,}
+    \PYG{p}{[}\PYG{l+m+mf}{0.35}\PYG{p}{,}\PYG{l+m+mf}{0.26}\PYG{p}{,}\PYG{l+m+mf}{0.52}\PYG{p}{,}\PYG{l+m+mf}{0.44}\PYG{p}{,}\PYG{l+m+mf}{0.48}\PYG{p}{,}\PYG{l+m+mf}{0.55}\PYG{p}{,}\PYG{l+m+mf}{0.66}\PYG{p}{,}\PYG{l+m+mf}{0.48}\PYG{p}{,}\PYG{l+m+mf}{0.75}\PYG{p}{,}\PYG{l+m+mf}{0.70}\PYG{p}{,}\PYG{l+m+mf}{0.75}\PYG{p}{,}\PYG{l+m+mf}{0.80}\PYG{p}{,}\PYG{l+m+mf}{0.90}\PYG{p}{]}\PYG{p}{,}
+    \PYG{n}{yabserr}\PYG{o}{=}\PYG{p}{[}\PYG{l+m+mf}{0.06}\PYG{p}{,}\PYG{l+m+mf}{0.07}\PYG{p}{,}\PYG{l+m+mf}{0.05}\PYG{p}{,}\PYG{l+m+mf}{0.05}\PYG{p}{,}\PYG{l+m+mf}{0.07}\PYG{p}{,}\PYG{l+m+mf}{0.07}\PYG{p}{,}\PYG{l+m+mf}{0.09}\PYG{p}{,}\PYG{l+m+mf}{0.1}\PYG{p}{,}\PYG{l+m+mf}{0.11}\PYG{p}{,}\PYG{l+m+mf}{0.1}\PYG{p}{,}\PYG{l+m+mf}{0.11}\PYG{p}{,}\PYG{l+m+mf}{0.12}\PYG{p}{,}\PYG{l+m+mf}{0.1}\PYG{p}{]}\PYG{p}{,}
+    \PYG{n}{title}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{some data}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+    \PYG{n}{axis\PYGZus{}labels}\PYG{o}{=}\PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZdl{}x\PYGZdl{}}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZdl{}y=f(x)\PYGZdl{}}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{)}
 
 \PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Create the Fit object}
 \PYG{n}{myFit} \PYG{o}{=} \PYG{n}{Fit}\PYG{p}{(}\PYG{n}{myDataset}\PYG{p}{,} \PYG{n}{quadratic\PYGZus{}3par}\PYG{p}{)}
-\PYG{c}{\PYGZsh{}   Set initial values and error estimates}
-\PYG{n}{myFit}\PYG{o}{.}\PYG{n}{set\PYGZus{}parameters}\PYG{p}{(}\PYG{p}{(}\PYG{l+m+mf}{0.}\PYG{p}{,}\PYG{l+m+mf}{1.}\PYG{p}{,}\PYG{l+m+mf}{0.2}\PYG{p}{)}\PYG{p}{,}\PYG{p}{(}\PYG{l+m+mf}{0.5}\PYG{p}{,}\PYG{l+m+mf}{0.5}\PYG{p}{,}\PYG{l+m+mf}{0.5}\PYG{p}{)}\PYG{p}{)}
-\PYG{c}{\PYGZsh{}   perform the fit}
+\PYG{c}{\PYGZsh{} Set initial values and error estimates}
+\PYG{n}{myFit}\PYG{o}{.}\PYG{n}{set\PYGZus{}parameters}\PYG{p}{(}\PYG{p}{(}\PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{l+m+mf}{1.}\PYG{p}{,} \PYG{l+m+mf}{0.2}\PYG{p}{)}\PYG{p}{,} \PYG{p}{(}\PYG{l+m+mf}{0.5}\PYG{p}{,} \PYG{l+m+mf}{0.5}\PYG{p}{,} \PYG{l+m+mf}{0.5}\PYG{p}{)}\PYG{p}{)}
+\PYG{c}{\PYGZsh{} Do the Fit}
 \PYG{n}{myFit}\PYG{o}{.}\PYG{n}{do\PYGZus{}fit}\PYG{p}{(}\PYG{p}{)}
 
 \PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Create the plots and output them}
@@ -247,7 +247,7 @@ the following graphical output:
 \centering
 \capstart
 
-\scalebox{1.000000}{\includegraphics{kafe_example0.jpg}}
+\scalebox{1.000000}{\includegraphics{kafe_example0.png}}
 \caption{Example: \emph{Data points with one-dimensional error bars compared
 to a quadratic model function with} \textbf{kafe}.}\end{figure}
 
@@ -260,7 +260,7 @@ a starting point for own applications.
 
 
 \section{Installation}
-\label{kafe:installation}
+\label{index:installation}
 To install \emph{kafe}, unpack the archive \emph{kafe-\textless{}version\textgreater{}.tgz} , change to
 the sub-directory  \emph{kafe-\textless{}versoin\textgreater{}/src/}  and follow the installation
 instructions below.
@@ -310,7 +310,7 @@ freely available at  \href{http://root.cern.ch}{http://root.cern.ch}
 
 
 \subsection{Dependencies}
-\label{kafe:dependencies}
+\label{index:dependencies}
 The recommended versions of external packages for kafe are as follows,
 the version numbers in parentheses refer to the minimum requirements:
 
@@ -347,7 +347,7 @@ expressions on graphs.
 
 
 \chapter{Fit examples, utilities, tips and tricks}
-\label{kafe:fit-examples-utilities-tips-and-tricks}
+\label{index:fit-examples-utilities-tips-and-tricks}
 A wide range of applications of the kafe core and the usage of
 the helper functions is exemplified here. All of them
 are contained in the sub-directory \code{examples/} of the
@@ -356,7 +356,7 @@ user projects.
 
 
 \section{Example 1 - model comparison}
-\label{kafe:example-1-model-comparison}
+\label{index:example-1-model-comparison}
 To decide whether a model is adequate to describe a given
 set of data, typically several models have to be fit to the
 same data. Here is the code for a comparison of a data set
@@ -392,29 +392,29 @@ is ignored when reading the data:
 \begin{Verbatim}[commandchars=\\\{\}]
 \# axis 0: x
 \# datapoints  uncor. err.
-0.957426      3.0e-01
-2.262212      3.0e-01
-3.061167      3.0e-01
-3.607280      3.0e-01
-4.933100      3.0e-01
-5.992332      3.0e-01
-7.021234      3.0e-01
-8.272489      3.0e-01
-9.250817      3.0e-01
-9.757758      3.0e-01
+0.957426  3.0e-01
+2.262212  3.0e-01
+3.061167  3.0e-01
+3.607280  3.0e-01
+4.933100  3.0e-01
+5.992332  3.0e-01
+7.021234  3.0e-01
+8.272489  3.0e-01
+9.250817  3.0e-01
+9.757758  3.0e-01
 
 \# axis 1: y
 \# datapoints  uncor. err.
-1.672481      2.0e-01
-1.743410      2.0e-01
-1.805217      2.0e-01
-2.147802      2.0e-01
-2.679615      2.0e-01
-3.110055      2.0e-01
-3.723173      2.0e-01
-4.430122      2.0e-01
-4.944116      2.0e-01
-5.698063      2.0e-01
+1.672481  2.0e-01
+1.743410  2.0e-01
+1.805217  2.0e-01
+2.147802  2.0e-01
+2.679615  2.0e-01
+3.110055  2.0e-01
+3.723173  2.0e-01
+4.430122  2.0e-01
+4.944116  2.0e-01
+5.698063  2.0e-01
 \end{Verbatim}
 
 The resulting output is shown below. As can be seen already
@@ -435,12 +435,12 @@ HYPTEST  accepted (CL 5\%)
 \centering
 \capstart
 
-\scalebox{1.000000}{\includegraphics{kafe_example1.jpg}}
+\scalebox{1.000000}{\includegraphics{kafe_example1.png}}
 \caption{\emph{Output of example1 - compare two models}}\end{figure}
 
 
 \section{Example 2 - two fits and models}
-\label{kafe:example-2-two-fits-and-models}
+\label{index:example-2-two-fits-and-models}
 Another typical use case consists of comparing two sets
 of measurements and the models derived from them. This is
 very similar to the previous example with minor
@@ -469,7 +469,7 @@ This results in the following output:
 \centering
 \capstart
 
-\scalebox{1.000000}{\includegraphics{kafe_example2.jpg}}
+\scalebox{1.000000}{\includegraphics{kafe_example2.png}}
 \caption{\emph{Output of example2 - comparison of two linear fits.}}\end{figure}
 
 Although the parameters extracted from the two data sets agree within
@@ -480,7 +480,7 @@ single linear model.
 
 
 \section{Example 3 - properties of a Gauss curve}
-\label{kafe:example-3-properties-of-a-gauss-curve}
+\label{index:example-3-properties-of-a-gauss-curve}
 This example creates a dummy \code{Dataset} object whose points lie exactly
 on a Gaussian curve. The \code{Fit} will then converge toward that very same
 Gaussian. When plotting, the data points used to ``support'' the curve
@@ -492,12 +492,12 @@ to annotate plots with \emph{matplotlib} functionality.
 \centering
 \capstart
 
-\scalebox{1.000000}{\includegraphics{kafe_example3.jpg}}
+\scalebox{1.000000}{\includegraphics{kafe_example3.png}}
 \caption{\emph{Output of example 3 - properties of a Gauss curve.}}\end{figure}
 
 
 \section{Example 4 - average of correlated measurements}
-\label{kafe:example-4-average-of-correlated-measurements}
+\label{index:example-4-average-of-correlated-measurements}
 The average of a set of measurements can be considered as a fit
 of a constant to a set of input data. This example illustrates
 how correlated errors are handled in \emph{kafe}.
@@ -590,7 +590,7 @@ averaging example is here:
 
 
 \section{Example 5 - multi-parameter fit (damped oscillation)}
-\label{kafe:example-5-multi-parameter-fit-damped-oscillation}
+\label{index:example-5-multi-parameter-fit-damped-oscillation}
 This example shows the fitting of a more complicated model function
 to data collected from a damped harmonic oscillator. In such
 non-linear fits, stetting the initial values is sometimes crucial
@@ -645,12 +645,12 @@ Here is the example code:
 \centering
 \capstart
 
-\scalebox{1.000000}{\includegraphics{kafe_example5.jpg}}
+\scalebox{1.000000}{\includegraphics{kafe_example5.png}}
 \caption{\emph{Example 5 - fit of the time dependence of the amplitude of a damped harmonic oscillator.}}\end{figure}
 
 
 \section{Example 6 - another multi-parameter fit}
-\label{kafe:example-6-another-multi-parameter-fit}
+\label{index:example-6-another-multi-parameter-fit}
 This example is not much different from the previous one, except that
 the fit function, a standard fourth-degree polynomial from the module
 \code{function\_library}, is modified to reflect the names of the problem
@@ -674,12 +674,12 @@ This is the resulting output:
 \centering
 \capstart
 
-\scalebox{1.000000}{\includegraphics{kafe_example6.jpg}}
+\scalebox{1.000000}{\includegraphics{kafe_example6.png}}
 \caption{\emph{Output of example 6 - counting rate.}}\end{figure}
 
 
 \section{Example 7 - non-linear multi-parameter fit}
-\label{kafe:example-7-non-linear-multi-parameter-fit}
+\label{index:example-7-non-linear-multi-parameter-fit}
 Again, not much new in this example, except that the
 model is now very non-linear, the intensity distribution
 of light after passing through a double-slit. The
@@ -752,12 +752,12 @@ This is the resulting output:
 \centering
 \capstart
 
-\scalebox{1.000000}{\includegraphics{kafe_example7.jpg}}
+\scalebox{1.000000}{\includegraphics{kafe_example7.png}}
 \caption{\emph{Example 7 - fit of the intensity distribution of light behind a double slit with fixed or constrained wave length.}}\end{figure}
 
 
 \section{Example 8 - fit of a Breit-Wigner Resonance to data with correlated errors}
-\label{kafe:example-8-fit-of-a-breit-wigner-resonance-to-data-with-correlated-errors}
+\label{index:example-8-fit-of-a-breit-wigner-resonance-to-data-with-correlated-errors}
 This example illustrates how to define the data and the fit function
 in a single file - provided by the helper function \code{buildFit\_fromFile}
 in module \code{file\_tools}. Parsing of the input file is done by the
@@ -856,12 +856,12 @@ Here is the output:
 \centering
 \capstart
 
-\scalebox{1.000000}{\includegraphics{kafe_BreitWignerFit.jpg}}
+\scalebox{1.000000}{\includegraphics{kafe_BreitWignerFit.png}}
 \caption{\emph{Output of example 8 - Fit of a Breit-Wigner function.}}\end{figure}
 
 
 \section{Example 9 - fit of a function to histogram data}
-\label{kafe:example-9-fit-of-a-function-to-histogram-data}
+\label{index:example-9-fit-of-a-function-to-histogram-data}
 This example brings us to the limit of what is presently
 possible with \emph{kafe}. Here, the data represent the
 centre of a histogram bins ad the number of entries, :math::\emph{n\_i},
@@ -934,12 +934,12 @@ well reproduced within the uncertainties by the fit result:
 \centering
 \capstart
 
-\scalebox{1.000000}{\includegraphics{kafe_example9.jpg}}
+\scalebox{1.000000}{\includegraphics{kafe_example9.png}}
 \caption{\emph{Output of example 9 - Fit of a Gaussian distribution to histogram data}}\end{figure}
 
 
 \chapter{\emph{kafe} Documentation -- module descriptions}
-\label{kafe:kafe-documentation-module-descriptions}
+\label{index:kafe-documentation-module-descriptions}
 The following documentation of functions and methods
 of relevance to the user interface was generated from
 the \emph{DocStrings} contained in the python code of the
@@ -950,7 +950,7 @@ code.
 
 
 \section{\texttt{kafe.\_\_init\_\_} Module}
-\label{kafe:module-kafe.__init__}\label{kafe:kafe-init-module}\index{kafe.\_\_init\_\_ (module)}
+\label{index:module-kafe.__init__}\label{index:kafe-init-module}\index{kafe.\_\_init\_\_ (module)}
 \textbf{kafe} \emph{-- a Python package for fitting and plotting for use in physics lab courses.}
 
 This Python package allows fitting of user-defined functions to data. A dataset
@@ -970,10 +970,10 @@ specified), or from a keyword-driven input format.
 
 
 \section{\texttt{\_version\_info} Module}
-\label{kafe:module-kafe._version_info}\label{kafe:version-info-module}\index{kafe.\_version\_info (module)}\phantomsection\label{kafe:module-__version_info}\index{\_\_version\_info (module)}\index{get\_version() (in module kafe.\_version\_info)}
+\label{index:module-kafe._version_info}\label{index:version-info-module}\index{kafe.\_version\_info (module)}\phantomsection\label{index:module-__version_info}\index{\_\_version\_info (module)}\index{get\_version() (in module kafe.\_version\_info)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe._version_info.get_version}\pysiglinewithargsret{\code{kafe.\_version\_info.}\bfcode{get\_version}}{}{}
+\phantomsection\label{index:kafe._version_info.get_version}\pysiglinewithargsret{\code{kafe.\_version\_info.}\bfcode{get\_version}}{}{}
 kafe version 0.5.2
 
 \end{fulllineitems}
@@ -981,10 +981,10 @@ kafe version 0.5.2
 
 
 \section{\texttt{dataset} Module}
-\label{kafe:dataset-module}\label{kafe:module-kafe.dataset}\index{kafe.dataset (module)}\phantomsection\label{kafe:module-dataset}\index{dataset (module)}\index{Dataset (class in kafe.dataset)}
+\label{index:dataset-module}\label{index:module-kafe.dataset}\index{kafe.dataset (module)}\phantomsection\label{index:module-dataset}\index{dataset (module)}\index{Dataset (class in kafe.dataset)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.dataset.Dataset}\pysiglinewithargsret{\strong{class }\code{kafe.dataset.}\bfcode{Dataset}}{\emph{input\_file=None, data=None, cov\_mats=None, title='Untitled Dataset', basename=None, axis\_labels={[}'x', `y'{]}, axis\_units={[}'`, `'{]}}}{}
+\phantomsection\label{index:kafe.dataset.Dataset}\pysiglinewithargsret{\strong{class }\code{kafe.dataset.}\bfcode{Dataset}}{\emph{input\_file=None, data=None, cov\_mats=None, title='Untitled Dataset', basename=None, axis\_labels={[}'x', `y'{]}, axis\_units={[}'`, `'{]}}}{}
 Bases: \code{object}
 
 The \emph{Dataset} object is a data structure for storing measurement and error
@@ -1099,7 +1099,7 @@ dimensionless, i.e. the unit will be an empty string.
 \index{cov\_mat\_is\_regular() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.dataset.Dataset.cov_mat_is_regular}\pysiglinewithargsret{\bfcode{cov\_mat\_is\_regular}}{\emph{axis}}{}
+\phantomsection\label{index:kafe.dataset.Dataset.cov_mat_is_regular}\pysiglinewithargsret{\bfcode{cov\_mat\_is\_regular}}{\emph{axis}}{}
 Returns \emph{True} if the covariance matrix for an axis is regular and
 \code{False} if it is singular.
 \begin{description}
@@ -1113,7 +1113,7 @@ Axis for which to check for regularity of the covariance matrix.
 \index{cov\_mats (kafe.dataset.Dataset attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.dataset.Dataset.cov_mats}\pysigline{\bfcode{cov\_mats}\strong{ = None}}
+\phantomsection\label{index:kafe.dataset.Dataset.cov_mats}\pysigline{\bfcode{cov\_mats}\strong{ = None}}
 list of covariance matrices
 
 \end{fulllineitems}
@@ -1121,7 +1121,7 @@ list of covariance matrices
 \index{get\_axis() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.dataset.Dataset.get_axis}\pysiglinewithargsret{\bfcode{get\_axis}}{\emph{axis\_alias}}{}
+\phantomsection\label{index:kafe.dataset.Dataset.get_axis}\pysiglinewithargsret{\bfcode{get\_axis}}{\emph{axis\_alias}}{}
 Get axis id from an alias.
 \begin{description}
 \item[{\textbf{axis\_alias}}] \leavevmode{[}string or int{]}
@@ -1135,7 +1135,7 @@ either \code{'0'} or \code{'x'} for the \emph{x}-axis (id 0).
 \index{get\_cov\_mat() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.dataset.Dataset.get_cov_mat}\pysiglinewithargsret{\bfcode{get\_cov\_mat}}{\emph{axis}, \emph{fallback\_on\_singular=None}}{}
+\phantomsection\label{index:kafe.dataset.Dataset.get_cov_mat}\pysiglinewithargsret{\bfcode{get\_cov\_mat}}{\emph{axis}, \emph{fallback\_on\_singular=None}}{}
 Get the error matrix for an axis.
 \begin{description}
 \item[{\textbf{axis}}] \leavevmode{[}\code{'x'} or \code{'y'}{]}
@@ -1156,7 +1156,7 @@ respectively.
 \index{get\_data() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.dataset.Dataset.get_data}\pysiglinewithargsret{\bfcode{get\_data}}{\emph{axis}}{}
+\phantomsection\label{index:kafe.dataset.Dataset.get_data}\pysiglinewithargsret{\bfcode{get\_data}}{\emph{axis}}{}
 Get the measurement data for an axis.
 \begin{description}
 \item[{\textbf{axis}}] \leavevmode{[}string{]}
@@ -1170,7 +1170,7 @@ Axis for which to get the measurement data. Can be \code{'x'} or
 \index{get\_data\_span() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.dataset.Dataset.get_data_span}\pysiglinewithargsret{\bfcode{get\_data\_span}}{\emph{axis}, \emph{include\_error\_bars=False}}{}
+\phantomsection\label{index:kafe.dataset.Dataset.get_data_span}\pysiglinewithargsret{\bfcode{get\_data\_span}}{\emph{axis}, \emph{include\_error\_bars=False}}{}
 Get the data span for an axis. The data span is a tuple (\emph{min}, \emph{max})
 containing the smallest and highest coordinates for an axis.
 \begin{description}
@@ -1189,10 +1189,10 @@ contain the error bars of the smallest and largest datapoints
 \index{get\_formatted() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.dataset.Dataset.get_formatted}\pysiglinewithargsret{\bfcode{get\_formatted}}{\emph{format\_string='.06e'}, \emph{delimiter='t'}}{}
+\phantomsection\label{index:kafe.dataset.Dataset.get_formatted}\pysiglinewithargsret{\bfcode{get\_formatted}}{\emph{format\_string='.06e'}, \emph{delimiter='t'}}{}
 Returns the dataset in a plain-text format which is human-readable and
 can later be used as an input file for the creation of a new \emph{Dataset}.
-\phantomsection\label{kafe:get-formatted}
+\phantomsection\label{index:get-formatted}
 The format is as follows:
 
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -1234,7 +1234,7 @@ A delimiter used to separate columns in the output.
 \index{get\_size() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.dataset.Dataset.get_size}\pysiglinewithargsret{\bfcode{get\_size}}{}{}
+\phantomsection\label{index:kafe.dataset.Dataset.get_size}\pysiglinewithargsret{\bfcode{get\_size}}{}{}
 Get the size of the \emph{Dataset}. This is equivalent to the length of the
 \emph{x}-axis data.
 
@@ -1243,7 +1243,7 @@ Get the size of the \emph{Dataset}. This is equivalent to the length of the
 \index{has\_correlations() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.dataset.Dataset.has_correlations}\pysiglinewithargsret{\bfcode{has\_correlations}}{\emph{axis}}{}
+\phantomsection\label{index:kafe.dataset.Dataset.has_correlations}\pysiglinewithargsret{\bfcode{has\_correlations}}{\emph{axis}}{}
 Returns \emph{True} if the specified axis has correlation data, \code{False} if
 not.
 \begin{description}
@@ -1257,7 +1257,7 @@ Axis for which to check for correlations.
 \index{has\_errors() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.dataset.Dataset.has_errors}\pysiglinewithargsret{\bfcode{has\_errors}}{\emph{axis}}{}
+\phantomsection\label{index:kafe.dataset.Dataset.has_errors}\pysiglinewithargsret{\bfcode{has\_errors}}{\emph{axis}}{}
 Returns \emph{True} if the specified axis has statistical error data.
 \begin{description}
 \item[{\textbf{axis}}] \leavevmode{[}\code{'x'} or \code{'y'}{]}
@@ -1270,7 +1270,7 @@ Axis for which to check for error data.
 \index{n\_axes (kafe.dataset.Dataset attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.dataset.Dataset.n_axes}\pysigline{\bfcode{n\_axes}\strong{ = None}}
+\phantomsection\label{index:kafe.dataset.Dataset.n_axes}\pysigline{\bfcode{n\_axes}\strong{ = None}}
 dimensionality of the \emph{Dataset}. Currently, only 2D \emph{Datasets} are
 supported
 
@@ -1279,7 +1279,7 @@ supported
 \index{n\_datapoints (kafe.dataset.Dataset attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.dataset.Dataset.n_datapoints}\pysigline{\bfcode{n\_datapoints}\strong{ = None}}
+\phantomsection\label{index:kafe.dataset.Dataset.n_datapoints}\pysigline{\bfcode{n\_datapoints}\strong{ = None}}
 number of data points in the \emph{Dataset}
 
 \end{fulllineitems}
@@ -1287,7 +1287,7 @@ number of data points in the \emph{Dataset}
 \index{read\_from\_file() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.dataset.Dataset.read_from_file}\pysiglinewithargsret{\bfcode{read\_from\_file}}{\emph{input\_file}}{}
+\phantomsection\label{index:kafe.dataset.Dataset.read_from_file}\pysiglinewithargsret{\bfcode{read\_from\_file}}{\emph{input\_file}}{}
 Reads the \emph{Dataset} object from a file.
 \begin{description}
 \item[{returns}] \leavevmode{[}boolean{]}
@@ -1300,7 +1300,7 @@ Reads the \emph{Dataset} object from a file.
 \index{set\_cov\_mat() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.dataset.Dataset.set_cov_mat}\pysiglinewithargsret{\bfcode{set\_cov\_mat}}{\emph{axis}, \emph{mat}}{}
+\phantomsection\label{index:kafe.dataset.Dataset.set_cov_mat}\pysiglinewithargsret{\bfcode{set\_cov\_mat}}{\emph{axis}, \emph{mat}}{}
 Set the error matrix for an axis.
 \begin{description}
 \item[{\textbf{axis}}] \leavevmode{[}\code{'x'} or \code{'y'}{]}
@@ -1317,7 +1317,7 @@ matrix.
 \index{set\_data() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.dataset.Dataset.set_data}\pysiglinewithargsret{\bfcode{set\_data}}{\emph{axis}, \emph{data}}{}
+\phantomsection\label{index:kafe.dataset.Dataset.set_data}\pysiglinewithargsret{\bfcode{set\_data}}{\emph{axis}, \emph{data}}{}
 Set the measurement data for an axis.
 \begin{description}
 \item[{\textbf{axis}}] \leavevmode{[}\code{'x'} or \code{'y'}{]}
@@ -1333,9 +1333,9 @@ Measurement data for axis.
 \index{write\_formatted() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.dataset.Dataset.write_formatted}\pysiglinewithargsret{\bfcode{write\_formatted}}{\emph{file\_path}, \emph{format\_string='.06e'}, \emph{delimiter='t'}}{}
+\phantomsection\label{index:kafe.dataset.Dataset.write_formatted}\pysiglinewithargsret{\bfcode{write\_formatted}}{\emph{file\_path}, \emph{format\_string='.06e'}, \emph{delimiter='t'}}{}
 Writes the dataset to a plain-text file. For details on the format, see
-{\hyperref[kafe:get-formatted]{get\_formatted}}.
+{\hyperref[index:get-formatted]{get\_formatted}}.
 \begin{description}
 \item[{\textbf{file\_path}}] \leavevmode{[}string{]}
 Path of the file object to write. \textbf{WARNING}: \emph{overwrites existing
@@ -1359,7 +1359,7 @@ A delimiter used to separate columns in the output.
 \index{build\_dataset() (in module kafe.dataset)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.dataset.build_dataset}\pysiglinewithargsret{\code{kafe.dataset.}\bfcode{build\_dataset}}{\emph{xdata}, \emph{ydata}, \emph{cov\_mats=None}, \emph{xabserr=0.0}, \emph{xrelerr=0.0}, \emph{xabscor=0.0}, \emph{xrelcor=0.0}, \emph{yabserr=0.0}, \emph{yrelerr=0.0}, \emph{yabscor=0.0}, \emph{yrelcor=0.0}, \emph{title=None}, \emph{basename=None}, \emph{axis\_labels=None}, \emph{axis\_units=None}}{}
+\phantomsection\label{index:kafe.dataset.build_dataset}\pysiglinewithargsret{\code{kafe.dataset.}\bfcode{build\_dataset}}{\emph{xdata}, \emph{ydata}, \emph{cov\_mats=None}, \emph{xabserr=0.0}, \emph{xrelerr=0.0}, \emph{xabscor=0.0}, \emph{xrelcor=0.0}, \emph{yabserr=0.0}, \emph{yrelerr=0.0}, \emph{yabscor=0.0}, \emph{yrelcor=0.0}, \emph{title=None}, \emph{basename=None}, \emph{axis\_labels=None}, \emph{axis\_units=None}}{}
 This helper function creates a \emph{Dataset} from a series of keyword
 arguments.
 
@@ -1443,10 +1443,10 @@ plotting more than one \emph{Fit} in the same \emph{Plot}.
 
 
 \section{\texttt{file\_tools} Module}
-\label{kafe:file-tools-module}\label{kafe:module-kafe.file_tools}\index{kafe.file\_tools (module)}\phantomsection\label{kafe:module-file_tools}\index{file\_tools (module)}\index{buildDataset\_fromFile() (in module kafe.file\_tools)}
+\label{index:file-tools-module}\label{index:module-kafe.file_tools}\index{kafe.file\_tools (module)}\phantomsection\label{index:module-file_tools}\index{file\_tools (module)}\index{buildDataset\_fromFile() (in module kafe.file\_tools)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.file_tools.buildDataset_fromFile}\pysiglinewithargsret{\code{kafe.file\_tools.}\bfcode{buildDataset\_fromFile}}{\emph{file\_to\_parse}}{}
+\phantomsection\label{index:kafe.file_tools.buildDataset_fromFile}\pysiglinewithargsret{\code{kafe.file\_tools.}\bfcode{buildDataset\_fromFile}}{\emph{file\_to\_parse}}{}
 build a kafe \code{Dataset} object from input file with key words
 and file format defined in \code{parse\_general\_inputfile}
 \begin{description}
@@ -1463,7 +1463,7 @@ constructed with the help of the method \code{Dataset.build\_dataset()}
 \index{buildFit\_fromFile() (in module kafe.file\_tools)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.file_tools.buildFit_fromFile}\pysiglinewithargsret{\code{kafe.file\_tools.}\bfcode{buildFit\_fromFile}}{\emph{file\_to\_parse}}{}
+\phantomsection\label{index:kafe.file_tools.buildFit_fromFile}\pysiglinewithargsret{\code{kafe.file\_tools.}\bfcode{buildFit\_fromFile}}{\emph{file\_to\_parse}}{}
 build a kafe \code{Fit} object from input file with keywords
 and file format defined in \code{parse\_general\_input\_file}
 \begin{description}
@@ -1482,7 +1482,7 @@ constructed with the help of the methods
 \index{parse\_column\_data() (in module kafe.file\_tools)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.file_tools.parse_column_data}\pysiglinewithargsret{\code{kafe.file\_tools.}\bfcode{parse\_column\_data}}{\emph{file\_to\_parse, field\_order='x,y', delimiter=' `, cov\_mat\_files=None, title='Untitled Dataset', basename=None, axis\_labels={[}'x', `y'{]}, axis\_units={[}'`, `'{]}}}{}
+\phantomsection\label{index:kafe.file_tools.parse_column_data}\pysiglinewithargsret{\code{kafe.file\_tools.}\bfcode{parse\_column\_data}}{\emph{file\_to\_parse, field\_order='x,y', delimiter=' `, cov\_mat\_files=None, title='Untitled Dataset', basename=None, axis\_labels={[}'x', `y'{]}, axis\_units={[}'`, `'{]}}}{}
 Parses a file which contains measurement data in a one-measurement-per-row
 format. The field (column) order can be specified. It defaults to \emph{x,y'.
 Valid field names are {}`x}, \emph{y}, \emph{xabserr}, \emph{yabserr}, \emph{xrelerr},
@@ -1555,7 +1555,7 @@ A Dataset built from the parsed file.
 \index{parse\_general\_inputfile() (in module kafe.file\_tools)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.file_tools.parse_general_inputfile}\pysiglinewithargsret{\code{kafe.file\_tools.}\bfcode{parse\_general\_inputfile}}{\emph{file\_to\_parse}}{}
+\phantomsection\label{index:kafe.file_tools.parse_general_inputfile}\pysiglinewithargsret{\code{kafe.file\_tools.}\bfcode{parse\_general\_inputfile}}{\emph{file\_to\_parse}}{}
 This function can be used to specify \emph{kafe} \code{Dataset}
 or \code{Fit} objects in a single input file, thus requiring
 minimal Python code. Keywords as specified in a dictionary
@@ -1815,10 +1815,10 @@ def fitf(x,av=1.): \# fit an average
 
 
 \section{\texttt{fit} Module}
-\label{kafe:fit-module}\label{kafe:module-kafe.fit}\index{kafe.fit (module)}\phantomsection\label{kafe:module-fit}\index{fit (module)}\index{Fit (class in kafe.fit)}
+\label{index:fit-module}\label{index:module-kafe.fit}\index{kafe.fit (module)}\phantomsection\label{index:module-fit}\index{fit (module)}\index{Fit (class in kafe.fit)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x38e0320\textgreater{}}, \emph{fit\_label=None}}{}
+\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x451c230\textgreater{}}, \emph{fit\_label=None}}{}
 Bases: \code{object}
 
 Object representing a fit. This object references the fitted \emph{Dataset},
@@ -1868,7 +1868,7 @@ fit function's $LaTeX$ expression.
 \index{call\_external\_fcn() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.call_external_fcn}\pysiglinewithargsret{\bfcode{call\_external\_fcn}}{\emph{*parameter\_values}}{}
+\phantomsection\label{index:kafe.fit.Fit.call_external_fcn}\pysiglinewithargsret{\bfcode{call\_external\_fcn}}{\emph{*parameter\_values}}{}
 Wrapper for the external \emph{FCN}. Since the actual fit process depends on
 finding the right parameter values and keeping everything else constant
 we can use the \emph{Dataset} object to pass known, fixed information to the
@@ -1884,7 +1884,7 @@ the parameter values at which \emph{FCN} is to be evaluated
 \index{call\_minimizer() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.call_minimizer}\pysiglinewithargsret{\bfcode{call\_minimizer}}{\emph{final\_fit=True}, \emph{verbose=False}}{}
+\phantomsection\label{index:kafe.fit.Fit.call_minimizer}\pysiglinewithargsret{\bfcode{call\_minimizer}}{\emph{final\_fit=True}, \emph{verbose=False}}{}
 Instructs the minimizer to do a minimization.
 
 \end{fulllineitems}
@@ -1892,7 +1892,7 @@ Instructs the minimizer to do a minimization.
 \index{constrain\_parameters() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.constrain_parameters}\pysiglinewithargsret{\bfcode{constrain\_parameters}}{\emph{parameters}, \emph{parvals}, \emph{parerrs}}{}
+\phantomsection\label{index:kafe.fit.Fit.constrain_parameters}\pysiglinewithargsret{\bfcode{constrain\_parameters}}{\emph{parameters}, \emph{parvals}, \emph{parerrs}}{}
 Constrain the parameter with the given name to $c\pm\sigma$.
 
 This is achieved by adding an appropriate \emph{penalty term} to the $\chi^2$
@@ -1911,7 +1911,7 @@ function, see function \code{chi2}.
 \index{current\_cov\_mat (kafe.fit.Fit attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.current_cov_mat}\pysigline{\bfcode{current\_cov\_mat}\strong{ = None}}
+\phantomsection\label{index:kafe.fit.Fit.current_cov_mat}\pysigline{\bfcode{current\_cov\_mat}\strong{ = None}}
 the current covariance matrix used for the \emph{Fit}
 
 \end{fulllineitems}
@@ -1919,7 +1919,7 @@ the current covariance matrix used for the \emph{Fit}
 \index{dataset (kafe.fit.Fit attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.dataset}\pysigline{\bfcode{dataset}\strong{ = None}}
+\phantomsection\label{index:kafe.fit.Fit.dataset}\pysigline{\bfcode{dataset}\strong{ = None}}
 this Fit instance's child \emph{Dataset}
 
 \end{fulllineitems}
@@ -1927,7 +1927,7 @@ this Fit instance's child \emph{Dataset}
 \index{do\_fit() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.do_fit}\pysiglinewithargsret{\bfcode{do\_fit}}{\emph{quiet=False}, \emph{verbose=False}}{}
+\phantomsection\label{index:kafe.fit.Fit.do_fit}\pysiglinewithargsret{\bfcode{do\_fit}}{\emph{quiet=False}, \emph{verbose=False}}{}
 Runs the fit algorithm for this \emph{Fit} object.
 
 First, the \emph{Dataset} is fitted considering only uncertainties in the
@@ -1957,7 +1957,7 @@ Set to \code{True} if more output should be printed.
 \index{external\_fcn (kafe.fit.Fit attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.external_fcn}\pysigline{\bfcode{external\_fcn}\strong{ = None}}
+\phantomsection\label{index:kafe.fit.Fit.external_fcn}\pysigline{\bfcode{external\_fcn}\strong{ = None}}
 the (external) function to be minimized for this \emph{Fit}
 
 \end{fulllineitems}
@@ -1965,7 +1965,7 @@ the (external) function to be minimized for this \emph{Fit}
 \index{fit\_function (kafe.fit.Fit attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.fit_function}\pysigline{\bfcode{fit\_function}\strong{ = None}}
+\phantomsection\label{index:kafe.fit.Fit.fit_function}\pysigline{\bfcode{fit\_function}\strong{ = None}}
 the fit function used for this \emph{Fit}
 
 \end{fulllineitems}
@@ -1973,7 +1973,7 @@ the fit function used for this \emph{Fit}
 \index{fix\_parameters() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.fix_parameters}\pysiglinewithargsret{\bfcode{fix\_parameters}}{\emph{*parameters\_to\_fix}}{}
+\phantomsection\label{index:kafe.fit.Fit.fix_parameters}\pysiglinewithargsret{\bfcode{fix\_parameters}}{\emph{*parameters\_to\_fix}}{}
 Fix the given parameters so that the minimizer works without them
 when \emph{do\_fit} is called next. Parameters can be given by their names
 or by their IDs.
@@ -1983,7 +1983,7 @@ or by their IDs.
 \index{get\_current\_fit\_function() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.get_current_fit_function}\pysiglinewithargsret{\bfcode{get\_current\_fit\_function}}{}{}
+\phantomsection\label{index:kafe.fit.Fit.get_current_fit_function}\pysiglinewithargsret{\bfcode{get\_current\_fit\_function}}{}{}
 This method returns a function object corresponding to the fit function
 for the current parameter values. The returned function is a function
 of a single variable.
@@ -1999,7 +1999,7 @@ at the current parameter values.
 \index{get\_error\_matrix() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.get_error_matrix}\pysiglinewithargsret{\bfcode{get\_error\_matrix}}{}{}
+\phantomsection\label{index:kafe.fit.Fit.get_error_matrix}\pysiglinewithargsret{\bfcode{get\_error\_matrix}}{}{}
 This method returns the covariance matrix of the fit parameters which
 is obtained by querying the minimizer object for this \emph{Fit}
 \begin{description}
@@ -2013,7 +2013,7 @@ The covariance matrix of the parameters.
 \index{get\_function\_error() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.get_function_error}\pysiglinewithargsret{\bfcode{get\_function\_error}}{\emph{x}}{}
+\phantomsection\label{index:kafe.fit.Fit.get_function_error}\pysiglinewithargsret{\bfcode{get\_function\_error}}{\emph{x}}{}
 This method uses the parameter error matrix of the fit to calculate
 a symmetric (parabolic) error on the function value itself. Note that
 this method takes the entire parameter error matrix into account, so
@@ -2035,7 +2035,7 @@ the estimated error at the given point(s)
 \index{get\_parameter\_errors() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.get_parameter_errors}\pysiglinewithargsret{\bfcode{get\_parameter\_errors}}{\emph{rounding=False}}{}
+\phantomsection\label{index:kafe.fit.Fit.get_parameter_errors}\pysiglinewithargsret{\bfcode{get\_parameter\_errors}}{\emph{rounding=False}}{}
 Get the current parameter uncertainties from the minimizer.
 \begin{description}
 \item[{\emph{rounding}}] \leavevmode{[}boolean (optional){]}
@@ -2051,7 +2051,7 @@ A tuple of the parameter uncertainties
 \index{get\_parameter\_values() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.get_parameter_values}\pysiglinewithargsret{\bfcode{get\_parameter\_values}}{\emph{rounding=False}}{}
+\phantomsection\label{index:kafe.fit.Fit.get_parameter_values}\pysiglinewithargsret{\bfcode{get\_parameter\_values}}{\emph{rounding=False}}{}
 Get the current parameter values from the minimizer.
 \begin{description}
 \item[{\emph{rounding}}] \leavevmode{[}boolean (optional){]}
@@ -2067,7 +2067,7 @@ A tuple of the parameter values
 \index{latex\_parameter\_names (kafe.fit.Fit attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.latex_parameter_names}\pysigline{\bfcode{latex\_parameter\_names}\strong{ = None}}
+\phantomsection\label{index:kafe.fit.Fit.latex_parameter_names}\pysigline{\bfcode{latex\_parameter\_names}\strong{ = None}}
 $LaTeX$ parameter names
 
 \end{fulllineitems}
@@ -2075,7 +2075,7 @@ $LaTeX$ parameter names
 \index{minimizer (kafe.fit.Fit attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.minimizer}\pysigline{\bfcode{minimizer}\strong{ = None}}
+\phantomsection\label{index:kafe.fit.Fit.minimizer}\pysigline{\bfcode{minimizer}\strong{ = None}}
 this \emph{Fit}`s minimizer (\emph{Minuit})
 
 \end{fulllineitems}
@@ -2083,7 +2083,7 @@ this \emph{Fit}`s minimizer (\emph{Minuit})
 \index{number\_of\_parameters (kafe.fit.Fit attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.number_of_parameters}\pysigline{\bfcode{number\_of\_parameters}\strong{ = None}}
+\phantomsection\label{index:kafe.fit.Fit.number_of_parameters}\pysigline{\bfcode{number\_of\_parameters}\strong{ = None}}
 the total number of parameters
 
 \end{fulllineitems}
@@ -2091,7 +2091,7 @@ the total number of parameters
 \index{parameter\_names (kafe.fit.Fit attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.parameter_names}\pysigline{\bfcode{parameter\_names}\strong{ = None}}
+\phantomsection\label{index:kafe.fit.Fit.parameter_names}\pysigline{\bfcode{parameter\_names}\strong{ = None}}
 the names of the parameters
 
 \end{fulllineitems}
@@ -2099,7 +2099,7 @@ the names of the parameters
 \index{print\_fit\_details() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.print_fit_details}\pysiglinewithargsret{\bfcode{print\_fit\_details}}{}{}
+\phantomsection\label{index:kafe.fit.Fit.print_fit_details}\pysiglinewithargsret{\bfcode{print\_fit\_details}}{}{}
 prints some fit goodness details
 
 \end{fulllineitems}
@@ -2107,7 +2107,7 @@ prints some fit goodness details
 \index{print\_fit\_results() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.print_fit_results}\pysiglinewithargsret{\bfcode{print\_fit\_results}}{}{}
+\phantomsection\label{index:kafe.fit.Fit.print_fit_results}\pysiglinewithargsret{\bfcode{print\_fit\_results}}{}{}
 prints fit results
 
 \end{fulllineitems}
@@ -2115,7 +2115,7 @@ prints fit results
 \index{print\_rounded\_fit\_parameters() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.print_rounded_fit_parameters}\pysiglinewithargsret{\bfcode{print\_rounded\_fit\_parameters}}{}{}
+\phantomsection\label{index:kafe.fit.Fit.print_rounded_fit_parameters}\pysiglinewithargsret{\bfcode{print\_rounded\_fit\_parameters}}{}{}
 prints the fit parameters
 
 \end{fulllineitems}
@@ -2123,7 +2123,7 @@ prints the fit parameters
 \index{project\_x\_covariance\_matrix() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.project_x_covariance_matrix}\pysiglinewithargsret{\bfcode{project\_x\_covariance\_matrix}}{}{}
+\phantomsection\label{index:kafe.fit.Fit.project_x_covariance_matrix}\pysiglinewithargsret{\bfcode{project\_x\_covariance\_matrix}}{}{}
 Project elements of the \emph{x} covariance matrix onto the total
 matrix.
 
@@ -2137,7 +2137,7 @@ This is done element-wise, according to the formula:
 \index{release\_parameters() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.release_parameters}\pysiglinewithargsret{\bfcode{release\_parameters}}{\emph{*parameters\_to\_release}}{}
+\phantomsection\label{index:kafe.fit.Fit.release_parameters}\pysiglinewithargsret{\bfcode{release\_parameters}}{\emph{*parameters\_to\_release}}{}
 Release the given parameters so that the minimizer begins to work with
 them when \emph{do\_fit} is called next. Parameters can be given by their
 names or by their IDs. If no arguments are provied, then release all
@@ -2148,7 +2148,7 @@ parameters.
 \index{set\_parameters() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.set_parameters}\pysiglinewithargsret{\bfcode{set\_parameters}}{\emph{*args}, \emph{**kwargs}}{}
+\phantomsection\label{index:kafe.fit.Fit.set_parameters}\pysiglinewithargsret{\bfcode{set\_parameters}}{\emph{*args}, \emph{**kwargs}}{}
 Sets the parameter values (and optionally errors) for this fit.
 This is usually called just before the fit is done, to establish
 the initial parameters. If a parameter error is omitted, it is
@@ -2189,7 +2189,7 @@ to be the value and the second to be the parameter error.
 \index{xdata (kafe.fit.Fit attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.xdata}\pysigline{\bfcode{xdata}\strong{ = None}}
+\phantomsection\label{index:kafe.fit.Fit.xdata}\pysigline{\bfcode{xdata}\strong{ = None}}
 the \emph{x} coordinates of the data points used for this \emph{Fit}
 
 \end{fulllineitems}
@@ -2197,7 +2197,7 @@ the \emph{x} coordinates of the data points used for this \emph{Fit}
 \index{ydata (kafe.fit.Fit attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.Fit.ydata}\pysigline{\bfcode{ydata}\strong{ = None}}
+\phantomsection\label{index:kafe.fit.Fit.ydata}\pysigline{\bfcode{ydata}\strong{ = None}}
 the \emph{y} coordinates of the data points used for this \emph{Fit}
 
 \end{fulllineitems}
@@ -2208,7 +2208,7 @@ the \emph{y} coordinates of the data points used for this \emph{Fit}
 \index{build\_fit() (in module kafe.fit)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.build_fit}\pysiglinewithargsret{\code{kafe.fit.}\bfcode{build\_fit}}{\emph{dataset}, \emph{fitfunc}, \emph{fitlabel='untitled'}, \emph{initial\_fit\_parameters=None}, \emph{constrained\_parameters=None}}{}
+\phantomsection\label{index:kafe.fit.build_fit}\pysiglinewithargsret{\code{kafe.fit.}\bfcode{build\_fit}}{\emph{dataset}, \emph{fitfunc}, \emph{fitlabel='untitled'}, \emph{initial\_fit\_parameters=None}, \emph{constrained\_parameters=None}}{}
 This helper fuction creates a \code{Fit} from a series of keyword arguments.
 
 Valid keywords are:
@@ -2238,7 +2238,7 @@ uncertainties of constraints to apply to model parameters
 \index{chi2() (in module kafe.fit)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.chi2}\pysiglinewithargsret{\code{kafe.fit.}\bfcode{chi2}}{\emph{xdata}, \emph{ydata}, \emph{cov\_mat}, \emph{fit\_function}, \emph{parameter\_values}, \emph{constrained\_parameters=None}}{}
+\phantomsection\label{index:kafe.fit.chi2}\pysiglinewithargsret{\code{kafe.fit.}\bfcode{chi2}}{\emph{xdata}, \emph{ydata}, \emph{cov\_mat}, \emph{fit\_function}, \emph{parameter\_values}, \emph{constrained\_parameters=None}}{}
 The $\chi^2$ implementation. Calculates $\chi^2$ according
 to the formula:
 \begin{gather}
@@ -2280,7 +2280,7 @@ The values of the parameters at which $f(x)$ should be evaluated.
 \index{round\_to\_significance() (in module kafe.fit)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.fit.round_to_significance}\pysiglinewithargsret{\code{kafe.fit.}\bfcode{round\_to\_significance}}{\emph{value}, \emph{error}, \emph{significance=2}}{}
+\phantomsection\label{index:kafe.fit.round_to_significance}\pysiglinewithargsret{\code{kafe.fit.}\bfcode{round\_to\_significance}}{\emph{value}, \emph{error}, \emph{significance=2}}{}
 Rounds the error to the established number of significant digits, then
 rounds the value to the same order of magnitude as the error.
 \begin{description}
@@ -2300,15 +2300,15 @@ number of significant digits of the error to consider
 
 
 \section{\texttt{function\_library} Module}
-\label{kafe:module-kafe.function_library}\label{kafe:function-library-module}\index{kafe.function\_library (module)}\phantomsection\label{kafe:module-function_library}\index{function\_library (module)}
+\label{index:module-kafe.function_library}\label{index:function-library-module}\index{kafe.function\_library (module)}\phantomsection\label{index:module-function_library}\index{function\_library (module)}
 Collection of model functions
 
 
 \section{\texttt{function\_tools} Module}
-\label{kafe:module-kafe.function_tools}\label{kafe:function-tools-module}\index{kafe.function\_tools (module)}\phantomsection\label{kafe:module-function_tools}\index{function\_tools (module)}\index{ASCII() (in module kafe.function\_tools)}
+\label{index:module-kafe.function_tools}\label{index:function-tools-module}\index{kafe.function\_tools (module)}\phantomsection\label{index:module-function_tools}\index{function\_tools (module)}\index{ASCII() (in module kafe.function\_tools)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.ASCII}\pysiglinewithargsret{\code{kafe.function\_tools.}\bfcode{ASCII}}{\emph{**kwargs}}{}
+\phantomsection\label{index:kafe.function_tools.ASCII}\pysiglinewithargsret{\code{kafe.function\_tools.}\bfcode{ASCII}}{\emph{**kwargs}}{}
 Optional decorator for fit functions. This overrides a FitFunction's
 plain-text (ASCII) attributes. The new values for these attributes must be
 passed as keyword arguments to the decorator. Possible arguments:
@@ -2336,7 +2336,7 @@ function's formula.
 \index{FitFunction (class in kafe.function\_tools)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.FitFunction}\pysiglinewithargsret{\strong{class }\code{kafe.function\_tools.}\bfcode{FitFunction}}{\emph{f}}{}
+\phantomsection\label{index:kafe.function_tools.FitFunction}\pysiglinewithargsret{\strong{class }\code{kafe.function\_tools.}\bfcode{FitFunction}}{\emph{f}}{}
 Decorator class for fit functions. If a function definition is decorated
 using this class, some information is collected about the function which
 is relevant to the fitting process, such as the number of parameters, 
@@ -2348,7 +2348,7 @@ plain-text expression for the fit function.
 \index{derive\_by\_parameters() (kafe.function\_tools.FitFunction method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.FitFunction.derive_by_parameters}\pysiglinewithargsret{\bfcode{derive\_by\_parameters}}{\emph{x\_0}, \emph{precision\_spec}, \emph{parameter\_list}}{}
+\phantomsection\label{index:kafe.function_tools.FitFunction.derive_by_parameters}\pysiglinewithargsret{\bfcode{derive\_by\_parameters}}{\emph{x\_0}, \emph{precision\_spec}, \emph{parameter\_list}}{}
 Returns the gradient of \emph{func} with respect to its parameters, i.e.
 with respect to every variable of \emph{func} except the first one.
 \begin{description}
@@ -2364,7 +2364,7 @@ value to use the same spacing for every derivation.
 \index{derive\_by\_x() (kafe.function\_tools.FitFunction method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.FitFunction.derive_by_x}\pysiglinewithargsret{\bfcode{derive\_by\_x}}{\emph{x\_0}, \emph{precision\_list}, \emph{parameter\_list}}{}
+\phantomsection\label{index:kafe.function_tools.FitFunction.derive_by_x}\pysiglinewithargsret{\bfcode{derive\_by\_x}}{\emph{x\_0}, \emph{precision\_list}, \emph{parameter\_list}}{}
 If \emph{x\_0} is iterable, gives the array of derivatives of a function
 $f(x, par_1, par_2, \ldots)$ around $x = x_i$ at every
 $x_i$ in $\vec{x}$. If \emph{x\_0} is not iterable, gives the
@@ -2376,7 +2376,7 @@ $x = \verb!x_0!$.
 \index{evaluate() (kafe.function\_tools.FitFunction method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.FitFunction.evaluate}\pysiglinewithargsret{\bfcode{evaluate}}{\emph{x\_0}, \emph{parameter\_list}}{}
+\phantomsection\label{index:kafe.function_tools.FitFunction.evaluate}\pysiglinewithargsret{\bfcode{evaluate}}{\emph{x\_0}, \emph{parameter\_list}}{}
 Evaluate the fit function at an x-value or at an array of 
 x-values for the parameter values in \emph{prarameter\_list}.
 \begin{quote}
@@ -2393,7 +2393,7 @@ x-values for the parameter values in \emph{prarameter\_list}.
 \index{expression (kafe.function\_tools.FitFunction attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.FitFunction.expression}\pysigline{\bfcode{expression}\strong{ = None}}
+\phantomsection\label{index:kafe.function_tools.FitFunction.expression}\pysigline{\bfcode{expression}\strong{ = None}}
 a math expression (string) representing the function's result
 
 \end{fulllineitems}
@@ -2401,7 +2401,7 @@ a math expression (string) representing the function's result
 \index{get\_function\_equation() (kafe.function\_tools.FitFunction method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.FitFunction.get_function_equation}\pysiglinewithargsret{\bfcode{get\_function\_equation}}{\emph{equation\_format='latex'}, \emph{equation\_type='full'}, \emph{ensuremath=True}}{}
+\phantomsection\label{index:kafe.function_tools.FitFunction.get_function_equation}\pysiglinewithargsret{\bfcode{get\_function\_equation}}{\emph{equation\_format='latex'}, \emph{equation\_type='full'}, \emph{ensuremath=True}}{}
 Returns a string representing the function equation. Supported formats
 are $LaTeX$ and ASCII inline math. Note that $LaTeX$
 math is wrapped by default in an \code{\textbackslash{}ensuremath\{\}} expression. If this
@@ -2445,7 +2445,7 @@ If a $LaTeX$ math equation is requested, \code{True}
 \index{latex\_expression (kafe.function\_tools.FitFunction attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.FitFunction.latex_expression}\pysigline{\bfcode{latex\_expression}\strong{ = None}}
+\phantomsection\label{index:kafe.function_tools.FitFunction.latex_expression}\pysigline{\bfcode{latex\_expression}\strong{ = None}}
 a $LaTeX$ math expression, the function's result
 
 \end{fulllineitems}
@@ -2453,7 +2453,7 @@ a $LaTeX$ math expression, the function's result
 \index{latex\_name (kafe.function\_tools.FitFunction attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.FitFunction.latex_name}\pysigline{\bfcode{latex\_name}\strong{ = None}}
+\phantomsection\label{index:kafe.function_tools.FitFunction.latex_name}\pysigline{\bfcode{latex\_name}\strong{ = None}}
 The function's name in $LaTeX$
 
 \end{fulllineitems}
@@ -2461,7 +2461,7 @@ The function's name in $LaTeX$
 \index{latex\_parameter\_names (kafe.function\_tools.FitFunction attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.FitFunction.latex_parameter_names}\pysigline{\bfcode{latex\_parameter\_names}\strong{ = None}}
+\phantomsection\label{index:kafe.function_tools.FitFunction.latex_parameter_names}\pysigline{\bfcode{latex\_parameter\_names}\strong{ = None}}
 A list of parameter names in $LaTeX$
 
 \end{fulllineitems}
@@ -2469,7 +2469,7 @@ A list of parameter names in $LaTeX$
 \index{latex\_x\_name (kafe.function\_tools.FitFunction attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.FitFunction.latex_x_name}\pysigline{\bfcode{latex\_x\_name}\strong{ = None}}
+\phantomsection\label{index:kafe.function_tools.FitFunction.latex_x_name}\pysigline{\bfcode{latex\_x\_name}\strong{ = None}}
 A $LaTeX$ symbol for the independent variable.
 
 \end{fulllineitems}
@@ -2477,7 +2477,7 @@ A $LaTeX$ symbol for the independent variable.
 \index{name (kafe.function\_tools.FitFunction attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.FitFunction.name}\pysigline{\bfcode{name}\strong{ = None}}
+\phantomsection\label{index:kafe.function_tools.FitFunction.name}\pysigline{\bfcode{name}\strong{ = None}}
 The name of the function
 
 \end{fulllineitems}
@@ -2485,7 +2485,7 @@ The name of the function
 \index{number\_of\_parameters (kafe.function\_tools.FitFunction attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.FitFunction.number_of_parameters}\pysigline{\bfcode{number\_of\_parameters}\strong{ = None}}
+\phantomsection\label{index:kafe.function_tools.FitFunction.number_of_parameters}\pysigline{\bfcode{number\_of\_parameters}\strong{ = None}}
 The number of parameters
 
 \end{fulllineitems}
@@ -2493,7 +2493,7 @@ The number of parameters
 \index{parameter\_defaults (kafe.function\_tools.FitFunction attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.FitFunction.parameter_defaults}\pysigline{\bfcode{parameter\_defaults}\strong{ = None}}
+\phantomsection\label{index:kafe.function_tools.FitFunction.parameter_defaults}\pysigline{\bfcode{parameter\_defaults}\strong{ = None}}
 The default values of the parameters
 
 \end{fulllineitems}
@@ -2501,7 +2501,7 @@ The default values of the parameters
 \index{parameter\_names (kafe.function\_tools.FitFunction attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.FitFunction.parameter_names}\pysigline{\bfcode{parameter\_names}\strong{ = None}}
+\phantomsection\label{index:kafe.function_tools.FitFunction.parameter_names}\pysigline{\bfcode{parameter\_names}\strong{ = None}}
 The names of the parameters
 
 \end{fulllineitems}
@@ -2509,7 +2509,7 @@ The names of the parameters
 \index{x\_name (kafe.function\_tools.FitFunction attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.FitFunction.x_name}\pysigline{\bfcode{x\_name}\strong{ = None}}
+\phantomsection\label{index:kafe.function_tools.FitFunction.x_name}\pysigline{\bfcode{x\_name}\strong{ = None}}
 The name given to the independent variable
 
 \end{fulllineitems}
@@ -2520,7 +2520,7 @@ The name given to the independent variable
 \index{LaTeX() (in module kafe.function\_tools)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.LaTeX}\pysiglinewithargsret{\code{kafe.function\_tools.}\bfcode{LaTeX}}{\emph{**kwargs}}{}
+\phantomsection\label{index:kafe.function_tools.LaTeX}\pysiglinewithargsret{\code{kafe.function\_tools.}\bfcode{LaTeX}}{\emph{**kwargs}}{}
 Optional decorator for fit functions. This overrides a FitFunction's
 \emph{latex\_} attributes. The new values for the \emph{latex\_} attributes must be
 passed as keyword arguments to the decorator. Possible arguments:
@@ -2548,7 +2548,7 @@ function's formula.
 \index{derivative() (in module kafe.function\_tools)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.derivative}\pysiglinewithargsret{\code{kafe.function\_tools.}\bfcode{derivative}}{\emph{func}, \emph{derive\_by\_index}, \emph{variables\_tuple}, \emph{derivative\_spacing}}{}
+\phantomsection\label{index:kafe.function_tools.derivative}\pysiglinewithargsret{\code{kafe.function\_tools.}\bfcode{derivative}}{\emph{func}, \emph{derive\_by\_index}, \emph{variables\_tuple}, \emph{derivative\_spacing}}{}
 Gives $\frac{\partial f}{\partial x_k}$ for $f = f(x_0, x_1,
 \ldots)$. \emph{func} is $f$, \emph{variables\_tuple} is $\{x_i\}$ and
 \emph{derive\_by\_index} is $k$.
@@ -2558,7 +2558,7 @@ Gives $\frac{\partial f}{\partial x_k}$ for $f = f(x_0, x_1,
 \index{outer\_product() (in module kafe.function\_tools)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.function_tools.outer_product}\pysiglinewithargsret{\code{kafe.function\_tools.}\bfcode{outer\_product}}{\emph{input\_array}}{}
+\phantomsection\label{index:kafe.function_tools.outer_product}\pysiglinewithargsret{\code{kafe.function\_tools.}\bfcode{outer\_product}}{\emph{input\_array}}{}
 Takes a \emph{NumPy} array and returns the outer (dyadic, Kronecker) product
 with itself. If \emph{input\_array} is a vector $\mathbf{x}$, this returns
 $\mathbf{x}\mathbf{x}^T$.
@@ -2568,10 +2568,10 @@ $\mathbf{x}\mathbf{x}^T$.
 
 
 \section{\texttt{minuit} Module}
-\label{kafe:module-kafe.minuit}\label{kafe:minuit-module}\index{kafe.minuit (module)}\phantomsection\label{kafe:module-minuit}\index{minuit (module)}\index{D\_MATRIX\_ERROR (in module kafe.minuit)}
+\label{index:module-kafe.minuit}\label{index:minuit-module}\index{kafe.minuit (module)}\phantomsection\label{index:module-minuit}\index{minuit (module)}\index{D\_MATRIX\_ERROR (in module kafe.minuit)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.D_MATRIX_ERROR}\pysigline{\code{kafe.minuit.}\bfcode{D\_MATRIX\_ERROR}\strong{ = \{0: `Error matrix not calculated', 1: `Error matrix approximate!', 2: `Error matrix forced positive definite!', 3: `Error matrix accurate'\}}}
+\phantomsection\label{index:kafe.minuit.D_MATRIX_ERROR}\pysigline{\code{kafe.minuit.}\bfcode{D\_MATRIX\_ERROR}\strong{ = \{0: `Error matrix not calculated', 1: `Error matrix approximate!', 2: `Error matrix forced positive definite!', 3: `Error matrix accurate'\}}}
 Error matrix status codes
 
 \end{fulllineitems}
@@ -2579,12 +2579,12 @@ Error matrix status codes
 \index{Minuit (class in kafe.minuit)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit}\pysiglinewithargsret{\strong{class }\code{kafe.minuit.}\bfcode{Minuit}}{\emph{number\_of\_parameters}, \emph{function\_to\_minimize}, \emph{parameter\_names}, \emph{start\_parameters}, \emph{parameter\_errors}, \emph{quiet=True}, \emph{verbose=False}}{}
+\phantomsection\label{index:kafe.minuit.Minuit}\pysiglinewithargsret{\strong{class }\code{kafe.minuit.}\bfcode{Minuit}}{\emph{number\_of\_parameters}, \emph{function\_to\_minimize}, \emph{parameter\_names}, \emph{start\_parameters}, \emph{parameter\_errors}, \emph{quiet=True}, \emph{verbose=False}}{}
 A class for communicating with ROOT's function minimizer tool Minuit.
 \index{FCN\_wrapper() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.FCN_wrapper}\pysiglinewithargsret{\bfcode{FCN\_wrapper}}{\emph{number\_of\_parameters}, \emph{derivatives}, \emph{f}, \emph{parameters}, \emph{internal\_flag}}{}
+\phantomsection\label{index:kafe.minuit.Minuit.FCN_wrapper}\pysiglinewithargsret{\bfcode{FCN\_wrapper}}{\emph{number\_of\_parameters}, \emph{derivatives}, \emph{f}, \emph{parameters}, \emph{internal\_flag}}{}
 This is actually a function called in \emph{ROOT} and acting as a C wrapper
 for our \emph{FCN}, which is implemented in Python.
 
@@ -2620,7 +2620,7 @@ Can be any integer from 1 (initial run) to 4(normal run). See
 \index{fix\_parameter() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.fix_parameter}\pysiglinewithargsret{\bfcode{fix\_parameter}}{\emph{parameter\_number}}{}
+\phantomsection\label{index:kafe.minuit.Minuit.fix_parameter}\pysiglinewithargsret{\bfcode{fix\_parameter}}{\emph{parameter\_number}}{}
 Fix parameter number \textless{}\emph{parameter\_number}\textgreater{}.
 \begin{description}
 \item[{\textbf{parameter\_number}}] \leavevmode{[}int{]}
@@ -2633,7 +2633,7 @@ Number of the parameter to fix.
 \index{function\_to\_minimize (kafe.minuit.Minuit attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.function_to_minimize}\pysigline{\bfcode{function\_to\_minimize}\strong{ = None}}
+\phantomsection\label{index:kafe.minuit.Minuit.function_to_minimize}\pysigline{\bfcode{function\_to\_minimize}\strong{ = None}}
 the actual \emph{FCN} called in \code{FCN\_wrapper}
 
 \end{fulllineitems}
@@ -2641,7 +2641,7 @@ the actual \emph{FCN} called in \code{FCN\_wrapper}
 \index{get\_chi2\_probability() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.get_chi2_probability}\pysiglinewithargsret{\bfcode{get\_chi2\_probability}}{\emph{n\_deg\_of\_freedom}}{}
+\phantomsection\label{index:kafe.minuit.Minuit.get_chi2_probability}\pysiglinewithargsret{\bfcode{get\_chi2\_probability}}{\emph{n\_deg\_of\_freedom}}{}
 Returns the probability that an observed $\chi^2$ exceeds
 the calculated value of $\chi^2$ for this fit by chance,
 even for a correct model. In other words, returns the probability that
@@ -2660,7 +2660,7 @@ $n_   ext{datapoints} - n_    ext{parameters}$.
 \index{get\_contour() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.get_contour}\pysiglinewithargsret{\bfcode{get\_contour}}{\emph{parameter1}, \emph{parameter2}, \emph{n\_points=20}}{}
+\phantomsection\label{index:kafe.minuit.Minuit.get_contour}\pysiglinewithargsret{\bfcode{get\_contour}}{\emph{parameter1}, \emph{parameter2}, \emph{n\_points=20}}{}
 Returns a list of points (2-tuples) representing a sampling of
 the $1\sigma$ contour of the TMinuit fit. The \code{FCN} has to be
 minimized before calling this.
@@ -2686,7 +2686,7 @@ of the list to generate a closed contour.
 \index{get\_error\_matrix() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.get_error_matrix}\pysiglinewithargsret{\bfcode{get\_error\_matrix}}{}{}
+\phantomsection\label{index:kafe.minuit.Minuit.get_error_matrix}\pysiglinewithargsret{\bfcode{get\_error\_matrix}}{}{}
 Retrieves the parameter error matrix from TMinuit.
 
 return : \emph{numpy.matrix}
@@ -2696,7 +2696,7 @@ return : \emph{numpy.matrix}
 \index{get\_fit\_info() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.get_fit_info}\pysiglinewithargsret{\bfcode{get\_fit\_info}}{\emph{info}}{}
+\phantomsection\label{index:kafe.minuit.Minuit.get_fit_info}\pysiglinewithargsret{\bfcode{get\_fit\_info}}{\emph{info}}{}
 Retrieves other info from \emph{Minuit}.
 \begin{description}
 \item[{\textbf{info}}] \leavevmode{[}string{]}
@@ -2724,7 +2724,7 @@ This can be any of the following:
 \index{get\_parameter\_errors() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.get_parameter_errors}\pysiglinewithargsret{\bfcode{get\_parameter\_errors}}{}{}
+\phantomsection\label{index:kafe.minuit.Minuit.get_parameter_errors}\pysiglinewithargsret{\bfcode{get\_parameter\_errors}}{}{}
 Retrieves the parameter errors from TMinuit.
 \begin{description}
 \item[{return}] \leavevmode{[}tuple{]}
@@ -2737,7 +2737,7 @@ Current \emph{Minuit} parameter errors
 \index{get\_parameter\_info() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.get_parameter_info}\pysiglinewithargsret{\bfcode{get\_parameter\_info}}{}{}
+\phantomsection\label{index:kafe.minuit.Minuit.get_parameter_info}\pysiglinewithargsret{\bfcode{get\_parameter\_info}}{}{}
 Retrieves parameter information from TMinuit.
 \begin{description}
 \item[{return}] \leavevmode{[}list of tuples{]}
@@ -2750,7 +2750,7 @@ Retrieves parameter information from TMinuit.
 \index{get\_parameter\_name() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.get_parameter_name}\pysiglinewithargsret{\bfcode{get\_parameter\_name}}{\emph{parameter\_nr}}{}
+\phantomsection\label{index:kafe.minuit.Minuit.get_parameter_name}\pysiglinewithargsret{\bfcode{get\_parameter\_name}}{\emph{parameter\_nr}}{}
 Gets the name of parameter number \code{parameter\_nr}
 \begin{description}
 \item[{\textbf{parameter\_nr}}] \leavevmode{[}int{]}
@@ -2763,7 +2763,7 @@ Number of the parameter whose name to get.
 \index{get\_parameter\_values() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.get_parameter_values}\pysiglinewithargsret{\bfcode{get\_parameter\_values}}{}{}
+\phantomsection\label{index:kafe.minuit.Minuit.get_parameter_values}\pysiglinewithargsret{\bfcode{get\_parameter\_values}}{}{}
 Retrieves the parameter values from TMinuit.
 \begin{description}
 \item[{return}] \leavevmode{[}tuple{]}
@@ -2776,7 +2776,7 @@ Current \emph{Minuit} parameter values
 \index{max\_iterations (kafe.minuit.Minuit attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.max_iterations}\pysigline{\bfcode{max\_iterations}\strong{ = None}}
+\phantomsection\label{index:kafe.minuit.Minuit.max_iterations}\pysigline{\bfcode{max\_iterations}\strong{ = None}}
 maximum number of iterations until \code{TMinuit} gives up
 
 \end{fulllineitems}
@@ -2784,7 +2784,7 @@ maximum number of iterations until \code{TMinuit} gives up
 \index{minimize() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.minimize}\pysiglinewithargsret{\bfcode{minimize}}{\emph{final\_fit=True}, \emph{log\_print\_level=2}}{}
+\phantomsection\label{index:kafe.minuit.Minuit.minimize}\pysiglinewithargsret{\bfcode{minimize}}{\emph{final\_fit=True}, \emph{log\_print\_level=2}}{}
 Do the minimization. This calls \emph{Minuit}`s algorithms \code{MIGRAD}
 for minimization and, if \emph{final\_fit} is \emph{True}, also \code{HESSE}
 for computing/checking the parameter error matrix.
@@ -2794,7 +2794,7 @@ for computing/checking the parameter error matrix.
 \index{number\_of\_parameters (kafe.minuit.Minuit attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.number_of_parameters}\pysigline{\bfcode{number\_of\_parameters}\strong{ = None}}
+\phantomsection\label{index:kafe.minuit.Minuit.number_of_parameters}\pysigline{\bfcode{number\_of\_parameters}\strong{ = None}}
 number of parameters to minimize for
 
 \end{fulllineitems}
@@ -2802,7 +2802,7 @@ number of parameters to minimize for
 \index{release\_parameter() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.release_parameter}\pysiglinewithargsret{\bfcode{release\_parameter}}{\emph{parameter\_number}}{}
+\phantomsection\label{index:kafe.minuit.Minuit.release_parameter}\pysiglinewithargsret{\bfcode{release\_parameter}}{\emph{parameter\_number}}{}
 Release parameter number \textless{}\emph{parameter\_number}\textgreater{}.
 \begin{description}
 \item[{\textbf{parameter\_number}}] \leavevmode{[}int{]}
@@ -2815,7 +2815,7 @@ Number of the parameter to release.
 \index{reset() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.reset}\pysiglinewithargsret{\bfcode{reset}}{}{}
+\phantomsection\label{index:kafe.minuit.Minuit.reset}\pysiglinewithargsret{\bfcode{reset}}{}{}
 Execute TMinuit's \emph{mnrset} method.
 
 \end{fulllineitems}
@@ -2823,7 +2823,7 @@ Execute TMinuit's \emph{mnrset} method.
 \index{set\_err() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.set_err}\pysiglinewithargsret{\bfcode{set\_err}}{\emph{up\_value=1.0}}{}
+\phantomsection\label{index:kafe.minuit.Minuit.set_err}\pysiglinewithargsret{\bfcode{set\_err}}{\emph{up\_value=1.0}}{}
 Sets the \code{UP} value for Minuit.
 \begin{description}
 \item[{\emph{up\_value}}] \leavevmode{[}float (optional, default: 1.0){]}
@@ -2836,7 +2836,7 @@ This is the value by which \emph{FCN} is expected to change.
 \index{set\_parameter\_errors() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.set_parameter_errors}\pysiglinewithargsret{\bfcode{set\_parameter\_errors}}{\emph{parameter\_errors=None}}{}
+\phantomsection\label{index:kafe.minuit.Minuit.set_parameter_errors}\pysiglinewithargsret{\bfcode{set\_parameter\_errors}}{\emph{parameter\_errors=None}}{}
 Sets the fit parameter errors. If parameter\_values={}`None{}`, sets the
 error to 10\% of the parameter value.
 
@@ -2845,7 +2845,7 @@ error to 10\% of the parameter value.
 \index{set\_parameter\_names() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.set_parameter_names}\pysiglinewithargsret{\bfcode{set\_parameter\_names}}{\emph{parameter\_names}}{}
+\phantomsection\label{index:kafe.minuit.Minuit.set_parameter_names}\pysiglinewithargsret{\bfcode{set\_parameter\_names}}{\emph{parameter\_names}}{}
 Sets the fit parameters. If parameter\_values={}`None{}`, tries to infer
 defaults from the function\_to\_minimize.
 
@@ -2854,7 +2854,7 @@ defaults from the function\_to\_minimize.
 \index{set\_parameter\_values() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.set_parameter_values}\pysiglinewithargsret{\bfcode{set\_parameter\_values}}{\emph{parameter\_values}}{}
+\phantomsection\label{index:kafe.minuit.Minuit.set_parameter_values}\pysiglinewithargsret{\bfcode{set\_parameter\_values}}{\emph{parameter\_values}}{}
 Sets the fit parameters. If parameter\_values={}`None{}`, tries to infer
 defaults from the function\_to\_minimize.
 
@@ -2863,7 +2863,7 @@ defaults from the function\_to\_minimize.
 \index{set\_print\_level() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.set_print_level}\pysiglinewithargsret{\bfcode{set\_print\_level}}{\emph{print\_level=1}}{}
+\phantomsection\label{index:kafe.minuit.Minuit.set_print_level}\pysiglinewithargsret{\bfcode{set\_print\_level}}{\emph{print\_level=1}}{}
 Sets the print level for Minuit.
 \begin{description}
 \item[{\emph{print\_level}}] \leavevmode{[}int (optional, default: 1 (frugal output)){]}
@@ -2877,7 +2877,7 @@ value, the more output it generates.
 \index{set\_strategy() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.set_strategy}\pysiglinewithargsret{\bfcode{set\_strategy}}{\emph{strategy\_id=1}}{}
+\phantomsection\label{index:kafe.minuit.Minuit.set_strategy}\pysiglinewithargsret{\bfcode{set\_strategy}}{\emph{strategy\_id=1}}{}
 Sets the strategy Minuit.
 \begin{description}
 \item[{\emph{strategy\_id}}] \leavevmode{[}int (optional, default: 1 (optimized)){]}
@@ -2891,7 +2891,7 @@ documentation for available strategies.
 \index{tolerance (kafe.minuit.Minuit attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.tolerance}\pysigline{\bfcode{tolerance}\strong{ = None}}
+\phantomsection\label{index:kafe.minuit.Minuit.tolerance}\pysigline{\bfcode{tolerance}\strong{ = None}}
 \code{TMinuit} tolerance
 
 \end{fulllineitems}
@@ -2899,7 +2899,7 @@ documentation for available strategies.
 \index{update\_parameter\_data() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.Minuit.update_parameter_data}\pysiglinewithargsret{\bfcode{update\_parameter\_data}}{\emph{show\_warnings=False}}{}
+\phantomsection\label{index:kafe.minuit.Minuit.update_parameter_data}\pysiglinewithargsret{\bfcode{update\_parameter\_data}}{\emph{show\_warnings=False}}{}
 (Re-)Sets the parameter names, values and step size on the
 C++ side of Minuit.
 
@@ -2911,7 +2911,7 @@ C++ side of Minuit.
 \index{P\_DETAIL\_LEVEL (in module kafe.minuit)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.minuit.P_DETAIL_LEVEL}\pysigline{\code{kafe.minuit.}\bfcode{P\_DETAIL\_LEVEL}\strong{ = 1}}
+\phantomsection\label{index:kafe.minuit.P_DETAIL_LEVEL}\pysigline{\code{kafe.minuit.}\bfcode{P\_DETAIL\_LEVEL}\strong{ = 1}}
 default level of detail for TMinuit's output
 (typical range: -1 to 3, default: 1)
 
@@ -2920,13 +2920,13 @@ default level of detail for TMinuit's output
 
 
 \section{\texttt{constants} Module}
-\label{kafe:constants-module}\label{kafe:module-kafe.constants}\index{kafe.constants (module)}\phantomsection\label{kafe:module-constants}\index{constants (module)}
+\label{index:constants-module}\label{index:module-kafe.constants}\index{kafe.constants (module)}\phantomsection\label{index:module-constants}\index{constants (module)}
 
 \section{\texttt{plot} Module}
-\label{kafe:module-kafe.plot}\label{kafe:plot-module}\index{kafe.plot (module)}\phantomsection\label{kafe:module-plot}\index{plot (module)}\index{Plot (class in kafe.plot)}
+\label{index:module-kafe.plot}\label{index:plot-module}\index{kafe.plot (module)}\phantomsection\label{index:module-plot}\index{plot (module)}\index{Plot (class in kafe.plot)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.Plot}\pysiglinewithargsret{\strong{class }\code{kafe.plot.}\bfcode{Plot}}{\emph{*fits}, \emph{**kwargs}}{}
+\phantomsection\label{index:kafe.plot.Plot}\pysiglinewithargsret{\strong{class }\code{kafe.plot.}\bfcode{Plot}}{\emph{*fits}, \emph{**kwargs}}{}
 Bases: \code{object}
 
 The constuctor accepts a series of \emph{Fit} objects as positional
@@ -2935,7 +2935,7 @@ the defaults.
 \index{axis\_labels (kafe.plot.Plot attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.Plot.axis_labels}\pysigline{\bfcode{axis\_labels}\strong{ = None}}
+\phantomsection\label{index:kafe.plot.Plot.axis_labels}\pysigline{\bfcode{axis\_labels}\strong{ = None}}
 axis labels
 
 \end{fulllineitems}
@@ -2943,7 +2943,7 @@ axis labels
 \index{compute\_plot\_range() (kafe.plot.Plot method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.Plot.compute_plot_range}\pysiglinewithargsret{\bfcode{compute\_plot\_range}}{\emph{include\_error\_bars=True}}{}
+\phantomsection\label{index:kafe.plot.Plot.compute_plot_range}\pysiglinewithargsret{\bfcode{compute\_plot\_range}}{\emph{include\_error\_bars=True}}{}
 Compute the span of all child datasets and sets the plot range to that
 
 \end{fulllineitems}
@@ -2951,7 +2951,7 @@ Compute the span of all child datasets and sets the plot range to that
 \index{draw\_fit\_parameters\_box() (kafe.plot.Plot method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.Plot.draw_fit_parameters_box}\pysiglinewithargsret{\bfcode{draw\_fit\_parameters\_box}}{\emph{plot\_spec=0}}{}
+\phantomsection\label{index:kafe.plot.Plot.draw_fit_parameters_box}\pysiglinewithargsret{\bfcode{draw\_fit\_parameters\_box}}{\emph{plot\_spec=0}}{}
 Draw the parameter box to the canvas
 \begin{description}
 \item[{\emph{plot\_spec}}] \leavevmode{[}int, list of ints, string or None (optional, default: 0){]}
@@ -2969,7 +2969,7 @@ nothing.
 \index{draw\_legend() (kafe.plot.Plot method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.Plot.draw_legend}\pysiglinewithargsret{\bfcode{draw\_legend}}{}{}
+\phantomsection\label{index:kafe.plot.Plot.draw_legend}\pysiglinewithargsret{\bfcode{draw\_legend}}{}{}
 Draw the plot legend to the canvas
 
 \end{fulllineitems}
@@ -2977,7 +2977,7 @@ Draw the plot legend to the canvas
 \index{extend\_span() (kafe.plot.Plot method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.Plot.extend_span}\pysiglinewithargsret{\bfcode{extend\_span}}{\emph{axis}, \emph{new\_span}}{}
+\phantomsection\label{index:kafe.plot.Plot.extend_span}\pysiglinewithargsret{\bfcode{extend\_span}}{\emph{axis}, \emph{new\_span}}{}
 Expand the span of the current plot.
 
 This method extends the current plot span to include \emph{new\_span}
@@ -2987,7 +2987,7 @@ This method extends the current plot span to include \emph{new\_span}
 \index{fits (kafe.plot.Plot attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.Plot.fits}\pysigline{\bfcode{fits}\strong{ = None}}
+\phantomsection\label{index:kafe.plot.Plot.fits}\pysigline{\bfcode{fits}\strong{ = None}}
 list of {\color{red}\bfseries{}{}`}Fit{}`s to plot
 
 \end{fulllineitems}
@@ -2995,7 +2995,7 @@ list of {\color{red}\bfseries{}{}`}Fit{}`s to plot
 \index{init\_plots() (kafe.plot.Plot method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.Plot.init_plots}\pysiglinewithargsret{\bfcode{init\_plots}}{}{}
+\phantomsection\label{index:kafe.plot.Plot.init_plots}\pysiglinewithargsret{\bfcode{init\_plots}}{}{}
 Initialize the plots for each fit.
 
 \end{fulllineitems}
@@ -3003,7 +3003,7 @@ Initialize the plots for each fit.
 \index{on\_draw() (kafe.plot.Plot method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.Plot.on_draw}\pysiglinewithargsret{\bfcode{on\_draw}}{\emph{event}}{}
+\phantomsection\label{index:kafe.plot.Plot.on_draw}\pysiglinewithargsret{\bfcode{on\_draw}}{\emph{event}}{}
 Function to call when a draw event occurs.
 
 \end{fulllineitems}
@@ -3011,7 +3011,7 @@ Function to call when a draw event occurs.
 \index{plot() (kafe.plot.Plot method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.Plot.plot}\pysiglinewithargsret{\bfcode{plot}}{\emph{p\_id}, \emph{show\_data=True}, \emph{show\_function=True}}{}
+\phantomsection\label{index:kafe.plot.Plot.plot}\pysiglinewithargsret{\bfcode{plot}}{\emph{p\_id}, \emph{show\_data=True}, \emph{show\_function=True}}{}
 Plot the \emph{Fit} object with the number \emph{p\_id} to its figure.
 
 \end{fulllineitems}
@@ -3019,7 +3019,7 @@ Plot the \emph{Fit} object with the number \emph{p\_id} to its figure.
 \index{plot\_all() (kafe.plot.Plot method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.Plot.plot_all}\pysiglinewithargsret{\bfcode{plot\_all}}{\emph{show\_info\_for='all'}, \emph{show\_data\_for='all'}, \emph{show\_function\_for='all'}}{}
+\phantomsection\label{index:kafe.plot.Plot.plot_all}\pysiglinewithargsret{\bfcode{plot\_all}}{\emph{show\_info\_for='all'}, \emph{show\_data\_for='all'}, \emph{show\_function\_for='all'}}{}
 Plot every \emph{Fit} object to its figure.
 
 \end{fulllineitems}
@@ -3027,7 +3027,7 @@ Plot every \emph{Fit} object to its figure.
 \index{plot\_range (kafe.plot.Plot attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.Plot.plot_range}\pysigline{\bfcode{plot\_range}\strong{ = None}}
+\phantomsection\label{index:kafe.plot.Plot.plot_range}\pysigline{\bfcode{plot\_range}\strong{ = None}}
 plot range
 
 \end{fulllineitems}
@@ -3035,7 +3035,7 @@ plot range
 \index{plot\_style (kafe.plot.Plot attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.Plot.plot_style}\pysigline{\bfcode{plot\_style}\strong{ = None}}
+\phantomsection\label{index:kafe.plot.Plot.plot_style}\pysigline{\bfcode{plot\_style}\strong{ = None}}
 plot style
 
 \end{fulllineitems}
@@ -3043,7 +3043,7 @@ plot style
 \index{save() (kafe.plot.Plot method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.Plot.save}\pysiglinewithargsret{\bfcode{save}}{\emph{output\_file}}{}
+\phantomsection\label{index:kafe.plot.Plot.save}\pysiglinewithargsret{\bfcode{save}}{\emph{output\_file}}{}
 Save the \emph{Plot} to a file.
 
 \end{fulllineitems}
@@ -3051,7 +3051,7 @@ Save the \emph{Plot} to a file.
 \index{show() (kafe.plot.Plot method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.Plot.show}\pysiglinewithargsret{\bfcode{show}}{}{}
+\phantomsection\label{index:kafe.plot.Plot.show}\pysiglinewithargsret{\bfcode{show}}{}{}
 Show the \emph{Plot} in a matplotlib interactive window.
 
 \end{fulllineitems}
@@ -3059,7 +3059,7 @@ Show the \emph{Plot} in a matplotlib interactive window.
 \index{show\_legend (kafe.plot.Plot attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.Plot.show_legend}\pysigline{\bfcode{show\_legend}\strong{ = None}}
+\phantomsection\label{index:kafe.plot.Plot.show_legend}\pysigline{\bfcode{show\_legend}\strong{ = None}}
 whether to show the plot legend (\code{True}) or not (\code{False})
 
 \end{fulllineitems}
@@ -3070,7 +3070,7 @@ whether to show the plot legend (\code{True}) or not (\code{False})
 \index{PlotStyle (class in kafe.plot)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.PlotStyle}\pysigline{\strong{class }\code{kafe.plot.}\bfcode{PlotStyle}}
+\phantomsection\label{index:kafe.plot.PlotStyle}\pysigline{\strong{class }\code{kafe.plot.}\bfcode{PlotStyle}}
 Class for specifying a style for a specific plot. This object stores a
 progression of marker and line types and colors, as well as preferences
 relating to point size and label size. These can be overriden by
@@ -3079,7 +3079,7 @@ are provided which go through these lists cyclically.
 \index{get\_line() (kafe.plot.PlotStyle method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.PlotStyle.get_line}\pysiglinewithargsret{\bfcode{get\_line}}{\emph{idm}}{}
+\phantomsection\label{index:kafe.plot.PlotStyle.get_line}\pysiglinewithargsret{\bfcode{get\_line}}{\emph{idm}}{}
 Get a specific line type. This runs cyclically through the defined
 defaults.
 
@@ -3088,7 +3088,7 @@ defaults.
 \index{get\_linecolor() (kafe.plot.PlotStyle method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.PlotStyle.get_linecolor}\pysiglinewithargsret{\bfcode{get\_linecolor}}{\emph{idm}}{}
+\phantomsection\label{index:kafe.plot.PlotStyle.get_linecolor}\pysiglinewithargsret{\bfcode{get\_linecolor}}{\emph{idm}}{}
 Get a specific line color. This runs cyclically through the defined
 defaults.
 
@@ -3097,7 +3097,7 @@ defaults.
 \index{get\_marker() (kafe.plot.PlotStyle method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.PlotStyle.get_marker}\pysiglinewithargsret{\bfcode{get\_marker}}{\emph{idm}}{}
+\phantomsection\label{index:kafe.plot.PlotStyle.get_marker}\pysiglinewithargsret{\bfcode{get\_marker}}{\emph{idm}}{}
 Get a specific marker type. This runs cyclically through the defined
 defaults.
 
@@ -3106,7 +3106,7 @@ defaults.
 \index{get\_markercolor() (kafe.plot.PlotStyle method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.PlotStyle.get_markercolor}\pysiglinewithargsret{\bfcode{get\_markercolor}}{\emph{idm}}{}
+\phantomsection\label{index:kafe.plot.PlotStyle.get_markercolor}\pysiglinewithargsret{\bfcode{get\_markercolor}}{\emph{idm}}{}
 Get a specific marker color. This runs cyclically through the
 defined defaults.
 
@@ -3115,7 +3115,7 @@ defined defaults.
 \index{get\_pointsize() (kafe.plot.PlotStyle method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.PlotStyle.get_pointsize}\pysiglinewithargsret{\bfcode{get\_pointsize}}{\emph{idm}}{}
+\phantomsection\label{index:kafe.plot.PlotStyle.get_pointsize}\pysiglinewithargsret{\bfcode{get\_pointsize}}{\emph{idm}}{}
 Get a specific point size. This runs cyclically through the defined
 defaults.
 
@@ -3127,7 +3127,7 @@ defaults.
 \index{label\_to\_latex() (in module kafe.plot)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.label_to_latex}\pysiglinewithargsret{\code{kafe.plot.}\bfcode{label\_to\_latex}}{\emph{label}}{}
+\phantomsection\label{index:kafe.plot.label_to_latex}\pysiglinewithargsret{\code{kafe.plot.}\bfcode{label\_to\_latex}}{\emph{label}}{}
 Generates a simple LaTeX-formatted label from a plain-text label.
 This treats isolated characters and words beginning with a backslash
 as mathematical expressions and surround them with \$ signs accordingly.
@@ -3142,7 +3142,7 @@ Plain-text string to convert to LaTeX.
 \index{pad\_span() (in module kafe.plot)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.plot.pad_span}\pysiglinewithargsret{\code{kafe.plot.}\bfcode{pad\_span}}{\emph{span}, \emph{pad\_coeff=1}, \emph{additional\_pad=None}}{}
+\phantomsection\label{index:kafe.plot.pad_span}\pysiglinewithargsret{\code{kafe.plot.}\bfcode{pad\_span}}{\emph{span}, \emph{pad\_coeff=1}, \emph{additional\_pad=None}}{}
 Enlarges the interval \emph{span} (list of two floats) symmetrically around
 its center to length \emph{pad\_coeff}. Optionally, an \emph{additional\_pad} argument
 can be specified. The returned span is then additionally enlarged by that
@@ -3159,10 +3159,10 @@ shorten it (move the interval end towards the interval center).
 
 
 \section{\texttt{latex\_tools} Module}
-\label{kafe:module-kafe.latex_tools}\label{kafe:latex-tools-module}\index{kafe.latex\_tools (module)}\phantomsection\label{kafe:module-latex_tools}\index{latex\_tools (module)}\index{ascii\_to\_latex\_math() (in module kafe.latex\_tools)}
+\label{index:module-kafe.latex_tools}\label{index:latex-tools-module}\index{kafe.latex\_tools (module)}\phantomsection\label{index:module-latex_tools}\index{latex\_tools (module)}\index{ascii\_to\_latex\_math() (in module kafe.latex\_tools)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.latex_tools.ascii_to_latex_math}\pysiglinewithargsret{\code{kafe.latex\_tools.}\bfcode{ascii\_to\_latex\_math}}{\emph{str\_ascii}, \emph{monospace=True}, \emph{ensuremath=True}}{}
+\phantomsection\label{index:kafe.latex_tools.ascii_to_latex_math}\pysiglinewithargsret{\code{kafe.latex\_tools.}\bfcode{ascii\_to\_latex\_math}}{\emph{str\_ascii}, \emph{monospace=True}, \emph{ensuremath=True}}{}
 Escapes certain characters in an ASCII input string so that the result
 can be included in math mode without error.
 \begin{description}
@@ -3185,10 +3185,10 @@ an \code{\textbackslash{}ensuremath\{\}} tag. Defaults to \code{True}.
 
 
 \section{\texttt{numeric\_tools} Module}
-\label{kafe:module-kafe.numeric_tools}\label{kafe:numeric-tools-module}\index{kafe.numeric\_tools (module)}\phantomsection\label{kafe:module-numeric_tools}\index{numeric\_tools (module)}\index{MinuitCov\_to\_cor() (in module kafe.numeric\_tools)}
+\label{index:module-kafe.numeric_tools}\label{index:numeric-tools-module}\index{kafe.numeric\_tools (module)}\phantomsection\label{index:module-numeric_tools}\index{numeric\_tools (module)}\index{MinuitCov\_to\_cor() (in module kafe.numeric\_tools)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.numeric_tools.MinuitCov_to_cor}\pysiglinewithargsret{\code{kafe.numeric\_tools.}\bfcode{MinuitCov\_to\_cor}}{\emph{cov\_mat}}{}
+\phantomsection\label{index:kafe.numeric_tools.MinuitCov_to_cor}\pysiglinewithargsret{\code{kafe.numeric\_tools.}\bfcode{MinuitCov\_to\_cor}}{\emph{cov\_mat}}{}
 Converts a covariance matrix as returned by Minuit to the 
 corresponding correlation matrix; note that the Minuit
 covariance matrix may contain lines/rows with zeroes if
@@ -3204,7 +3204,7 @@ The Minuit covariance matrix to convert.
 \index{cor\_to\_cov() (in module kafe.numeric\_tools)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.numeric_tools.cor_to_cov}\pysiglinewithargsret{\code{kafe.numeric\_tools.}\bfcode{cor\_to\_cov}}{\emph{cor\_mat}, \emph{error\_list}}{}
+\phantomsection\label{index:kafe.numeric_tools.cor_to_cov}\pysiglinewithargsret{\code{kafe.numeric\_tools.}\bfcode{cor\_to\_cov}}{\emph{cor\_mat}, \emph{error\_list}}{}
 Converts a correlation matrix to a covariance matrix according to the
 formula
 \begin{gather}
@@ -3224,7 +3224,7 @@ as the diagonal of \emph{cor\_mat}.
 \index{cov\_to\_cor() (in module kafe.numeric\_tools)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.numeric_tools.cov_to_cor}\pysiglinewithargsret{\code{kafe.numeric\_tools.}\bfcode{cov\_to\_cor}}{\emph{cov\_mat}}{}
+\phantomsection\label{index:kafe.numeric_tools.cov_to_cor}\pysiglinewithargsret{\code{kafe.numeric\_tools.}\bfcode{cov\_to\_cor}}{\emph{cov\_mat}}{}
 Converts a covariance matrix to a correlation matrix according to the
 formula
 \begin{gather}
@@ -3241,7 +3241,7 @@ The covariance matrix to convert.
 \index{extract\_statistical\_errors() (in module kafe.numeric\_tools)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.numeric_tools.extract_statistical_errors}\pysiglinewithargsret{\code{kafe.numeric\_tools.}\bfcode{extract\_statistical\_errors}}{\emph{cov\_mat}}{}
+\phantomsection\label{index:kafe.numeric_tools.extract_statistical_errors}\pysiglinewithargsret{\code{kafe.numeric\_tools.}\bfcode{extract\_statistical\_errors}}{\emph{cov\_mat}}{}
 Extracts the statistical errors from a covariance matrix. This means
 it returns the (elementwise) square root of the diagonal entries
 \begin{description}
@@ -3255,7 +3255,7 @@ The covariance matrix to extract errors from. Type: \emph{numpy.matrix}
 \index{make\_symmetric\_lower() (in module kafe.numeric\_tools)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.numeric_tools.make_symmetric_lower}\pysiglinewithargsret{\code{kafe.numeric\_tools.}\bfcode{make\_symmetric\_lower}}{\emph{mat}}{}
+\phantomsection\label{index:kafe.numeric_tools.make_symmetric_lower}\pysiglinewithargsret{\code{kafe.numeric\_tools.}\bfcode{make\_symmetric\_lower}}{\emph{mat}}{}
 Copies the matrix entries below the main diagonal to the upper triangle
 half of the matrix. Leaves the diagonal unchanged. Returns a \emph{NumPy} matrix
 object.
@@ -3273,7 +3273,7 @@ The lower triangle matrix.
 \index{zero\_pad\_lower\_triangle() (in module kafe.numeric\_tools)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.numeric_tools.zero_pad_lower_triangle}\pysiglinewithargsret{\code{kafe.numeric\_tools.}\bfcode{zero\_pad\_lower\_triangle}}{\emph{triangle\_list}}{}
+\phantomsection\label{index:kafe.numeric_tools.zero_pad_lower_triangle}\pysiglinewithargsret{\code{kafe.numeric\_tools.}\bfcode{zero\_pad\_lower\_triangle}}{\emph{triangle\_list}}{}
 Converts a list of lists into a lower triangle matrix. The list members
 should be lists of increasing length from 1 to N, N being the dimension of
 the resulting lower triangle matrix. Returns a \emph{NumPy} matrix object.
@@ -3300,10 +3300,10 @@ The lower triangle matrix.
 
 
 \section{\texttt{stream} Module}
-\label{kafe:stream-module}\label{kafe:module-kafe.stream}\index{kafe.stream (module)}\phantomsection\label{kafe:module-stream}\index{stream (module)}\index{StreamDup (class in kafe.stream)}
+\label{index:stream-module}\label{index:module-kafe.stream}\index{kafe.stream (module)}\phantomsection\label{index:module-stream}\index{stream (module)}\index{StreamDup (class in kafe.stream)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.stream.StreamDup}\pysiglinewithargsret{\strong{class }\code{kafe.stream.}\bfcode{StreamDup}}{\emph{out\_file}, \emph{suppress\_stdout=False}}{}
+\phantomsection\label{index:kafe.stream.StreamDup}\pysiglinewithargsret{\strong{class }\code{kafe.stream.}\bfcode{StreamDup}}{\emph{out\_file}, \emph{suppress\_stdout=False}}{}
 Bases: \code{object}
 
 Object for simultaneous logging to stdout and files.
@@ -3323,7 +3323,7 @@ to stdout (\code{True}). Default to \code{False}.
 \index{fileno() (kafe.stream.StreamDup method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.stream.StreamDup.fileno}\pysiglinewithargsret{\bfcode{fileno}}{}{}
+\phantomsection\label{index:kafe.stream.StreamDup.fileno}\pysiglinewithargsret{\bfcode{fileno}}{}{}
 Returns the file handler id of the main (first) output file.
 
 \end{fulllineitems}
@@ -3331,31 +3331,31 @@ Returns the file handler id of the main (first) output file.
 \index{flush() (kafe.stream.StreamDup method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.stream.StreamDup.flush}\pysiglinewithargsret{\bfcode{flush}}{}{}
+\phantomsection\label{index:kafe.stream.StreamDup.flush}\pysiglinewithargsret{\bfcode{flush}}{}{}
 \end{fulllineitems}
 
 \index{write() (kafe.stream.StreamDup method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.stream.StreamDup.write}\pysiglinewithargsret{\bfcode{write}}{\emph{message}}{}
+\phantomsection\label{index:kafe.stream.StreamDup.write}\pysiglinewithargsret{\bfcode{write}}{\emph{message}}{}
 \end{fulllineitems}
 
 \index{write\_timestamp() (kafe.stream.StreamDup method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.stream.StreamDup.write_timestamp}\pysiglinewithargsret{\bfcode{write\_timestamp}}{\emph{prefix}}{}
+\phantomsection\label{index:kafe.stream.StreamDup.write_timestamp}\pysiglinewithargsret{\bfcode{write\_timestamp}}{\emph{prefix}}{}
 \end{fulllineitems}
 
 \index{write\_to\_file() (kafe.stream.StreamDup method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.stream.StreamDup.write_to_file}\pysiglinewithargsret{\bfcode{write\_to\_file}}{\emph{message}}{}
+\phantomsection\label{index:kafe.stream.StreamDup.write_to_file}\pysiglinewithargsret{\bfcode{write\_to\_file}}{\emph{message}}{}
 \end{fulllineitems}
 
 \index{write\_to\_stdout() (kafe.stream.StreamDup method)}
 
 \begin{fulllineitems}
-\phantomsection\label{kafe:kafe.stream.StreamDup.write_to_stdout}\pysiglinewithargsret{\bfcode{write\_to\_stdout}}{\emph{message}, \emph{check\_if\_suppressed=False}}{}
+\phantomsection\label{index:kafe.stream.StreamDup.write_to_stdout}\pysiglinewithargsret{\bfcode{write\_to\_stdout}}{\emph{message}, \emph{check\_if\_suppressed=False}}{}
 Explicitly write to stdout. This method will not check by default
 whether \code{suppress\_stdout} is set for this \emph{StreamDup}. If
 \code{check\_if\_suppressed} is explicitly set to \code{True}, then this
@@ -3372,49 +3372,49 @@ check occurs.
 \begin{theindex}
 \def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
 \bigletter{\_}
-\item {\texttt{\_\_version\_info}} \emph{(Unix)}, \pageref{kafe:module-__version_info}
+\item {\texttt{\_\_version\_info}} \emph{(Unix)}, \pageref{index:module-__version_info}
 \indexspace
 \bigletter{c}
-\item {\texttt{constants}} \emph{(Unix)}, \pageref{kafe:module-constants}
+\item {\texttt{constants}} \emph{(Unix)}, \pageref{index:module-constants}
 \indexspace
 \bigletter{d}
-\item {\texttt{dataset}} \emph{(Unix)}, \pageref{kafe:module-dataset}
+\item {\texttt{dataset}} \emph{(Unix)}, \pageref{index:module-dataset}
 \indexspace
 \bigletter{f}
-\item {\texttt{file\_tools}} \emph{(Unix)}, \pageref{kafe:module-file_tools}
-\item {\texttt{fit}} \emph{(Unix)}, \pageref{kafe:module-fit}
-\item {\texttt{function\_library}} \emph{(Unix)}, \pageref{kafe:module-function_library}
-\item {\texttt{function\_tools}} \emph{(Unix)}, \pageref{kafe:module-function_tools}
+\item {\texttt{file\_tools}} \emph{(Unix)}, \pageref{index:module-file_tools}
+\item {\texttt{fit}} \emph{(Unix)}, \pageref{index:module-fit}
+\item {\texttt{function\_library}} \emph{(Unix)}, \pageref{index:module-function_library}
+\item {\texttt{function\_tools}} \emph{(Unix)}, \pageref{index:module-function_tools}
 \indexspace
 \bigletter{k}
-\item {\texttt{kafe.\_\_init\_\_}}, \pageref{kafe:module-kafe.__init__}
-\item {\texttt{kafe.\_version\_info}}, \pageref{kafe:module-kafe._version_info}
-\item {\texttt{kafe.constants}}, \pageref{kafe:module-kafe.constants}
-\item {\texttt{kafe.dataset}}, \pageref{kafe:module-kafe.dataset}
-\item {\texttt{kafe.file\_tools}}, \pageref{kafe:module-kafe.file_tools}
-\item {\texttt{kafe.fit}}, \pageref{kafe:module-kafe.fit}
-\item {\texttt{kafe.function\_library}}, \pageref{kafe:module-kafe.function_library}
-\item {\texttt{kafe.function\_tools}}, \pageref{kafe:module-kafe.function_tools}
-\item {\texttt{kafe.latex\_tools}}, \pageref{kafe:module-kafe.latex_tools}
-\item {\texttt{kafe.minuit}}, \pageref{kafe:module-kafe.minuit}
-\item {\texttt{kafe.numeric\_tools}}, \pageref{kafe:module-kafe.numeric_tools}
-\item {\texttt{kafe.plot}}, \pageref{kafe:module-kafe.plot}
-\item {\texttt{kafe.stream}}, \pageref{kafe:module-kafe.stream}
+\item {\texttt{kafe.\_\_init\_\_}}, \pageref{index:module-kafe.__init__}
+\item {\texttt{kafe.\_version\_info}}, \pageref{index:module-kafe._version_info}
+\item {\texttt{kafe.constants}}, \pageref{index:module-kafe.constants}
+\item {\texttt{kafe.dataset}}, \pageref{index:module-kafe.dataset}
+\item {\texttt{kafe.file\_tools}}, \pageref{index:module-kafe.file_tools}
+\item {\texttt{kafe.fit}}, \pageref{index:module-kafe.fit}
+\item {\texttt{kafe.function\_library}}, \pageref{index:module-kafe.function_library}
+\item {\texttt{kafe.function\_tools}}, \pageref{index:module-kafe.function_tools}
+\item {\texttt{kafe.latex\_tools}}, \pageref{index:module-kafe.latex_tools}
+\item {\texttt{kafe.minuit}}, \pageref{index:module-kafe.minuit}
+\item {\texttt{kafe.numeric\_tools}}, \pageref{index:module-kafe.numeric_tools}
+\item {\texttt{kafe.plot}}, \pageref{index:module-kafe.plot}
+\item {\texttt{kafe.stream}}, \pageref{index:module-kafe.stream}
 \indexspace
 \bigletter{l}
-\item {\texttt{latex\_tools}} \emph{(Unix)}, \pageref{kafe:module-latex_tools}
+\item {\texttt{latex\_tools}} \emph{(Unix)}, \pageref{index:module-latex_tools}
 \indexspace
 \bigletter{m}
-\item {\texttt{minuit}} \emph{(Unix)}, \pageref{kafe:module-minuit}
+\item {\texttt{minuit}} \emph{(Unix)}, \pageref{index:module-minuit}
 \indexspace
 \bigletter{n}
-\item {\texttt{numeric\_tools}} \emph{(Unix)}, \pageref{kafe:module-numeric_tools}
+\item {\texttt{numeric\_tools}} \emph{(Unix)}, \pageref{index:module-numeric_tools}
 \indexspace
 \bigletter{p}
-\item {\texttt{plot}} \emph{(Unix)}, \pageref{kafe:module-plot}
+\item {\texttt{plot}} \emph{(Unix)}, \pageref{index:module-plot}
 \indexspace
 \bigletter{s}
-\item {\texttt{stream}} \emph{(Unix)}, \pageref{kafe:module-stream}
+\item {\texttt{stream}} \emph{(Unix)}, \pageref{index:module-stream}
 \end{theindex}
 
 \renewcommand{\indexname}{Index}

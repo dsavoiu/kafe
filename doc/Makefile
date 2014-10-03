@@ -15,7 +15,7 @@ SPHINXSRCDIR = build
 all: html latex
 
 html:
-	$(MAKE) -C $(SPHINXSRCDIR) html && cp -R "$(SPHINXSRCDIR)/_build/html" .
+	$(MAKE) -C $(SPHINXSRCDIR) html && rm -rf html && cp -R "$(SPHINXSRCDIR)/_build/html" .
 
 latex:
-	$(MAKE) -C $(SPHINXSRCDIR) latex && $(MAKE) -C $(SPHINXSRCDIR) latexpdf && cp -R "$(SPHINXSRCDIR)/_build/latex" .
+	$(MAKE) -C $(SPHINXSRCDIR) latex && $(MAKE) -C $(SPHINXSRCDIR) latexpdf && rm -rf latex && cp -R "$(SPHINXSRCDIR)/_build/latex" .

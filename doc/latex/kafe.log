@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.6-1.40.14 (TeX Live 2014/dev) (format=pdflatex 2014.7.25)  2 OCT 2014 09:41
+This is pdfTeX, Version 3.1415926-2.6-1.40.14 (TeX Live 2014/dev) (format=pdflatex 2014.7.25)  3 OCT 2014 12:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -964,17 +964,17 @@ LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
 LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
 (Font)              Font shape `T1/pcr/m/sl' tried instead on input line 220.
 
-<kafe_example0.jpg, id=202, 867.24pt x 433.62pt>
-File: kafe_example0.jpg Graphic file (type jpg)
- <use kafe_example0.jpg>
-Package pdftex.def Info: kafe_example0.jpg used on input line 250.
+<kafe_example0.png, id=202, 867.24pt x 433.62pt>
+File: kafe_example0.png Graphic file (type png)
+ <use kafe_example0.png>
+Package pdftex.def Info: kafe_example0.png used on input line 250.
 (pdftex.def)             Requested size: 867.2379pt x 433.61894pt.
-File: kafe_example0.jpg Graphic file (type jpg)
+File: kafe_example0.png Graphic file (type png)
 
-<use kafe_example0.jpg>
-Package pdftex.def Info: kafe_example0.jpg used on input line 250.
+<use kafe_example0.png>
+Package pdftex.def Info: kafe_example0.png used on input line 250.
 (pdftex.def)             Requested size: 452.96788pt x 226.48279pt.
- [5 <./kafe_example0.jpg>]
+ [5 <./kafe_example0.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 306--308
 []\T1/ptm/m/n/10 freely avail-able at
  []
@@ -985,94 +985,93 @@ LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
 Chapter 2.
 [7
 
-] <kafe_example1.jpg, id=222, 867.24pt x 433.62pt>
-File: kafe_example1.jpg Graphic file (type jpg)
- <use kafe_example1.jpg>
-Package pdftex.def Info: kafe_example1.jpg used on input line 438.
+] <kafe_example1.png, id=223, 867.24pt x 433.62pt>
+File: kafe_example1.png Graphic file (type png)
+ <use kafe_example1.png>
+Package pdftex.def Info: kafe_example1.png used on input line 438.
 (pdftex.def)             Requested size: 867.2379pt x 433.61894pt.
-File: kafe_example1.jpg Graphic file (type jpg)
+File: kafe_example1.png Graphic file (type png)
 
-<use kafe_example1.jpg>
-Package pdftex.def Info: kafe_example1.jpg used on input line 438.
+<use kafe_example1.png>
+Package pdftex.def Info: kafe_example1.png used on input line 438.
 (pdftex.def)             Requested size: 452.96788pt x 226.48279pt.
- [8 <./kafe_example1.jpg>]
-<kafe_example2.jpg, id=228, 867.24pt x 433.62pt>
-File: kafe_example2.jpg Graphic file (type jpg)
- <use kafe_example2.jpg>
-Package pdftex.def Info: kafe_example2.jpg used on input line 472.
+ [8 <./kafe_example1.png>]
+<kafe_example2.png, id=231, 867.24pt x 433.62pt>
+File: kafe_example2.png Graphic file (type png)
+ <use kafe_example2.png>
+Package pdftex.def Info: kafe_example2.png used on input line 472.
 (pdftex.def)             Requested size: 867.2379pt x 433.61894pt.
-File: kafe_example2.jpg Graphic file (type jpg)
+File: kafe_example2.png Graphic file (type png)
 
-<use kafe_example2.jpg>
-Package pdftex.def Info: kafe_example2.jpg used on input line 472.
+<use kafe_example2.png>
+Package pdftex.def Info: kafe_example2.png used on input line 472.
 (pdftex.def)             Requested size: 452.96788pt x 226.48279pt.
- <kafe_example3.jpg, id=229, 867.24pt x 433.62pt>
-File: kafe_example3.jpg Graphic file (type jpg)
+ <kafe_example3.png, id=232, 867.24pt x 433.62pt>
+File: kafe_example3.png Graphic file (type png)
 
-<use kafe_example3.jpg>
-Package pdftex.def Info: kafe_example3.jpg used on input line 495.
+<use kafe_example3.png>
+Package pdftex.def Info: kafe_example3.png used on input line 495.
 (pdftex.def)             Requested size: 867.2379pt x 433.61894pt.
-File: kafe_example3.jpg Graphic file (type jpg)
- <use kafe_example3.jpg>
-Package pdftex.def Info: kafe_example3.jpg used on input line 495.
+File: kafe_example3.png Graphic file (type png)
+ <use kafe_example3.png>
+Package pdftex.def Info: kafe_example3.png used on input line 495.
 (pdftex.def)             Requested size: 452.96788pt x 226.48279pt.
- [9 <./kafe_example2.jpg>]
-[10 <./kafe_example3.jpg>] [11]
-<kafe_example5.jpg, id=247, 997.7275pt x 468.75125pt>
-File: kafe_example5.jpg Graphic file (type jpg)
- <use kafe_example5.jpg>
-Package pdftex.def Info: kafe_example5.jpg used on input line 648.
-(pdftex.def)             Requested size: 997.72505pt x 468.75009pt.
-File: kafe_example5.jpg Graphic file (type jpg)
-
-<use kafe_example5.jpg>
-Package pdftex.def Info: kafe_example5.jpg used on input line 648.
-(pdftex.def)             Requested size: 452.96788pt x 212.81007pt.
- <kafe_example6.jpg, id=248, 1214.5375pt x 549.05125pt>
-File: kafe_example6.jpg Graphic file (type jpg)
-
-<use kafe_example6.jpg>
-Package pdftex.def Info: kafe_example6.jpg used on input line 677.
-(pdftex.def)             Requested size: 1214.53455pt x 549.04991pt.
-File: kafe_example6.jpg Graphic file (type jpg)
- <use kafe_example6.jpg>
-Package pdftex.def Info: kafe_example6.jpg used on input line 677.
-(pdftex.def)             Requested size: 452.96788pt x 204.77107pt.
- [12 <./kafe_example5.jpg>]
-[13 <./kafe_example6.jpg>]
-<kafe_example7.jpg, id=259, 1130.2225pt x 565.11125pt>
-File: kafe_example7.jpg Graphic file (type jpg)
- <use kafe_example7.jpg>
-Package pdftex.def Info: kafe_example7.jpg used on input line 755.
-(pdftex.def)             Requested size: 1130.21976pt x 565.10986pt.
-File: kafe_example7.jpg Graphic file (type jpg)
-
-<use kafe_example7.jpg>
-Package pdftex.def Info: kafe_example7.jpg used on input line 755.
-(pdftex.def)             Requested size: 452.96788pt x 226.48026pt.
- [14 <./kafe_example7.jpg>]
-<kafe_BreitWignerFit.jpg, id=265, 867.24pt x 433.62pt>
-File: kafe_BreitWignerFit.jpg Graphic file (type jpg)
-
-<use kafe_BreitWignerFit.jpg>
-Package pdftex.def Info: kafe_BreitWignerFit.jpg used on input line 859.
+ [9 <./kafe_example2.png>]
+[10 <./kafe_example3.png>] [11]
+<kafe_example5.png, id=252, 867.24pt x 433.62pt>
+File: kafe_example5.png Graphic file (type png)
+ <use kafe_example5.png>
+Package pdftex.def Info: kafe_example5.png used on input line 648.
 (pdftex.def)             Requested size: 867.2379pt x 433.61894pt.
-File: kafe_BreitWignerFit.jpg Graphic file (type jpg)
- <use kafe_BreitWignerFit.jpg>
-Package pdftex.def Info: kafe_BreitWignerFit.jpg used on input line 859.
+File: kafe_example5.png Graphic file (type png)
+
+<use kafe_example5.png>
+Package pdftex.def Info: kafe_example5.png used on input line 648.
 (pdftex.def)             Requested size: 452.96788pt x 226.48279pt.
- [15] [16 <./kafe_BreitWignerFit.jpg>] <kafe_example9.jpg, id=276, 867.24pt x 4
+ <kafe_example6.png, id=253, 867.24pt x 433.62pt>
+File: kafe_example6.png Graphic file (type png)
+
+<use kafe_example6.png>
+Package pdftex.def Info: kafe_example6.png used on input line 677.
+(pdftex.def)             Requested size: 867.2379pt x 433.61894pt.
+File: kafe_example6.png Graphic file (type png)
+ <use kafe_example6.png>
+Package pdftex.def Info: kafe_example6.png used on input line 677.
+(pdftex.def)             Requested size: 452.96788pt x 226.48279pt.
+ [12 <./kafe_example5.png>]
+[13 <./kafe_example6.png>] <kafe_example7.png, id=266, 867.24pt x 433.62pt>
+File: kafe_example7.png Graphic file (type png)
+
+<use kafe_example7.png>
+Package pdftex.def Info: kafe_example7.png used on input line 755.
+(pdftex.def)             Requested size: 867.2379pt x 433.61894pt.
+File: kafe_example7.png Graphic file (type png)
+ <use kafe_example7.png>
+Package pdftex.def Info: kafe_example7.png used on input line 755.
+(pdftex.def)             Requested size: 452.96788pt x 226.48279pt.
+ [14 <./kafe_example7.png>]
+<kafe_BreitWignerFit.png, id=273, 867.24pt x 433.62pt>
+File: kafe_BreitWignerFit.png Graphic file (type png)
+
+<use kafe_BreitWignerFit.png>
+Package pdftex.def Info: kafe_BreitWignerFit.png used on input line 859.
+(pdftex.def)             Requested size: 867.2379pt x 433.61894pt.
+File: kafe_BreitWignerFit.png Graphic file (type png)
+ <use kafe_BreitWignerFit.png>
+Package pdftex.def Info: kafe_BreitWignerFit.png used on input line 859.
+(pdftex.def)             Requested size: 452.96788pt x 226.48279pt.
+ [15] [16 <./kafe_BreitWignerFit.png>] <kafe_example9.png, id=285, 867.24pt x 4
 33.62pt>
-File: kafe_example9.jpg Graphic file (type jpg)
+File: kafe_example9.png Graphic file (type png)
 
-<use kafe_example9.jpg>
-Package pdftex.def Info: kafe_example9.jpg used on input line 937.
+<use kafe_example9.png>
+Package pdftex.def Info: kafe_example9.png used on input line 937.
 (pdftex.def)             Requested size: 867.2379pt x 433.61894pt.
-File: kafe_example9.jpg Graphic file (type jpg)
- <use kafe_example9.jpg>
-Package pdftex.def Info: kafe_example9.jpg used on input line 937.
+File: kafe_example9.png Graphic file (type png)
+ <use kafe_example9.png>
+Package pdftex.def Info: kafe_example9.png used on input line 937.
 (pdftex.def)             Requested size: 452.96788pt x 226.48279pt.
- [17 <./kafe_example9.jpg>]
+ [17 <./kafe_example9.png>]
 [18
 
 ]
@@ -1117,7 +1116,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 1485--1485
 [23] [24] [25]
 Underfull \hbox (badness 10000) in paragraph at lines 1821--1821
 []\T1/ptm/m/it/10 dataset\T1/ptm/m/n/10 , \T1/ptm/m/it/10 fit_function\T1/ptm/m
-/n/10 , \T1/ptm/m/it/10 ex-ter-nal_fcn=<function chi2 at 0x38e0320>\T1/ptm/m/n/
+/n/10 , \T1/ptm/m/it/10 ex-ter-nal_fcn=<function chi2 at 0x451c230>\T1/ptm/m/n/
 10 ,
  []
 
@@ -1221,8 +1220,8 @@ Package rerunfilecheck Info: File `kafe.out' has not changed.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 3422.
  ) 
 Here is how much of TeX's memory you used:
- 9518 strings out of 493572
- 135377 string characters out of 6148657
+ 9519 strings out of 493572
+ 135575 string characters out of 6148657
  234671 words of memory out of 5000000
  12466 multiletter control sequences out of 15000+600000
  73537 words of font info for 85 fonts, out of 8000000 for 9000
@@ -1246,10 +1245,10 @@ lvetic/uhvbo8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr
 are/texlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/te
 xmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/
 type1/urw/times/utmri8a.pfb>
-Output written on kafe.pdf (47 pages, 1024452 bytes).
+Output written on kafe.pdf (47 pages, 650035 bytes).
 PDF statistics:
- 861 PDF objects out of 1000 (max. 8388607)
- 774 compressed objects within 8 object streams
+ 871 PDF objects out of 1000 (max. 8388607)
+ 775 compressed objects within 8 object streams
  245 named destinations out of 1000 (max. 500000)
  296 words of extra memory for PDF output out of 10000 (max. 10000000)
 
