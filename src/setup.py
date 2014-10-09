@@ -6,8 +6,9 @@ setup(
     author='Daniel Savoiu, Guenter Quast',
     author_email='danielsavoiu@gmail.com',
     packages=['kafe'],
+    package_data={'kafe': ['config/*.conf']},
     scripts=[],
-    url='https://ekptrac.physik.uni-karlsruhe.de/trac/dsavoiu/browser',
+    url='https://ekptrac.physik.uni-karlsruhe.de/trac/kafe/browser',
     license='LICENSE',
     description='A Python Package for Introduction to \
         Data Analysis in Physics Lab Courses',

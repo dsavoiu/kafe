@@ -29,7 +29,7 @@ if not os.path.isfile(kafe_config_file):
     # copy the default config file to the user's conf directory
     import shutil
     kafe_default_config_file = \
-        os.path.join(kafe.__path__[0], '..', 'kafe.default.conf')
+        os.path.join(kafe.__path__[0], 'config', 'kafe.default.conf')
     shutil.copyfile(kafe_default_config_file, kafe_config_file)
     logger.debug("Successfully copied default config from '%s' to '%s'." % (kafe_default_config_file, kafe_config_file))
 
