@@ -108,8 +108,8 @@ def poly3(x, coeff3=1.0, coeff2=0.0, coeff1=0.0, coeff0=0.0):
     return coeff3 * x**3 + coeff2 * x**2 + coeff1 * x + coeff0
 
 
-@ASCII(expression='coeff4 * x^4 + coeff3 * x^3 + coeff2 * x^2 + \
-                   scoeff1 * x + coeff0')
+@ASCII(expression='coeff4 * x^4 + coeff3 * x^3 + coeff2 * x^2 + '
+                  'coeff1 * x + coeff0')
 @LaTeX(name='f', parameter_names=('a', 'b', 'c', 'd', 'e'),
        expression='a\\,x^4+b\\,x^3+c\\,x^2+d\\,x+e')
 @FitFunction
@@ -117,8 +117,8 @@ def poly4(x, coeff4=1.0, coeff3=0.0, coeff2=0.0, coeff1=0.0, coeff0=0.0):
     return coeff4 * x**4 + coeff3 * x**3 + coeff2 * x**2 + coeff1 * x + coeff0
 
 
-@ASCII(expression='coeff5 * x^5 + coeff4 * x^4 + coeff3 * x^3 + \
-                   coeff2 * x^2 + coeff1 * x + coeff0')
+@ASCII(expression='coeff5 * x^5 + coeff4 * x^4 + coeff3 * x^3 + '
+                  'coeff2 * x^2 + coeff1 * x + coeff0')
 @LaTeX(name='f', parameter_names=('a', 'b', 'c', 'd', 'e', 'f'),
        expression='a\\,x^5+b\\,x^4+c\\,x^3+d\\,x^2+e\\,x+f')
 @FitFunction
@@ -198,27 +198,27 @@ def poisson(x, mean=0.0, scale=1.0):
 @ASCII(expression='scale * gamma / (pi *((x-x0)^2 + gamma^2)')
 @LaTeX(name='f', parameter_names=('x_0','\\gamma','scale'),
               expression='\\frac{\\gamma}'
-              '{ \\pi\\,((x-x_0)^2 + \\gamma^2)}' ) 
+              '{ \\pi\\,((x-x_0)^2 + \\gamma^2)}' )
 @FitFunction
 def lorentz(x, x0=0., gamma=1., scale=1.):
-  return scale * gamma / (pi * ((x-x0)*(x-x0) + gamma*gamma))            
+  return scale * gamma / (pi * ((x-x0)*(x-x0) + gamma*gamma))
 
-# relativistic Breit-Wigner: 
+# relativistic Breit-Wigner:
 #
 @ASCII(expression='s*M^2*G^2/[(x^2-M^2)^2+(G^2*M^2)]')
 @LaTeX(name='f', parameter_names=('\\sigma_0', 'M_Z','\\Gamma_Z'),
 expression='\\frac{\\sigma_0\\, M_Z^2\\Gamma^2}'
-           '{ ((x^2-M_Z^2)^2+(\\Gamma^2 \\cdot M_Z^2))}' ) 
+           '{ ((x^2-M_Z^2)^2+(\\Gamma^2 \\cdot M_Z^2))}' )
 @FitFunction
 def breit_wigner(x, M=91.0, G=2.0, s0=40.0):
-   return s0*M*M*G*G/((x*x-M*M)**2+(G*G*M*M)) 
+   return s0*M*M*G*G/((x*x-M*M)**2+(G*G*M*M))
 
 # relativistic Breit-Wigner with s-dependent width
-#                   
+#
 @ASCII(expression='s0*x^2*G^2/[(x^2-M^2)^2+(x^4*G^2/M^2)]')
 @LaTeX(name='f', parameter_names=('\\sigma_0', 'M_Z','\\Gamma_Z'),
 expression='\\frac{\\sigma_0\\, M_Z^2\\Gamma^2}'
-                 '{((x^2-M_Z^2)^2+(x^4\\Gamma^2 / M_Z^2))}') 
+                 '{((x^2-M_Z^2)^2+(x^4\\Gamma^2 / M_Z^2))}')
 @FitFunction
 def breit_wigner2(x, M=91.2, G=2.5, s0=41.0):
    return s0*x*x*G*G/((x*x-M*M)**2+(x**4*G*G/(M*M)))
@@ -226,7 +226,7 @@ def breit_wigner2(x, M=91.2, G=2.5, s0=41.0):
 # Voigt function (Lorentz folded with Gauss)
 @ASCII(expression='Lorentz(x,x0,gamma) folded w. Gauss(x,0,sigma)')
 @LaTeX(name='f', parameter_names=('scale', 'x_0','\\gamma,\\sigma'),
-       expression='{Lorentz(x,x_0,\\gamma) \\, \\oplus \\, Gauss(x\',0,\\sigma)}') 
+       expression='{Lorentz(x,x_0,\\gamma) \\, \\oplus \\, Gauss(x\',0,\\sigma)}')
 @FitFunction
 def voigt(x, x0=0., gamma=1., sigma=0.01, scale=1.):
   if gamma!=0. and sigma/gamma < 1.e-16:

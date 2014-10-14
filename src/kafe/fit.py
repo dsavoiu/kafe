@@ -63,12 +63,12 @@ def chi2(xdata, ydata, cov_mat,
     Here, :math:`\lambda` is the residual vector :math:`\lambda = \vec{y} -
     \vec{f}(\vec{x})` and :math:`C` is the covariance matrix.
 
-    If a constraint :math:`c_i\pm\sigma_i` is applied to  a parameter i,
-    a `penalty term` is added for each constrained parameter according to:
+    If a constraint :math:`c_i\pm\sigma_i` is applied to a parameter :math:`p_i`,
+    a `penalty term` is added for each constrained parameter:
 
     .. math::
 
-        \chi^2 += \left( \frac{v_i - c_i}{\sigma_i} \right)^2
+        \chi^2_{\text{cons}} = \chi^2 + \sum_i{ \left( \frac{p_i - c_i}{\sigma_i} \right)^2 }
 
 
     **xdata** : iterable
@@ -83,12 +83,15 @@ def chi2(xdata, ydata, cov_mat,
     **fit_function** : function
         The fit function :math:`f(x)`
 
-    **constrained_parameters** : None or list of two iterables
-    with a length equal to the number of parameters. An uncertainty of
-    0 means that a parameter remains unconstrained.
-
     **parameter_values** : list/tuple
         The values of the parameters at which :math:`f(x)` should be evaluated.
+
+    *constrained_parameters* : ``None`` or list of two iterables (optional)
+        The first iterable (:math:`{c_i}`) contains the constrained parameters'
+        expected values and the second iterable (:math:`{\sigma_i}`) contains
+        the constraint uncertainties. A parameter with constraint uncertainty
+        set to 0 remains unconstrained.
+
     '''
 
     # since the parameter_values are constants, the
@@ -109,10 +112,10 @@ def chi2(xdata, ydata, cov_mat,
     # apply constraints, if any
     if(constrained_parameters is not None):
         for i, err in enumerate(constrained_parameters[1]):
-            if(err): # there is a constraint, add to chi2
-                dchi2=(parameter_values[i]-constrained_parameters[0][i])/err
-                dchi2*=dchi2
-                chi2val+=dchi2
+            if err:  # there is a constraint, add to chi2
+                dchi2 = (parameter_values[i] - constrained_parameters[0][i])/err
+                dchi2 *= dchi2
+                chi2val += dchi2
 
     return chi2val
 
@@ -435,8 +438,8 @@ class Fit(object):
         Sets the parameter values (and optionally errors) for this fit.
         This is usually called just before the fit is done, to establish
         the initial parameters. If a parameter error is omitted, it is
-        set to 1/1000th of the parameter values themselves. If the default
-        value of the parameter is 0, it is set, by exception, to 0.001.
+        set to 1/10th of the parameter values themselves. If the default
+        value of the parameter is 0, it is set, by exception, to 0.1.
 
         This method accepts up to two positional arguments and several
         keyword arguments.
@@ -547,8 +550,8 @@ class Fit(object):
     def fix_parameters(self, *parameters_to_fix):
         '''
         Fix the given parameters so that the minimizer works without them
-        when `do_fit` is called next. Parameters can be given by their names
-        or by their IDs.
+        when :py:func:`do_fit` is called next. Parameters can be given by their
+        names or by their IDs.
         '''
         for parameter in parameters_to_fix:
             # turn names into IDs, if needed
@@ -567,7 +570,7 @@ class Fit(object):
     def release_parameters(self, *parameters_to_release):
         '''
         Release the given parameters so that the minimizer begins to work with
-        them when `do_fit` is called next. Parameters can be given by their
+        them when :py:func:`do_fit` is called next. Parameters can be given by their
         names or by their IDs. If no arguments are provied, then release all
         parameters.
         '''
@@ -658,7 +661,7 @@ class Fit(object):
         '''
         Runs the fit algorithm for this `Fit` object.
 
-        First, the `Dataset` is fitted considering only uncertainties in the
+        First, the :py:obj:`Dataset` is fitted considering only uncertainties in the
         `y` direction. If the `Dataset` has no uncertainties in the `y`
         direction, they are assumed to be equal to 1.0 for this preliminary
         fit, as there is no better information available.
@@ -916,25 +919,26 @@ def build_fit(dataset, fitfunc,
               fitlabel='untitled', initial_fit_parameters=None,
               constrained_parameters=None ) :
   '''
-  This helper fuction creates a ``Fit`` from a series of keyword arguments.
+  This helper fuction creates a :py:obj:`Fit` from a series of keyword arguments.
 
   Valid keywords are:
 
-  **dataset** : a `kafe` ``Dataset``
+  **dataset** : a :py:mod:`kafe` :py:obj:`Dataset`
 
-  **fitfunc** : a python function, eventually with
+  **fitfunc** : a python function, optionally with
       ``@FitFunction``, ``@LATEX`` and ``@FitFunction`` decorators
 
-  **fitlabel** : name for this fit
+  *fitlabel* : name for this fit (optional)
+      Defaults to "untitled".
 
-  **fitparameters** : None or 2-tuple of list, tuple/`np.array` of floats
+  *initial_fit_parameters* : None or 2-tuple of list, tuple/`np.array` of floats
       specifying initial parameter values and errors
 
-  **constrained_parameters**: None or 3-tuple of list, tuple/np.array`
+  *constrained_parameters*: None or 3-tuple of list, tuple/np.array`
      of one string and 2 floats specifiying the names, values and
      uncertainties of constraints to apply to model parameters
 
-  **returns** `Fit` object
+  **returns** : :py:obj:`Fit` object
 
   '''
 

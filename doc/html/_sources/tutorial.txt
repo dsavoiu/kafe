@@ -1,0 +1,88 @@
+.. meta::
+   :description lang=en: kafe - a general, python-based approach to fit a
+      model function to two-dimensional data points with correlated
+      uncertainties in both dimensions
+   :robots: index, follow
+
+
+===========================================
+:mod:`kafe` tutorial
+===========================================
+
+This tutorial covers the basics of fitting models to data with :mod:`kafe`. It
+is meant to take you step by step through the basics of what :mod:`kafe` has
+to offer and aims at getting you ready to fit
+Some of the more advanced functionality is mentioned briefly. topics are 
+
+This entire section was written with second-year undergraduate students taking
+Natural Science, Engineering or similar courses in mind, so some prior
+knowledge about how fitting works is assumed to be known. Some familiarity with
+the Python programming language and the Python packages NumPy and SciPy are
+also required/recommended.
+
+Getting started
+===============
+
+Installing :mod:`kafe`
+----------------------
+
+For this section, a working copy of :mod:`kafe` has to be installed on your
+system.
+
+Importing :mod:`kafe` into Python
+---------------------------------
+
+To get started, fire up your favorite Python interpreter (we recommend
+`IPython`) and enter::
+
+    >>> import kafe
+    
+at the prompt. If this raises an exception, then :mod:`kafe` has not been
+correctly installed.
+
+If this worked, everything should be all set. Note at this point that it is
+generally recommended to run ``import kafe`` before importing anything else.
+This is because :mod:`kafe` relies on some other packages as well and it
+should be given the chance to import and configure them before any user
+interaction. (This is particularly true of ``matplotlib``.)
+
+The :py:obj:`Dataset` object
+------------------------------
+
+To begin fitting, we first need to provide :mod:`kafe` with our measurement
+data. This includes not only our **data points**, but also information
+regarding the **uncertainties** of the data points and the amout of
+**correlation** between the data points.
+
+In :mod:`kafe`, all this information is stored in a single object called a
+:py:obj:`Dataset`. This object also contains relevant **metadata**, such as
+the names quantities measured, their units, a dataset title *etc.*
+
+We'll get to the specifics of specifying all of this later on. For now, we'll
+create a simple :py:obj:`Dataset` object. There are several ways to get data
+into a :py:obj:`Dataset`, but the simplest is to use Python lists or NumPy
+arrays, so let's start by defining some data points::
+
+    >>> my_xdata = [0.05, 0.36, 0.68, 0.80, 1.09, 1.46, 1.71, 1.83, 2.44, 2.09, 3.72, 4.36, 4.60]
+    >>> my_ydata = [0.35, 0.26, 0.52, 0.44, 0.48, 0.55, 0.66, 0.48, 0.75, 0.70, 0.75, 0.80, 0.90]
+
+
+And some "y-uncertainties"::
+
+    >>> my_yerrs = [0.06, 0.07, 0.05, 0.05, 0.07, 0.07, 0.09, 0.1, 0.11, 0.1, 0.11, 0.12, 0.1]
+
+To create a Dataset object, we need to pass these variables to a function
+called :py:func:`build_dataset`:
+
+    >>> my_dataset = kafe.build_dataset(my_xdata, my_ydata, yabserr=my_yerrs, title='some data', axis_labels=['$x$', '$y=f(x)$'])
+
+
+
+Fitting a simple model
+----------------------
+
+Making sense of the output
+--------------------------
+
+Underdotted Heading
+...................

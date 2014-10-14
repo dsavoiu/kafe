@@ -223,7 +223,7 @@ class Plot(object):
 
     def __init__(self, *fits, **kwargs):
         # store the child Fit objects in an instance variable
-        #: list of `Fit`s to plot
+        #: list of :py:obj:`Fit` objects to plot
         self.fits = list(fits)
 
         # set the default style as the current plot style

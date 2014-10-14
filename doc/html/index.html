@@ -195,10 +195,8 @@ with <cite>Pip</cite> is not possible:</p>
 </div></blockquote>
 </li>
 </ol>
-<dl class="docutils">
-<dt>Kafe needs a working version of the CERN data analysis framework <tt class="docutils literal"><span class="pre">root</span></tt>,</dt>
-<dd>freely available at  <a class="reference external" href="http://root.cern.ch">http://root.cern.ch</a></dd>
-</dl>
+<p>Kafe needs a working version of the CERN data analysis framework <tt class="docutils literal"><span class="pre">root</span></tt>,
+freely available at  <a class="reference external" href="http://root.cern.ch">http://root.cern.ch</a></p>
 <div class="section" id="dependencies">
 <h4>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h4>
 <p>The recommended versions of external packages for kafe are as follows,
@@ -242,26 +240,25 @@ user projects.</p>
 set of data, typically several models have to be fit to the
 same data. Here is the code for a comparison of a data set
 to two models, namely a linear and an exponential function:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># import everything we need from kafe</span>
-<span class="kn">from</span> <span class="nn">kafe</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="c"># additionally, import the two model functions we want to fit:</span>
-<span class="kn">from</span> <span class="nn">kafe.function_library</span> <span class="kn">import</span> <span class="n">linear_2par</span><span class="p">,</span> <span class="n">exp_2par</span>
+<div class="highlight-python"><pre># import everything we need from kafe
+from kafe import *
+# additionally, import the two model functions we want to fit:
+from kafe.function_library import linear_2par, exp_2par
 
-<span class="c">############</span>
-<span class="c"># Load the Dataset from the file</span>
-<span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">input_file</span><span class="o">=</span><span class="s">&#39;dataset.dat&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Example Dataset&quot;</span><span class="p">)</span>
-<span class="c">### Create the Fits</span>
-<span class="n">my_fits</span> <span class="o">=</span> <span class="p">[</span><span class="n">Fit</span><span class="p">(</span><span class="n">my_dataset</span><span class="p">,</span> <span class="n">exp_2par</span><span class="p">),</span>
-           <span class="n">Fit</span><span class="p">(</span><span class="n">my_dataset</span><span class="p">,</span> <span class="n">linear_2par</span><span class="p">)]</span>
-<span class="c">### Do the Fits</span>
-<span class="k">for</span> <span class="n">fit</span> <span class="ow">in</span> <span class="n">my_fits</span><span class="p">:</span>
-  <span class="n">fit</span><span class="o">.</span><span class="n">do_fit</span><span class="p">()</span>
-<span class="c">### Create the plots, save and show output</span>
-<span class="n">my_plot</span> <span class="o">=</span> <span class="n">Plot</span><span class="p">(</span><span class="n">my_fits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">my_fits</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">my_plot</span><span class="o">.</span><span class="n">plot_all</span><span class="p">(</span><span class="n">show_data_for</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c"># show data only once (it&#39;s the same data)</span>
-<span class="n">my_plot</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s">&#39;plot.pdf&#39;</span><span class="p">)</span>
-<span class="n">my_plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
+############
+# Load the Dataset from the file
+my_dataset = Dataset(input_file='dataset.dat', title="Example Dataset")
+### Create the Fits
+my_fits = [Fit(my_dataset, exp_2par),
+         Fit(my_dataset, linear_2par)]
+### Do the Fits
+for fit in my_fits:
+fit.do_fit()
+### Create the plots, save and show output
+my_plot = Plot(my_fits[0], my_fits[1])
+my_plot.plot_all(show_data_for=0) # show data only once (it's the same data)
+my_plot.save('plot.pdf')
+my_plot.show()</pre>
 </div>
 <p>The file <cite>dataset.dat</cite> contains x and y data in the standard <cite>kafe</cite> data
 format, where values and errors (and optionally also correlation coefficients)
@@ -316,21 +313,22 @@ HYPTEST  accepted (CL 5%)</pre>
 of measurements and the models derived from them. This is
 very similar to the previous example with minor
 modifications:</p>
-<div class="highlight-python"><pre>...
+<div class="highlight-python"><div class="highlight"><pre><span class="o">...</span>
 
-############
-# Workflow #
-############
-# Load two Datasets from files
-my_datasets = [Dataset(input_file='dataset1.dat', title="Example Dataset 1"),
-               Dataset(input_file='dataset2.dat', title="Example Dataset 2")]
-# Create the Fits
-...
-# Do the Fits
-...
-# Create the plots
-  my_plot.plot_all() # this time withouth argument, i.e. show everything
-...</pre>
+<span class="c">############</span>
+<span class="c"># Workflow #</span>
+<span class="c">############</span>
+<span class="c"># Load two Datasets from files</span>
+<span class="n">my_datasets</span> <span class="o">=</span> <span class="p">[</span><span class="n">Dataset</span><span class="p">(</span><span class="n">input_file</span><span class="o">=</span><span class="s">&#39;dataset1.dat&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Example Dataset 1&quot;</span><span class="p">),</span>
+             <span class="n">Dataset</span><span class="p">(</span><span class="n">input_file</span><span class="o">=</span><span class="s">&#39;dataset2.dat&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Example Dataset 2&quot;</span><span class="p">)]</span>
+<span class="c"># Create the Fits</span>
+<span class="o">...</span>
+<span class="c"># Do the Fits</span>
+<span class="o">...</span>
+<span class="c"># Create the plots</span>
+<span class="n">my_plot</span><span class="o">.</span><span class="n">plot_all</span><span class="p">()</span> <span class="c"># this time withouth argument, i.e. show everything</span>
+<span class="o">...</span>
+</pre></div>
 </div>
 <p>This results in the following output:</p>
 <div class="figure align-center">
@@ -429,15 +427,15 @@ averaging example is here:</p>
 *yData_SCOV
 # W_mass  err     syst    sqrt of the off-diagonal
 # 2q2l channel                           elements of the
-  80.429  0.055   0.021          #         covariance matrix
-  80.339  0.073   0.021   0.021
-  80.217  0.068   0.021   0.021 0.021
-  80.449  0.058   0.021   0.021 0.021 0.021
+80.429  0.055   0.021          #         covariance matrix
+80.339  0.073   0.021   0.021
+80.217  0.068   0.021   0.021 0.021
+80.449  0.058   0.021   0.021 0.021 0.021
 # 4q  channel
-  80.477  0.069   0.044   0.025 0.025 0.025 0.025 0.044
-  80.310  0.091   0.044   0.025 0.025 0.025 0.025 0.044 0.044
-  80.324  0.078   0.044   0.025 0.025 0.025 0.025 0.044 0.044 0.044
-  80.353  0.068   0.044   0.025 0.025 0.025 0.025 0.044 0.044 0.044 0.044</pre>
+80.477  0.069   0.044   0.025 0.025 0.025 0.025 0.044
+80.310  0.091   0.044   0.025 0.025 0.025 0.025 0.044 0.044
+80.324  0.078   0.044   0.025 0.025 0.025 0.025 0.044 0.044 0.044
+80.353  0.068   0.044   0.025 0.025 0.025 0.025 0.044 0.044 0.044 0.044</pre>
 </div>
 </div>
 <div class="section" id="example-5-multi-parameter-fit-damped-oscillation">
@@ -455,7 +453,8 @@ which is given as separate columns with the fields</p>
 <blockquote>
 <div><tt class="docutils literal"><span class="pre">&lt;time&gt;</span>&nbsp; <span class="pre">&lt;Amplitude&gt;</span>&nbsp;&nbsp;&nbsp; <span class="pre">&lt;error</span> <span class="pre">on</span> <span class="pre">time&gt;</span>&nbsp;&nbsp; <span class="pre">&lt;error</span> <span class="pre">on</span> <span class="pre">Amplitude&gt;</span></tt></div></blockquote>
 <p>Here is the example code:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">kafe</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="o">...</span>
+<span class="kn">from</span> <span class="nn">kafe</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">cos</span>
 <span class="c"># Model function definition #</span>
 <span class="c"># ---------------------------</span>
@@ -463,18 +462,18 @@ which is given as separate columns with the fields</p>
 <span class="nd">@ASCII</span><span class="p">(</span><span class="n">x_name</span><span class="o">=</span><span class="s">&quot;t&quot;</span><span class="p">,</span> <span class="n">expression</span><span class="o">=</span><span class="s">&quot;A0*exp(-t/tau)*cos(omega*t+phi)&quot;</span><span class="p">)</span>
 <span class="c"># Set some LaTeX-related parameters for this function</span>
 <span class="nd">@LaTeX</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="n">x_name</span><span class="o">=</span><span class="s">&quot;t&quot;</span><span class="p">,</span>
-     <span class="n">parameter_names</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;a_0&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\\</span><span class="s">tau{}&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\\</span><span class="s">omega{}&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\\</span><span class="s">varphi{}&#39;</span><span class="p">),</span>
-     <span class="n">expression</span><span class="o">=</span><span class="s">&quot;a_0</span><span class="se">\\</span><span class="s">,</span><span class="se">\\</span><span class="s">exp(-</span><span class="se">\\</span><span class="s">frac{t}{</span><span class="se">\\</span><span class="s">tau})\,&quot;</span>
-                <span class="s">&quot;\cos(</span><span class="se">\\</span><span class="s">omega{}</span><span class="se">\\</span><span class="s">,t+</span><span class="se">\\</span><span class="s">varphi{})&quot;</span><span class="p">)</span>
+       <span class="n">parameter_names</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;a_0&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\\</span><span class="s">tau{}&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\\</span><span class="s">omega{}&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\\</span><span class="s">varphi{}&#39;</span><span class="p">),</span>
+       <span class="n">expression</span><span class="o">=</span><span class="s">&quot;a_0</span><span class="se">\\</span><span class="s">,</span><span class="se">\\</span><span class="s">exp(-</span><span class="se">\\</span><span class="s">frac{t}{</span><span class="se">\\</span><span class="s">tau})\,&quot;</span>
+                  <span class="s">&quot;\cos(</span><span class="se">\\</span><span class="s">omega{}</span><span class="se">\\</span><span class="s">,t+</span><span class="se">\\</span><span class="s">varphi{})&quot;</span><span class="p">)</span>
 <span class="nd">@FitFunction</span>
 <span class="k">def</span> <span class="nf">damped_oscillator</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">a0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">omega</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-  <span class="k">return</span> <span class="n">a0</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">t</span><span class="o">/</span><span class="n">tau</span><span class="p">)</span> <span class="o">*</span> <span class="n">cos</span><span class="p">(</span><span class="n">omega</span><span class="o">*</span><span class="n">t</span> <span class="o">+</span> <span class="n">phi</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">a0</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">t</span><span class="o">/</span><span class="n">tau</span><span class="p">)</span> <span class="o">*</span> <span class="n">cos</span><span class="p">(</span><span class="n">omega</span><span class="o">*</span><span class="n">t</span> <span class="o">+</span> <span class="n">phi</span><span class="p">)</span>
 
 <span class="c"># ---- Workflow #</span>
 <span class="c"># load the experimental data from a file</span>
 <span class="n">my_dataset</span> <span class="o">=</span> <span class="n">parse_column_data</span><span class="p">(</span><span class="s">&#39;damped_oscillation.dat&#39;</span><span class="p">,</span>
-  <span class="n">field_order</span><span class="o">=</span><span class="s">&quot;x,y,xabserr,yabserr&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Damped Oscillator&quot;</span><span class="p">,</span>
-  <span class="n">axis_labels</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;Time t&#39;</span><span class="p">,</span><span class="s">&#39;Amplitude&#39;</span><span class="p">])</span>
+    <span class="n">field_order</span><span class="o">=</span><span class="s">&quot;x,y,xabserr,yabserr&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Damped Oscillator&quot;</span><span class="p">,</span>
+    <span class="n">axis_labels</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;Time t&#39;</span><span class="p">,</span> <span class="s">&#39;Amplitude&#39;</span><span class="p">])</span>
 <span class="c"># --- Create the Fit</span>
 <span class="n">my_fit</span> <span class="o">=</span> <span class="n">Fit</span><span class="p">(</span><span class="n">my_dataset</span><span class="p">,</span> <span class="n">damped_oscillator</span><span class="p">)</span>
 <span class="c"># Set the initial values for the fit:</span>
@@ -498,9 +497,30 @@ which is given as separate columns with the fields</p>
 <p>This example is not much different from the previous one, except that
 the fit function, a standard fourth-degree polynomial from the module
 <tt class="docutils literal"><span class="pre">function_library</span></tt>, is modified to reflect the names of the problem
-given:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="o">...</span>
-<span class="kn">from</span> <span class="nn">kafe.function_library</span> <span class="kn">import</span> <span class="n">poly4</span>
+given, and <cite>matplotlib</cite> functionality is used to influence the
+ouput of the plot, e.g. axis names and linear or logarithmic scale.</p>
+<p>It is also shown how to circumvent a problem that
+often arises when errors depend on the measured values.
+For a counting rate, the (statistical) error is typically estimated
+as the square root of the (observed) number of entries in each bin.
+For large numbers of entries, this is not a problem,
+but for small numbers, the correlation between the observed
+number of entries and the error derived from it leads to a
+bias when fitting functions to the data. This problem can be
+avoided by iterating the fit procedure:</p>
+<p>In a pre-fit, a first approximation of the model function is
+determined, which is then used to calculate
+the expected errors, and the origial errors are
+replaced before performing the final fit. Note that the numbers
+of entries in the bins must be sufficiently large to justify
+a replacement of the (asymmetric) Poission uncertainties by
+the symmetric uncertainties implied by the χ²-method.</p>
+<p>The implementation of this  procedure needs accesses some
+more fundamental methods of the <cite>Dataset</cite>, <cite>Fit</cite> and
+<cite>FitFunction</cite> classes. The code shown below demonstrates
+how this can be done with <cite>kafe</cite>, using some of its lower-level,
+internal interfaces:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">kafe.function_library</span> <span class="kn">import</span> <span class="n">poly4</span>
 <span class="c"># modify function&#39;s independent variable name to reflect its nature:</span>
 <span class="n">poly4</span><span class="o">.</span><span class="n">x_name</span> <span class="o">=</span> <span class="s">&#39;x=cos(t)&#39;</span>
 <span class="n">poly4</span><span class="o">.</span><span class="n">latex_x_name</span> <span class="o">=</span> <span class="s">&#39;x=</span><span class="se">\\</span><span class="s">cos(</span><span class="se">\\</span><span class="s">theta)&#39;</span>
@@ -508,6 +528,42 @@ given:</p>
 
 <span class="c"># Set the axis labels appropriately</span>
 <span class="n">my_plot</span><span class="o">.</span><span class="n">axis_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;$</span><span class="se">\\</span><span class="s">cos(</span><span class="se">\\</span><span class="s">theta)$&#39;</span><span class="p">,</span> <span class="s">&#39;counting rate&#39;</span><span class="p">]</span>
+<span class="o">...</span>
+<span class="c"># load the experimental data from a file</span>
+<span class="n">my_dataset</span> <span class="o">=</span> <span class="n">parse_column_data</span><span class="p">(</span>
+  <span class="s">&#39;counting_rate.dat&#39;</span><span class="p">,</span>
+  <span class="n">field_order</span><span class="o">=</span><span class="s">&quot;x,y,yabserr&quot;</span><span class="p">,</span>
+  <span class="n">title</span><span class="o">=</span><span class="s">&quot;Counting Rate per Angle&quot;</span><span class="p">)</span>
+
+<span class="c">### pre-fit</span>
+<span class="c"># error for bins with zero contents is set to 1.</span>
+<span class="n">covmat</span> <span class="o">=</span> <span class="n">my_dataset</span><span class="o">.</span><span class="n">get_cov_mat</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">covmat</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="n">covmat</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="mf">0.</span><span class="p">:</span>
+        <span class="n">covmat</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="mf">1.</span>
+<span class="n">my_dataset</span><span class="o">.</span><span class="n">set_cov_mat</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">covmat</span><span class="p">)</span> <span class="c"># write it back</span>
+
+<span class="c"># Create the Fit</span>
+<span class="n">my_fit</span> <span class="o">=</span> <span class="n">Fit</span><span class="p">(</span><span class="n">my_dataset</span><span class="p">,</span> <span class="n">poly4</span><span class="p">)</span>
+<span class="c">#            fit_label=&quot;Linear Regression &quot; + dataset.data_label[-1])</span>
+
+<span class="c"># perform an initial fit with temporary errors (minimial output)</span>
+<span class="n">my_fit</span><span class="o">.</span><span class="n">call_minimizer</span><span class="p">(</span><span class="n">final_fit</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="c"># set errors using model at pre-fit parameter values:</span>
+<span class="c">#       sigma_i^2=cov[i,i]=n(x_i)</span>
+<span class="n">fdata</span> <span class="o">=</span> <span class="n">my_fit</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">my_fit</span><span class="o">.</span><span class="n">xdata</span><span class="p">,</span>
+                                   <span class="n">my_fit</span><span class="o">.</span><span class="n">current_parameter_values</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">covmat</span><span class="p">,</span> <span class="n">fdata</span><span class="p">)</span>
+<span class="n">my_fit</span><span class="o">.</span><span class="n">current_cov_mat</span> <span class="o">=</span> <span class="n">covmat</span>  <span class="c"># write new covariance matrix</span>
+<span class="c">### end pre-fit - rest ist as usual</span>
+<span class="n">my_fit</span><span class="o">.</span><span class="n">do_fit</span><span class="p">()</span>
+<span class="c"># Create the plots and --</span>
+<span class="n">my_plot</span> <span class="o">=</span> <span class="n">Plot</span><span class="p">(</span><span class="n">my_fit</span><span class="p">)</span>
+<span class="c"># -- set the axis labels</span>
+<span class="n">my_plot</span><span class="o">.</span><span class="n">axis_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;$</span><span class="se">\\</span><span class="s">cos(</span><span class="se">\\</span><span class="s">theta)$&#39;</span><span class="p">,</span> <span class="s">&#39;counting rate&#39;</span><span class="p">]</span>
+<span class="c"># -- set scale linear / log</span>
+<span class="n">my_plot</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s">&#39;linear&#39;</span><span class="p">)</span>
 <span class="o">...</span>
 </pre></div>
 </div>
@@ -543,19 +599,19 @@ of the <tt class="docutils literal"><span class="pre">Fit</span></tt> class.</p>
 <span class="c"># Model function definition #</span>
 <span class="c"># Set an ASCII expression for this function</span>
 <span class="nd">@ASCII</span><span class="p">(</span><span class="n">x_name</span><span class="o">=</span><span class="s">&quot;x&quot;</span><span class="p">,</span> <span class="n">expression</span><span class="o">=</span><span class="s">&quot;I0*(sin(k/2*b*sin(x))/(k/2*b*sin(x))&quot;</span>
-                            <span class="s">&quot;*cos(k/2*g*sin(x)))^2&quot;</span><span class="p">)</span>
+                              <span class="s">&quot;*cos(k/2*g*sin(x)))^2&quot;</span><span class="p">)</span>
 <span class="c"># Set some LaTeX-related parameters for this function</span>
 <span class="nd">@LaTeX</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;I&#39;</span><span class="p">,</span> <span class="n">x_name</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\\</span><span class="s">alpha{}&quot;</span><span class="p">,</span>
-  <span class="n">parameter_names</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;I_0&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;g&#39;</span><span class="p">,</span> <span class="s">&#39;k&#39;</span><span class="p">),</span>
-  <span class="n">expression</span><span class="o">=</span><span class="s">&quot;I_0</span><span class="se">\\</span><span class="s">,</span><span class="se">\\</span><span class="s">left(</span><span class="se">\\</span><span class="s">frac{</span><span class="se">\\</span><span class="s">sin(</span><span class="se">\\</span><span class="s">frac{k}{2}</span><span class="se">\\</span><span class="s">,b</span><span class="se">\\</span><span class="s">,</span><span class="se">\\</span><span class="s">sin{</span><span class="se">\\</span><span class="s">alpha})}&quot;</span>
-                <span class="s">&quot;{</span><span class="se">\\</span><span class="s">frac{k}{2}</span><span class="se">\\</span><span class="s">,b</span><span class="se">\\</span><span class="s">,</span><span class="se">\\</span><span class="s">sin{</span><span class="se">\\</span><span class="s">alpha}}&quot;</span>
-                <span class="s">&quot;</span><span class="se">\\</span><span class="s">cos(</span><span class="se">\\</span><span class="s">frac{k}{2}</span><span class="se">\\</span><span class="s">,g</span><span class="se">\\</span><span class="s">,</span><span class="se">\\</span><span class="s">sin{</span><span class="se">\\</span><span class="s">alpha})</span><span class="se">\\</span><span class="s">right)^2&quot;</span><span class="p">)</span>
+       <span class="n">parameter_names</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;I_0&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;g&#39;</span><span class="p">,</span> <span class="s">&#39;k&#39;</span><span class="p">),</span>
+       <span class="n">expression</span><span class="o">=</span><span class="s">&quot;I_0</span><span class="se">\\</span><span class="s">,</span><span class="se">\\</span><span class="s">left(</span><span class="se">\\</span><span class="s">frac{</span><span class="se">\\</span><span class="s">sin(</span><span class="se">\\</span><span class="s">frac{k}{2}</span><span class="se">\\</span><span class="s">,b</span><span class="se">\\</span><span class="s">,</span><span class="se">\\</span><span class="s">sin{</span><span class="se">\\</span><span class="s">alpha})}&quot;</span>
+                  <span class="s">&quot;{</span><span class="se">\\</span><span class="s">frac{k}{2}</span><span class="se">\\</span><span class="s">,b</span><span class="se">\\</span><span class="s">,</span><span class="se">\\</span><span class="s">sin{</span><span class="se">\\</span><span class="s">alpha}}&quot;</span>
+                  <span class="s">&quot;</span><span class="se">\\</span><span class="s">cos(</span><span class="se">\\</span><span class="s">frac{k}{2}</span><span class="se">\\</span><span class="s">,g</span><span class="se">\\</span><span class="s">,</span><span class="se">\\</span><span class="s">sin{</span><span class="se">\\</span><span class="s">alpha})</span><span class="se">\\</span><span class="s">right)^2&quot;</span><span class="p">)</span>
 <span class="nd">@FitFunction</span>
 <span class="k">def</span> <span class="nf">double_slit</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">I0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">10e-6</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mf">20e-6</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mf">1.e7</span><span class="p">):</span>
-  <span class="n">k_half_sine_alpha</span> <span class="o">=</span> <span class="n">k</span><span class="o">/</span><span class="mi">2</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>  <span class="c"># helper variable</span>
-  <span class="n">k_b</span> <span class="o">=</span> <span class="n">k_half_sine_alpha</span> <span class="o">*</span> <span class="n">b</span>
-  <span class="n">k_g</span> <span class="o">=</span> <span class="n">k_half_sine_alpha</span> <span class="o">*</span> <span class="n">g</span>
-  <span class="k">return</span> <span class="n">I0</span> <span class="o">*</span> <span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">k_b</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">k_b</span><span class="p">)</span> <span class="o">*</span> <span class="n">cos</span><span class="p">(</span><span class="n">k_g</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">k_half_sine_alpha</span> <span class="o">=</span> <span class="n">k</span><span class="o">/</span><span class="mi">2</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>  <span class="c"># helper variable</span>
+    <span class="n">k_b</span> <span class="o">=</span> <span class="n">k_half_sine_alpha</span> <span class="o">*</span> <span class="n">b</span>
+    <span class="n">k_g</span> <span class="o">=</span> <span class="n">k_half_sine_alpha</span> <span class="o">*</span> <span class="n">g</span>
+    <span class="k">return</span> <span class="n">I0</span> <span class="o">*</span> <span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">k_b</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">k_b</span><span class="p">)</span> <span class="o">*</span> <span class="n">cos</span><span class="p">(</span><span class="n">k_g</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
 
 <span class="o">...</span>
 
@@ -575,7 +631,7 @@ of the laser used in the experiment). To take into account a
 wave number <cite>k</cite> known with a precision of 10&#8216;000, the
 last line in the example above should be replaced by:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="o">...</span>
-<span class="n">my_fit</span><span class="o">.</span><span class="n">constrain_parameters</span><span class="p">([</span><span class="s">&#39;k&#39;</span><span class="p">],[</span><span class="mf">9.67e6</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.e4</span><span class="p">])</span>
+<span class="n">my_fit</span><span class="o">.</span><span class="n">constrain_parameters</span><span class="p">([</span><span class="s">&#39;k&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mf">9.67e6</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.e4</span><span class="p">])</span>
 <span class="o">...</span>
 </pre></div>
 </div>
@@ -606,12 +662,12 @@ passed on the command line):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">kafe</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">kafe.file_tools</span> <span class="kn">import</span> <span class="n">buildFit_fromFile</span>
 <span class="c"># ---------------------------------------------------------</span>
-<span class="n">fname</span><span class="o">=</span><span class="s">&#39;LEP-Data.dat&#39;</span>
+<span class="n">fname</span> <span class="o">=</span> <span class="s">&#39;LEP-Data.dat&#39;</span>
 <span class="c"># initialize fit object from file</span>
-<span class="n">BWfit</span><span class="o">=</span><span class="n">buildFit_fromFile</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+<span class="n">BWfit</span> <span class="o">=</span> <span class="n">buildFit_fromFile</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
 <span class="n">BWfit</span><span class="o">.</span><span class="n">do_fit</span><span class="p">()</span>
 <span class="c">#</span>
-<span class="n">BWplot</span><span class="o">=</span><span class="n">Plot</span><span class="p">(</span><span class="n">BWfit</span><span class="p">)</span>
+<span class="n">BWplot</span> <span class="o">=</span> <span class="n">Plot</span><span class="p">(</span><span class="n">BWfit</span><span class="p">)</span>
 <span class="n">BWplot</span><span class="o">.</span><span class="n">plot_all</span><span class="p">()</span>
 <span class="n">BWplot</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s">&quot;plot.pdf&quot;</span><span class="p">)</span>
 <span class="n">BWplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -619,8 +675,8 @@ passed on the command line):</p>
 </div>
 <p>The magic happens in the input file, which now has to provide
 all the information needed to perform the fit:</p>
-<div class="highlight-python"><pre># Fit of a Breit-Wigern function to
-#      measruements of hadronic Z cross sections a LEP
+<div class="highlight-python"><pre># Fit of a Breit-Wigner function to
+#      measurements of hadronic Z cross sections at LEP
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #  Meta-data for plotting
 *TITLE  LEP Hadronic Cross Section ($\sigma^0_\mathrm{had}$)
@@ -679,12 +735,38 @@ def fitf(E, M=91.2, G=2.5, s0=41.0):
 <a class="reference internal image-reference" href="_images/kafe_BreitWignerFit.png"><img alt="image not found" src="_images/kafe_BreitWignerFit.png" style="width: 600.0px; height: 300.0px;" /></a>
 <p class="caption"><cite>Output of example 8 - Fit of a Breit-Wigner function.</cite></p>
 </div>
+<p>This example also contains a code snippet demonstrating how to plot
+contours with <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt>. A <em>contour</em> is a region of the parameter
+space containing all parameter values consistent with the fit, within
+uncertainty.</p>
+<p>Contours are useful because they provide a way to visualize parameter
+uncertainties and correlations. <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> supports plotting
+2D <img class="math" src="_images/math/070fe743455ad95e644411607dc18d8e72f1d23f.png" alt="1\sigma"/> contours for any pair of parameters by getting the
+relevant data from <tt class="docutils literal"><span class="pre">TMinuit</span></tt> and plotting it using <tt class="docutils literal"><span class="pre">matplotlib</span></tt>.
+Here is a possible way to do it:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># plot 1-sigma contour of first two parameters into a separate figure</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">BWfit</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_contour</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>  <span class="c"># get contour</span>
+<span class="n">cont_fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>  <span class="c"># create new figure for contour</span>
+<span class="n">cont_ax</span> <span class="o">=</span> <span class="n">cont_fig</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>  <span class="c"># get/create axes object for current figure</span>
+<span class="c"># set axis labels</span>
+<span class="n">cont_ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">&#39;$</span><span class="si">%s</span><span class="s">$&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">BWfit</span><span class="o">.</span><span class="n">latex_parameter_names</span><span class="p">[</span><span class="mi">0</span><span class="p">],))</span>
+<span class="n">cont_ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">&#39;$</span><span class="si">%s</span><span class="s">$&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">BWfit</span><span class="o">.</span><span class="n">latex_parameter_names</span><span class="p">[</span><span class="mi">1</span><span class="p">],))</span>
+<span class="c"># plot the actual contour</span>
+<span class="n">cont_ax</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;red&#39;</span><span class="p">)</span>
+<span class="c"># save to file</span>
+<span class="n">cont_fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&quot;kafe_BreitWignerFit_contour12.pdf&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/kafe_BreitWignerFit_contour12.png"><img alt="image not found" src="_images/kafe_BreitWignerFit_contour12.png" style="width: 600.0px; height: 300.0px;" /></a>
+<p class="caption"><cite>Contour generated in example 8 - Fit of a Breit-Wigner function.</cite></p>
+</div>
 </div>
 <div class="section" id="example-9-fit-of-a-function-to-histogram-data">
 <h3>Example 9 - fit of a function to histogram data<a class="headerlink" href="#example-9-fit-of-a-function-to-histogram-data" title="Permalink to this headline">¶</a></h3>
-<p>This example brings us to the limit of what is presently
+<p>This example brings us to the limit of what is currently
 possible with <cite>kafe</cite>. Here, the data represent the
-centre of a histogram bins ad the number of entries, :math::<cite>n_i</cite>,
+centre of a histogram bins ad the number of entries, <img class="math" src="_images/math/7eb75ccf06e046206cb4c636a54d7be11d049fbf.png" alt="n_i"/>,
 in each bin. The (statistical) error is typically estimated
 as the square root of the (observed) number of entries in each bin.
 For large numbers of entries, this is not a problem,
@@ -693,13 +775,13 @@ the correlation between the observed number of entries and
 the error derived from it leads to a bias when fitting
 functions to the histogram data. In particular, bins with
 zero entries cannot be handled in the χ²-function, and are
-typically omitted to cure the problem.  However, the bias
+typically omitted to cure the problem.  However, a bias
 remains, as bins with downward fluctuations of the
-observed numbers of events have get assigned smaller errors
+observed numbers of events get assigned smaller errors
 and hence larger weights in the fitting procedure - leading
 to the aforementioned bias.</p>
 <p>These problems are avoided by using a likelihood method for
-such use cases, where Poission distribtution of the uncertainties
+such use cases, where the Poission distribution of the uncertainties
 and their dependence on the values of the fit model is properly
 taken into accout. However, the χ²-method can be saved to some
 extend if the fitting procedure is iterated. In a pre-fit, a
@@ -711,36 +793,38 @@ replaced before performing the final fit. Note that the numbers
 of entries in the bins must be sufficiently large to justify
 a replacement of the (asymmetric) Poission uncertainties by
 the symmetric uncertainties implied by the χ²-method.</p>
-<p>The implementation of this  procedure needs accesses some
+<p>The code shown below demonstrates
+how to get a grip on such more complex procedures with
 more fundamental methods of the <cite>Dataset</cite>, <cite>Fit</cite> and
-<cite>FitFunction</cite> classes. The code shown below demonstrates
-how to get a grip on such more complex procedures with <cite>kafe</cite>:</p>
-<div class="highlight-python"><pre>...
-# Load Dataset from file
-hdataset = Dataset(input_file='hdataset.dat', title="Data for example 9")
+<cite>FitFunction</cite> classes:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="o">...</span>
+<span class="c"># Load Dataset from file</span>
+<span class="n">hdataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">input_file</span><span class="o">=</span><span class="s">&#39;hdataset.dat&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Data for example 9&quot;</span><span class="p">)</span>
 
-# error for bins with zero contents is set to 1.
-covmat=hdataset.get_cov_mat('y')
-for i in range(0,len(covmat)):
-  if covmat[i,i]==0.: covmat[i,i]=1.
-hdataset.set_cov_mat('y',covmat) # write it back
+<span class="c"># error for bins with zero contents is set to 1.</span>
+<span class="n">covmat</span> <span class="o">=</span> <span class="n">hdataset</span><span class="o">.</span><span class="n">get_cov_mat</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">covmat</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="n">covmat</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="mf">0.</span><span class="p">:</span>
+        <span class="n">covmat</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="mf">1.</span>
+<span class="n">hdataset</span><span class="o">.</span><span class="n">set_cov_mat</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">covmat</span><span class="p">)</span> <span class="c"># write it back</span>
 
-# Create the Fit instance
-hfit = Fit(hdataset,gauss,fit_label="Fit of a Gaussian to histogram data")
-#
-# perform an initial fit with temporary errors (minimial output)
-hfit.call_minimizer(final_fit=False, verbose=False)
-#
-#re-set errors using model at pre-fit parameter values:
-#        sigma_i^2=cov[i,i]=n(x_i)
-fdata=hfit.fit_function.evaluate(hfit.xdata, hfit.current_parameter_values)
-np.fill_diagonal(covmat, fdata)
-hfit.current_cov_mat=covmat # write back new covariance matrix
-#
-# now do final fit with full output
-hfit.do_fit()
-# and create, draw, save and show plot
- ...</pre>
+<span class="c"># Create the Fit instance</span>
+<span class="n">hfit</span> <span class="o">=</span> <span class="n">Fit</span><span class="p">(</span><span class="n">hdataset</span><span class="p">,</span> <span class="n">gauss</span><span class="p">,</span> <span class="n">fit_label</span><span class="o">=</span><span class="s">&quot;Fit of a Gaussian to histogram data&quot;</span><span class="p">)</span>
+<span class="c">#</span>
+<span class="c"># perform an initial fit with temporary errors (minimial output)</span>
+<span class="n">hfit</span><span class="o">.</span><span class="n">call_minimizer</span><span class="p">(</span><span class="n">final_fit</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="c">#</span>
+<span class="c">#re-set errors using model at pre-fit parameter values:</span>
+<span class="c">#        sigma_i^2=cov[i,i]=n(x_i)</span>
+<span class="n">fdata</span><span class="o">=</span><span class="n">hfit</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">hfit</span><span class="o">.</span><span class="n">xdata</span><span class="p">,</span> <span class="n">hfit</span><span class="o">.</span><span class="n">current_parameter_values</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">covmat</span><span class="p">,</span> <span class="n">fdata</span><span class="p">)</span>
+<span class="n">hfit</span><span class="o">.</span><span class="n">current_cov_mat</span> <span class="o">=</span> <span class="n">covmat</span> <span class="c"># write back new covariance matrix</span>
+<span class="c">#</span>
+<span class="c"># now do final fit with full output</span>
+<span class="n">hfit</span><span class="o">.</span><span class="n">do_fit</span><span class="p">()</span>
+<span class="c"># and create, draw, save and show plot</span>
+<span class="o">...</span>
+</pre></div>
 </div>
 <p>Here is the output, which shows that the parameters of the
 normal distribution, from which the data were generated, are
@@ -1149,28 +1233,28 @@ plotting more than one <cite>Fit</cite> in the same <cite>Plot</cite>.</dd>
 <span class="target" id="module-file_tools"></span><dl class="function">
 <dt id="kafe.file_tools.buildDataset_fromFile">
 <tt class="descclassname">kafe.file_tools.</tt><tt class="descname">buildDataset_fromFile</tt><big>(</big><em>file_to_parse</em><big>)</big><a class="headerlink" href="#kafe.file_tools.buildDataset_fromFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>build a kafe <tt class="docutils literal"><span class="pre">Dataset</span></tt> object from input file with key words
+<dd><p>build a kafe <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt> object from input file with key words
 and file format defined in <tt class="docutils literal"><span class="pre">parse_general_inputfile</span></tt></p>
 <dl class="docutils">
-<dt><strong>file_to_parse</strong>:  file-like object or string containing a file path</dt>
+<dt><strong>file_to_parse</strong> <span class="classifier-delimiter">:</span> <span class="classifier">file-like object or string containing a file path</span></dt>
 <dd>The file to parse.</dd>
-<dt><strong>returns</strong> an instance of the <tt class="docutils literal"><span class="pre">Dataset</span></tt> class,</dt>
-<dd>constructed with the help of the method <tt class="docutils literal"><span class="pre">Dataset.build_dataset()</span></tt></dd>
+<dt><strong>returns</strong> <span class="classifier-delimiter">:</span> <span class="classifier">an instance of the <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt> class,</span></dt>
+<dd>constructed with the help of the method <tt class="xref py py-func docutils literal"><span class="pre">Dataset.build_dataset()</span></tt></dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="kafe.file_tools.buildFit_fromFile">
 <tt class="descclassname">kafe.file_tools.</tt><tt class="descname">buildFit_fromFile</tt><big>(</big><em>file_to_parse</em><big>)</big><a class="headerlink" href="#kafe.file_tools.buildFit_fromFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>build a kafe <tt class="docutils literal"><span class="pre">Fit</span></tt> object from input file with keywords
-and file format defined in <tt class="docutils literal"><span class="pre">parse_general_input_file</span></tt></p>
+<dd><p>build a kafe <tt class="xref py py-obj docutils literal"><span class="pre">Fit</span></tt> object from input file with keywords
+and file format defined in <tt class="xref py py-func docutils literal"><span class="pre">parse_general_input_file()</span></tt></p>
 <dl class="docutils">
 <dt><strong>file_to_parse</strong>:  file-like object or string containing a file path</dt>
 <dd>The file to parse.</dd>
-<dt><strong>returns</strong> an instance of the <tt class="docutils literal"><span class="pre">Fit</span></tt> class,</dt>
+<dt><strong>returns</strong> <span class="classifier-delimiter">:</span> <span class="classifier">an instance of the <tt class="xref py py-obj docutils literal"><span class="pre">Fit</span></tt> class,</span></dt>
 <dd>constructed with the help of the methods
-<tt class="docutils literal"><span class="pre">Dataset.build_dataset()</span></tt> and
-<tt class="docutils literal"><span class="pre">Fit.build_fit()</span></tt></dd>
+<tt class="xref py py-func docutils literal"><span class="pre">Dataset.build_dataset()</span></tt> and
+<tt class="xref py py-func docutils literal"><span class="pre">Fit.build_fit()</span></tt></dd>
 </dl>
 </dd></dl>
 
@@ -1178,8 +1262,9 @@ and file format defined in <tt class="docutils literal"><span class="pre">parse_
 <dt id="kafe.file_tools.parse_column_data">
 <tt class="descclassname">kafe.file_tools.</tt><tt class="descname">parse_column_data</tt><big>(</big><em>file_to_parse, field_order='x,y', delimiter=' ', cov_mat_files=None, title='Untitled Dataset', basename=None, axis_labels=['x', 'y'], axis_units=['', '']</em><big>)</big><a class="headerlink" href="#kafe.file_tools.parse_column_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses a file which contains measurement data in a one-measurement-per-row
-format. The field (column) order can be specified. It defaults to <cite>x,y&#8217;.
-Valid field names are `x</cite>, <cite>y</cite>, <cite>xabserr</cite>, <cite>yabserr</cite>, <cite>xrelerr</cite>,
+format. The field (column) order can be specified. It defaults to
+<tt class="docutils literal"><span class="pre">&quot;x,y&quot;</span></tt>.
+Valid field names are <cite>x</cite>, <cite>y</cite>, <cite>xabserr</cite>, <cite>yabserr</cite>, <cite>xrelerr</cite>,
 <cite>yrelerr</cite>. Another valid field name is <cite>ignore</cite> which can be used to skip
 a field.</p>
 <p>A certain type of field can appear several times. If this is the case, all
@@ -1210,23 +1295,23 @@ passed.</p>
 <p>Each element of this tuple may be either <tt class="docutils literal"><span class="pre">None</span></tt>, a file or file-like
 object, or an iterable containing files and file-like objects. Each
 file should contain a covariance matrix for the respective axis.</p>
-<p class="last">When creating the <cite>Dataset</cite>, all given matrices are summed over.</p>
+<p class="last">When creating the <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt>, all given matrices are summed over.</p>
 </dd>
 <dt><em>title</em> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
-<dd>The title of the <cite>Dataset</cite>.</dd>
+<dd>The title of the <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt>.</dd>
 <dt><em>basename</em> <span class="classifier-delimiter">:</span> <span class="classifier">string or <tt class="docutils literal"><span class="pre">None</span></tt> (optional)</span></dt>
-<dd>A basename for the <cite>Dataset</cite>. All output files related to this dataset
+<dd>A basename for the <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt>. All output files related to this dataset
 will use this as a basename. If this is <tt class="docutils literal"><span class="pre">None</span></tt> (default), the
 basename will be inferred from the filename.</dd>
 <dt><em>axis_labels</em> <span class="classifier-delimiter">:</span> <span class="classifier">2-tuple of strings (optional)</span></dt>
-<dd>a 2-tuple containing the axis labels for the <cite>Dataset</cite>. This is
-relevant when plotting <cite>Fits</cite> of the <cite>Dataset</cite>, but is ignored when
-plotting more than one <cite>Fit</cite> in the same <cite>Plot</cite>.</dd>
+<dd>a 2-tuple containing the axis labels for the <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt>. This is
+relevant when plotting <tt class="xref py py-obj docutils literal"><span class="pre">Fits</span></tt> of the <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt>, but is ignored when
+plotting more than one <tt class="xref py py-obj docutils literal"><span class="pre">Fit</span></tt> in the same <tt class="xref py py-obj docutils literal"><span class="pre">Plot</span></tt>.</dd>
 <dt><em>axis_units</em> <span class="classifier-delimiter">:</span> <span class="classifier">2-tuple of strings (optional)</span></dt>
-<dd>a 2-tuple containing the axis units for the <cite>Dataset</cite>. This is
-relevant when plotting <cite>Fits</cite> of the <cite>Dataset</cite>, but is ignored when
-plotting more than one <cite>Fit</cite> in the same <cite>Plot</cite>.</dd>
-<dt><strong>return</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><cite>Dataset</cite></span></dt>
+<dd>a 2-tuple containing the axis units for the <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt>. This is
+relevant when plotting <tt class="xref py py-obj docutils literal"><span class="pre">Fits</span></tt> of the <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt>, but is ignored when
+plotting more than one <tt class="xref py py-obj docutils literal"><span class="pre">Fit</span></tt> in the same <tt class="xref py py-obj docutils literal"><span class="pre">Plot</span></tt>.</dd>
+<dt><strong>return</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt></span></dt>
 <dd>A Dataset built from the parsed file.</dd>
 </dl>
 </dd></dl>
@@ -1234,38 +1319,39 @@ plotting more than one <cite>Fit</cite> in the same <cite>Plot</cite>.</dd>
 <dl class="function">
 <dt id="kafe.file_tools.parse_general_inputfile">
 <tt class="descclassname">kafe.file_tools.</tt><tt class="descname">parse_general_inputfile</tt><big>(</big><em>file_to_parse</em><big>)</big><a class="headerlink" href="#kafe.file_tools.parse_general_inputfile" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function can be used to specify <cite>kafe</cite> <tt class="docutils literal"><span class="pre">Dataset</span></tt>
-or <tt class="docutils literal"><span class="pre">Fit</span></tt> objects in a single input file, thus requiring
+<dd><p>This function can be used to specify <cite>kafe</cite> <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt>
+or <tt class="xref py py-obj docutils literal"><span class="pre">Fit</span></tt> objects in a single input file, thus requiring
 minimal Python code. Keywords as specified in a dictionary
 <tt class="docutils literal"><span class="pre">tokens</span></tt> specify all objects and parameters needed by the
-functions <tt class="docutils literal"><span class="pre">build_dataset()</span></tt> in  module <tt class="docutils literal"><span class="pre">dataset</span></tt> and
-<tt class="docutils literal"><span class="pre">build_fit()</span></tt> in module <tt class="docutils literal"><span class="pre">fit</span></tt>.</p>
+functions <tt class="xref py py-func docutils literal"><span class="pre">build_dataset()</span></tt> in  module <a class="reference internal" href="#module-dataset" title="dataset: This sub-module defines a `Dataset` object, a container class for storing measurement data and error data. It also provides functions to build a Dataset object from pyhton arrays or read from or export data to a file (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">dataset</span></tt></a> and
+<tt class="xref py py-func docutils literal"><span class="pre">build_fit()</span></tt> in module <a class="reference internal" href="#module-fit" title="fit: This submodule defines a `Fit` object which performs the actual fitting given a `Dataset` and a fit function. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">fit</span></tt></a>.</p>
 <dl class="docutils">
 <dt><strong>file_to_parse</strong>:  file-like object or string containing a file path</dt>
 <dd>The file to parse.</dd>
 <dt><strong>return</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dataset_kwargs, fit_kwargs</span></dt>
-<dd>keyword lists to build a kafe <tt class="docutils literal"><span class="pre">Dataset</span></tt> or <tt class="docutils literal"><span class="pre">Fit`</span> <span class="pre">object</span>
-<span class="pre">with</span> <span class="pre">the</span> <span class="pre">helper</span> <span class="pre">functions</span> <span class="pre">``build_dataset</span></tt> or <tt class="docutils literal"><span class="pre">build_fit</span></tt></dd>
+<dd>keyword lists to build a kafe <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt> or <tt class="xref py py-obj docutils literal"><span class="pre">Fit</span></tt> object
+with the helper functions <cite>build_dataset</cite> or <cite>build_fit</cite></dd>
 </dl>
-<p><em>Description of the format of the input file</em></p>
+<p><strong>Description of the format of the input file</strong></p>
 <p>The interpretation of the input data is driven by keywords.
 All data following a key must be of the same kind, a block of
 data ends when a new key is specified.</p>
 <p>Some keys only expect a single float or string-tpye value, given
 on the same line, separated by a space (<tt class="docutils literal"><span class="pre">'</span> <span class="pre">'</span></tt>):</p>
-<blockquote>
-<div>&lt;key&gt; &lt;value&gt;</div></blockquote>
+<div class="highlight-python"><pre>&lt;key&gt; &lt;value&gt;</pre>
+</div>
 <p>For multiple input, i.e. data, uncertainties and covariance or
 correlation matrices, the format is:</p>
-<blockquote>
-<div><p>&lt;key&gt;
-&lt;xval&gt;  &lt;xerr&gt;  [&lt;xsyst&gt;  &lt;elements of cov/cor matrix&gt;]</p>
-<p>...</p>
-<p>&lt;xval&gt;  &lt;xerr&gt;  [&lt;xsyst&gt;  &lt;elements of cov/cor matrix&gt;]</p>
-</div></blockquote>
+<div class="highlight-python"><pre>&lt;key&gt;
+&lt;xval&gt;  &lt;xerr&gt;  [&lt;xsyst&gt;  &lt;elements of cov/cor matrix&gt;]
+
+...
+
+&lt;xval&gt;  &lt;xerr&gt;  [&lt;xsyst&gt;  &lt;elements of cov/cor matrix&gt;]</pre>
+</div>
 <p>The field separator is space (<tt class="docutils literal"><span class="pre">'</span> <span class="pre">'</span></tt>). Note that the number of input
 values in each line must correspond to the specified format of the
-(correlated) ucertainties.</p>
+(correlated) uncertainties.</p>
 <p>The currently implemented keys are:</p>
 <ul>
 <li><p class="first">for metadata:</p>
@@ -1393,10 +1479,9 @@ to be accounted for in the fit. This option is specified via the
 keyword:</p>
 <ul>
 <li><p class="first"><tt class="docutils literal"><span class="pre">*ConstrainedParameters</span></tt> followed by one or more lines with
-the fields</p>
-<blockquote>
-<div><p>&lt;parameter name&gt;  &lt;parameter value&gt;  &lt;parameter uncert.&gt;,</p>
-</div></blockquote>
+the fields:</p>
+<div class="highlight-python"><pre>&lt;parameter name&gt;  &lt;parameter value&gt;  &lt;parameter uncert.&gt;,</pre>
+</div>
 <p>where <cite>parameter name</cite> is the name of the parameter in the fit
 function specification.</p>
 </li>
@@ -1442,7 +1527,7 @@ def fitf(x,av=1.): # fit an average
 <span id="fit-module"></span><h3><a class="reference internal" href="#module-fit" title="fit: This submodule defines a `Fit` object which performs the actual fitting given a `Dataset` and a fit function. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">fit</span></tt></a> Module<a class="headerlink" href="#module-kafe.fit" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-fit"></span><dl class="class">
 <dt id="kafe.fit.Fit">
-<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x451c230&gt;</em>, <em>fit_label=None</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x3310b90&gt;</em>, <em>fit_label=None</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Object representing a fit. This object references the fitted <cite>Dataset</cite>,
 the fit function and the resulting fit parameters.</p>
@@ -1529,7 +1614,7 @@ function, see function <tt class="docutils literal"><span class="pre">chi2</span
 <dt id="kafe.fit.Fit.do_fit">
 <tt class="descname">do_fit</tt><big>(</big><em>quiet=False</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit.do_fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the fit algorithm for this <cite>Fit</cite> object.</p>
-<p>First, the <cite>Dataset</cite> is fitted considering only uncertainties in the
+<p>First, the <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt> is fitted considering only uncertainties in the
 <cite>y</cite> direction. If the <cite>Dataset</cite> has no uncertainties in the <cite>y</cite>
 direction, they are assumed to be equal to 1.0 for this preliminary
 fit, as there is no better information available.</p>
@@ -1564,8 +1649,8 @@ by the projection becomes negligible.</p>
 <dt id="kafe.fit.Fit.fix_parameters">
 <tt class="descname">fix_parameters</tt><big>(</big><em>*parameters_to_fix</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit.fix_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fix the given parameters so that the minimizer works without them
-when <cite>do_fit</cite> is called next. Parameters can be given by their names
-or by their IDs.</p>
+when <tt class="xref py py-func docutils literal"><span class="pre">do_fit()</span></tt> is called next. Parameters can be given by their
+names or by their IDs.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1690,7 +1775,7 @@ matrix.</p>
 <dt id="kafe.fit.Fit.release_parameters">
 <tt class="descname">release_parameters</tt><big>(</big><em>*parameters_to_release</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit.release_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Release the given parameters so that the minimizer begins to work with
-them when <cite>do_fit</cite> is called next. Parameters can be given by their
+them when <tt class="xref py py-func docutils literal"><span class="pre">do_fit()</span></tt> is called next. Parameters can be given by their
 names or by their IDs. If no arguments are provied, then release all
 parameters.</p>
 </dd></dl>
@@ -1701,8 +1786,8 @@ parameters.</p>
 <dd><p>Sets the parameter values (and optionally errors) for this fit.
 This is usually called just before the fit is done, to establish
 the initial parameters. If a parameter error is omitted, it is
-set to 1/1000th of the parameter values themselves. If the default
-value of the parameter is 0, it is set, by exception, to 0.001.</p>
+set to 1/10th of the parameter values themselves. If the default
+value of the parameter is 0, it is set, by exception, to 0.1.</p>
 <p>This method accepts up to two positional arguments and several
 keyword arguments.</p>
 <dl class="docutils">
@@ -1745,22 +1830,21 @@ to be the value and the second to be the parameter error.</dd>
 <dl class="function">
 <dt id="kafe.fit.build_fit">
 <tt class="descclassname">kafe.fit.</tt><tt class="descname">build_fit</tt><big>(</big><em>dataset</em>, <em>fitfunc</em>, <em>fitlabel='untitled'</em>, <em>initial_fit_parameters=None</em>, <em>constrained_parameters=None</em><big>)</big><a class="headerlink" href="#kafe.fit.build_fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>This helper fuction creates a <tt class="docutils literal"><span class="pre">Fit</span></tt> from a series of keyword arguments.</p>
+<dd><p>This helper fuction creates a <tt class="xref py py-obj docutils literal"><span class="pre">Fit</span></tt> from a series of keyword arguments.</p>
 <p>Valid keywords are:</p>
-<p><strong>dataset</strong> : a <cite>kafe</cite> <tt class="docutils literal"><span class="pre">Dataset</span></tt></p>
+<p><strong>dataset</strong> : a <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt></p>
 <dl class="docutils">
-<dt><strong>fitfunc</strong> <span class="classifier-delimiter">:</span> <span class="classifier">a python function, eventually with</span></dt>
+<dt><strong>fitfunc</strong> <span class="classifier-delimiter">:</span> <span class="classifier">a python function, optionally with</span></dt>
 <dd><tt class="docutils literal"><span class="pre">&#64;FitFunction</span></tt>, <tt class="docutils literal"><span class="pre">&#64;LATEX</span></tt> and <tt class="docutils literal"><span class="pre">&#64;FitFunction</span></tt> decorators</dd>
-</dl>
-<p><strong>fitlabel</strong> : name for this fit</p>
-<dl class="docutils">
-<dt><strong>fitparameters</strong> <span class="classifier-delimiter">:</span> <span class="classifier">None or 2-tuple of list, tuple/<cite>np.array</cite> of floats</span></dt>
+<dt><em>fitlabel</em> <span class="classifier-delimiter">:</span> <span class="classifier">name for this fit (optional)</span></dt>
+<dd>Defaults to &#8220;untitled&#8221;.</dd>
+<dt><em>initial_fit_parameters</em> <span class="classifier-delimiter">:</span> <span class="classifier">None or 2-tuple of list, tuple/<cite>np.array</cite> of floats</span></dt>
 <dd>specifying initial parameter values and errors</dd>
-<dt><strong>constrained_parameters</strong>: None or 3-tuple of list, tuple/np.array`</dt>
+<dt><em>constrained_parameters</em>: None or 3-tuple of list, tuple/np.array`</dt>
 <dd>of one string and 2 floats specifiying the names, values and
 uncertainties of constraints to apply to model parameters</dd>
 </dl>
-<p><strong>returns</strong> <cite>Fit</cite> object</p>
+<p><strong>returns</strong> : <tt class="xref py py-obj docutils literal"><span class="pre">Fit</span></tt> object</p>
 </dd></dl>
 
 <dl class="function">
@@ -1772,10 +1856,10 @@ to the formula:</p>
 <p><img src="_images/math/f8c456962536a9bcf2afe8e93d06249c2e0924da.png" alt="\chi^2 = \lambda^T C^{-1} \lambda"/></p>
 </div><p>Here, <img class="math" src="_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/> is the residual vector <img class="math" src="_images/math/b4a9f878bd30b7d5b83cca751a92a2675e72201a.png" alt="\lambda = \vec{y} -
 \vec{f}(\vec{x})"/> and <img class="math" src="_images/math/c3355896da590fc491a10150a50416687626d7cc.png" alt="C"/> is the covariance matrix.</p>
-<p>If a constraint <img class="math" src="_images/math/ce91fa21da4f2ba0b6673e880bcfc0fba37f0c85.png" alt="c_i\pm\sigma_i"/> is applied to  a parameter i,
-a <cite>penalty term</cite> is added for each constrained parameter according to:</p>
+<p>If a constraint <img class="math" src="_images/math/ce91fa21da4f2ba0b6673e880bcfc0fba37f0c85.png" alt="c_i\pm\sigma_i"/> is applied to a parameter <img class="math" src="_images/math/245a5501248a6ea24f520f76d4140cedf08e1674.png" alt="p_i"/>,
+a <cite>penalty term</cite> is added for each constrained parameter:</p>
 <div class="math">
-<p><img src="_images/math/6bffc8258500ff710f1ed6d7511004475de7088d.png" alt="\chi^2 += \left( \frac{v_i - c_i}{\sigma_i} \right)^2"/></p>
+<p><img src="_images/math/00951437a41e87430d8e797698b14fa33405ce0d.png" alt="\chi^2_{\text{cons}} = \chi^2 + \sum_i{ \left( \frac{p_i - c_i}{\sigma_i} \right)^2 }"/></p>
 </div><dl class="docutils">
 <dt><strong>xdata</strong> <span class="classifier-delimiter">:</span> <span class="classifier">iterable</span></dt>
 <dd>The <em>x</em> measurement data</dd>
@@ -1785,13 +1869,13 @@ a <cite>penalty term</cite> is added for each constrained parameter according to
 <dd>The total covariance matrix</dd>
 <dt><strong>fit_function</strong> <span class="classifier-delimiter">:</span> <span class="classifier">function</span></dt>
 <dd>The fit function <img class="math" src="_images/math/c96dd6ec1dc4ad7520fbdc78fcdbec9edd068d0c.png" alt="f(x)"/></dd>
-</dl>
-<p><strong>constrained_parameters</strong> : None or list of two iterables
-with a length equal to the number of parameters. An uncertainty of
-0 means that a parameter remains unconstrained.</p>
-<dl class="docutils">
 <dt><strong>parameter_values</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list/tuple</span></dt>
 <dd>The values of the parameters at which <img class="math" src="_images/math/c96dd6ec1dc4ad7520fbdc78fcdbec9edd068d0c.png" alt="f(x)"/> should be evaluated.</dd>
+<dt><em>constrained_parameters</em> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="docutils literal"><span class="pre">None</span></tt> or list of two iterables (optional)</span></dt>
+<dd>The first iterable (<img class="math" src="_images/math/61ac54033f92d9102c9351f520da8ef02b8418d8.png" alt="{c_i}"/>) contains the constrained parameters&#8217;
+expected values and the second iterable (<img class="math" src="_images/math/8140344872360c1062af24c4b37cc3330f3157d0.png" alt="{\sigma_i}"/>) contains
+the constraint uncertainties. A parameter with constraint uncertainty
+set to 0 remains unconstrained.</dd>
 </dl>
 </dd></dl>
 
@@ -2292,9 +2376,9 @@ C++ side of Minuit.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-kafe.constants">
-<span id="constants-module"></span><h3><a class="reference internal" href="#module-constants" title="constants: A submodule defining some constants used by the fit package. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">constants</span></tt></a> Module<a class="headerlink" href="#module-kafe.constants" title="Permalink to this headline">¶</a></h3>
-<span class="target" id="module-constants"></span></div>
+<div class="section" id="module-kafe.config">
+<span id="config-module"></span><h3><a class="reference internal" href="#module-config" title="config: A submodule for working with config files. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">config</span></tt></a> Module<a class="headerlink" href="#module-kafe.config" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-config"></span></div>
 <div class="section" id="module-kafe.plot">
 <span id="plot-module"></span><h3><a class="reference internal" href="#module-plot" title="plot: A submodule for plotting `Dataset`s with ``matplotlib``. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">plot</span></tt></a> Module<a class="headerlink" href="#module-kafe.plot" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-plot"></span><dl class="class">
@@ -2347,7 +2431,7 @@ nothing.</dd>
 <dl class="attribute">
 <dt id="kafe.plot.Plot.fits">
 <tt class="descname">fits</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.plot.Plot.fits" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of <a href="#id1"><span class="problematic" id="id2">`</span></a>Fit`s to plot</p>
+<dd><p>list of <tt class="xref py py-obj docutils literal"><span class="pre">Fit</span></tt> objects to plot</p>
 </dd></dl>
 
 <dl class="method">
@@ -2689,7 +2773,7 @@ check occurs.</p>
 <li><a class="reference internal" href="#module-kafe.function_library"><tt class="docutils literal"><span class="pre">function_library</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.function_tools"><tt class="docutils literal"><span class="pre">function_tools</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.minuit"><tt class="docutils literal"><span class="pre">minuit</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-kafe.constants"><tt class="docutils literal"><span class="pre">constants</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-kafe.config"><tt class="docutils literal"><span class="pre">config</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.plot"><tt class="docutils literal"><span class="pre">plot</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.latex_tools"><tt class="docutils literal"><span class="pre">latex_tools</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.numeric_tools"><tt class="docutils literal"><span class="pre">numeric_tools</span></tt> Module</a></li>

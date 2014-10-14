@@ -13,7 +13,7 @@
 
 
 \title{kafe Documentation}
-\date{October 03, 2014}
+\date{October 14, 2014}
 \release{0.5.2}
 \author{D. Savoiu, G. Quast}
 \newcommand{\sphinxlogo}{}
@@ -302,11 +302,9 @@ with \emph{Pip} is not possible:
 \end{quote}
 
 \end{enumerate}
-\begin{description}
-\item[{Kafe needs a working version of the CERN data analysis framework \code{root},}] \leavevmode
-freely available at  \href{http://root.cern.ch}{http://root.cern.ch}
 
-\end{description}
+Kafe needs a working version of the CERN data analysis framework \code{root},
+freely available at  \href{http://root.cern.ch}{http://root.cern.ch}
 
 
 \subsection{Dependencies}
@@ -363,25 +361,25 @@ same data. Here is the code for a comparison of a data set
 to two models, namely a linear and an exponential function:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c}{\PYGZsh{} import everything we need from kafe}
-\PYG{k+kn}{from} \PYG{n+nn}{kafe} \PYG{k+kn}{import} \PYG{o}{*}
-\PYG{c}{\PYGZsh{} additionally, import the two model functions we want to fit:}
-\PYG{k+kn}{from} \PYG{n+nn}{kafe.function\PYGZus{}library} \PYG{k+kn}{import} \PYG{n}{linear\PYGZus{}2par}\PYG{p}{,} \PYG{n}{exp\PYGZus{}2par}
+\# import everything we need from kafe
+from kafe import *
+\# additionally, import the two model functions we want to fit:
+from kafe.function\_library import linear\_2par, exp\_2par
 
-\PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
-\PYG{c}{\PYGZsh{} Load the Dataset from the file}
-\PYG{n}{my\PYGZus{}dataset} \PYG{o}{=} \PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{input\PYGZus{}file}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{dataset.dat}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{title}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Example Dataset}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
-\PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{} Create the Fits}
-\PYG{n}{my\PYGZus{}fits} \PYG{o}{=} \PYG{p}{[}\PYG{n}{Fit}\PYG{p}{(}\PYG{n}{my\PYGZus{}dataset}\PYG{p}{,} \PYG{n}{exp\PYGZus{}2par}\PYG{p}{)}\PYG{p}{,}
-           \PYG{n}{Fit}\PYG{p}{(}\PYG{n}{my\PYGZus{}dataset}\PYG{p}{,} \PYG{n}{linear\PYGZus{}2par}\PYG{p}{)}\PYG{p}{]}
-\PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{} Do the Fits}
-\PYG{k}{for} \PYG{n}{fit} \PYG{o+ow}{in} \PYG{n}{my\PYGZus{}fits}\PYG{p}{:}
-  \PYG{n}{fit}\PYG{o}{.}\PYG{n}{do\PYGZus{}fit}\PYG{p}{(}\PYG{p}{)}
-\PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{} Create the plots, save and show output}
-\PYG{n}{my\PYGZus{}plot} \PYG{o}{=} \PYG{n}{Plot}\PYG{p}{(}\PYG{n}{my\PYGZus{}fits}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{n}{my\PYGZus{}fits}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)}
-\PYG{n}{my\PYGZus{}plot}\PYG{o}{.}\PYG{n}{plot\PYGZus{}all}\PYG{p}{(}\PYG{n}{show\PYGZus{}data\PYGZus{}for}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)} \PYG{c}{\PYGZsh{} show data only once (it\PYGZsq{}s the same data)}
-\PYG{n}{my\PYGZus{}plot}\PYG{o}{.}\PYG{n}{save}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{plot.pdf}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
-\PYG{n}{my\PYGZus{}plot}\PYG{o}{.}\PYG{n}{show}\PYG{p}{(}\PYG{p}{)}
+\#\#\#\#\#\#\#\#\#\#\#\#
+\# Load the Dataset from the file
+my\_dataset = Dataset(input\_file='dataset.dat', title="Example Dataset")
+\#\#\# Create the Fits
+my\_fits = [Fit(my\_dataset, exp\_2par),
+         Fit(my\_dataset, linear\_2par)]
+\#\#\# Do the Fits
+for fit in my\_fits:
+fit.do\_fit()
+\#\#\# Create the plots, save and show output
+my\_plot = Plot(my\_fits[0], my\_fits[1])
+my\_plot.plot\_all(show\_data\_for=0) \# show data only once (it's the same data)
+my\_plot.save('plot.pdf')
+my\_plot.show()
 \end{Verbatim}
 
 The file \emph{dataset.dat} contains x and y data in the standard \emph{kafe} data
@@ -447,21 +445,21 @@ very similar to the previous example with minor
 modifications:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-...
+\PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
 
-\#\#\#\#\#\#\#\#\#\#\#\#
-\# Workflow \#
-\#\#\#\#\#\#\#\#\#\#\#\#
-\# Load two Datasets from files
-my\_datasets = [Dataset(input\_file='dataset1.dat', title="Example Dataset 1"),
-               Dataset(input\_file='dataset2.dat', title="Example Dataset 2")]
-\# Create the Fits
-...
-\# Do the Fits
-...
-\# Create the plots
-  my\_plot.plot\_all() \# this time withouth argument, i.e. show everything
-...
+\PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+\PYG{c}{\PYGZsh{} Workflow \PYGZsh{}}
+\PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+\PYG{c}{\PYGZsh{} Load two Datasets from files}
+\PYG{n}{my\PYGZus{}datasets} \PYG{o}{=} \PYG{p}{[}\PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{input\PYGZus{}file}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{dataset1.dat}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{title}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Example Dataset 1}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}\PYG{p}{,}
+             \PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{input\PYGZus{}file}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{dataset2.dat}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{title}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Example Dataset 2}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}\PYG{p}{]}
+\PYG{c}{\PYGZsh{} Create the Fits}
+\PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\PYG{c}{\PYGZsh{} Do the Fits}
+\PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\PYG{c}{\PYGZsh{} Create the plots}
+\PYG{n}{my\PYGZus{}plot}\PYG{o}{.}\PYG{n}{plot\PYGZus{}all}\PYG{p}{(}\PYG{p}{)} \PYG{c}{\PYGZsh{} this time withouth argument, i.e. show everything}
+\PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
 \end{Verbatim}
 
 This results in the following output:
@@ -577,15 +575,15 @@ averaging example is here:
 *yData\_SCOV
 \# W\_mass  err     syst    sqrt of the off-diagonal
 \# 2q2l channel                           elements of the
-  80.429  0.055   0.021          \#         covariance matrix
-  80.339  0.073   0.021   0.021
-  80.217  0.068   0.021   0.021 0.021
-  80.449  0.058   0.021   0.021 0.021 0.021
+80.429  0.055   0.021          \#         covariance matrix
+80.339  0.073   0.021   0.021
+80.217  0.068   0.021   0.021 0.021
+80.449  0.058   0.021   0.021 0.021 0.021
 \# 4q  channel
-  80.477  0.069   0.044   0.025 0.025 0.025 0.025 0.044
-  80.310  0.091   0.044   0.025 0.025 0.025 0.025 0.044 0.044
-  80.324  0.078   0.044   0.025 0.025 0.025 0.025 0.044 0.044 0.044
-  80.353  0.068   0.044   0.025 0.025 0.025 0.025 0.044 0.044 0.044 0.044
+80.477  0.069   0.044   0.025 0.025 0.025 0.025 0.044
+80.310  0.091   0.044   0.025 0.025 0.025 0.025 0.044 0.044
+80.324  0.078   0.044   0.025 0.025 0.025 0.025 0.044 0.044 0.044
+80.353  0.068   0.044   0.025 0.025 0.025 0.025 0.044 0.044 0.044 0.044
 \end{Verbatim}
 
 
@@ -609,6 +607,7 @@ which is given as separate columns with the fields
 Here is the example code:
 
 \begin{Verbatim}[commandchars=\\\{\}]
+\PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
 \PYG{k+kn}{from} \PYG{n+nn}{kafe} \PYG{k+kn}{import} \PYG{o}{*}
 \PYG{k+kn}{from} \PYG{n+nn}{numpy} \PYG{k+kn}{import} \PYG{n}{exp}\PYG{p}{,} \PYG{n}{cos}
 \PYG{c}{\PYGZsh{} Model function definition \PYGZsh{}}
@@ -617,18 +616,18 @@ Here is the example code:
 \PYG{n+nd}{@ASCII}\PYG{p}{(}\PYG{n}{x\PYGZus{}name}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{t}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{expression}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{A0*exp(\PYGZhy{}t/tau)*cos(omega*t+phi)}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
 \PYG{c}{\PYGZsh{} Set some LaTeX\PYGZhy{}related parameters for this function}
 \PYG{n+nd}{@LaTeX}\PYG{p}{(}\PYG{n}{name}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{A}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{x\PYGZus{}name}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{t}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
-     \PYG{n}{parameter\PYGZus{}names}\PYG{o}{=}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{a\PYGZus{}0}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{tau\PYGZob{}\PYGZcb{}}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{omega\PYGZob{}\PYGZcb{}}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{varphi\PYGZob{}\PYGZcb{}}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{,}
-     \PYG{n}{expression}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{a\PYGZus{}0}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{exp(\PYGZhy{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{frac\PYGZob{}t\PYGZcb{}\PYGZob{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{tau\PYGZcb{})}\PYG{l+s}{\PYGZbs{}}\PYG{l+s}{,}\PYG{l+s}{\PYGZdq{}}
-                \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZbs{}}\PYG{l+s}{cos(}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{omega\PYGZob{}\PYGZcb{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,t+}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{varphi\PYGZob{}\PYGZcb{})}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+       \PYG{n}{parameter\PYGZus{}names}\PYG{o}{=}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{a\PYGZus{}0}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{tau\PYGZob{}\PYGZcb{}}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{omega\PYGZob{}\PYGZcb{}}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{varphi\PYGZob{}\PYGZcb{}}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{,}
+       \PYG{n}{expression}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{a\PYGZus{}0}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{exp(\PYGZhy{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{frac\PYGZob{}t\PYGZcb{}\PYGZob{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{tau\PYGZcb{})}\PYG{l+s}{\PYGZbs{}}\PYG{l+s}{,}\PYG{l+s}{\PYGZdq{}}
+                  \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZbs{}}\PYG{l+s}{cos(}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{omega\PYGZob{}\PYGZcb{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,t+}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{varphi\PYGZob{}\PYGZcb{})}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
 \PYG{n+nd}{@FitFunction}
 \PYG{k}{def} \PYG{n+nf}{damped\PYGZus{}oscillator}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,} \PYG{n}{a0}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{tau}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{omega}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{phi}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{p}{:}
-  \PYG{k}{return} \PYG{n}{a0} \PYG{o}{*} \PYG{n}{exp}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{t}\PYG{o}{/}\PYG{n}{tau}\PYG{p}{)} \PYG{o}{*} \PYG{n}{cos}\PYG{p}{(}\PYG{n}{omega}\PYG{o}{*}\PYG{n}{t} \PYG{o}{+} \PYG{n}{phi}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{a0} \PYG{o}{*} \PYG{n}{exp}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{t}\PYG{o}{/}\PYG{n}{tau}\PYG{p}{)} \PYG{o}{*} \PYG{n}{cos}\PYG{p}{(}\PYG{n}{omega}\PYG{o}{*}\PYG{n}{t} \PYG{o}{+} \PYG{n}{phi}\PYG{p}{)}
 
 \PYG{c}{\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{} Workflow \PYGZsh{}}
 \PYG{c}{\PYGZsh{} load the experimental data from a file}
 \PYG{n}{my\PYGZus{}dataset} \PYG{o}{=} \PYG{n}{parse\PYGZus{}column\PYGZus{}data}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{damped\PYGZus{}oscillation.dat}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
-  \PYG{n}{field\PYGZus{}order}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{x,y,xabserr,yabserr}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{title}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Damped Oscillator}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
-  \PYG{n}{axis\PYGZus{}labels}\PYG{o}{=}\PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Time t}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Amplitude}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{)}
+    \PYG{n}{field\PYGZus{}order}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{x,y,xabserr,yabserr}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{title}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Damped Oscillator}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{n}{axis\PYGZus{}labels}\PYG{o}{=}\PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Time t}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Amplitude}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{)}
 \PYG{c}{\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZhy{} Create the Fit}
 \PYG{n}{my\PYGZus{}fit} \PYG{o}{=} \PYG{n}{Fit}\PYG{p}{(}\PYG{n}{my\PYGZus{}dataset}\PYG{p}{,} \PYG{n}{damped\PYGZus{}oscillator}\PYG{p}{)}
 \PYG{c}{\PYGZsh{} Set the initial values for the fit:}
@@ -654,10 +653,34 @@ Here is the example code:
 This example is not much different from the previous one, except that
 the fit function, a standard fourth-degree polynomial from the module
 \code{function\_library}, is modified to reflect the names of the problem
-given:
+given, and \emph{matplotlib} functionality is used to influence the
+ouput of the plot, e.g. axis names and linear or logarithmic scale.
+
+It is also shown how to circumvent a problem that
+often arises when errors depend on the measured values.
+For a counting rate, the (statistical) error is typically estimated
+as the square root of the (observed) number of entries in each bin.
+For large numbers of entries, this is not a problem,
+but for small numbers, the correlation between the observed
+number of entries and the error derived from it leads to a
+bias when fitting functions to the data. This problem can be
+avoided by iterating the fit procedure:
+
+In a pre-fit, a first approximation of the model function is
+determined, which is then used to calculate
+the expected errors, and the origial errors are
+replaced before performing the final fit. Note that the numbers
+of entries in the bins must be sufficiently large to justify
+a replacement of the (asymmetric) Poission uncertainties by
+the symmetric uncertainties implied by the \(\chi\)²-method.
+
+The implementation of this  procedure needs accesses some
+more fundamental methods of the \emph{Dataset}, \emph{Fit} and
+\emph{FitFunction} classes. The code shown below demonstrates
+how this can be done with \emph{kafe}, using some of its lower-level,
+internal interfaces:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
 \PYG{k+kn}{from} \PYG{n+nn}{kafe.function\PYGZus{}library} \PYG{k+kn}{import} \PYG{n}{poly4}
 \PYG{c}{\PYGZsh{} modify function\PYGZsq{}s independent variable name to reflect its nature:}
 \PYG{n}{poly4}\PYG{o}{.}\PYG{n}{x\PYGZus{}name} \PYG{o}{=} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{x=cos(t)}\PYG{l+s}{\PYGZsq{}}
@@ -666,6 +689,42 @@ given:
 
 \PYG{c}{\PYGZsh{} Set the axis labels appropriately}
 \PYG{n}{my\PYGZus{}plot}\PYG{o}{.}\PYG{n}{axis\PYGZus{}labels} \PYG{o}{=} \PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZdl{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{cos(}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{theta)\PYGZdl{}}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{counting rate}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}
+\PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\PYG{c}{\PYGZsh{} load the experimental data from a file}
+\PYG{n}{my\PYGZus{}dataset} \PYG{o}{=} \PYG{n}{parse\PYGZus{}column\PYGZus{}data}\PYG{p}{(}
+  \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{counting\PYGZus{}rate.dat}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,}
+  \PYG{n}{field\PYGZus{}order}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{x,y,yabserr}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+  \PYG{n}{title}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Counting Rate per Angle}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+
+\PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{} pre\PYGZhy{}fit}
+\PYG{c}{\PYGZsh{} error for bins with zero contents is set to 1.}
+\PYG{n}{covmat} \PYG{o}{=} \PYG{n}{my\PYGZus{}dataset}\PYG{o}{.}\PYG{n}{get\PYGZus{}cov\PYGZus{}mat}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{y}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
+\PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{covmat}\PYG{p}{)}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{if} \PYG{n}{covmat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]}\PYG{o}{==}\PYG{l+m+mf}{0.}\PYG{p}{:}
+        \PYG{n}{covmat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]}\PYG{o}{=}\PYG{l+m+mf}{1.}
+\PYG{n}{my\PYGZus{}dataset}\PYG{o}{.}\PYG{n}{set\PYGZus{}cov\PYGZus{}mat}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{y}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{covmat}\PYG{p}{)} \PYG{c}{\PYGZsh{} write it back}
+
+\PYG{c}{\PYGZsh{} Create the Fit}
+\PYG{n}{my\PYGZus{}fit} \PYG{o}{=} \PYG{n}{Fit}\PYG{p}{(}\PYG{n}{my\PYGZus{}dataset}\PYG{p}{,} \PYG{n}{poly4}\PYG{p}{)}
+\PYG{c}{\PYGZsh{}            fit\PYGZus{}label=\PYGZdq{}Linear Regression \PYGZdq{} + dataset.data\PYGZus{}label[\PYGZhy{}1])}
+
+\PYG{c}{\PYGZsh{} perform an initial fit with temporary errors (minimial output)}
+\PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{call\PYGZus{}minimizer}\PYG{p}{(}\PYG{n}{final\PYGZus{}fit}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,} \PYG{n}{verbose}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}
+
+\PYG{c}{\PYGZsh{} set errors using model at pre\PYGZhy{}fit parameter values:}
+\PYG{c}{\PYGZsh{}       sigma\PYGZus{}i\PYGZca{}2=cov[i,i]=n(x\PYGZus{}i)}
+\PYG{n}{fdata} \PYG{o}{=} \PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{fit\PYGZus{}function}\PYG{o}{.}\PYG{n}{evaluate}\PYG{p}{(}\PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{xdata}\PYG{p}{,}
+                                   \PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{current\PYGZus{}parameter\PYGZus{}values}\PYG{p}{)}
+\PYG{n}{np}\PYG{o}{.}\PYG{n}{fill\PYGZus{}diagonal}\PYG{p}{(}\PYG{n}{covmat}\PYG{p}{,} \PYG{n}{fdata}\PYG{p}{)}
+\PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{current\PYGZus{}cov\PYGZus{}mat} \PYG{o}{=} \PYG{n}{covmat}  \PYG{c}{\PYGZsh{} write new covariance matrix}
+\PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{} end pre\PYGZhy{}fit \PYGZhy{} rest ist as usual}
+\PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{do\PYGZus{}fit}\PYG{p}{(}\PYG{p}{)}
+\PYG{c}{\PYGZsh{} Create the plots and \PYGZhy{}\PYGZhy{}}
+\PYG{n}{my\PYGZus{}plot} \PYG{o}{=} \PYG{n}{Plot}\PYG{p}{(}\PYG{n}{my\PYGZus{}fit}\PYG{p}{)}
+\PYG{c}{\PYGZsh{} \PYGZhy{}\PYGZhy{} set the axis labels}
+\PYG{n}{my\PYGZus{}plot}\PYG{o}{.}\PYG{n}{axis\PYGZus{}labels} \PYG{o}{=} \PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZdl{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{cos(}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{theta)\PYGZdl{}}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{counting rate}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}
+\PYG{c}{\PYGZsh{} \PYGZhy{}\PYGZhy{} set scale linear / log}
+\PYG{n}{my\PYGZus{}plot}\PYG{o}{.}\PYG{n}{axes}\PYG{o}{.}\PYG{n}{set\PYGZus{}yscale}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{linear}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
 \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
 \end{Verbatim}
 
@@ -709,19 +768,19 @@ Here are the interesting pieces of code:
 \PYG{c}{\PYGZsh{} Model function definition \PYGZsh{}}
 \PYG{c}{\PYGZsh{} Set an ASCII expression for this function}
 \PYG{n+nd}{@ASCII}\PYG{p}{(}\PYG{n}{x\PYGZus{}name}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{x}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{expression}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{I0*(sin(k/2*b*sin(x))/(k/2*b*sin(x))}\PYG{l+s}{\PYGZdq{}}
-                            \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{*cos(k/2*g*sin(x)))\PYGZca{}2}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+                              \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{*cos(k/2*g*sin(x)))\PYGZca{}2}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
 \PYG{c}{\PYGZsh{} Set some LaTeX\PYGZhy{}related parameters for this function}
 \PYG{n+nd}{@LaTeX}\PYG{p}{(}\PYG{n}{name}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{I}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{x\PYGZus{}name}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{alpha\PYGZob{}\PYGZcb{}}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
-  \PYG{n}{parameter\PYGZus{}names}\PYG{o}{=}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{I\PYGZus{}0}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{b}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{g}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{k}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{,}
-  \PYG{n}{expression}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{I\PYGZus{}0}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{left(}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{frac\PYGZob{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{sin(}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{frac\PYGZob{}k\PYGZcb{}\PYGZob{}2\PYGZcb{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,b}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{sin\PYGZob{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{alpha\PYGZcb{})\PYGZcb{}}\PYG{l+s}{\PYGZdq{}}
-                \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZob{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{frac\PYGZob{}k\PYGZcb{}\PYGZob{}2\PYGZcb{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,b}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{sin\PYGZob{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{alpha\PYGZcb{}\PYGZcb{}}\PYG{l+s}{\PYGZdq{}}
-                \PYG{l+s}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{cos(}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{frac\PYGZob{}k\PYGZcb{}\PYGZob{}2\PYGZcb{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,g}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{sin\PYGZob{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{alpha\PYGZcb{})}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{right)\PYGZca{}2}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+       \PYG{n}{parameter\PYGZus{}names}\PYG{o}{=}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{I\PYGZus{}0}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{b}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{g}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{k}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{,}
+       \PYG{n}{expression}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{I\PYGZus{}0}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{left(}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{frac\PYGZob{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{sin(}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{frac\PYGZob{}k\PYGZcb{}\PYGZob{}2\PYGZcb{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,b}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{sin\PYGZob{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{alpha\PYGZcb{})\PYGZcb{}}\PYG{l+s}{\PYGZdq{}}
+                  \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZob{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{frac\PYGZob{}k\PYGZcb{}\PYGZob{}2\PYGZcb{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,b}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{sin\PYGZob{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{alpha\PYGZcb{}\PYGZcb{}}\PYG{l+s}{\PYGZdq{}}
+                  \PYG{l+s}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{cos(}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{frac\PYGZob{}k\PYGZcb{}\PYGZob{}2\PYGZcb{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,g}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{sin\PYGZob{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{alpha\PYGZcb{})}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{right)\PYGZca{}2}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
 \PYG{n+nd}{@FitFunction}
 \PYG{k}{def} \PYG{n+nf}{double\PYGZus{}slit}\PYG{p}{(}\PYG{n}{alpha}\PYG{p}{,} \PYG{n}{I0}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{b}\PYG{o}{=}\PYG{l+m+mf}{10e\PYGZhy{}6}\PYG{p}{,} \PYG{n}{g}\PYG{o}{=}\PYG{l+m+mf}{20e\PYGZhy{}6}\PYG{p}{,} \PYG{n}{k}\PYG{o}{=}\PYG{l+m+mf}{1.e7}\PYG{p}{)}\PYG{p}{:}
-  \PYG{n}{k\PYGZus{}half\PYGZus{}sine\PYGZus{}alpha} \PYG{o}{=} \PYG{n}{k}\PYG{o}{/}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{sin}\PYG{p}{(}\PYG{n}{alpha}\PYG{p}{)}  \PYG{c}{\PYGZsh{} helper variable}
-  \PYG{n}{k\PYGZus{}b} \PYG{o}{=} \PYG{n}{k\PYGZus{}half\PYGZus{}sine\PYGZus{}alpha} \PYG{o}{*} \PYG{n}{b}
-  \PYG{n}{k\PYGZus{}g} \PYG{o}{=} \PYG{n}{k\PYGZus{}half\PYGZus{}sine\PYGZus{}alpha} \PYG{o}{*} \PYG{n}{g}
-  \PYG{k}{return} \PYG{n}{I0} \PYG{o}{*} \PYG{p}{(}\PYG{n}{sin}\PYG{p}{(}\PYG{n}{k\PYGZus{}b}\PYG{p}{)}\PYG{o}{/}\PYG{p}{(}\PYG{n}{k\PYGZus{}b}\PYG{p}{)} \PYG{o}{*} \PYG{n}{cos}\PYG{p}{(}\PYG{n}{k\PYGZus{}g}\PYG{p}{)}\PYG{p}{)}\PYG{o}{*}\PYG{o}{*}\PYG{l+m+mi}{2}
+    \PYG{n}{k\PYGZus{}half\PYGZus{}sine\PYGZus{}alpha} \PYG{o}{=} \PYG{n}{k}\PYG{o}{/}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{sin}\PYG{p}{(}\PYG{n}{alpha}\PYG{p}{)}  \PYG{c}{\PYGZsh{} helper variable}
+    \PYG{n}{k\PYGZus{}b} \PYG{o}{=} \PYG{n}{k\PYGZus{}half\PYGZus{}sine\PYGZus{}alpha} \PYG{o}{*} \PYG{n}{b}
+    \PYG{n}{k\PYGZus{}g} \PYG{o}{=} \PYG{n}{k\PYGZus{}half\PYGZus{}sine\PYGZus{}alpha} \PYG{o}{*} \PYG{n}{g}
+    \PYG{k}{return} \PYG{n}{I0} \PYG{o}{*} \PYG{p}{(}\PYG{n}{sin}\PYG{p}{(}\PYG{n}{k\PYGZus{}b}\PYG{p}{)}\PYG{o}{/}\PYG{p}{(}\PYG{n}{k\PYGZus{}b}\PYG{p}{)} \PYG{o}{*} \PYG{n}{cos}\PYG{p}{(}\PYG{n}{k\PYGZus{}g}\PYG{p}{)}\PYG{p}{)}\PYG{o}{*}\PYG{o}{*}\PYG{l+m+mi}{2}
 
 \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
 
@@ -743,7 +802,7 @@ last line in the example above should be replaced by:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
-\PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{constrain\PYGZus{}parameters}\PYG{p}{(}\PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{k}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mf}{9.67e6}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mf}{1.e4}\PYG{p}{]}\PYG{p}{)}
+\PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{constrain\PYGZus{}parameters}\PYG{p}{(}\PYG{p}{[}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{k}\PYG{l+s}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mf}{9.67e6}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mf}{1.e4}\PYG{p}{]}\PYG{p}{)}
 \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
 \end{Verbatim}
 
@@ -780,12 +839,12 @@ passed on the command line):
 \PYG{k+kn}{from} \PYG{n+nn}{kafe} \PYG{k+kn}{import} \PYG{o}{*}
 \PYG{k+kn}{from} \PYG{n+nn}{kafe.file\PYGZus{}tools} \PYG{k+kn}{import} \PYG{n}{buildFit\PYGZus{}fromFile}
 \PYG{c}{\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
-\PYG{n}{fname}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{LEP\PYGZhy{}Data.dat}\PYG{l+s}{\PYGZsq{}}
+\PYG{n}{fname} \PYG{o}{=} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{LEP\PYGZhy{}Data.dat}\PYG{l+s}{\PYGZsq{}}
 \PYG{c}{\PYGZsh{} initialize fit object from file}
-\PYG{n}{BWfit}\PYG{o}{=}\PYG{n}{buildFit\PYGZus{}fromFile}\PYG{p}{(}\PYG{n}{fname}\PYG{p}{)}
+\PYG{n}{BWfit} \PYG{o}{=} \PYG{n}{buildFit\PYGZus{}fromFile}\PYG{p}{(}\PYG{n}{fname}\PYG{p}{)}
 \PYG{n}{BWfit}\PYG{o}{.}\PYG{n}{do\PYGZus{}fit}\PYG{p}{(}\PYG{p}{)}
 \PYG{c}{\PYGZsh{}}
-\PYG{n}{BWplot}\PYG{o}{=}\PYG{n}{Plot}\PYG{p}{(}\PYG{n}{BWfit}\PYG{p}{)}
+\PYG{n}{BWplot} \PYG{o}{=} \PYG{n}{Plot}\PYG{p}{(}\PYG{n}{BWfit}\PYG{p}{)}
 \PYG{n}{BWplot}\PYG{o}{.}\PYG{n}{plot\PYGZus{}all}\PYG{p}{(}\PYG{p}{)}
 \PYG{n}{BWplot}\PYG{o}{.}\PYG{n}{save}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{plot.pdf}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
 \PYG{n}{BWplot}\PYG{o}{.}\PYG{n}{show}\PYG{p}{(}\PYG{p}{)}
@@ -795,8 +854,8 @@ The magic happens in the input file, which now has to provide
 all the information needed to perform the fit:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\# Fit of a Breit-Wigern function to
-\#      measruements of hadronic Z cross sections a LEP
+\# Fit of a Breit-Wigner function to
+\#      measurements of hadronic Z cross sections at LEP
 \# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \#  Meta-data for plotting
 *TITLE  LEP Hadronic Cross Section (\$\PYGZbs{}sigma\textasciicircum{}0\_\PYGZbs{}mathrm\PYGZob{}had\PYGZcb{}\$)
@@ -859,12 +918,43 @@ Here is the output:
 \scalebox{1.000000}{\includegraphics{kafe_BreitWignerFit.png}}
 \caption{\emph{Output of example 8 - Fit of a Breit-Wigner function.}}\end{figure}
 
+This example also contains a code snippet demonstrating how to plot
+contours with \code{kafe}. A \emph{contour} is a region of the parameter
+space containing all parameter values consistent with the fit, within
+uncertainty.
+
+Contours are useful because they provide a way to visualize parameter
+uncertainties and correlations. \code{kafe} supports plotting
+2D $1\sigma$ contours for any pair of parameters by getting the
+relevant data from \code{TMinuit} and plotting it using \code{matplotlib}.
+Here is a possible way to do it:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c}{\PYGZsh{} plot 1\PYGZhy{}sigma contour of first two parameters into a separate figure}
+\PYG{n}{x}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{n}{BWfit}\PYG{o}{.}\PYG{n}{minimizer}\PYG{o}{.}\PYG{n}{get\PYGZus{}contour}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{n\PYGZus{}points}\PYG{o}{=}\PYG{l+m+mi}{100}\PYG{p}{)}  \PYG{c}{\PYGZsh{} get contour}
+\PYG{n}{cont\PYGZus{}fig} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{figure}\PYG{p}{(}\PYG{p}{)}  \PYG{c}{\PYGZsh{} create new figure for contour}
+\PYG{n}{cont\PYGZus{}ax} \PYG{o}{=} \PYG{n}{cont\PYGZus{}fig}\PYG{o}{.}\PYG{n}{gca}\PYG{p}{(}\PYG{p}{)}  \PYG{c}{\PYGZsh{} get/create axes object for current figure}
+\PYG{c}{\PYGZsh{} set axis labels}
+\PYG{n}{cont\PYGZus{}ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}xlabel}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZdl{}}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s}{\PYGZdl{}}\PYG{l+s}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{p}{(}\PYG{n}{BWfit}\PYG{o}{.}\PYG{n}{latex\PYGZus{}parameter\PYGZus{}names}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,}\PYG{p}{)}\PYG{p}{)}
+\PYG{n}{cont\PYGZus{}ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}ylabel}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZdl{}}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s}{\PYGZdl{}}\PYG{l+s}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{p}{(}\PYG{n}{BWfit}\PYG{o}{.}\PYG{n}{latex\PYGZus{}parameter\PYGZus{}names}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,}\PYG{p}{)}\PYG{p}{)}
+\PYG{c}{\PYGZsh{} plot the actual contour}
+\PYG{n}{cont\PYGZus{}ax}\PYG{o}{.}\PYG{n}{fill}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{,} \PYG{n}{alpha}\PYG{o}{=}\PYG{l+m+mf}{0.25}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{red}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
+\PYG{c}{\PYGZsh{} save to file}
+\PYG{n}{cont\PYGZus{}fig}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{kafe\PYGZus{}BreitWignerFit\PYGZus{}contour12.pdf}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\end{Verbatim}
+\begin{figure}[htbp]
+\centering
+\capstart
+
+\scalebox{1.000000}{\includegraphics{kafe_BreitWignerFit_contour12.png}}
+\caption{\emph{Contour generated in example 8 - Fit of a Breit-Wigner function.}}\end{figure}
+
 
 \section{Example 9 - fit of a function to histogram data}
 \label{index:example-9-fit-of-a-function-to-histogram-data}
-This example brings us to the limit of what is presently
+This example brings us to the limit of what is currently
 possible with \emph{kafe}. Here, the data represent the
-centre of a histogram bins ad the number of entries, :math::\emph{n\_i},
+centre of a histogram bins ad the number of entries, $n_i$,
 in each bin. The (statistical) error is typically estimated
 as the square root of the (observed) number of entries in each bin.
 For large numbers of entries, this is not a problem,
@@ -873,14 +963,14 @@ the correlation between the observed number of entries and
 the error derived from it leads to a bias when fitting
 functions to the histogram data. In particular, bins with
 zero entries cannot be handled in the \(\chi\)²-function, and are
-typically omitted to cure the problem.  However, the bias
+typically omitted to cure the problem.  However, a bias
 remains, as bins with downward fluctuations of the
-observed numbers of events have get assigned smaller errors
+observed numbers of events get assigned smaller errors
 and hence larger weights in the fitting procedure - leading
 to the aforementioned bias.
 
 These problems are avoided by using a likelihood method for
-such use cases, where Poission distribtution of the uncertainties
+such use cases, where the Poission distribution of the uncertainties
 and their dependence on the values of the fit model is properly
 taken into accout. However, the \(\chi\)²-method can be saved to some
 extend if the fitting procedure is iterated. In a pre-fit, a
@@ -893,38 +983,39 @@ of entries in the bins must be sufficiently large to justify
 a replacement of the (asymmetric) Poission uncertainties by
 the symmetric uncertainties implied by the \(\chi\)²-method.
 
-The implementation of this  procedure needs accesses some
+The code shown below demonstrates
+how to get a grip on such more complex procedures with
 more fundamental methods of the \emph{Dataset}, \emph{Fit} and
-\emph{FitFunction} classes. The code shown below demonstrates
-how to get a grip on such more complex procedures with \emph{kafe}:
+\emph{FitFunction} classes:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-...
-\# Load Dataset from file
-hdataset = Dataset(input\_file='hdataset.dat', title="Data for example 9")
+\PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\PYG{c}{\PYGZsh{} Load Dataset from file}
+\PYG{n}{hdataset} \PYG{o}{=} \PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{input\PYGZus{}file}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{hdataset.dat}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{title}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Data for example 9}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
 
-\# error for bins with zero contents is set to 1.
-covmat=hdataset.get\_cov\_mat('y')
-for i in range(0,len(covmat)):
-  if covmat[i,i]==0.: covmat[i,i]=1.
-hdataset.set\_cov\_mat('y',covmat) \# write it back
+\PYG{c}{\PYGZsh{} error for bins with zero contents is set to 1.}
+\PYG{n}{covmat} \PYG{o}{=} \PYG{n}{hdataset}\PYG{o}{.}\PYG{n}{get\PYGZus{}cov\PYGZus{}mat}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{y}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
+\PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{covmat}\PYG{p}{)}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{if} \PYG{n}{covmat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]}\PYG{o}{==}\PYG{l+m+mf}{0.}\PYG{p}{:}
+        \PYG{n}{covmat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]}\PYG{o}{=}\PYG{l+m+mf}{1.}
+\PYG{n}{hdataset}\PYG{o}{.}\PYG{n}{set\PYGZus{}cov\PYGZus{}mat}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{y}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{covmat}\PYG{p}{)} \PYG{c}{\PYGZsh{} write it back}
 
-\# Create the Fit instance
-hfit = Fit(hdataset,gauss,fit\_label="Fit of a Gaussian to histogram data")
-\#
-\# perform an initial fit with temporary errors (minimial output)
-hfit.call\_minimizer(final\_fit=False, verbose=False)
-\#
-\#re-set errors using model at pre-fit parameter values:
-\#        sigma\_i\textasciicircum{}2=cov[i,i]=n(x\_i)
-fdata=hfit.fit\_function.evaluate(hfit.xdata, hfit.current\_parameter\_values)
-np.fill\_diagonal(covmat, fdata)
-hfit.current\_cov\_mat=covmat \# write back new covariance matrix
-\#
-\# now do final fit with full output
-hfit.do\_fit()
-\# and create, draw, save and show plot
- ...
+\PYG{c}{\PYGZsh{} Create the Fit instance}
+\PYG{n}{hfit} \PYG{o}{=} \PYG{n}{Fit}\PYG{p}{(}\PYG{n}{hdataset}\PYG{p}{,} \PYG{n}{gauss}\PYG{p}{,} \PYG{n}{fit\PYGZus{}label}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Fit of a Gaussian to histogram data}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{c}{\PYGZsh{}}
+\PYG{c}{\PYGZsh{} perform an initial fit with temporary errors (minimial output)}
+\PYG{n}{hfit}\PYG{o}{.}\PYG{n}{call\PYGZus{}minimizer}\PYG{p}{(}\PYG{n}{final\PYGZus{}fit}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,} \PYG{n}{verbose}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}
+\PYG{c}{\PYGZsh{}}
+\PYG{c}{\PYGZsh{}re\PYGZhy{}set errors using model at pre\PYGZhy{}fit parameter values:}
+\PYG{c}{\PYGZsh{}        sigma\PYGZus{}i\PYGZca{}2=cov[i,i]=n(x\PYGZus{}i)}
+\PYG{n}{fdata}\PYG{o}{=}\PYG{n}{hfit}\PYG{o}{.}\PYG{n}{fit\PYGZus{}function}\PYG{o}{.}\PYG{n}{evaluate}\PYG{p}{(}\PYG{n}{hfit}\PYG{o}{.}\PYG{n}{xdata}\PYG{p}{,} \PYG{n}{hfit}\PYG{o}{.}\PYG{n}{current\PYGZus{}parameter\PYGZus{}values}\PYG{p}{)}
+\PYG{n}{np}\PYG{o}{.}\PYG{n}{fill\PYGZus{}diagonal}\PYG{p}{(}\PYG{n}{covmat}\PYG{p}{,} \PYG{n}{fdata}\PYG{p}{)}
+\PYG{n}{hfit}\PYG{o}{.}\PYG{n}{current\PYGZus{}cov\PYGZus{}mat} \PYG{o}{=} \PYG{n}{covmat} \PYG{c}{\PYGZsh{} write back new covariance matrix}
+\PYG{c}{\PYGZsh{}}
+\PYG{c}{\PYGZsh{} now do final fit with full output}
+\PYG{n}{hfit}\PYG{o}{.}\PYG{n}{do\PYGZus{}fit}\PYG{p}{(}\PYG{p}{)}
+\PYG{c}{\PYGZsh{} and create, draw, save and show plot}
+\PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
 \end{Verbatim}
 
 Here is the output, which shows that the parameters of the
@@ -1450,10 +1541,10 @@ plotting more than one \emph{Fit} in the same \emph{Plot}.
 build a kafe \code{Dataset} object from input file with key words
 and file format defined in \code{parse\_general\_inputfile}
 \begin{description}
-\item[{\textbf{file\_to\_parse}:  file-like object or string containing a file path}] \leavevmode
+\item[{\textbf{file\_to\_parse}}] \leavevmode{[}file-like object or string containing a file path{]}
 The file to parse.
 
-\item[{\textbf{returns} an instance of the \code{Dataset} class,}] \leavevmode
+\item[{\textbf{returns}}] \leavevmode{[}an instance of the \code{Dataset} class,{]}
 constructed with the help of the method \code{Dataset.build\_dataset()}
 
 \end{description}
@@ -1465,12 +1556,12 @@ constructed with the help of the method \code{Dataset.build\_dataset()}
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.file_tools.buildFit_fromFile}\pysiglinewithargsret{\code{kafe.file\_tools.}\bfcode{buildFit\_fromFile}}{\emph{file\_to\_parse}}{}
 build a kafe \code{Fit} object from input file with keywords
-and file format defined in \code{parse\_general\_input\_file}
+and file format defined in \code{parse\_general\_input\_file()}
 \begin{description}
 \item[{\textbf{file\_to\_parse}:  file-like object or string containing a file path}] \leavevmode
 The file to parse.
 
-\item[{\textbf{returns} an instance of the \code{Fit} class,}] \leavevmode
+\item[{\textbf{returns}}] \leavevmode{[}an instance of the \code{Fit} class,{]}
 constructed with the help of the methods
 \code{Dataset.build\_dataset()} and
 \code{Fit.build\_fit()}
@@ -1484,8 +1575,9 @@ constructed with the help of the methods
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.file_tools.parse_column_data}\pysiglinewithargsret{\code{kafe.file\_tools.}\bfcode{parse\_column\_data}}{\emph{file\_to\_parse, field\_order='x,y', delimiter=' `, cov\_mat\_files=None, title='Untitled Dataset', basename=None, axis\_labels={[}'x', `y'{]}, axis\_units={[}'`, `'{]}}}{}
 Parses a file which contains measurement data in a one-measurement-per-row
-format. The field (column) order can be specified. It defaults to \emph{x,y'.
-Valid field names are {}`x}, \emph{y}, \emph{xabserr}, \emph{yabserr}, \emph{xrelerr},
+format. The field (column) order can be specified. It defaults to
+\code{"x,y"}.
+Valid field names are \emph{x}, \emph{y}, \emph{xabserr}, \emph{yabserr}, \emph{xrelerr},
 \emph{yrelerr}. Another valid field name is \emph{ignore} which can be used to skip
 a field.
 
@@ -1525,27 +1617,27 @@ Each element of this tuple may be either \code{None}, a file or file-like
 object, or an iterable containing files and file-like objects. Each
 file should contain a covariance matrix for the respective axis.
 
-When creating the \emph{Dataset}, all given matrices are summed over.
+When creating the \code{Dataset}, all given matrices are summed over.
 
 \item[{\emph{title}}] \leavevmode{[}string (optional){]}
-The title of the \emph{Dataset}.
+The title of the \code{Dataset}.
 
 \item[{\emph{basename}}] \leavevmode{[}string or \code{None} (optional){]}
-A basename for the \emph{Dataset}. All output files related to this dataset
+A basename for the \code{Dataset}. All output files related to this dataset
 will use this as a basename. If this is \code{None} (default), the
 basename will be inferred from the filename.
 
 \item[{\emph{axis\_labels}}] \leavevmode{[}2-tuple of strings (optional){]}
-a 2-tuple containing the axis labels for the \emph{Dataset}. This is
-relevant when plotting \emph{Fits} of the \emph{Dataset}, but is ignored when
-plotting more than one \emph{Fit} in the same \emph{Plot}.
+a 2-tuple containing the axis labels for the \code{Dataset}. This is
+relevant when plotting \code{Fits} of the \code{Dataset}, but is ignored when
+plotting more than one \code{Fit} in the same \code{Plot}.
 
 \item[{\emph{axis\_units}}] \leavevmode{[}2-tuple of strings (optional){]}
-a 2-tuple containing the axis units for the \emph{Dataset}. This is
-relevant when plotting \emph{Fits} of the \emph{Dataset}, but is ignored when
-plotting more than one \emph{Fit} in the same \emph{Plot}.
+a 2-tuple containing the axis units for the \code{Dataset}. This is
+relevant when plotting \code{Fits} of the \code{Dataset}, but is ignored when
+plotting more than one \code{Fit} in the same \code{Plot}.
 
-\item[{\textbf{return}}] \leavevmode{[}\emph{Dataset}{]}
+\item[{\textbf{return}}] \leavevmode{[}\code{Dataset}{]}
 A Dataset built from the parsed file.
 
 \end{description}
@@ -1560,19 +1652,19 @@ This function can be used to specify \emph{kafe} \code{Dataset}
 or \code{Fit} objects in a single input file, thus requiring
 minimal Python code. Keywords as specified in a dictionary
 \code{tokens} specify all objects and parameters needed by the
-functions \code{build\_dataset()} in  module \code{dataset} and
-\code{build\_fit()} in module \code{fit}.
+functions \code{build\_dataset()} in  module {\hyperref[index:module-dataset]{\code{dataset}}} and
+\code{build\_fit()} in module {\hyperref[index:module-fit]{\code{fit}}}.
 \begin{description}
 \item[{\textbf{file\_to\_parse}:  file-like object or string containing a file path}] \leavevmode
 The file to parse.
 
 \item[{\textbf{return}}] \leavevmode{[}dataset\_kwargs, fit\_kwargs{]}
-keyword lists to build a kafe \code{Dataset} or \code{Fit{}` object
-with the helper functions {}`{}`build\_dataset} or \code{build\_fit}
+keyword lists to build a kafe \code{Dataset} or \code{Fit} object
+with the helper functions \emph{build\_dataset} or \emph{build\_fit}
 
 \end{description}
 
-\emph{Description of the format of the input file}
+\textbf{Description of the format of the input file}
 
 The interpretation of the input data is driven by keywords.
 All data following a key must be of the same kind, a block of
@@ -1580,26 +1672,26 @@ data ends when a new key is specified.
 
 Some keys only expect a single float or string-tpye value, given
 on the same line, separated by a space (\code{' '}):
-\begin{quote}
 
+\begin{Verbatim}[commandchars=\\\{\}]
 \textless{}key\textgreater{} \textless{}value\textgreater{}
-\end{quote}
+\end{Verbatim}
 
 For multiple input, i.e. data, uncertainties and covariance or
 correlation matrices, the format is:
-\begin{quote}
 
+\begin{Verbatim}[commandchars=\\\{\}]
 \textless{}key\textgreater{}
-\textless{}xval\textgreater{}  \textless{}xerr\textgreater{}  {[}\textless{}xsyst\textgreater{}  \textless{}elements of cov/cor matrix\textgreater{}{]}
+\textless{}xval\textgreater{}  \textless{}xerr\textgreater{}  [\textless{}xsyst\textgreater{}  \textless{}elements of cov/cor matrix\textgreater{}]
 
 ...
 
-\textless{}xval\textgreater{}  \textless{}xerr\textgreater{}  {[}\textless{}xsyst\textgreater{}  \textless{}elements of cov/cor matrix\textgreater{}{]}
-\end{quote}
+\textless{}xval\textgreater{}  \textless{}xerr\textgreater{}  [\textless{}xsyst\textgreater{}  \textless{}elements of cov/cor matrix\textgreater{}]
+\end{Verbatim}
 
 The field separator is space (\code{' '}). Note that the number of input
 values in each line must correspond to the specified format of the
-(correlated) ucertainties.
+(correlated) uncertainties.
 
 The currently implemented keys are:
 \begin{itemize}
@@ -1762,11 +1854,11 @@ keyword:
 \begin{itemize}
 \item {} 
 \code{*ConstrainedParameters} followed by one or more lines with
-the fields
-\begin{quote}
+the fields:
 
+\begin{Verbatim}[commandchars=\\\{\}]
 \textless{}parameter name\textgreater{}  \textless{}parameter value\textgreater{}  \textless{}parameter uncert.\textgreater{},
-\end{quote}
+\end{Verbatim}
 
 where \emph{parameter name} is the name of the parameter in the fit
 function specification.
@@ -1818,7 +1910,7 @@ def fitf(x,av=1.): \# fit an average
 \label{index:fit-module}\label{index:module-kafe.fit}\index{kafe.fit (module)}\phantomsection\label{index:module-fit}\index{fit (module)}\index{Fit (class in kafe.fit)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x451c230\textgreater{}}, \emph{fit\_label=None}}{}
+\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x3310b90\textgreater{}}, \emph{fit\_label=None}}{}
 Bases: \code{object}
 
 Object representing a fit. This object references the fitted \emph{Dataset},
@@ -1930,7 +2022,7 @@ this Fit instance's child \emph{Dataset}
 \phantomsection\label{index:kafe.fit.Fit.do_fit}\pysiglinewithargsret{\bfcode{do\_fit}}{\emph{quiet=False}, \emph{verbose=False}}{}
 Runs the fit algorithm for this \emph{Fit} object.
 
-First, the \emph{Dataset} is fitted considering only uncertainties in the
+First, the \code{Dataset} is fitted considering only uncertainties in the
 \emph{y} direction. If the \emph{Dataset} has no uncertainties in the \emph{y}
 direction, they are assumed to be equal to 1.0 for this preliminary
 fit, as there is no better information available.
@@ -1975,8 +2067,8 @@ the fit function used for this \emph{Fit}
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.fit.Fit.fix_parameters}\pysiglinewithargsret{\bfcode{fix\_parameters}}{\emph{*parameters\_to\_fix}}{}
 Fix the given parameters so that the minimizer works without them
-when \emph{do\_fit} is called next. Parameters can be given by their names
-or by their IDs.
+when \code{do\_fit()} is called next. Parameters can be given by their
+names or by their IDs.
 
 \end{fulllineitems}
 
@@ -2139,7 +2231,7 @@ This is done element-wise, according to the formula:
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.fit.Fit.release_parameters}\pysiglinewithargsret{\bfcode{release\_parameters}}{\emph{*parameters\_to\_release}}{}
 Release the given parameters so that the minimizer begins to work with
-them when \emph{do\_fit} is called next. Parameters can be given by their
+them when \code{do\_fit()} is called next. Parameters can be given by their
 names or by their IDs. If no arguments are provied, then release all
 parameters.
 
@@ -2152,8 +2244,8 @@ parameters.
 Sets the parameter values (and optionally errors) for this fit.
 This is usually called just before the fit is done, to establish
 the initial parameters. If a parameter error is omitted, it is
-set to 1/1000th of the parameter values themselves. If the default
-value of the parameter is 0, it is set, by exception, to 0.001.
+set to 1/10th of the parameter values themselves. If the default
+value of the parameter is 0, it is set, by exception, to 0.1.
 
 This method accepts up to two positional arguments and several
 keyword arguments.
@@ -2213,25 +2305,24 @@ This helper fuction creates a \code{Fit} from a series of keyword arguments.
 
 Valid keywords are:
 
-\textbf{dataset} : a \emph{kafe} \code{Dataset}
+\textbf{dataset} : a \code{kafe} \code{Dataset}
 \begin{description}
-\item[{\textbf{fitfunc}}] \leavevmode{[}a python function, eventually with{]}
+\item[{\textbf{fitfunc}}] \leavevmode{[}a python function, optionally with{]}
 \code{@FitFunction}, \code{@LATEX} and \code{@FitFunction} decorators
 
-\end{description}
+\item[{\emph{fitlabel}}] \leavevmode{[}name for this fit (optional){]}
+Defaults to ``untitled''.
 
-\textbf{fitlabel} : name for this fit
-\begin{description}
-\item[{\textbf{fitparameters}}] \leavevmode{[}None or 2-tuple of list, tuple/\emph{np.array} of floats{]}
+\item[{\emph{initial\_fit\_parameters}}] \leavevmode{[}None or 2-tuple of list, tuple/\emph{np.array} of floats{]}
 specifying initial parameter values and errors
 
-\item[{\textbf{constrained\_parameters}: None or 3-tuple of list, tuple/np.array{}`}] \leavevmode
+\item[{\emph{constrained\_parameters}: None or 3-tuple of list, tuple/np.array{}`}] \leavevmode
 of one string and 2 floats specifiying the names, values and
 uncertainties of constraints to apply to model parameters
 
 \end{description}
 
-\textbf{returns} \emph{Fit} object
+\textbf{returns} : \code{Fit} object
 
 \end{fulllineitems}
 
@@ -2247,10 +2338,10 @@ to the formula:
 Here, $\lambda$ is the residual vector $\lambda = \vec{y} -
 \vec{f}(\vec{x})$ and $C$ is the covariance matrix.
 
-If a constraint $c_i\pm\sigma_i$ is applied to  a parameter i,
-a \emph{penalty term} is added for each constrained parameter according to:
+If a constraint $c_i\pm\sigma_i$ is applied to a parameter $p_i$,
+a \emph{penalty term} is added for each constrained parameter:
 \begin{gather}
-\begin{split}\chi^2 += \left( \frac{v_i - c_i}{\sigma_i} \right)^2\end{split}\notag
+\begin{split}\chi^2_{\text{cons}} = \chi^2 + \sum_i{ \left( \frac{p_i - c_i}{\sigma_i} \right)^2 }\end{split}\notag
 \end{gather}\begin{description}
 \item[{\textbf{xdata}}] \leavevmode{[}iterable{]}
 The \emph{x} measurement data
@@ -2264,14 +2355,14 @@ The total covariance matrix
 \item[{\textbf{fit\_function}}] \leavevmode{[}function{]}
 The fit function $f(x)$
 
-\end{description}
-
-\textbf{constrained\_parameters} : None or list of two iterables
-with a length equal to the number of parameters. An uncertainty of
-0 means that a parameter remains unconstrained.
-\begin{description}
 \item[{\textbf{parameter\_values}}] \leavevmode{[}list/tuple{]}
 The values of the parameters at which $f(x)$ should be evaluated.
+
+\item[{\emph{constrained\_parameters}}] \leavevmode{[}\code{None} or list of two iterables (optional){]}
+The first iterable (${c_i}$) contains the constrained parameters'
+expected values and the second iterable (${\sigma_i}$) contains
+the constraint uncertainties. A parameter with constraint uncertainty
+set to 0 remains unconstrained.
 
 \end{description}
 
@@ -2919,8 +3010,8 @@ default level of detail for TMinuit's output
 
 
 
-\section{\texttt{constants} Module}
-\label{index:constants-module}\label{index:module-kafe.constants}\index{kafe.constants (module)}\phantomsection\label{index:module-constants}\index{constants (module)}
+\section{\texttt{config} Module}
+\label{index:module-kafe.config}\label{index:config-module}\index{kafe.config (module)}\phantomsection\label{index:module-config}\index{config (module)}
 
 \section{\texttt{plot} Module}
 \label{index:module-kafe.plot}\label{index:plot-module}\index{kafe.plot (module)}\phantomsection\label{index:module-plot}\index{plot (module)}\index{Plot (class in kafe.plot)}
@@ -2988,7 +3079,7 @@ This method extends the current plot span to include \emph{new\_span}
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.plot.Plot.fits}\pysigline{\bfcode{fits}\strong{ = None}}
-list of {\color{red}\bfseries{}{}`}Fit{}`s to plot
+list of \code{Fit} objects to plot
 
 \end{fulllineitems}
 
@@ -3375,7 +3466,7 @@ check occurs.
 \item {\texttt{\_\_version\_info}} \emph{(Unix)}, \pageref{index:module-__version_info}
 \indexspace
 \bigletter{c}
-\item {\texttt{constants}} \emph{(Unix)}, \pageref{index:module-constants}
+\item {\texttt{config}} \emph{(Unix)}, \pageref{index:module-config}
 \indexspace
 \bigletter{d}
 \item {\texttt{dataset}} \emph{(Unix)}, \pageref{index:module-dataset}
@@ -3389,7 +3480,7 @@ check occurs.
 \bigletter{k}
 \item {\texttt{kafe.\_\_init\_\_}}, \pageref{index:module-kafe.__init__}
 \item {\texttt{kafe.\_version\_info}}, \pageref{index:module-kafe._version_info}
-\item {\texttt{kafe.constants}}, \pageref{index:module-kafe.constants}
+\item {\texttt{kafe.config}}, \pageref{index:module-kafe.config}
 \item {\texttt{kafe.dataset}}, \pageref{index:module-kafe.dataset}
 \item {\texttt{kafe.file\_tools}}, \pageref{index:module-kafe.file_tools}
 \item {\texttt{kafe.fit}}, \pageref{index:module-kafe.fit}

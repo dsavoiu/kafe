@@ -9,7 +9,7 @@
 '''
 
 import numpy as np
-import os,sys
+import os, sys
 
 from string import split, replace
 from dataset import Dataset, build_dataset
@@ -28,7 +28,8 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
                       axis_units=['', '']):
     '''
     Parses a file which contains measurement data in a one-measurement-per-row
-    format. The field (column) order can be specified. It defaults to `x,y'.
+    format. The field (column) order can be specified. It defaults to
+    ``"x,y"``.
     Valid field names are `x`, `y`, `xabserr`, `yabserr`, `xrelerr`,
     `yrelerr`. Another valid field name is `ignore` which can be used to skip
     a field.
@@ -71,27 +72,27 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
         object, or an iterable containing files and file-like objects. Each
         file should contain a covariance matrix for the respective axis.
 
-        When creating the `Dataset`, all given matrices are summed over.
+        When creating the :py:obj:`Dataset`, all given matrices are summed over.
 
     *title* : string (optional)
-        The title of the `Dataset`.
+        The title of the :py:obj:`Dataset`.
 
     *basename* : string or ``None`` (optional)
-        A basename for the `Dataset`. All output files related to this dataset
+        A basename for the :py:obj:`Dataset`. All output files related to this dataset
         will use this as a basename. If this is ``None`` (default), the
         basename will be inferred from the filename.
 
     *axis_labels* : 2-tuple of strings (optional)
-        a 2-tuple containing the axis labels for the `Dataset`. This is
-        relevant when plotting `Fits` of the `Dataset`, but is ignored when
-        plotting more than one `Fit` in the same `Plot`.
+        a 2-tuple containing the axis labels for the :py:obj:`Dataset`. This is
+        relevant when plotting :py:obj:`Fits` of the :py:obj:`Dataset`, but is ignored when
+        plotting more than one :py:obj:`Fit` in the same :py:obj:`Plot`.
 
     *axis_units* : 2-tuple of strings (optional)
-        a 2-tuple containing the axis units for the `Dataset`. This is
-        relevant when plotting `Fits` of the `Dataset`, but is ignored when
-        plotting more than one `Fit` in the same `Plot`.
+        a 2-tuple containing the axis units for the :py:obj:`Dataset`. This is
+        relevant when plotting :py:obj:`Fits` of the :py:obj:`Dataset`, but is ignored when
+        plotting more than one :py:obj:`Fit` in the same :py:obj:`Plot`.
 
-    **return** : `Dataset`
+    **return** : :py:obj:`Dataset`
         A Dataset built from the parsed file.
 
     '''
@@ -291,7 +292,7 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
                             cov_mat_files[axis_id]
                         )
 
-                    # append to cov_mats to pass to `Dataset`
+                    # append to cov_mats to pass to :py:obj:`Dataset`
                     cov_mats.append(current_cov_mat)
 
                 else:
@@ -305,34 +306,34 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
 
 def parse_general_inputfile(file_to_parse):
   '''
-  This function can be used to specify `kafe` ``Dataset``
-  or ``Fit`` objects in a single input file, thus requiring
+  This function can be used to specify `kafe` :py:obj:`Dataset`
+  or :py:obj:`Fit` objects in a single input file, thus requiring
   minimal Python code. Keywords as specified in a dictionary
   ``tokens`` specify all objects and parameters needed by the
-  functions ``build_dataset()`` in  module ``dataset`` and
-  ``build_fit()`` in module ``fit``.
+  functions :py:func:`build_dataset` in  module :py:mod:`dataset` and
+  :py:func:`build_fit` in module :py:mod:`fit`.
 
   **file_to_parse**:  file-like object or string containing a file path
      The file to parse.
 
   **return** : dataset_kwargs, fit_kwargs
-        keyword lists to build a kafe ``Dataset`` or ``Fit` object
-        with the helper functions ``build_dataset`` or ``build_fit``
+        keyword lists to build a kafe :py:obj:`Dataset` or :py:obj:`Fit` object
+        with the helper functions `build_dataset` or `build_fit`
 
 
-  *Description of the format of the input file*
+  **Description of the format of the input file**
 
   The interpretation of the input data is driven by keywords.
   All data following a key must be of the same kind, a block of
   data ends when a new key is specified.
 
   Some keys only expect a single float or string-tpye value, given
-  on the same line, separated by a space (``' '``):
+  on the same line, separated by a space (``' '``)::
 
       <key> <value>
 
   For multiple input, i.e. data, uncertainties and covariance or
-  correlation matrices, the format is:
+  correlation matrices, the format is::
 
       <key>
       <xval>  <xerr>  [<xsyst>  <elements of cov/cor matrix>]
@@ -343,7 +344,7 @@ def parse_general_inputfile(file_to_parse):
 
   The field separator is space (``' '``). Note that the number of input
   values in each line must correspond to the specified format of the
-  (correlated) ucertainties.
+  (correlated) uncertainties.
 
   The currently implemented keys are:
 
@@ -426,7 +427,7 @@ def parse_general_inputfile(file_to_parse):
     keyword:
 
     - ``*ConstrainedParameters`` followed by one or more lines with
-      the fields
+      the fields::
 
         <parameter name>  <parameter value>  <parameter uncert.>,
 
@@ -744,30 +745,30 @@ def parse_general_inputfile(file_to_parse):
 
 def buildDataset_fromFile(file_to_parse):
   '''
-  build a kafe ``Dataset`` object from input file with key words
+  build a kafe :py:obj:`Dataset` object from input file with key words
   and file format defined in ``parse_general_inputfile``
 
-  **file_to_parse**:  file-like object or string containing a file path
+  **file_to_parse** :  file-like object or string containing a file path
      The file to parse.
 
-  **returns** an instance of the ``Dataset`` class,
-     constructed with the help of the method ``Dataset.build_dataset()``
+  **returns** : an instance of the :py:obj:`Dataset` class,
+     constructed with the help of the method :py:func:`Dataset.build_dataset`
   '''
   dataset_kwargs, dummy=parse_general_inputfile(file_to_parse)
   return build_dataset(**dataset_kwargs)
 
 def buildFit_fromFile(file_to_parse):
   '''
-  build a kafe ``Fit`` object from input file with keywords
-  and file format defined in ``parse_general_input_file``
+  build a kafe :py:obj:`Fit` object from input file with keywords
+  and file format defined in :py:func:`parse_general_input_file`
 
   **file_to_parse**:  file-like object or string containing a file path
      The file to parse.
 
-  **returns** an instance of the ``Fit`` class,
+  **returns** :  an instance of the :py:obj:`Fit` class,
      constructed with the help of the methods
-     ``Dataset.build_dataset()`` and
-     ``Fit.build_fit()``
+     :py:func:`Dataset.build_dataset` and
+     :py:func:`Fit.build_fit`
 
   '''
   dataset_kwargs,fit_kwargs=parse_general_inputfile(file_to_parse)
