@@ -927,19 +927,13 @@ Contours are useful because they provide a way to visualize parameter
 uncertainties and correlations. \code{kafe} supports plotting
 2D $1\sigma$ contours for any pair of parameters by getting the
 relevant data from \code{TMinuit} and plotting it using \code{matplotlib}.
-Here is a possible way to do it:
+This can be achieved by calling a {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} object's
+{\hyperref[index:kafe.fit.Fit.plot_contour]{\code{plot\_contour()}}} method:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c}{\PYGZsh{} plot 1\PYGZhy{}sigma contour of first two parameters into a separate figure}
-\PYG{n}{x}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{n}{BWfit}\PYG{o}{.}\PYG{n}{minimizer}\PYG{o}{.}\PYG{n}{get\PYGZus{}contour}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{n\PYGZus{}points}\PYG{o}{=}\PYG{l+m+mi}{100}\PYG{p}{)}  \PYG{c}{\PYGZsh{} get contour}
-\PYG{n}{cont\PYGZus{}fig} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{figure}\PYG{p}{(}\PYG{p}{)}  \PYG{c}{\PYGZsh{} create new figure for contour}
-\PYG{n}{cont\PYGZus{}ax} \PYG{o}{=} \PYG{n}{cont\PYGZus{}fig}\PYG{o}{.}\PYG{n}{gca}\PYG{p}{(}\PYG{p}{)}  \PYG{c}{\PYGZsh{} get/create axes object for current figure}
-\PYG{c}{\PYGZsh{} set axis labels}
-\PYG{n}{cont\PYGZus{}ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}xlabel}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZdl{}}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s}{\PYGZdl{}}\PYG{l+s}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{p}{(}\PYG{n}{BWfit}\PYG{o}{.}\PYG{n}{latex\PYGZus{}parameter\PYGZus{}names}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,}\PYG{p}{)}\PYG{p}{)}
-\PYG{n}{cont\PYGZus{}ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}ylabel}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZdl{}}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s}{\PYGZdl{}}\PYG{l+s}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{p}{(}\PYG{n}{BWfit}\PYG{o}{.}\PYG{n}{latex\PYGZus{}parameter\PYGZus{}names}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,}\PYG{p}{)}\PYG{p}{)}
-\PYG{c}{\PYGZsh{} plot the actual contour}
-\PYG{n}{cont\PYGZus{}ax}\PYG{o}{.}\PYG{n}{fill}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{,} \PYG{n}{alpha}\PYG{o}{=}\PYG{l+m+mf}{0.25}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{red}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
-\PYG{c}{\PYGZsh{} save to file}
+\PYG{n}{cont\PYGZus{}fig} \PYG{o}{=} \PYG{n}{BWfit}\PYG{o}{.}\PYG{n}{plot\PYGZus{}contour}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}  \PYG{c}{\PYGZsh{} plot contour}
+\PYG{c}{\PYGZsh{} save figure}
 \PYG{n}{cont\PYGZus{}fig}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{kafe\PYGZus{}BreitWignerFit\PYGZus{}contour12.pdf}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
 \end{Verbatim}
 \begin{figure}[htbp]
@@ -1910,7 +1904,7 @@ def fitf(x,av=1.): \# fit an average
 \label{index:fit-module}\label{index:module-kafe.fit}\index{kafe.fit (module)}\phantomsection\label{index:module-fit}\index{fit (module)}\index{Fit (class in kafe.fit)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x4a31848\textgreater{}}, \emph{fit\_label=None}}{}
+\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x4bc87d0\textgreater{}}, \emph{fit\_label=None}}{}
 Bases: \code{object}
 
 Object representing a fit. This object references the fitted \emph{Dataset},

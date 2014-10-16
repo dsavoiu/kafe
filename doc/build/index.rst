@@ -836,20 +836,14 @@ Contours are useful because they provide a way to visualize parameter
 uncertainties and correlations. :py:mod:`kafe` supports plotting
 2D :math:`1\sigma` contours for any pair of parameters by getting the
 relevant data from :cpp:class:`TMinuit` and plotting it using :py:mod:`matplotlib`.
-Here is a possible way to do it:
+This can be achieved by calling a :py:class:`~kafe.fit.Fit` object's
+:py:meth:`~kafe.fit.Fit.plot_contour` method:
 
 .. code-block:: python
 
     # plot 1-sigma contour of first two parameters into a separate figure
-    x, y = BWfit.minimizer.get_contour(0, 1, n_points=100)  # get contour
-    cont_fig = plt.figure()  # create new figure for contour
-    cont_ax = cont_fig.gca()  # get/create axes object for current figure
-    # set axis labels
-    cont_ax.set_xlabel('$%s$' % (BWfit.latex_parameter_names[0],))
-    cont_ax.set_ylabel('$%s$' % (BWfit.latex_parameter_names[1],))
-    # plot the actual contour
-    cont_ax.fill(x, y, alpha=0.25, color='red')
-    # save to file
+    cont_fig = BWfit.plot_contour(0, 1)  # plot contour
+    # save figure
     cont_fig.savefig("kafe_BreitWignerFit_contour12.pdf")
 
 .. figure:: _static/img/kafe_BreitWignerFit_contour12.png

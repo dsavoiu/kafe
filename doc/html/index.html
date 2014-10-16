@@ -744,17 +744,11 @@ uncertainty.</p>
 uncertainties and correlations. <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> supports plotting
 2D <img class="math" src="_images/math/070fe743455ad95e644411607dc18d8e72f1d23f.png" alt="1\sigma"/> contours for any pair of parameters by getting the
 relevant data from <tt class="xref cpp cpp-class docutils literal"><span class="pre">TMinuit</span></tt> and plotting it using <tt class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></tt>.
-Here is a possible way to do it:</p>
+This can be achieved by calling a <a class="reference internal" href="#kafe.fit.Fit" title="kafe.fit.Fit"><tt class="xref py py-class docutils literal"><span class="pre">Fit</span></tt></a> object&#8217;s
+<a class="reference internal" href="#kafe.fit.Fit.plot_contour" title="kafe.fit.Fit.plot_contour"><tt class="xref py py-meth docutils literal"><span class="pre">plot_contour()</span></tt></a> method:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># plot 1-sigma contour of first two parameters into a separate figure</span>
-<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">BWfit</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_contour</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>  <span class="c"># get contour</span>
-<span class="n">cont_fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>  <span class="c"># create new figure for contour</span>
-<span class="n">cont_ax</span> <span class="o">=</span> <span class="n">cont_fig</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>  <span class="c"># get/create axes object for current figure</span>
-<span class="c"># set axis labels</span>
-<span class="n">cont_ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">&#39;$</span><span class="si">%s</span><span class="s">$&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">BWfit</span><span class="o">.</span><span class="n">latex_parameter_names</span><span class="p">[</span><span class="mi">0</span><span class="p">],))</span>
-<span class="n">cont_ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">&#39;$</span><span class="si">%s</span><span class="s">$&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">BWfit</span><span class="o">.</span><span class="n">latex_parameter_names</span><span class="p">[</span><span class="mi">1</span><span class="p">],))</span>
-<span class="c"># plot the actual contour</span>
-<span class="n">cont_ax</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;red&#39;</span><span class="p">)</span>
-<span class="c"># save to file</span>
+<span class="n">cont_fig</span> <span class="o">=</span> <span class="n">BWfit</span><span class="o">.</span><span class="n">plot_contour</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c"># plot contour</span>
+<span class="c"># save figure</span>
 <span class="n">cont_fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&quot;kafe_BreitWignerFit_contour12.pdf&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1528,7 +1522,7 @@ def fitf(x,av=1.): # fit an average
 <span id="fit-module"></span><h3><a class="reference internal" href="#module-fit" title="fit: This submodule defines a `Fit` object which performs the actual fitting given a `Dataset` and a fit function. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">fit</span></tt></a> Module<a class="headerlink" href="#module-kafe.fit" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-fit"></span><dl class="class">
 <dt id="kafe.fit.Fit">
-<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x4a31848&gt;</em>, <em>fit_label=None</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x4bc87d0&gt;</em>, <em>fit_label=None</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Object representing a fit. This object references the fitted <cite>Dataset</cite>,
 the fit function and the resulting fit parameters.</p>

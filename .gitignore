@@ -21,3 +21,12 @@ examples/example*/*.png
 src/MANIFEST
 src/build
 doc/build/_build/
+
+# LaTeX auxiliary files
+doc/latex/*.idx
+doc/latex/*.ilg
+doc/latex/*.ind
+doc/latex/*.out
+doc/latex/*.toc
+doc/latex/*.aux
+doc/latex/*.log
