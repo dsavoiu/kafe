@@ -13,7 +13,7 @@
 \BOOKMARK [1][-]{section.2.8}{Example 8 - fit of a Breit-Wigner Resonance to data with correlated errors}{chapter.2}% 13
 \BOOKMARK [1][-]{section.2.9}{Example 9 - fit of a function to histogram data}{chapter.2}% 14
 \BOOKMARK [0][-]{chapter.3}{kafe Documentation \205 module descriptions}{}% 15
-\BOOKMARK [1][-]{section.3.1}{kafe.\137\137init\137\137 Module}{chapter.3}% 16
+\BOOKMARK [1][-]{section.3.1}{\137\137init\137\137 Module}{chapter.3}% 16
 \BOOKMARK [1][-]{section.3.2}{\137version\137info Module}{chapter.3}% 17
 \BOOKMARK [1][-]{section.3.3}{dataset Module}{chapter.3}% 18
 \BOOKMARK [1][-]{section.3.4}{file\137tools Module}{chapter.3}% 19

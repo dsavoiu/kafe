@@ -122,10 +122,10 @@
 \begin{quote}
 
 \textbf{kafe} is a data fitting framework designed for use in undergraduate
-physics lab courses. It provides a basic Python toolkit for fitting
-models to data as well as visualisation of the data and the model function.
-It relies on Python packages such as \emph{NumPy} and \emph{matplotlib}, and uses
-the python interface to the minimizer \emph{Minuit} contained in the data
+physics lab courses. It provides a basic \emph{Python} toolkit for fitting
+models to data as well as visualization of the data and the model function.
+It relies on \emph{Python} packages such as \code{numpy} and \code{matplotlib}, and uses
+the \emph{Python} interface to the minimizer \emph{Minuit} contained in the data
 analysis framework \emph{ROOT}.
 \end{quote}
 
@@ -145,14 +145,14 @@ and correlated systematic uncertainties.
 
 Use cases range from performing a simple average of measurements
 to complex situations with correlated uncertainties on the measurements
-of the x and y values. The python-API guarantees full flexibility
+of the x and y values. The \emph{Python} API guarantees full flexibility
 for data input. Helper functions, which also serve as examples for
 own implementations,  are available to handle file-based examples.
 
 The model function describes the y values as a function of the
 x-values and a set of model parameters \{p\}, \emph{y=f(x; \{p\})}. Full
 flexibility exists as model functions are implemented as
-\emph{python} code. Again, examples are provided, but user
+\emph{Python} code. Again, examples are provided, but user
 implementations are supported as well.
 
 Fitting is based on the \(\chi\)²-method, assuming Gaussian errors and
@@ -162,7 +162,7 @@ between data points and the fit model is expressed in terms of the
 data and model than actually observed. Full access to the covariance
 matrix of the - typically correlated - model parameters is provided.
 
-The graphical output visualises the data and the fit model at the
+The graphical output visualizes the data and the fit model at the
 best-fit-point of the parameters and also shows the uncertainty
 of the fit model as a light band surrounding the line representing
 the model function.
@@ -175,32 +175,32 @@ the model function.
 \scalebox{0.800000}{\includegraphics{kafeDiagram.jpg}}
 \caption{\emph{Code structure of the kafe package}}\end{flushright}\end{figure}
 
-The code of cafe is centred around very few classes to handle Data input,
+The code of \code{kafe} is centered around very few classes to handle Data input,
 fitting and plotting, as illustrated in the figure on the right-hand side.
 
 Data, their uncertainties, and, optionally, the correlations of the
-uncertainties - are passed through the interface of the cafe class
-\code{Dataset}. Input can be included in the Python code or is read
-from files in standardised or user-defined formats. The representation
-of the data within the \code{Dataset} class is minimalistic, consisting
+uncertainties - are passed through the interface of the \code{kafe} class
+{\hyperref[index:kafe.dataset.Dataset]{\code{Dataset}}}. Input can be included in the \emph{Python} code or is read
+from files in standardized or user-defined formats. The representation
+of the data within the {\hyperref[index:kafe.dataset.Dataset]{\code{Dataset}}} class is minimalistic, consisting
 of the x and y values and the full covariance matrices of their
 uncertainties. Correlated errors between x and y values are not
 supported yet, as such use cases are extremely rare.
 
-A helper function, \code{build\_dataset()}, is available
+A helper function, {\hyperref[index:kafe.dataset.build_dataset]{\code{build\_dataset()}}}, is available
 to transform various error models, like a combination of independent
 and correlated errors or common absolute or relative errors, to this
 basic format.
 
 Adding a model function, taken either from a prepared set of fit
-functions within kafe or from a user's own \emph{python} implementation,
-results in a \code{Fit} object, which controls the minimizer \code{Minuit}
+functions within kafe or from a user's own \emph{Python} implementation,
+results in a {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} object, which controls the minimizer {\hyperref[index:kafe.minuit.Minuit]{\code{Minuit}}}
 and provides the results through access methods.
 
 One or multiple fit objects, i. e. the input data and model
 functions(s) at the best-fit point in parameter-space, are
-visualised by the class \code{Plot} with the help of \emph{matplotlib}
-functionality. The \code{plot} module also contains functionality to
+visualized by the class {\hyperref[index:kafe.plot.Plot]{\code{Plot}}} with the help of \code{matplotlib}
+functionality. The {\hyperref[index:module-plot]{\code{plot}}} module also contains functionality to
 display the model uncertainty by surrounding the model function
 at the best-fit values of the parameters by a light band, the one-\(\sigma\)
 uncertainty band, which is obtained by propagation of the uncertainties
@@ -210,7 +210,7 @@ of the fit parameters, taking into account their correlations.
 \section{Example}
 \label{index:example}
 Only very few lines of Python code are needed to perform fits with kafe.
-The sniplet of code shown below performs a fit of a quadratic
+The snippet of code shown below performs a fit of a quadratic
 function to some data points with uncertainties:
 
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -240,7 +240,7 @@ function to some data points with uncertainties:
 \end{Verbatim}
 
 The output in text form (also available via various \code{get\_...()} methods
-of the \code{Fit} class) contains the values of the parameters at the best-fit
+of the {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} class) contains the values of the parameters at the best-fit
 point, their correlation matrix and the fit probability. The example produces
 the following graphical output:
 \begin{figure}[htbp]
@@ -262,7 +262,7 @@ a starting point for own applications.
 \section{Installation}
 \label{index:installation}
 To install \emph{kafe}, unpack the archive \emph{kafe-\textless{}version\textgreater{}.tgz} , change to
-the sub-directory  \emph{kafe-\textless{}versoin\textgreater{}/src/}  and follow the installation
+the sub-directory  \emph{kafe-\textless{}version\textgreater{}/src/}  and follow the installation
 instructions below.
 
 1.) Install using \emph{pip}:
@@ -303,13 +303,13 @@ with \emph{Pip} is not possible:
 
 \end{enumerate}
 
-Kafe needs a working version of the CERN data analysis framework \code{root},
+\code{kafe} needs a working version of the CERN data analysis framework \code{root},
 freely available at  \href{http://root.cern.ch}{http://root.cern.ch}
 
 
 \subsection{Dependencies}
 \label{index:dependencies}
-The recommended versions of external packages for kafe are as follows,
+The recommended versions of external packages for \code{kafe} are as follows,
 the version numbers in parentheses refer to the minimum requirements:
 
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -338,18 +338,18 @@ export PYTHONPATH=\$ROOTSYS/lib:\$PYTHONPATH
 For more info, refer to {[}\href{http://root.cern.ch/drupal/content/pyroot}{http://root.cern.ch/drupal/content/pyroot}{]}.
 
 \emph{Qt} is needed because it is the supported interactive front-end for
-\emph{matplotlib}. Other front-ends are not supported and can cause weird behaviour.
+\code{matplotlib}. Other front-ends are not supported and can cause weird behavior.
 
-\emph{LaTeX} is used by \emph{matplotlib} for displaying labels and mathematical
+\emph{LaTeX} is used by \code{matplotlib} for displaying labels and mathematical
 expressions on graphs.
 
 
 \chapter{Fit examples, utilities, tips and tricks}
 \label{index:fit-examples-utilities-tips-and-tricks}
-A wide range of applications of the kafe core and the usage of
+A wide range of applications of the \code{kafe} core and the usage of
 the helper functions is exemplified here. All of them
 are contained in the sub-directory \code{examples/} of the
-cafe distribution and are intended to serve as a basis for
+\code{kafe} distribution and are intended to serve as a basis for
 user projects.
 
 
@@ -361,28 +361,28 @@ same data. Here is the code for a comparison of a data set
 to two models, namely a linear and an exponential function:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\# import everything we need from kafe
-from kafe import *
-\# additionally, import the two model functions we want to fit:
-from kafe.function\_library import linear\_2par, exp\_2par
+\PYG{c}{\PYGZsh{} import everything we need from kafe}
+\PYG{k+kn}{from} \PYG{n+nn}{kafe} \PYG{k+kn}{import} \PYG{o}{*}
+\PYG{c}{\PYGZsh{} additionally, import the two model functions we want to fit:}
+\PYG{k+kn}{from} \PYG{n+nn}{kafe.function\PYGZus{}library} \PYG{k+kn}{import} \PYG{n}{linear\PYGZus{}2par}\PYG{p}{,} \PYG{n}{exp\PYGZus{}2par}
 
-\#\#\#\#\#\#\#\#\#\#\#\#
-\# Load the Dataset from the file
-my\_dataset = Dataset(input\_file='dataset.dat', title="Example Dataset")
-\#\#\# Create the Fits
-my\_fits = [Fit(my\_dataset, exp\_2par),
-         Fit(my\_dataset, linear\_2par)]
-\#\#\# Do the Fits
-for fit in my\_fits:
-fit.do\_fit()
-\#\#\# Create the plots, save and show output
-my\_plot = Plot(my\_fits[0], my\_fits[1])
-my\_plot.plot\_all(show\_data\_for=0) \# show data only once (it's the same data)
-my\_plot.save('plot.pdf')
-my\_plot.show()
+\PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+\PYG{c}{\PYGZsh{} Load the Dataset from the file}
+\PYG{n}{my\PYGZus{}dataset} \PYG{o}{=} \PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{input\PYGZus{}file}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{dataset.dat}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{title}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Example Dataset}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{} Create the Fits}
+\PYG{n}{my\PYGZus{}fits} \PYG{o}{=} \PYG{p}{[}\PYG{n}{Fit}\PYG{p}{(}\PYG{n}{my\PYGZus{}dataset}\PYG{p}{,} \PYG{n}{exp\PYGZus{}2par}\PYG{p}{)}\PYG{p}{,}
+           \PYG{n}{Fit}\PYG{p}{(}\PYG{n}{my\PYGZus{}dataset}\PYG{p}{,} \PYG{n}{linear\PYGZus{}2par}\PYG{p}{)}\PYG{p}{]}
+\PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{} Do the Fits}
+\PYG{k}{for} \PYG{n}{fit} \PYG{o+ow}{in} \PYG{n}{my\PYGZus{}fits}\PYG{p}{:}
+\PYG{n}{fit}\PYG{o}{.}\PYG{n}{do\PYGZus{}fit}\PYG{p}{(}\PYG{p}{)}
+\PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{} Create the plots, save and show output}
+\PYG{n}{my\PYGZus{}plot} \PYG{o}{=} \PYG{n}{Plot}\PYG{p}{(}\PYG{n}{my\PYGZus{}fits}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{n}{my\PYGZus{}fits}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)}
+\PYG{n}{my\PYGZus{}plot}\PYG{o}{.}\PYG{n}{plot\PYGZus{}all}\PYG{p}{(}\PYG{n}{show\PYGZus{}data\PYGZus{}for}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)} \PYG{c}{\PYGZsh{} show data only once (it\PYGZsq{}s the same data)}
+\PYG{n}{my\PYGZus{}plot}\PYG{o}{.}\PYG{n}{save}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{plot.pdf}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{my\PYGZus{}plot}\PYG{o}{.}\PYG{n}{show}\PYG{p}{(}\PYG{p}{)}
 \end{Verbatim}
 
-The file \emph{dataset.dat} contains x and y data in the standard \emph{kafe} data
+The file \emph{dataset.dat} contains x and y data in the standard \code{kafe} data
 format, where values and errors (and optionally also correlation coefficients)
 are given for each axis separately. \emph{\#} indicates a comment line, which
 is ignored when reading the data:
@@ -452,13 +452,13 @@ modifications:
 \PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
 \PYG{c}{\PYGZsh{} Load two Datasets from files}
 \PYG{n}{my\PYGZus{}datasets} \PYG{o}{=} \PYG{p}{[}\PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{input\PYGZus{}file}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{dataset1.dat}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{title}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Example Dataset 1}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}\PYG{p}{,}
-             \PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{input\PYGZus{}file}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{dataset2.dat}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{title}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Example Dataset 2}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}\PYG{p}{]}
+               \PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{input\PYGZus{}file}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{dataset2.dat}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{title}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Example Dataset 2}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}\PYG{p}{]}
 \PYG{c}{\PYGZsh{} Create the Fits}
 \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
 \PYG{c}{\PYGZsh{} Do the Fits}
 \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
 \PYG{c}{\PYGZsh{} Create the plots}
-\PYG{n}{my\PYGZus{}plot}\PYG{o}{.}\PYG{n}{plot\PYGZus{}all}\PYG{p}{(}\PYG{p}{)} \PYG{c}{\PYGZsh{} this time withouth argument, i.e. show everything}
+\PYG{n}{my\PYGZus{}plot}\PYG{o}{.}\PYG{n}{plot\PYGZus{}all}\PYG{p}{(}\PYG{p}{)}  \PYG{c}{\PYGZsh{} this time without any arguments, i.e. show everything}
 \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
 \end{Verbatim}
 
@@ -479,13 +479,13 @@ single linear model.
 
 \section{Example 3 - properties of a Gauss curve}
 \label{index:example-3-properties-of-a-gauss-curve}
-This example creates a dummy \code{Dataset} object whose points lie exactly
-on a Gaussian curve. The \code{Fit} will then converge toward that very same
+This example creates a dummy {\hyperref[index:kafe.dataset.Dataset]{\code{Dataset}}} object whose points lie exactly
+on a Gaussian curve. The {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} will then converge toward that very same
 Gaussian. When plotting, the data points used to ``support'' the curve
 can be omitted.
 
-This example shows how to access the \emph{kafe} plot objects
-to annotate plots with \emph{matplotlib} functionality.
+This example shows how to access the \code{kafe} plot objects
+to annotate plots with \code{matplotlib} functionality.
 \begin{figure}[htbp]
 \centering
 \capstart
@@ -498,25 +498,25 @@ to annotate plots with \emph{matplotlib} functionality.
 \label{index:example-4-average-of-correlated-measurements}
 The average of a set of measurements can be considered as a fit
 of a constant to a set of input data. This example illustrates
-how correlated errors are handled in \emph{kafe}.
+how correlated errors are handled in \code{kafe}.
 Measurements can have a common error, which may be absolute
 or relative, i. e. depend on the input value.  In more complicated
 cases the full covariance matrix must be constructed.
 
-\emph{kafe} has a helper function, \code{build\_dataset} in module \code{fit},
+\code{kafe} has a helper function, {\hyperref[index:kafe.dataset.build_dataset]{\code{build\_dataset()}}} in module {\hyperref[index:module-fit]{\code{fit}}},
 which aids in setting up the covariance matrix and transforming
-the input to the default format used by the \code{Dataset} and \code{Fit}
-classes. Two further helper functions in module \code{file\_tools}
+the input to the default format used by the {\hyperref[index:kafe.dataset.Dataset]{\code{Dataset}}} and {\hyperref[index:kafe.fit.Fit]{\code{Fit}}}
+classes. Two further helper functions in module {\hyperref[index:module-file_tools]{\code{file\_tools}}}
 aid in reading the appropriate information from data files.
 \begin{enumerate}
 \item {} 
-The function  \code{parse\_column\_data} reads the input values and their
+The function  {\hyperref[index:kafe.file_tools.parse_column_data]{\code{parse\_column\_data()}}} reads the input values and their
 independent errors from one file, and optionally covariance
 matrices for the x and y axes from additional files. The field ordering
 is defined by a control string.
 
 \item {} 
-Another helper function, \code{buildDataset\_fromFile}, specifies
+Another helper function, {\hyperref[index:kafe.file_tools.buildDataset_fromFile]{\code{buildDataset\_fromFile()}}}, specifies
 input values or blocks of input data from a single file with
 keywords.
 
@@ -531,12 +531,12 @@ code, as illustrated here:
 \PYG{k+kn}{from} \PYG{n+nn}{kafe.file\PYGZus{}tools} \PYG{k+kn}{import} \PYG{n}{buildDataset\PYGZus{}fromFile}
 \PYG{c}{\PYGZsh{}}
 \PYG{c}{\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
-\PYG{n}{fname}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{WData.dat}\PYG{l+s}{\PYGZsq{}}
-\PYG{n}{curDataset}\PYG{o}{=}\PYG{n}{buildDataset\PYGZus{}fromFile}\PYG{p}{(}\PYG{n}{fname}\PYG{p}{)} \PYG{c}{\PYGZsh{} Dataset from input file}
-\PYG{n}{curFit}\PYG{o}{=}\PYG{n}{Fit}\PYG{p}{(}\PYG{n}{curDataset}\PYG{p}{,} \PYG{n}{constant\PYGZus{}1par}\PYG{p}{)}   \PYG{c}{\PYGZsh{} set up the fit object}
+\PYG{n}{fname} \PYG{o}{=} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{WData.dat}\PYG{l+s}{\PYGZsq{}}
+\PYG{n}{curDataset} \PYG{o}{=} \PYG{n}{buildDataset\PYGZus{}fromFile}\PYG{p}{(}\PYG{n}{fname}\PYG{p}{)} \PYG{c}{\PYGZsh{} Dataset from input file}
+\PYG{n}{curFit} \PYG{o}{=} \PYG{n}{Fit}\PYG{p}{(}\PYG{n}{curDataset}\PYG{p}{,} \PYG{n}{constant\PYGZus{}1par}\PYG{p}{)}   \PYG{c}{\PYGZsh{} set up the fit object}
 \PYG{n}{curFit}\PYG{o}{.}\PYG{n}{do\PYGZus{}fit}\PYG{p}{(}\PYG{p}{)}
 
-\PYG{n}{myPlot}\PYG{o}{=}\PYG{n}{Plot}\PYG{p}{(}\PYG{n}{curFit}\PYG{p}{)}
+\PYG{n}{myPlot} \PYG{o}{=} \PYG{n}{Plot}\PYG{p}{(}\PYG{n}{curFit}\PYG{p}{)}
 \PYG{n}{myPlot}\PYG{o}{.}\PYG{n}{plot\PYGZus{}all}\PYG{p}{(}\PYG{p}{)}
 \PYG{n}{myPlot}\PYG{o}{.}\PYG{n}{save}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{plot.pdf}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
 \PYG{n}{myPlot}\PYG{o}{.}\PYG{n}{show}\PYG{p}{(}\PYG{p}{)}
@@ -544,9 +544,9 @@ code, as illustrated here:
 
 The input file is necessarily more complicated, but holds
 the full information on the data set in one place. Refer to
-the documentation of the module \code{parse\_general\_inputfile}
-in module \code{file\_tools} for a full description of the
-presently implemented keywords. The input file for the
+the documentation of the function {\hyperref[index:kafe.file_tools.parse_general_inputfile]{\code{parse\_general\_inputfile()}}}
+in module {\hyperref[index:module-file_tools]{\code{file\_tools}}} for a full description of the
+currently implemented keywords. The input file for the
 averaging example is here:
 
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -592,12 +592,12 @@ averaging example is here:
 This example shows the fitting of a more complicated model function
 to data collected from a damped harmonic oscillator. In such
 non-linear fits, stetting the initial values is sometimes crucial
-to let the fit converge at the global minimum. The \code{Fit} object
-provides the method \code{set\_parameters} for this purpose. As the
+to let the fit converge at the global minimum. The {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} object
+provides the method {\hyperref[index:kafe.fit.Fit.set_parameters]{\code{set\_parameters()}}} for this purpose. As the
 fit function for this problem is not a standard one, it is defined
-explicitly making use of the decorator functions available in \emph{kafe}
+explicitly making use of the decorator functions available in \code{kafe}
 to provide nice type setting of the parameters. This time, the
-function \code{parse\_colmn\_data} is used to read the input,
+function {\hyperref[index:kafe.file_tools.parse_column_data]{\code{parse\_column\_data()}}} is used to read the input,
 which is given as separate columns with the fields
 \begin{quote}
 
@@ -652,9 +652,9 @@ Here is the example code:
 \label{index:example-6-another-multi-parameter-fit}
 This example is not much different from the previous one, except that
 the fit function, a standard fourth-degree polynomial from the module
-\code{function\_library}, is modified to reflect the names of the problem
-given, and \emph{matplotlib} functionality is used to influence the
-ouput of the plot, e.g. axis names and linear or logarithmic scale.
+{\hyperref[index:module-function_library]{\code{function\_library}}}, is modified to reflect the names of the problem
+given, and \code{matplotlib} functionality is used to influence the
+output of the plot, e.g. axis names and linear or logarithmic scale.
 
 It is also shown how to circumvent a problem that
 often arises when errors depend on the measured values.
@@ -668,16 +668,16 @@ avoided by iterating the fit procedure:
 
 In a pre-fit, a first approximation of the model function is
 determined, which is then used to calculate
-the expected errors, and the origial errors are
+the expected errors, and the original errors are
 replaced before performing the final fit. Note that the numbers
 of entries in the bins must be sufficiently large to justify
-a replacement of the (asymmetric) Poission uncertainties by
+a replacement of the (asymmetric) Poisson uncertainties by
 the symmetric uncertainties implied by the \(\chi\)²-method.
 
 The implementation of this  procedure needs accesses some
 more fundamental methods of the \emph{Dataset}, \emph{Fit} and
 \emph{FitFunction} classes. The code shown below demonstrates
-how this can be done with \emph{kafe}, using some of its lower-level,
+how this can be done with \code{kafe}, using some of its lower-level,
 internal interfaces:
 
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -700,24 +700,24 @@ internal interfaces:
 \PYG{c}{\PYGZsh{} error for bins with zero contents is set to 1.}
 \PYG{n}{covmat} \PYG{o}{=} \PYG{n}{my\PYGZus{}dataset}\PYG{o}{.}\PYG{n}{get\PYGZus{}cov\PYGZus{}mat}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{y}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
 \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{covmat}\PYG{p}{)}\PYG{p}{)}\PYG{p}{:}
-    \PYG{k}{if} \PYG{n}{covmat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]}\PYG{o}{==}\PYG{l+m+mf}{0.}\PYG{p}{:}
-        \PYG{n}{covmat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]}\PYG{o}{=}\PYG{l+m+mf}{1.}
+    \PYG{k}{if} \PYG{n}{covmat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]} \PYG{o}{==} \PYG{l+m+mf}{0.}\PYG{p}{:}
+        \PYG{n}{covmat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mf}{1.}
 \PYG{n}{my\PYGZus{}dataset}\PYG{o}{.}\PYG{n}{set\PYGZus{}cov\PYGZus{}mat}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{y}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{covmat}\PYG{p}{)} \PYG{c}{\PYGZsh{} write it back}
 
 \PYG{c}{\PYGZsh{} Create the Fit}
 \PYG{n}{my\PYGZus{}fit} \PYG{o}{=} \PYG{n}{Fit}\PYG{p}{(}\PYG{n}{my\PYGZus{}dataset}\PYG{p}{,} \PYG{n}{poly4}\PYG{p}{)}
 \PYG{c}{\PYGZsh{}            fit\PYGZus{}label=\PYGZdq{}Linear Regression \PYGZdq{} + dataset.data\PYGZus{}label[\PYGZhy{}1])}
 
-\PYG{c}{\PYGZsh{} perform an initial fit with temporary errors (minimial output)}
+\PYG{c}{\PYGZsh{} perform an initial fit with temporary errors (minimal output)}
 \PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{call\PYGZus{}minimizer}\PYG{p}{(}\PYG{n}{final\PYGZus{}fit}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,} \PYG{n}{verbose}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}
 
 \PYG{c}{\PYGZsh{} set errors using model at pre\PYGZhy{}fit parameter values:}
-\PYG{c}{\PYGZsh{}       sigma\PYGZus{}i\PYGZca{}2=cov[i,i]=n(x\PYGZus{}i)}
+\PYG{c}{\PYGZsh{}       sigma\PYGZus{}i\PYGZca{}2=cov[i, i]=n(x\PYGZus{}i)}
 \PYG{n}{fdata} \PYG{o}{=} \PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{fit\PYGZus{}function}\PYG{o}{.}\PYG{n}{evaluate}\PYG{p}{(}\PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{xdata}\PYG{p}{,}
                                    \PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{current\PYGZus{}parameter\PYGZus{}values}\PYG{p}{)}
 \PYG{n}{np}\PYG{o}{.}\PYG{n}{fill\PYGZus{}diagonal}\PYG{p}{(}\PYG{n}{covmat}\PYG{p}{,} \PYG{n}{fdata}\PYG{p}{)}
 \PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{current\PYGZus{}cov\PYGZus{}mat} \PYG{o}{=} \PYG{n}{covmat}  \PYG{c}{\PYGZsh{} write new covariance matrix}
-\PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{} end pre\PYGZhy{}fit \PYGZhy{} rest ist as usual}
+\PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{} end pre\PYGZhy{}fit \PYGZhy{} rest is as usual}
 \PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{do\PYGZus{}fit}\PYG{p}{(}\PYG{p}{)}
 \PYG{c}{\PYGZsh{} Create the plots and \PYGZhy{}\PYGZhy{}}
 \PYG{n}{my\PYGZus{}plot} \PYG{o}{=} \PYG{n}{Plot}\PYG{p}{(}\PYG{n}{my\PYGZus{}fit}\PYG{p}{)}
@@ -757,9 +757,9 @@ Failing to do so will result in large, correlated errors
 on the parameters g, b and k as an indication of the problem.
 
 Fixing parameters of a model function is achieved by the method
-\code{fix\_parameters()}, and a constraint within a given uncertainty
-is achieved by the method \code{constrain\_parameters()}
-of the \code{Fit} class.
+{\hyperref[index:kafe.fit.Fit.fix_parameters]{\code{fix\_parameters()}}}, and a constraint within a given uncertainty
+is achieved by the method {\hyperref[index:kafe.fit.Fit.constrain_parameters]{\code{constrain\_parameters()}}}
+of the {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} class.
 
 Here are the interesting pieces of code:
 
@@ -795,7 +795,7 @@ Here are the interesting pieces of code:
 
 If the parameter \emph{k} in the example above has a (known) uncertainty,
 is is more appropriate to constrain it within its uncertainty (which
-may be known from an indepedent measurement of from the secifications
+may be known from an independent measurement or from the specifications
 of the laser used in the experiment). To take into account a
 wave number \emph{k} known with a precision of 10`000, the
 last line in the example above should be replaced by:
@@ -818,19 +818,19 @@ This is the resulting output:
 \section{Example 8 - fit of a Breit-Wigner Resonance to data with correlated errors}
 \label{index:example-8-fit-of-a-breit-wigner-resonance-to-data-with-correlated-errors}
 This example illustrates how to define the data and the fit function
-in a single file - provided by the helper function \code{buildFit\_fromFile}
-in module \code{file\_tools}. Parsing of the input file is done by the
-function \code{parse\_general\_inputfile}, which had already been introduced
-in Example 4. The definition of the fit function as python code
-including the \emph{kafe} decorators in the input file, however, is new.
+in a single file - provided by the helper function {\hyperref[index:kafe.file_tools.buildFit_fromFile]{\code{buildFit\_fromFile()}}}
+in module {\hyperref[index:module-file_tools]{\code{file\_tools}}}. Parsing of the input file is done by the
+function {\hyperref[index:kafe.file_tools.parse_general_inputfile]{\code{parse\_general\_inputfile()}}}, which had already been introduced
+in Example 4. The definition of the fit function as \emph{Python} code
+including the \code{kafe} decorators in the input file, however, is new.
 Note: because spaces are used to to separate data  fields in the
-input file, spaces needed for proper python indentation have to be
+input file, spaces needed for proper \emph{Python} indentation have to be
 replaced by `\textasciitilde{}'. The last key in the file defines the start values
 of the parameters and their initial ranges.
 
 The advantage of this approach is the location of all data
 and the fit model in one place, which is strictly separated
-from the python code. The python code below is thus very general
+from the \emph{Python} code. The \emph{Python} code below is thus very general
 and can handle a large large variety of problems without
 modification (except for the file name, which could easily be
 passed on the command line):
@@ -897,12 +897,12 @@ all the information needed to perform the fit:
 *FitFunction
 \# Breit-Wigner with s-dependent width
 @ASCII(expression='s0*E\textasciicircum{}2*G\textasciicircum{}2/[(E\textasciicircum{}2-M\textasciicircum{}2)\textasciicircum{}2+(E\textasciicircum{}4*G\textasciicircum{}2/M\textasciicircum{}2)]')
-@LaTeX(name='f', parameter\_names=('\PYGZbs{}\PYGZbs{}sigma\textasciicircum{}0', 'M\_Z','\PYGZbs{}\PYGZbs{}Gamma\_Z'),
+@LaTeX(name='f', parameter\_names=('\PYGZbs{}\PYGZbs{}sigma\textasciicircum{}0', 'M\_Z', '\PYGZbs{}\PYGZbs{}Gamma\_Z'),
 expression='\PYGZbs{}\PYGZbs{}frac\PYGZob{}\PYGZbs{}\PYGZbs{}sigma\textasciicircum{}0\PYGZbs{}\PYGZbs{}, M\_Z\textasciicircum{}2\PYGZbs{}\PYGZbs{}Gamma\textasciicircum{}2\PYGZcb{}'
                '\PYGZob{}((E\textasciicircum{}2-M\_Z\textasciicircum{}2)\textasciicircum{}2+(E\textasciicircum{}4\PYGZbs{}\PYGZbs{}Gamma\textasciicircum{}2 / M\_Z\textasciicircum{}2))\PYGZcb{}')
 @FitFunction
 def fitf(E, M=91.2, G=2.5, s0=41.0):
-\textasciitilde{}\textasciitilde{}return s0*E*E*G*G/((E*E-M*M)**2+(E**4*G*G/(M*M)))
+\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}return s0*E*E*G*G/((E*E-M*M)**2+(E**4*G*G/(M*M)))
 
 *InitialParameters    \# set initial values and ranges
 91.2 0.1
@@ -953,8 +953,8 @@ Here is a possible way to do it:
 \section{Example 9 - fit of a function to histogram data}
 \label{index:example-9-fit-of-a-function-to-histogram-data}
 This example brings us to the limit of what is currently
-possible with \emph{kafe}. Here, the data represent the
-centre of a histogram bins ad the number of entries, $n_i$,
+possible with \code{kafe}. Here, the data represent the
+center of a histogram bins ad the number of entries, $n_i$,
 in each bin. The (statistical) error is typically estimated
 as the square root of the (observed) number of entries in each bin.
 For large numbers of entries, this is not a problem,
@@ -970,17 +970,17 @@ and hence larger weights in the fitting procedure - leading
 to the aforementioned bias.
 
 These problems are avoided by using a likelihood method for
-such use cases, where the Poission distribution of the uncertainties
+such use cases, where the Poisson distribution of the uncertainties
 and their dependence on the values of the fit model is properly
-taken into accout. However, the \(\chi\)²-method can be saved to some
+taken into account. However, the \(\chi\)²-method can be saved to some
 extend if the fitting procedure is iterated. In a pre-fit, a
 first approximation of the model function is determined, where
 the error in bins with zero entries is set to one. The model
 function determined from the pre-fit is then used to calculate
-the expected errors for each bin, and the origial errors are
+the expected errors for each bin, and the original errors are
 replaced before performing the final fit. Note that the numbers
 of entries in the bins must be sufficiently large to justify
-a replacement of the (asymmetric) Poission uncertainties by
+a replacement of the (asymmetric) Poisson uncertainties by
 the symmetric uncertainties implied by the \(\chi\)²-method.
 
 The code shown below demonstrates
@@ -995,19 +995,19 @@ more fundamental methods of the \emph{Dataset}, \emph{Fit} and
 
 \PYG{c}{\PYGZsh{} error for bins with zero contents is set to 1.}
 \PYG{n}{covmat} \PYG{o}{=} \PYG{n}{hdataset}\PYG{o}{.}\PYG{n}{get\PYGZus{}cov\PYGZus{}mat}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{y}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
-\PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{covmat}\PYG{p}{)}\PYG{p}{)}\PYG{p}{:}
-    \PYG{k}{if} \PYG{n}{covmat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]}\PYG{o}{==}\PYG{l+m+mf}{0.}\PYG{p}{:}
-        \PYG{n}{covmat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]}\PYG{o}{=}\PYG{l+m+mf}{1.}
+\PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{covmat}\PYG{p}{)}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{if} \PYG{n}{covmat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]} \PYG{o}{==} \PYG{l+m+mf}{0.}\PYG{p}{:}
+        \PYG{n}{covmat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mf}{1.}
 \PYG{n}{hdataset}\PYG{o}{.}\PYG{n}{set\PYGZus{}cov\PYGZus{}mat}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{y}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{covmat}\PYG{p}{)} \PYG{c}{\PYGZsh{} write it back}
 
 \PYG{c}{\PYGZsh{} Create the Fit instance}
 \PYG{n}{hfit} \PYG{o}{=} \PYG{n}{Fit}\PYG{p}{(}\PYG{n}{hdataset}\PYG{p}{,} \PYG{n}{gauss}\PYG{p}{,} \PYG{n}{fit\PYGZus{}label}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Fit of a Gaussian to histogram data}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
 \PYG{c}{\PYGZsh{}}
-\PYG{c}{\PYGZsh{} perform an initial fit with temporary errors (minimial output)}
+\PYG{c}{\PYGZsh{} perform an initial fit with temporary errors (minimal output)}
 \PYG{n}{hfit}\PYG{o}{.}\PYG{n}{call\PYGZus{}minimizer}\PYG{p}{(}\PYG{n}{final\PYGZus{}fit}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,} \PYG{n}{verbose}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}
 \PYG{c}{\PYGZsh{}}
 \PYG{c}{\PYGZsh{}re\PYGZhy{}set errors using model at pre\PYGZhy{}fit parameter values:}
-\PYG{c}{\PYGZsh{}        sigma\PYGZus{}i\PYGZca{}2=cov[i,i]=n(x\PYGZus{}i)}
+\PYG{c}{\PYGZsh{}        sigma\PYGZus{}i\PYGZca{}2=cov[i, i]=n(x\PYGZus{}i)}
 \PYG{n}{fdata}\PYG{o}{=}\PYG{n}{hfit}\PYG{o}{.}\PYG{n}{fit\PYGZus{}function}\PYG{o}{.}\PYG{n}{evaluate}\PYG{p}{(}\PYG{n}{hfit}\PYG{o}{.}\PYG{n}{xdata}\PYG{p}{,} \PYG{n}{hfit}\PYG{o}{.}\PYG{n}{current\PYGZus{}parameter\PYGZus{}values}\PYG{p}{)}
 \PYG{n}{np}\PYG{o}{.}\PYG{n}{fill\PYGZus{}diagonal}\PYG{p}{(}\PYG{n}{covmat}\PYG{p}{,} \PYG{n}{fdata}\PYG{p}{)}
 \PYG{n}{hfit}\PYG{o}{.}\PYG{n}{current\PYGZus{}cov\PYGZus{}mat} \PYG{o}{=} \PYG{n}{covmat} \PYG{c}{\PYGZsh{} write back new covariance matrix}
@@ -1029,19 +1029,19 @@ well reproduced within the uncertainties by the fit result:
 \caption{\emph{Output of example 9 - Fit of a Gaussian distribution to histogram data}}\end{figure}
 
 
-\chapter{\emph{kafe} Documentation -- module descriptions}
+\chapter{\texttt{kafe} Documentation -- module descriptions}
 \label{index:kafe-documentation-module-descriptions}
 The following documentation of functions and methods
 of relevance to the user interface was generated from
-the \emph{DocStrings} contained in the python code of the
-\emph{kafe} package.
+the \emph{DocStrings} contained in the \emph{Python} code of the
+\code{kafe} package.
 For further information or if in doubt about the exact
 functionality, users are invited to consult the source
 code.
 
 
-\section{\texttt{kafe.\_\_init\_\_} Module}
-\label{index:module-kafe.__init__}\label{index:kafe-init-module}\index{kafe.\_\_init\_\_ (module)}
+\section{\texttt{\_\_init\_\_} Module}
+\label{index:init-module}\label{index:module-kafe.__init__}\index{kafe.\_\_init\_\_ (module)}
 \textbf{kafe} \emph{-- a Python package for fitting and plotting for use in physics lab courses.}
 
 This Python package allows fitting of user-defined functions to data. A dataset
@@ -1910,7 +1910,7 @@ def fitf(x,av=1.): \# fit an average
 \label{index:fit-module}\label{index:module-kafe.fit}\index{kafe.fit (module)}\phantomsection\label{index:module-fit}\index{fit (module)}\index{Fit (class in kafe.fit)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x4891cf8\textgreater{}}, \emph{fit\_label=None}}{}
+\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x4a31848\textgreater{}}, \emph{fit\_label=None}}{}
 Bases: \code{object}
 
 Object representing a fit. This object references the fitted \emph{Dataset},

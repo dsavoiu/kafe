@@ -14,8 +14,8 @@
 \contentsline {section}{\numberline {2.7}Example 7 - non-linear multi-parameter fit}{13}{section.2.7}
 \contentsline {section}{\numberline {2.8}Example 8 - fit of a Breit-Wigner Resonance to data with correlated errors}{15}{section.2.8}
 \contentsline {section}{\numberline {2.9}Example 9 - fit of a function to histogram data}{17}{section.2.9}
-\contentsline {chapter}{\numberline {3}\emph {kafe} Documentation -- module descriptions}{21}{chapter.3}
-\contentsline {section}{\numberline {3.1}\texttt {kafe.\_\_init\_\_} Module}{21}{section.3.1}
+\contentsline {chapter}{\numberline {3}\texttt {kafe} Documentation -- module descriptions}{21}{chapter.3}
+\contentsline {section}{\numberline {3.1}\texttt {\_\_init\_\_} Module}{21}{section.3.1}
 \contentsline {section}{\numberline {3.2}\texttt {\_version\_info} Module}{21}{section.3.2}
 \contentsline {section}{\numberline {3.3}\texttt {dataset} Module}{21}{section.3.3}
 \contentsline {section}{\numberline {3.4}\texttt {file\_tools} Module}{25}{section.3.4}

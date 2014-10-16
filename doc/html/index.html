@@ -6,7 +6,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta content="kafe - a general, python-based approach to fit a model function to two-dimensional data points with correlated uncertainties in both dimensions" lang="en" name="description" />
+    <meta content="kafe - a general, Python-based approach to fit a model function to two-dimensional data points with correlated uncertainties in both dimensions" lang="en" name="description" />
 <meta content="index, follow" name="robots" />
 
     <title>Welcome to KaFE (Karlsruhe Fit Environment) &mdash; kafe 0.5.2 documentation</title>
@@ -51,10 +51,10 @@
 <h1>Welcome to KaFE (Karlsruhe Fit Environment)<a class="headerlink" href="#welcome-to-kafe-karlsruhe-fit-environment" title="Permalink to this headline">¶</a></h1>
 <blockquote>
 <div><strong>kafe</strong> is a data fitting framework designed for use in undergraduate
-physics lab courses. It provides a basic Python toolkit for fitting
-models to data as well as visualisation of the data and the model function.
-It relies on Python packages such as <cite>NumPy</cite> and <cite>matplotlib</cite>, and uses
-the python interface to the minimizer <cite>Minuit</cite> contained in the data
+physics lab courses. It provides a basic <cite>Python</cite> toolkit for fitting
+models to data as well as visualization of the data and the model function.
+It relies on <cite>Python</cite> packages such as <tt class="xref py py-mod docutils literal"><span class="pre">numpy</span></tt> and <tt class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></tt>, and uses
+the <cite>Python</cite> interface to the minimizer <cite>Minuit</cite> contained in the data
 analysis framework <cite>ROOT</cite>.</div></blockquote>
 <div class="section" id="kafe-overview">
 <h2><tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> Overview<a class="headerlink" href="#kafe-overview" title="Permalink to this headline">¶</a></h2>
@@ -62,20 +62,20 @@ analysis framework <cite>ROOT</cite>.</div></blockquote>
 <a class="reference internal image-reference" href="_images/graph_example1.jpg"><img alt="image not found" src="_images/graph_example1.jpg" style="width: 300.0px; height: 300.0px;" /></a>
 <p class="caption"><cite>Graphical output generated with kafe</cite>.</p>
 </div>
-<p>The <tt class="docutils literal"><span class="pre">kafe</span></tt> package provides a rather general approach to fitting of a model
+<p>The <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> package provides a rather general approach to fitting of a model
 function to two-dimensional data points with correlated uncertainties in both
 dimensions. A typical use-case would be measurements of two quantities,
 an <cite>x</cite>- and a <cite>y</cite>-value, with both uncorrelated (statistical) uncertainties
 and correlated systematic uncertainties.</p>
 <p>Use cases range from performing a simple average of measurements
 to complex situations with correlated uncertainties on the measurements
-of the x and y values. The python-API guarantees full flexibility
+of the x and y values. The <cite>Python</cite> API guarantees full flexibility
 for data input. Helper functions, which also serve as examples for
 own implementations,  are available to handle file-based examples.</p>
 <p>The model function describes the y values as a function of the
 x-values and a set of model parameters {p}, <cite>y=f(x; {p})</cite>. Full
 flexibility exists as model functions are implemented as
-<cite>python</cite> code. Again, examples are provided, but user
+<cite>Python</cite> code. Again, examples are provided, but user
 implementations are supported as well.</p>
 <p>Fitting is based on the χ²-method, assuming Gaussian errors and
 correlations described by covariance matrices. The level of agreement
@@ -83,7 +83,7 @@ between data points and the fit model is expressed in terms of the
 <cite>χ² probability</cite>, i. e. the probability to find less agreement between
 data and model than actually observed. Full access to the covariance
 matrix of the - typically correlated - model parameters is provided.</p>
-<p>The graphical output visualises the data and the fit model at the
+<p>The graphical output visualizes the data and the fit model at the
 best-fit-point of the parameters and also shows the uncertainty
 of the fit model as a light band surrounding the line representing
 the model function.</p>
@@ -93,28 +93,28 @@ the model function.</p>
 <a class="reference internal image-reference" href="_images/kafeDiagram.jpg"><img alt="image not found" src="_images/kafeDiagram.jpg" style="width: 480.0px; height: 240.0px;" /></a>
 <p class="caption"><cite>Code structure of the kafe package</cite></p>
 </div>
-<p>The code of cafe is centred around very few classes to handle Data input,
+<p>The code of <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> is centered around very few classes to handle Data input,
 fitting and plotting, as illustrated in the figure on the right-hand side.</p>
 <p>Data, their uncertainties, and, optionally, the correlations of the
-uncertainties - are passed through the interface of the cafe class
-<tt class="docutils literal"><span class="pre">Dataset</span></tt>. Input can be included in the Python code or is read
-from files in standardised or user-defined formats. The representation
-of the data within the <tt class="docutils literal"><span class="pre">Dataset</span></tt> class is minimalistic, consisting
+uncertainties - are passed through the interface of the <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> class
+<a class="reference internal" href="#kafe.dataset.Dataset" title="kafe.dataset.Dataset"><tt class="xref py py-class docutils literal"><span class="pre">Dataset</span></tt></a>. Input can be included in the <cite>Python</cite> code or is read
+from files in standardized or user-defined formats. The representation
+of the data within the <a class="reference internal" href="#kafe.dataset.Dataset" title="kafe.dataset.Dataset"><tt class="xref py py-class docutils literal"><span class="pre">Dataset</span></tt></a> class is minimalistic, consisting
 of the x and y values and the full covariance matrices of their
 uncertainties. Correlated errors between x and y values are not
 supported yet, as such use cases are extremely rare.</p>
-<p>A helper function, <tt class="docutils literal"><span class="pre">build_dataset()</span></tt>, is available
+<p>A helper function, <a class="reference internal" href="#kafe.dataset.build_dataset" title="kafe.dataset.build_dataset"><tt class="xref py py-func docutils literal"><span class="pre">build_dataset()</span></tt></a>, is available
 to transform various error models, like a combination of independent
 and correlated errors or common absolute or relative errors, to this
 basic format.</p>
 <p>Adding a model function, taken either from a prepared set of fit
-functions within kafe or from a user&#8217;s own <cite>python</cite> implementation,
-results in a <tt class="docutils literal"><span class="pre">Fit</span></tt> object, which controls the minimizer <tt class="docutils literal"><span class="pre">Minuit</span></tt>
+functions within kafe or from a user&#8217;s own <cite>Python</cite> implementation,
+results in a <a class="reference internal" href="#kafe.fit.Fit" title="kafe.fit.Fit"><tt class="xref py py-class docutils literal"><span class="pre">Fit</span></tt></a> object, which controls the minimizer <a class="reference internal" href="#kafe.minuit.Minuit" title="kafe.minuit.Minuit"><tt class="xref py py-class docutils literal"><span class="pre">Minuit</span></tt></a>
 and provides the results through access methods.</p>
 <p>One or multiple fit objects, i. e. the input data and model
 functions(s) at the best-fit point in parameter-space, are
-visualised by the class <tt class="docutils literal"><span class="pre">Plot</span></tt> with the help of <cite>matplotlib</cite>
-functionality. The <tt class="docutils literal"><span class="pre">plot</span></tt> module also contains functionality to
+visualized by the class <a class="reference internal" href="#kafe.plot.Plot" title="kafe.plot.Plot"><tt class="xref py py-class docutils literal"><span class="pre">Plot</span></tt></a> with the help of <tt class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></tt>
+functionality. The <a class="reference internal" href="#module-plot" title="plot: A submodule for plotting `Dataset`s with ``matplotlib``. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">plot</span></tt></a> module also contains functionality to
 display the model uncertainty by surrounding the model function
 at the best-fit values of the parameters by a light band, the one-σ
 uncertainty band, which is obtained by propagation of the uncertainties
@@ -123,7 +123,7 @@ of the fit parameters, taking into account their correlations.</p>
 <div class="section" id="example">
 <h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
 <p>Only very few lines of Python code are needed to perform fits with kafe.
-The sniplet of code shown below performs a fit of a quadratic
+The snippet of code shown below performs a fit of a quadratic
 function to some data points with uncertainties:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">kafe</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">kafe.function_library</span> <span class="kn">import</span> <span class="n">quadratic_3par</span>
@@ -150,8 +150,8 @@ function to some data points with uncertainties:</p>
 <span class="n">myPlot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>                    <span class="c"># to screen</span>
 </pre></div>
 </div>
-<p>The output in text form (also available via various <tt class="docutils literal"><span class="pre">get_...()</span></tt> methods
-of the <tt class="docutils literal"><span class="pre">Fit</span></tt> class) contains the values of the parameters at the best-fit
+<p>The output in text form (also available via various <tt class="xref py py-meth docutils literal"><span class="pre">get_...()</span></tt> methods
+of the <a class="reference internal" href="#kafe.fit.Fit" title="kafe.fit.Fit"><tt class="xref py py-class docutils literal"><span class="pre">Fit</span></tt></a> class) contains the values of the parameters at the best-fit
 point, their correlation matrix and the fit probability. The example produces
 the following graphical output:</p>
 <div class="figure align-center">
@@ -169,7 +169,7 @@ a starting point for own applications.</p>
 <div class="section" id="installation">
 <h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
 <p>To install <cite>kafe</cite>, unpack the archive <cite>kafe-&lt;version&gt;.tgz</cite> , change to
-the sub-directory  <cite>kafe-&lt;versoin&gt;/src/</cite>  and follow the installation
+the sub-directory  <cite>kafe-&lt;version&gt;/src/</cite>  and follow the installation
 instructions below.</p>
 <p>1.) Install using <cite>pip</cite>:</p>
 <blockquote>
@@ -195,11 +195,11 @@ with <cite>Pip</cite> is not possible:</p>
 </div></blockquote>
 </li>
 </ol>
-<p>Kafe needs a working version of the CERN data analysis framework <tt class="docutils literal"><span class="pre">root</span></tt>,
+<p><tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> needs a working version of the CERN data analysis framework <tt class="docutils literal"><span class="pre">root</span></tt>,
 freely available at  <a class="reference external" href="http://root.cern.ch">http://root.cern.ch</a></p>
 <div class="section" id="dependencies">
 <h4>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h4>
-<p>The recommended versions of external packages for kafe are as follows,
+<p>The recommended versions of external packages for <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> are as follows,
 the version numbers in parentheses refer to the minimum requirements:</p>
 <div class="highlight-python"><pre>Python packages:
   * SciPy &gt;= 0.12.0 (0.9.0), which includes
@@ -221,18 +221,18 @@ export PYTHONPATH=$ROOTSYS/lib:$PYTHONPATH</pre>
 </div>
 <p>For more info, refer to [<a class="reference external" href="http://root.cern.ch/drupal/content/pyroot">http://root.cern.ch/drupal/content/pyroot</a>].</p>
 <p><cite>Qt</cite> is needed because it is the supported interactive front-end for
-<cite>matplotlib</cite>. Other front-ends are not supported and can cause weird behaviour.</p>
-<p><cite>LaTeX</cite> is used by <cite>matplotlib</cite> for displaying labels and mathematical
+<tt class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></tt>. Other front-ends are not supported and can cause weird behavior.</p>
+<p><cite>LaTeX</cite> is used by <tt class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></tt> for displaying labels and mathematical
 expressions on graphs.</p>
 </div>
 </div>
 </div>
 <div class="section" id="fit-examples-utilities-tips-and-tricks">
 <h2>Fit examples, utilities, tips and tricks<a class="headerlink" href="#fit-examples-utilities-tips-and-tricks" title="Permalink to this headline">¶</a></h2>
-<p>A wide range of applications of the kafe core and the usage of
+<p>A wide range of applications of the <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> core and the usage of
 the helper functions is exemplified here. All of them
 are contained in the sub-directory <tt class="docutils literal"><span class="pre">examples/</span></tt> of the
-cafe distribution and are intended to serve as a basis for
+<tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> distribution and are intended to serve as a basis for
 user projects.</p>
 <div class="section" id="example-1-model-comparison">
 <h3>Example 1 - model comparison<a class="headerlink" href="#example-1-model-comparison" title="Permalink to this headline">¶</a></h3>
@@ -240,27 +240,28 @@ user projects.</p>
 set of data, typically several models have to be fit to the
 same data. Here is the code for a comparison of a data set
 to two models, namely a linear and an exponential function:</p>
-<div class="highlight-python"><pre># import everything we need from kafe
-from kafe import *
-# additionally, import the two model functions we want to fit:
-from kafe.function_library import linear_2par, exp_2par
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># import everything we need from kafe</span>
+<span class="kn">from</span> <span class="nn">kafe</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="c"># additionally, import the two model functions we want to fit:</span>
+<span class="kn">from</span> <span class="nn">kafe.function_library</span> <span class="kn">import</span> <span class="n">linear_2par</span><span class="p">,</span> <span class="n">exp_2par</span>
 
-############
-# Load the Dataset from the file
-my_dataset = Dataset(input_file='dataset.dat', title="Example Dataset")
-### Create the Fits
-my_fits = [Fit(my_dataset, exp_2par),
-         Fit(my_dataset, linear_2par)]
-### Do the Fits
-for fit in my_fits:
-fit.do_fit()
-### Create the plots, save and show output
-my_plot = Plot(my_fits[0], my_fits[1])
-my_plot.plot_all(show_data_for=0) # show data only once (it's the same data)
-my_plot.save('plot.pdf')
-my_plot.show()</pre>
+<span class="c">############</span>
+<span class="c"># Load the Dataset from the file</span>
+<span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">input_file</span><span class="o">=</span><span class="s">&#39;dataset.dat&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Example Dataset&quot;</span><span class="p">)</span>
+<span class="c">### Create the Fits</span>
+<span class="n">my_fits</span> <span class="o">=</span> <span class="p">[</span><span class="n">Fit</span><span class="p">(</span><span class="n">my_dataset</span><span class="p">,</span> <span class="n">exp_2par</span><span class="p">),</span>
+           <span class="n">Fit</span><span class="p">(</span><span class="n">my_dataset</span><span class="p">,</span> <span class="n">linear_2par</span><span class="p">)]</span>
+<span class="c">### Do the Fits</span>
+<span class="k">for</span> <span class="n">fit</span> <span class="ow">in</span> <span class="n">my_fits</span><span class="p">:</span>
+<span class="n">fit</span><span class="o">.</span><span class="n">do_fit</span><span class="p">()</span>
+<span class="c">### Create the plots, save and show output</span>
+<span class="n">my_plot</span> <span class="o">=</span> <span class="n">Plot</span><span class="p">(</span><span class="n">my_fits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">my_fits</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">my_plot</span><span class="o">.</span><span class="n">plot_all</span><span class="p">(</span><span class="n">show_data_for</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c"># show data only once (it&#39;s the same data)</span>
+<span class="n">my_plot</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s">&#39;plot.pdf&#39;</span><span class="p">)</span>
+<span class="n">my_plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
 </div>
-<p>The file <cite>dataset.dat</cite> contains x and y data in the standard <cite>kafe</cite> data
+<p>The file <cite>dataset.dat</cite> contains x and y data in the standard <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> data
 format, where values and errors (and optionally also correlation coefficients)
 are given for each axis separately. <cite>#</cite> indicates a comment line, which
 is ignored when reading the data:</p>
@@ -320,13 +321,13 @@ modifications:</p>
 <span class="c">############</span>
 <span class="c"># Load two Datasets from files</span>
 <span class="n">my_datasets</span> <span class="o">=</span> <span class="p">[</span><span class="n">Dataset</span><span class="p">(</span><span class="n">input_file</span><span class="o">=</span><span class="s">&#39;dataset1.dat&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Example Dataset 1&quot;</span><span class="p">),</span>
-             <span class="n">Dataset</span><span class="p">(</span><span class="n">input_file</span><span class="o">=</span><span class="s">&#39;dataset2.dat&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Example Dataset 2&quot;</span><span class="p">)]</span>
+               <span class="n">Dataset</span><span class="p">(</span><span class="n">input_file</span><span class="o">=</span><span class="s">&#39;dataset2.dat&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Example Dataset 2&quot;</span><span class="p">)]</span>
 <span class="c"># Create the Fits</span>
 <span class="o">...</span>
 <span class="c"># Do the Fits</span>
 <span class="o">...</span>
 <span class="c"># Create the plots</span>
-<span class="n">my_plot</span><span class="o">.</span><span class="n">plot_all</span><span class="p">()</span> <span class="c"># this time withouth argument, i.e. show everything</span>
+<span class="n">my_plot</span><span class="o">.</span><span class="n">plot_all</span><span class="p">()</span>  <span class="c"># this time without any arguments, i.e. show everything</span>
 <span class="o">...</span>
 </pre></div>
 </div>
@@ -343,12 +344,12 @@ single linear model.</p>
 </div>
 <div class="section" id="example-3-properties-of-a-gauss-curve">
 <h3>Example 3 - properties of a Gauss curve<a class="headerlink" href="#example-3-properties-of-a-gauss-curve" title="Permalink to this headline">¶</a></h3>
-<p>This example creates a dummy <tt class="docutils literal"><span class="pre">Dataset</span></tt> object whose points lie exactly
-on a Gaussian curve. The <tt class="docutils literal"><span class="pre">Fit</span></tt> will then converge toward that very same
+<p>This example creates a dummy <a class="reference internal" href="#kafe.dataset.Dataset" title="kafe.dataset.Dataset"><tt class="xref py py-class docutils literal"><span class="pre">Dataset</span></tt></a> object whose points lie exactly
+on a Gaussian curve. The <a class="reference internal" href="#kafe.fit.Fit" title="kafe.fit.Fit"><tt class="xref py py-class docutils literal"><span class="pre">Fit</span></tt></a> will then converge toward that very same
 Gaussian. When plotting, the data points used to &#8220;support&#8221; the curve
 can be omitted.</p>
-<p>This example shows how to access the <cite>kafe</cite> plot objects
-to annotate plots with <cite>matplotlib</cite> functionality.</p>
+<p>This example shows how to access the <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> plot objects
+to annotate plots with <tt class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></tt> functionality.</p>
 <div class="figure align-center">
 <a class="reference internal image-reference" href="_images/kafe_example3.png"><img alt="image not found" src="_images/kafe_example3.png" style="width: 600.0px; height: 300.0px;" /></a>
 <p class="caption"><cite>Output of example 3 - properties of a Gauss curve.</cite></p>
@@ -358,22 +359,22 @@ to annotate plots with <cite>matplotlib</cite> functionality.</p>
 <h3>Example 4 - average of correlated measurements<a class="headerlink" href="#example-4-average-of-correlated-measurements" title="Permalink to this headline">¶</a></h3>
 <p>The average of a set of measurements can be considered as a fit
 of a constant to a set of input data. This example illustrates
-how correlated errors are handled in <cite>kafe</cite>.
+how correlated errors are handled in <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt>.
 Measurements can have a common error, which may be absolute
 or relative, i. e. depend on the input value.  In more complicated
 cases the full covariance matrix must be constructed.</p>
-<p><cite>kafe</cite> has a helper function, <tt class="docutils literal"><span class="pre">build_dataset</span></tt> in module <tt class="docutils literal"><span class="pre">fit</span></tt>,
+<p><tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> has a helper function, <a class="reference internal" href="#kafe.dataset.build_dataset" title="kafe.dataset.build_dataset"><tt class="xref py py-func docutils literal"><span class="pre">build_dataset()</span></tt></a> in module <a class="reference internal" href="#module-fit" title="fit: This submodule defines a `Fit` object which performs the actual fitting given a `Dataset` and a fit function. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">fit</span></tt></a>,
 which aids in setting up the covariance matrix and transforming
-the input to the default format used by the <tt class="docutils literal"><span class="pre">Dataset</span></tt> and <tt class="docutils literal"><span class="pre">Fit</span></tt>
-classes. Two further helper functions in module <tt class="docutils literal"><span class="pre">file_tools</span></tt>
+the input to the default format used by the <a class="reference internal" href="#kafe.dataset.Dataset" title="kafe.dataset.Dataset"><tt class="xref py py-class docutils literal"><span class="pre">Dataset</span></tt></a> and <a class="reference internal" href="#kafe.fit.Fit" title="kafe.fit.Fit"><tt class="xref py py-class docutils literal"><span class="pre">Fit</span></tt></a>
+classes. Two further helper functions in module <a class="reference internal" href="#module-file_tools" title="file_tools: This submodule provides a set of helper functions for parsing files (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">file_tools</span></tt></a>
 aid in reading the appropriate information from data files.</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li>The function  <tt class="docutils literal"><span class="pre">parse_column_data</span></tt> reads the input values and their
+<li>The function  <a class="reference internal" href="#kafe.file_tools.parse_column_data" title="kafe.file_tools.parse_column_data"><tt class="xref py py-func docutils literal"><span class="pre">parse_column_data()</span></tt></a> reads the input values and their
 independent errors from one file, and optionally covariance
 matrices for the x and y axes from additional files. The field ordering
 is defined by a control string.</li>
-<li>Another helper function, <tt class="docutils literal"><span class="pre">buildDataset_fromFile</span></tt>, specifies
+<li>Another helper function, <a class="reference internal" href="#kafe.file_tools.buildDataset_fromFile" title="kafe.file_tools.buildDataset_fromFile"><tt class="xref py py-func docutils literal"><span class="pre">buildDataset_fromFile()</span></tt></a>, specifies
 input values or blocks of input data from a single file with
 keywords.</li>
 </ol>
@@ -385,12 +386,12 @@ code, as illustrated here:</p>
 <span class="kn">from</span> <span class="nn">kafe.file_tools</span> <span class="kn">import</span> <span class="n">buildDataset_fromFile</span>
 <span class="c">#</span>
 <span class="c"># ---------------------------------------------------------</span>
-<span class="n">fname</span><span class="o">=</span><span class="s">&#39;WData.dat&#39;</span>
-<span class="n">curDataset</span><span class="o">=</span><span class="n">buildDataset_fromFile</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="c"># Dataset from input file</span>
-<span class="n">curFit</span><span class="o">=</span><span class="n">Fit</span><span class="p">(</span><span class="n">curDataset</span><span class="p">,</span> <span class="n">constant_1par</span><span class="p">)</span>   <span class="c"># set up the fit object</span>
+<span class="n">fname</span> <span class="o">=</span> <span class="s">&#39;WData.dat&#39;</span>
+<span class="n">curDataset</span> <span class="o">=</span> <span class="n">buildDataset_fromFile</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="c"># Dataset from input file</span>
+<span class="n">curFit</span> <span class="o">=</span> <span class="n">Fit</span><span class="p">(</span><span class="n">curDataset</span><span class="p">,</span> <span class="n">constant_1par</span><span class="p">)</span>   <span class="c"># set up the fit object</span>
 <span class="n">curFit</span><span class="o">.</span><span class="n">do_fit</span><span class="p">()</span>
 
-<span class="n">myPlot</span><span class="o">=</span><span class="n">Plot</span><span class="p">(</span><span class="n">curFit</span><span class="p">)</span>
+<span class="n">myPlot</span> <span class="o">=</span> <span class="n">Plot</span><span class="p">(</span><span class="n">curFit</span><span class="p">)</span>
 <span class="n">myPlot</span><span class="o">.</span><span class="n">plot_all</span><span class="p">()</span>
 <span class="n">myPlot</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s">&quot;plot.pdf&quot;</span><span class="p">)</span>
 <span class="n">myPlot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -398,9 +399,9 @@ code, as illustrated here:</p>
 </div>
 <p>The input file is necessarily more complicated, but holds
 the full information on the data set in one place. Refer to
-the documentation of the module <tt class="docutils literal"><span class="pre">parse_general_inputfile</span></tt>
-in module <tt class="docutils literal"><span class="pre">file_tools</span></tt> for a full description of the
-presently implemented keywords. The input file for the
+the documentation of the function <a class="reference internal" href="#kafe.file_tools.parse_general_inputfile" title="kafe.file_tools.parse_general_inputfile"><tt class="xref py py-func docutils literal"><span class="pre">parse_general_inputfile()</span></tt></a>
+in module <a class="reference internal" href="#module-file_tools" title="file_tools: This submodule provides a set of helper functions for parsing files (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">file_tools</span></tt></a> for a full description of the
+currently implemented keywords. The input file for the
 averaging example is here:</p>
 <div class="highlight-python"><pre># Measurements of W boson mass (combined LEP2, 2013)
 # --------------------------------------------------
@@ -443,12 +444,12 @@ averaging example is here:</p>
 <p>This example shows the fitting of a more complicated model function
 to data collected from a damped harmonic oscillator. In such
 non-linear fits, stetting the initial values is sometimes crucial
-to let the fit converge at the global minimum. The <tt class="docutils literal"><span class="pre">Fit</span></tt> object
-provides the method <tt class="docutils literal"><span class="pre">set_parameters</span></tt> for this purpose. As the
+to let the fit converge at the global minimum. The <a class="reference internal" href="#kafe.fit.Fit" title="kafe.fit.Fit"><tt class="xref py py-class docutils literal"><span class="pre">Fit</span></tt></a> object
+provides the method <a class="reference internal" href="#kafe.fit.Fit.set_parameters" title="kafe.fit.Fit.set_parameters"><tt class="xref py py-meth docutils literal"><span class="pre">set_parameters()</span></tt></a> for this purpose. As the
 fit function for this problem is not a standard one, it is defined
-explicitly making use of the decorator functions available in <cite>kafe</cite>
+explicitly making use of the decorator functions available in <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt>
 to provide nice type setting of the parameters. This time, the
-function <tt class="docutils literal"><span class="pre">parse_colmn_data</span></tt> is used to read the input,
+function <a class="reference internal" href="#kafe.file_tools.parse_column_data" title="kafe.file_tools.parse_column_data"><tt class="xref py py-func docutils literal"><span class="pre">parse_column_data()</span></tt></a> is used to read the input,
 which is given as separate columns with the fields</p>
 <blockquote>
 <div><tt class="docutils literal"><span class="pre">&lt;time&gt;</span>&nbsp; <span class="pre">&lt;Amplitude&gt;</span>&nbsp;&nbsp;&nbsp; <span class="pre">&lt;error</span> <span class="pre">on</span> <span class="pre">time&gt;</span>&nbsp;&nbsp; <span class="pre">&lt;error</span> <span class="pre">on</span> <span class="pre">Amplitude&gt;</span></tt></div></blockquote>
@@ -496,9 +497,9 @@ which is given as separate columns with the fields</p>
 <h3>Example 6 - another multi-parameter fit<a class="headerlink" href="#example-6-another-multi-parameter-fit" title="Permalink to this headline">¶</a></h3>
 <p>This example is not much different from the previous one, except that
 the fit function, a standard fourth-degree polynomial from the module
-<tt class="docutils literal"><span class="pre">function_library</span></tt>, is modified to reflect the names of the problem
-given, and <cite>matplotlib</cite> functionality is used to influence the
-ouput of the plot, e.g. axis names and linear or logarithmic scale.</p>
+<a class="reference internal" href="#module-function_library" title="function_library: A submodule containing a collection of model functions. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">function_library</span></tt></a>, is modified to reflect the names of the problem
+given, and <tt class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></tt> functionality is used to influence the
+output of the plot, e.g. axis names and linear or logarithmic scale.</p>
 <p>It is also shown how to circumvent a problem that
 often arises when errors depend on the measured values.
 For a counting rate, the (statistical) error is typically estimated
@@ -510,15 +511,15 @@ bias when fitting functions to the data. This problem can be
 avoided by iterating the fit procedure:</p>
 <p>In a pre-fit, a first approximation of the model function is
 determined, which is then used to calculate
-the expected errors, and the origial errors are
+the expected errors, and the original errors are
 replaced before performing the final fit. Note that the numbers
 of entries in the bins must be sufficiently large to justify
-a replacement of the (asymmetric) Poission uncertainties by
+a replacement of the (asymmetric) Poisson uncertainties by
 the symmetric uncertainties implied by the χ²-method.</p>
 <p>The implementation of this  procedure needs accesses some
 more fundamental methods of the <cite>Dataset</cite>, <cite>Fit</cite> and
 <cite>FitFunction</cite> classes. The code shown below demonstrates
-how this can be done with <cite>kafe</cite>, using some of its lower-level,
+how this can be done with <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt>, using some of its lower-level,
 internal interfaces:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">kafe.function_library</span> <span class="kn">import</span> <span class="n">poly4</span>
 <span class="c"># modify function&#39;s independent variable name to reflect its nature:</span>
@@ -539,24 +540,24 @@ internal interfaces:</p>
 <span class="c"># error for bins with zero contents is set to 1.</span>
 <span class="n">covmat</span> <span class="o">=</span> <span class="n">my_dataset</span><span class="o">.</span><span class="n">get_cov_mat</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">covmat</span><span class="p">)):</span>
-    <span class="k">if</span> <span class="n">covmat</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="mf">0.</span><span class="p">:</span>
-        <span class="n">covmat</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="mf">1.</span>
+    <span class="k">if</span> <span class="n">covmat</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">:</span>
+        <span class="n">covmat</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
 <span class="n">my_dataset</span><span class="o">.</span><span class="n">set_cov_mat</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">covmat</span><span class="p">)</span> <span class="c"># write it back</span>
 
 <span class="c"># Create the Fit</span>
 <span class="n">my_fit</span> <span class="o">=</span> <span class="n">Fit</span><span class="p">(</span><span class="n">my_dataset</span><span class="p">,</span> <span class="n">poly4</span><span class="p">)</span>
 <span class="c">#            fit_label=&quot;Linear Regression &quot; + dataset.data_label[-1])</span>
 
-<span class="c"># perform an initial fit with temporary errors (minimial output)</span>
+<span class="c"># perform an initial fit with temporary errors (minimal output)</span>
 <span class="n">my_fit</span><span class="o">.</span><span class="n">call_minimizer</span><span class="p">(</span><span class="n">final_fit</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
 <span class="c"># set errors using model at pre-fit parameter values:</span>
-<span class="c">#       sigma_i^2=cov[i,i]=n(x_i)</span>
+<span class="c">#       sigma_i^2=cov[i, i]=n(x_i)</span>
 <span class="n">fdata</span> <span class="o">=</span> <span class="n">my_fit</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">my_fit</span><span class="o">.</span><span class="n">xdata</span><span class="p">,</span>
                                    <span class="n">my_fit</span><span class="o">.</span><span class="n">current_parameter_values</span><span class="p">)</span>
 <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">covmat</span><span class="p">,</span> <span class="n">fdata</span><span class="p">)</span>
 <span class="n">my_fit</span><span class="o">.</span><span class="n">current_cov_mat</span> <span class="o">=</span> <span class="n">covmat</span>  <span class="c"># write new covariance matrix</span>
-<span class="c">### end pre-fit - rest ist as usual</span>
+<span class="c">### end pre-fit - rest is as usual</span>
 <span class="n">my_fit</span><span class="o">.</span><span class="n">do_fit</span><span class="p">()</span>
 <span class="c"># Create the plots and --</span>
 <span class="n">my_plot</span> <span class="o">=</span> <span class="n">Plot</span><span class="p">(</span><span class="n">my_fit</span><span class="p">)</span>
@@ -591,9 +592,9 @@ or an external constraint must be applied.
 Failing to do so will result in large, correlated errors
 on the parameters g, b and k as an indication of the problem.</p>
 <p>Fixing parameters of a model function is achieved by the method
-<tt class="docutils literal"><span class="pre">fix_parameters()</span></tt>, and a constraint within a given uncertainty
-is achieved by the method <tt class="docutils literal"><span class="pre">constrain_parameters()</span></tt>
-of the <tt class="docutils literal"><span class="pre">Fit</span></tt> class.</p>
+<a class="reference internal" href="#kafe.fit.Fit.fix_parameters" title="kafe.fit.Fit.fix_parameters"><tt class="xref py py-meth docutils literal"><span class="pre">fix_parameters()</span></tt></a>, and a constraint within a given uncertainty
+is achieved by the method <a class="reference internal" href="#kafe.fit.Fit.constrain_parameters" title="kafe.fit.Fit.constrain_parameters"><tt class="xref py py-meth docutils literal"><span class="pre">constrain_parameters()</span></tt></a>
+of the <a class="reference internal" href="#kafe.fit.Fit" title="kafe.fit.Fit"><tt class="xref py py-class docutils literal"><span class="pre">Fit</span></tt></a> class.</p>
 <p>Here are the interesting pieces of code:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="o">...</span>
 <span class="c"># Model function definition #</span>
@@ -626,7 +627,7 @@ of the <tt class="docutils literal"><span class="pre">Fit</span></tt> class.</p>
 </div>
 <p>If the parameter <cite>k</cite> in the example above has a (known) uncertainty,
 is is more appropriate to constrain it within its uncertainty (which
-may be known from an indepedent measurement of from the secifications
+may be known from an independent measurement or from the specifications
 of the laser used in the experiment). To take into account a
 wave number <cite>k</cite> known with a precision of 10&#8216;000, the
 last line in the example above should be replaced by:</p>
@@ -644,18 +645,18 @@ last line in the example above should be replaced by:</p>
 <div class="section" id="example-8-fit-of-a-breit-wigner-resonance-to-data-with-correlated-errors">
 <h3>Example 8 - fit of a Breit-Wigner Resonance to data with correlated errors<a class="headerlink" href="#example-8-fit-of-a-breit-wigner-resonance-to-data-with-correlated-errors" title="Permalink to this headline">¶</a></h3>
 <p>This example illustrates how to define the data and the fit function
-in a single file - provided by the helper function <tt class="docutils literal"><span class="pre">buildFit_fromFile</span></tt>
-in module <tt class="docutils literal"><span class="pre">file_tools</span></tt>. Parsing of the input file is done by the
-function <tt class="docutils literal"><span class="pre">parse_general_inputfile</span></tt>, which had already been introduced
-in Example 4. The definition of the fit function as python code
-including the <cite>kafe</cite> decorators in the input file, however, is new.
+in a single file - provided by the helper function <a class="reference internal" href="#kafe.file_tools.buildFit_fromFile" title="kafe.file_tools.buildFit_fromFile"><tt class="xref py py-func docutils literal"><span class="pre">buildFit_fromFile()</span></tt></a>
+in module <a class="reference internal" href="#module-file_tools" title="file_tools: This submodule provides a set of helper functions for parsing files (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">file_tools</span></tt></a>. Parsing of the input file is done by the
+function <a class="reference internal" href="#kafe.file_tools.parse_general_inputfile" title="kafe.file_tools.parse_general_inputfile"><tt class="xref py py-func docutils literal"><span class="pre">parse_general_inputfile()</span></tt></a>, which had already been introduced
+in Example 4. The definition of the fit function as <cite>Python</cite> code
+including the <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> decorators in the input file, however, is new.
 Note: because spaces are used to to separate data  fields in the
-input file, spaces needed for proper python indentation have to be
+input file, spaces needed for proper <cite>Python</cite> indentation have to be
 replaced by &#8216;~&#8217;. The last key in the file defines the start values
 of the parameters and their initial ranges.</p>
 <p>The advantage of this approach is the location of all data
 and the fit model in one place, which is strictly separated
-from the python code. The python code below is thus very general
+from the <cite>Python</cite> code. The <cite>Python</cite> code below is thus very general
 and can handle a large large variety of problems without
 modification (except for the file name, which could easily be
 passed on the command line):</p>
@@ -718,12 +719,12 @@ all the information needed to perform the fit:</p>
 *FitFunction
 # Breit-Wigner with s-dependent width
 @ASCII(expression='s0*E^2*G^2/[(E^2-M^2)^2+(E^4*G^2/M^2)]')
-@LaTeX(name='f', parameter_names=('\\sigma^0', 'M_Z','\\Gamma_Z'),
+@LaTeX(name='f', parameter_names=('\\sigma^0', 'M_Z', '\\Gamma_Z'),
 expression='\\frac{\\sigma^0\\, M_Z^2\\Gamma^2}'
                '{((E^2-M_Z^2)^2+(E^4\\Gamma^2 / M_Z^2))}')
 @FitFunction
 def fitf(E, M=91.2, G=2.5, s0=41.0):
-~~return s0*E*E*G*G/((E*E-M*M)**2+(E**4*G*G/(M*M)))
+~~~~return s0*E*E*G*G/((E*E-M*M)**2+(E**4*G*G/(M*M)))
 
 *InitialParameters    # set initial values and ranges
 91.2 0.1
@@ -742,7 +743,7 @@ uncertainty.</p>
 <p>Contours are useful because they provide a way to visualize parameter
 uncertainties and correlations. <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> supports plotting
 2D <img class="math" src="_images/math/070fe743455ad95e644411607dc18d8e72f1d23f.png" alt="1\sigma"/> contours for any pair of parameters by getting the
-relevant data from <tt class="docutils literal"><span class="pre">TMinuit</span></tt> and plotting it using <tt class="docutils literal"><span class="pre">matplotlib</span></tt>.
+relevant data from <tt class="xref cpp cpp-class docutils literal"><span class="pre">TMinuit</span></tt> and plotting it using <tt class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></tt>.
 Here is a possible way to do it:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># plot 1-sigma contour of first two parameters into a separate figure</span>
 <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">BWfit</span><span class="o">.</span><span class="n">minimizer</span><span class="o">.</span><span class="n">get_contour</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>  <span class="c"># get contour</span>
@@ -765,8 +766,8 @@ Here is a possible way to do it:</p>
 <div class="section" id="example-9-fit-of-a-function-to-histogram-data">
 <h3>Example 9 - fit of a function to histogram data<a class="headerlink" href="#example-9-fit-of-a-function-to-histogram-data" title="Permalink to this headline">¶</a></h3>
 <p>This example brings us to the limit of what is currently
-possible with <cite>kafe</cite>. Here, the data represent the
-centre of a histogram bins ad the number of entries, <img class="math" src="_images/math/7eb75ccf06e046206cb4c636a54d7be11d049fbf.png" alt="n_i"/>,
+possible with <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt>. Here, the data represent the
+center of a histogram bins ad the number of entries, <img class="math" src="_images/math/7eb75ccf06e046206cb4c636a54d7be11d049fbf.png" alt="n_i"/>,
 in each bin. The (statistical) error is typically estimated
 as the square root of the (observed) number of entries in each bin.
 For large numbers of entries, this is not a problem,
@@ -781,17 +782,17 @@ observed numbers of events get assigned smaller errors
 and hence larger weights in the fitting procedure - leading
 to the aforementioned bias.</p>
 <p>These problems are avoided by using a likelihood method for
-such use cases, where the Poission distribution of the uncertainties
+such use cases, where the Poisson distribution of the uncertainties
 and their dependence on the values of the fit model is properly
-taken into accout. However, the χ²-method can be saved to some
+taken into account. However, the χ²-method can be saved to some
 extend if the fitting procedure is iterated. In a pre-fit, a
 first approximation of the model function is determined, where
 the error in bins with zero entries is set to one. The model
 function determined from the pre-fit is then used to calculate
-the expected errors for each bin, and the origial errors are
+the expected errors for each bin, and the original errors are
 replaced before performing the final fit. Note that the numbers
 of entries in the bins must be sufficiently large to justify
-a replacement of the (asymmetric) Poission uncertainties by
+a replacement of the (asymmetric) Poisson uncertainties by
 the symmetric uncertainties implied by the χ²-method.</p>
 <p>The code shown below demonstrates
 how to get a grip on such more complex procedures with
@@ -803,19 +804,19 @@ more fundamental methods of the <cite>Dataset</cite>, <cite>Fit</cite> and
 
 <span class="c"># error for bins with zero contents is set to 1.</span>
 <span class="n">covmat</span> <span class="o">=</span> <span class="n">hdataset</span><span class="o">.</span><span class="n">get_cov_mat</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">covmat</span><span class="p">)):</span>
-    <span class="k">if</span> <span class="n">covmat</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="mf">0.</span><span class="p">:</span>
-        <span class="n">covmat</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="mf">1.</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">covmat</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="n">covmat</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">:</span>
+        <span class="n">covmat</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
 <span class="n">hdataset</span><span class="o">.</span><span class="n">set_cov_mat</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">covmat</span><span class="p">)</span> <span class="c"># write it back</span>
 
 <span class="c"># Create the Fit instance</span>
 <span class="n">hfit</span> <span class="o">=</span> <span class="n">Fit</span><span class="p">(</span><span class="n">hdataset</span><span class="p">,</span> <span class="n">gauss</span><span class="p">,</span> <span class="n">fit_label</span><span class="o">=</span><span class="s">&quot;Fit of a Gaussian to histogram data&quot;</span><span class="p">)</span>
 <span class="c">#</span>
-<span class="c"># perform an initial fit with temporary errors (minimial output)</span>
+<span class="c"># perform an initial fit with temporary errors (minimal output)</span>
 <span class="n">hfit</span><span class="o">.</span><span class="n">call_minimizer</span><span class="p">(</span><span class="n">final_fit</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 <span class="c">#</span>
 <span class="c">#re-set errors using model at pre-fit parameter values:</span>
-<span class="c">#        sigma_i^2=cov[i,i]=n(x_i)</span>
+<span class="c">#        sigma_i^2=cov[i, i]=n(x_i)</span>
 <span class="n">fdata</span><span class="o">=</span><span class="n">hfit</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">hfit</span><span class="o">.</span><span class="n">xdata</span><span class="p">,</span> <span class="n">hfit</span><span class="o">.</span><span class="n">current_parameter_values</span><span class="p">)</span>
 <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">covmat</span><span class="p">,</span> <span class="n">fdata</span><span class="p">)</span>
 <span class="n">hfit</span><span class="o">.</span><span class="n">current_cov_mat</span> <span class="o">=</span> <span class="n">covmat</span> <span class="c"># write back new covariance matrix</span>
@@ -836,16 +837,16 @@ well reproduced within the uncertainties by the fit result:</p>
 </div>
 </div>
 <div class="section" id="kafe-documentation-module-descriptions">
-<h2><cite>kafe</cite> Documentation &#8211; module descriptions<a class="headerlink" href="#kafe-documentation-module-descriptions" title="Permalink to this headline">¶</a></h2>
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> Documentation &#8211; module descriptions<a class="headerlink" href="#kafe-documentation-module-descriptions" title="Permalink to this headline">¶</a></h2>
 <p>The following documentation of functions and methods
 of relevance to the user interface was generated from
-the <cite>DocStrings</cite> contained in the python code of the
-<cite>kafe</cite> package.
+the <cite>DocStrings</cite> contained in the <cite>Python</cite> code of the
+<tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> package.
 For further information or if in doubt about the exact
 functionality, users are invited to consult the source
 code.</p>
 <div class="section" id="module-kafe.__init__">
-<span id="kafe-init-module"></span><h3><a class="reference internal" href="#module-kafe.__init__" title="kafe.__init__"><tt class="xref py py-mod docutils literal"><span class="pre">kafe.__init__</span></tt></a> Module<a class="headerlink" href="#module-kafe.__init__" title="Permalink to this headline">¶</a></h3>
+<span id="init-module"></span><h3><tt class="xref py py-mod docutils literal"><span class="pre">__init__</span></tt> Module<a class="headerlink" href="#module-kafe.__init__" title="Permalink to this headline">¶</a></h3>
 <p><strong>kafe</strong> <em>&#8211; a Python package for fitting and plotting for use in physics lab courses.</em></p>
 <p>This Python package allows fitting of user-defined functions to data. A dataset
 is represented by a <cite>Dataset</cite> object which stores measurement data as <cite>NumPy</cite>
@@ -1527,7 +1528,7 @@ def fitf(x,av=1.): # fit an average
 <span id="fit-module"></span><h3><a class="reference internal" href="#module-fit" title="fit: This submodule defines a `Fit` object which performs the actual fitting given a `Dataset` and a fit function. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">fit</span></tt></a> Module<a class="headerlink" href="#module-kafe.fit" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-fit"></span><dl class="class">
 <dt id="kafe.fit.Fit">
-<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x4891cf8&gt;</em>, <em>fit_label=None</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x4a31848&gt;</em>, <em>fit_label=None</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Object representing a fit. This object references the fitted <cite>Dataset</cite>,
 the fit function and the resulting fit parameters.</p>
@@ -2792,8 +2793,8 @@ check occurs.</p>
 <li><a class="reference internal" href="#example-9-fit-of-a-function-to-histogram-data">Example 9 - fit of a function to histogram data</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#kafe-documentation-module-descriptions"><cite>kafe</cite> Documentation &#8211; module descriptions</a><ul>
-<li><a class="reference internal" href="#module-kafe.__init__"><tt class="docutils literal"><span class="pre">kafe.__init__</span></tt> Module</a></li>
+<li><a class="reference internal" href="#kafe-documentation-module-descriptions"><tt class="docutils literal"><span class="pre">kafe</span></tt> Documentation &#8211; module descriptions</a><ul>
+<li><a class="reference internal" href="#module-kafe.__init__"><tt class="docutils literal"><span class="pre">__init__</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe._version_info"><tt class="docutils literal"><span class="pre">_version_info</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.dataset"><tt class="docutils literal"><span class="pre">dataset</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.file_tools"><tt class="docutils literal"><span class="pre">file_tools</span></tt> Module</a></li>
