@@ -21,12 +21,12 @@
 \contentsline {section}{\numberline {3.4}\texttt {file\_tools} Module}{25}{section.3.4}
 \contentsline {section}{\numberline {3.5}\texttt {fit} Module}{28}{section.3.5}
 \contentsline {section}{\numberline {3.6}\texttt {function\_library} Module}{32}{section.3.6}
-\contentsline {section}{\numberline {3.7}\texttt {function\_tools} Module}{32}{section.3.7}
+\contentsline {section}{\numberline {3.7}\texttt {function\_tools} Module}{33}{section.3.7}
 \contentsline {section}{\numberline {3.8}\texttt {minuit} Module}{34}{section.3.8}
-\contentsline {section}{\numberline {3.9}\texttt {config} Module}{36}{section.3.9}
-\contentsline {section}{\numberline {3.10}\texttt {plot} Module}{36}{section.3.10}
+\contentsline {section}{\numberline {3.9}\texttt {config} Module}{37}{section.3.9}
+\contentsline {section}{\numberline {3.10}\texttt {plot} Module}{37}{section.3.10}
 \contentsline {section}{\numberline {3.11}\texttt {latex\_tools} Module}{38}{section.3.11}
 \contentsline {section}{\numberline {3.12}\texttt {numeric\_tools} Module}{38}{section.3.12}
 \contentsline {section}{\numberline {3.13}\texttt {stream} Module}{39}{section.3.13}
-\contentsline {chapter}{Python Module Index}{41}{section*.153}
-\contentsline {chapter}{Index}{43}{section*.154}
+\contentsline {chapter}{Python Module Index}{41}{section*.154}
+\contentsline {chapter}{Index}{43}{section*.155}

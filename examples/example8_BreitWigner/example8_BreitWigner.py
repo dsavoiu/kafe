@@ -38,19 +38,12 @@ BWfit.do_fit()
 BWplot = Plot(BWfit)
 BWplot.plot_all()
 BWplot.save("kafe_BreitWignerFit.pdf")
-BWplot.show()
 
-# plot 1-sigma contour of first two parameters into a separate figure
-x, y = BWfit.minimizer.get_contour(0, 1, n_points=100)  # get contour
-cont_fig = plt.figure()  # create new figure for contour
-cont_ax = cont_fig.gca()  # get/create axes object for current figure
-# set axis labels
-cont_ax.set_xlabel('$%s$' % (BWfit.latex_parameter_names[0],))
-cont_ax.set_ylabel('$%s$' % (BWfit.latex_parameter_names[1],))
-# plot the actual contour
-cont_ax.fill(x, y, alpha=0.25, color='red')
+cont_fig = BWfit.plot_contour(0, 1)
+
 # save to file
 cont_fig.savefig("kafe_BreitWignerFit_contour12.pdf")
-# show the contour
-#cont_fig.show()
 
+
+# show everything
+plt.show()

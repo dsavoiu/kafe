@@ -13,7 +13,7 @@
 
 
 \title{kafe Documentation}
-\date{October 14, 2014}
+\date{October 16, 2014}
 \release{0.5.2}
 \author{D. Savoiu, G. Quast}
 \newcommand{\sphinxlogo}{}
@@ -1910,7 +1910,7 @@ def fitf(x,av=1.): \# fit an average
 \label{index:fit-module}\label{index:module-kafe.fit}\index{kafe.fit (module)}\phantomsection\label{index:module-fit}\index{fit (module)}\index{Fit (class in kafe.fit)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x3310b90\textgreater{}}, \emph{fit\_label=None}}{}
+\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x4891cf8\textgreater{}}, \emph{fit\_label=None}}{}
 Bases: \code{object}
 
 Object representing a fit. This object references the fitted \emph{Dataset},
@@ -2185,6 +2185,43 @@ the total number of parameters
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.fit.Fit.parameter_names}\pysigline{\bfcode{parameter\_names}\strong{ = None}}
 the names of the parameters
+
+\end{fulllineitems}
+
+\index{plot\_contour() (kafe.fit.Fit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.fit.Fit.plot_contour}\pysiglinewithargsret{\bfcode{plot\_contour}}{\emph{parameter1}, \emph{parameter2}, \emph{n\_points=100}, \emph{color='red'}, \emph{alpha=0.25}, \emph{show=False}}{}
+Plots a two-dimensional $1\sigma$ contour for this fit into
+a separate figure and returns the figure object.
+\begin{description}
+\item[{\textbf{parameter1}}] \leavevmode{[}int or string{]}
+ID or name of the parameter to appear on the \emph{x}-axis.
+
+\item[{\textbf{parameter2}}] \leavevmode{[}int or string{]}
+ID or name of the parameter to appear on the \emph{y}-axis.
+
+\item[{\emph{n\_points}}] \leavevmode{[}int (optional){]}
+Number of plot points to use for the contour. Higher
+values yield smoother contours but take longer to
+render. Default is 100.
+
+\item[{\emph{color}}] \leavevmode{[}string (optional){]}
+A \code{matplotlib} color identifier specifying the fill color
+of the contour. Default is `red'.
+
+\item[{\emph{alpha}}] \leavevmode{[}float (optional){]}
+Transparency of the contour fill color ranging from 0. (fully
+transparent) to 1. (fully opaque). Default is 0.25
+
+\item[{\emph{show}}] \leavevmode{[}boolean (optional){]}
+Specify whether to show the figure before returning it. Defaults
+to \code{False}.
+
+\item[{\textbf{returns}}] \leavevmode{[}\code{matplotlib} figure object{]}
+A figure object containing the contour plot.
+
+\end{description}
 
 \end{fulllineitems}
 

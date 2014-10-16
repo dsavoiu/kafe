@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.6-1.40.14 (TeX Live 2014/dev) (format=pdflatex 2014.7.25)  14 OCT 2014 12:53
+This is pdfTeX, Version 3.1415926-2.6-1.40.14 (TeX Live 2014/dev) (format=pdflatex 2014.7.25)  16 OCT 2014 13:53
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1131,34 +1131,33 @@ Underfull \hbox (badness 10000) in paragraph at lines 1576--1576
 [25] [26] [27]
 Underfull \hbox (badness 10000) in paragraph at lines 1913--1913
 []\T1/ptm/m/it/10 dataset\T1/ptm/m/n/10 , \T1/ptm/m/it/10 fit_function\T1/ptm/m
-/n/10 , \T1/ptm/m/it/10 ex-ter-nal_fcn=<function chi2 at 0x3310b90>\T1/ptm/m/n/
+/n/10 , \T1/ptm/m/it/10 ex-ter-nal_fcn=<function chi2 at 0x4891cf8>\T1/ptm/m/n/
 10 ,
  []
 
 [28] [29] [30]
-Underfull \hbox (badness 10000) in paragraph at lines 2303--2303
+Underfull \hbox (badness 10000) in paragraph at lines 2340--2340
 []\T1/ptm/m/it/10 dataset\T1/ptm/m/n/10 , \T1/ptm/m/it/10 fit-func\T1/ptm/m/n/1
 0 , \T1/ptm/m/it/10 fit-la-bel='untitled'\T1/ptm/m/n/10 , \T1/ptm/m/it/10 ini-t
 ial_fit_parameters=None\T1/ptm/m/n/10 , \T1/ptm/m/it/10 con-
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 2332--2332
+[31]
+Underfull \hbox (badness 10000) in paragraph at lines 2369--2369
 []\T1/ptm/m/it/10 xdata\T1/ptm/m/n/10 , \T1/ptm/m/it/10 ydata\T1/ptm/m/n/10 , \
 T1/ptm/m/it/10 cov_mat\T1/ptm/m/n/10 , \T1/ptm/m/it/10 fit_function\T1/ptm/m/n/
 10 , \T1/ptm/m/it/10 pa-ram-e-ter_values\T1/ptm/m/n/10 , \T1/ptm/m/it/10 con-
  []
 
-[31] [32] [33]
-Underfull \hbox (badness 10000) in paragraph at lines 2673--2673
+[32] [33]
+Underfull \hbox (badness 10000) in paragraph at lines 2710--2710
 []\T1/ptm/m/it/10 number_of_parameters\T1/ptm/m/n/10 , \T1/ptm/m/it/10 func-tio
 n_to_minimize\T1/ptm/m/n/10 , \T1/ptm/m/it/10 pa-ram-e-ter_names\T1/ptm/m/n/10 
 ,
  []
 
-[34] [35] [36] [37] [38] [39] [40
+[34] [35] [36] [37] [38] [39] [40] [41
 
-] [41
 
 
 ] (./kafe.ind [42
@@ -1217,31 +1216,31 @@ Underfull \hbox (badness 10000) in paragraph at lines 153--154
  []
 
 [44]
-Underfull \hbox (badness 10000) in paragraph at lines 235--236
+Underfull \hbox (badness 10000) in paragraph at lines 236--237
 []\T1/ptm/m/n/10 zero_pad_lower_triangle() (in mod-ule
  []
 
 [45
 
 ])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 3513.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 3513.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 3550.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 3550.
  (./kafe.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 3513.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 3513.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 3550.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 3550.
 
 Package rerunfilecheck Info: File `kafe.out' has not changed.
-(rerunfilecheck)             Checksum: 8733CEF26264FC42502160A0F59456DD;2155.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 3513.
+(rerunfilecheck)             Checksum: 3E3D9CF569760B23CD311A35951913C8;2155.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 3550.
  ) 
 Here is how much of TeX's memory you used:
- 9527 strings out of 493572
- 135774 string characters out of 6148657
- 234662 words of memory out of 5000000
- 12470 multiletter control sequences out of 15000+600000
+ 9529 strings out of 493572
+ 135819 string characters out of 6148657
+ 234704 words of memory out of 5000000
+ 12471 multiletter control sequences out of 15000+600000
  73537 words of font info for 85 fonts, out of 8000000 for 9000
  875 hyphenation exceptions out of 8191
- 41i,18n,45p,617b,536s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,18n,45p,617b,596s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist
@@ -1260,10 +1259,10 @@ lvetic/uhvbo8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr
 are/texlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/te
 xmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/
 type1/urw/times/utmri8a.pfb>
-Output written on kafe.pdf (49 pages, 683784 bytes).
+Output written on kafe.pdf (49 pages, 684929 bytes).
 PDF statistics:
- 886 PDF objects out of 1000 (max. 8388607)
- 786 compressed objects within 8 object streams
- 248 named destinations out of 1000 (max. 500000)
+ 888 PDF objects out of 1000 (max. 8388607)
+ 788 compressed objects within 8 object streams
+ 249 named destinations out of 1000 (max. 500000)
  301 words of extra memory for PDF output out of 10000 (max. 10000000)
 

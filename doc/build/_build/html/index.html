@@ -1527,7 +1527,7 @@ def fitf(x,av=1.): # fit an average
 <span id="fit-module"></span><h3><a class="reference internal" href="#module-fit" title="fit: This submodule defines a `Fit` object which performs the actual fitting given a `Dataset` and a fit function. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">fit</span></tt></a> Module<a class="headerlink" href="#module-kafe.fit" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-fit"></span><dl class="class">
 <dt id="kafe.fit.Fit">
-<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x3310b90&gt;</em>, <em>fit_label=None</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x4891cf8&gt;</em>, <em>fit_label=None</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Object representing a fit. This object references the fitted <cite>Dataset</cite>,
 the fit function and the resulting fit parameters.</p>
@@ -1740,6 +1740,34 @@ around the function in your plot routine.</p>
 <dt id="kafe.fit.Fit.parameter_names">
 <tt class="descname">parameter_names</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.fit.Fit.parameter_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>the names of the parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.fit.Fit.plot_contour">
+<tt class="descname">plot_contour</tt><big>(</big><em>parameter1</em>, <em>parameter2</em>, <em>n_points=100</em>, <em>color='red'</em>, <em>alpha=0.25</em>, <em>show=False</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit.plot_contour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a two-dimensional <img class="math" src="_images/math/070fe743455ad95e644411607dc18d8e72f1d23f.png" alt="1\sigma"/> contour for this fit into
+a separate figure and returns the figure object.</p>
+<dl class="docutils">
+<dt><strong>parameter1</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int or string</span></dt>
+<dd>ID or name of the parameter to appear on the <cite>x</cite>-axis.</dd>
+<dt><strong>parameter2</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int or string</span></dt>
+<dd>ID or name of the parameter to appear on the <cite>y</cite>-axis.</dd>
+<dt><em>n_points</em> <span class="classifier-delimiter">:</span> <span class="classifier">int (optional)</span></dt>
+<dd>Number of plot points to use for the contour. Higher
+values yield smoother contours but take longer to
+render. Default is 100.</dd>
+<dt><em>color</em> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
+<dd>A <tt class="docutils literal"><span class="pre">matplotlib</span></tt> color identifier specifying the fill color
+of the contour. Default is &#8216;red&#8217;.</dd>
+<dt><em>alpha</em> <span class="classifier-delimiter">:</span> <span class="classifier">float (optional)</span></dt>
+<dd>Transparency of the contour fill color ranging from 0. (fully
+transparent) to 1. (fully opaque). Default is 0.25</dd>
+<dt><em>show</em> <span class="classifier-delimiter">:</span> <span class="classifier">boolean (optional)</span></dt>
+<dd>Specify whether to show the figure before returning it. Defaults
+to <tt class="docutils literal"><span class="pre">False</span></tt>.</dd>
+<dt><strong>returns</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="docutils literal"><span class="pre">matplotlib</span></tt> figure object</span></dt>
+<dd>A figure object containing the contour plot.</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">

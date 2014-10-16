@@ -33,6 +33,7 @@ from minuit import Minuit
 from function_tools import FitFunction, outer_product
 from copy import copy
 
+import matplotlib.pyplot as plt
 import numpy as np
 from numeric_tools import cov_to_cor, extract_statistical_errors, MinuitCov_to_cor
 
@@ -914,6 +915,60 @@ class Fit(object):
                                                     '.3f')+'  ',
             print >>self.out_stream, ''
         print >>self.out_stream, ''
+
+    def plot_contour(self, parameter1, parameter2, n_points=100, color='red',
+                    alpha=.25 , show=False):
+        r'''
+        Plots a two-dimensional :math:`1\sigma` contour for this fit into
+        a separate figure and returns the figure object.
+        
+        **parameter1** : int or string
+            ID or name of the parameter to appear on the `x`-axis.
+            
+        **parameter2** : int or string
+            ID or name of the parameter to appear on the `y`-axis.
+        
+        *n_points* : int (optional)
+            Number of plot points to use for the contour. Higher
+            values yield smoother contours but take longer to
+            render. Default is 100.
+        
+        *color* : string (optional)
+            A ``matplotlib`` color identifier specifying the fill color
+            of the contour. Default is 'red'.
+            
+        *alpha* : float (optional)
+            Transparency of the contour fill color ranging from 0. (fully
+            transparent) to 1. (fully opaque). Default is 0.25
+        
+        *show* : boolean (optional)
+            Specify whether to show the figure before returning it. Defaults
+            to ``False``.
+        
+        **returns** : ``matplotlib`` figure object
+            A figure object containing the contour plot.
+        '''
+        # lookup parameter IDs
+        par1 = self._find_parameter(parameter1)
+        par2 = self._find_parameter(parameter2)
+        _pvals = self.get_parameter_values()
+        xval, yval = _pvals[par1], _pvals[par2]
+        # plot 1-sigma contour of two parameters into a separate figure
+        xs, ys = self.minimizer.get_contour(parameter1, parameter2, n_points)  # get contour
+        tmp_fig = plt.figure()  # create new figure for contour
+        tmp_ax = tmp_fig.gca()  # get/create axes object for current figure
+        # set axis labels
+        tmp_ax.set_xlabel('$%s$' % (self.latex_parameter_names[par1],))
+        tmp_ax.set_ylabel('$%s$' % (self.latex_parameter_names[par2],))
+        # plot the actual contour
+        tmp_ax.fill(xs, ys, alpha=alpha, color=color, label='$1\\sigma$ contour')
+        tmp_ax.scatter(xval, yval, marker='o', label='parameter values')
+        # plot a legend
+        tmp_leg = tmp_ax.legend(loc='best')
+        # show the contour, if requested
+        if show:
+            tmp_fig.show()
+        return tmp_fig
 
 def build_fit(dataset, fitfunc,
               fitlabel='untitled', initial_fit_parameters=None,
