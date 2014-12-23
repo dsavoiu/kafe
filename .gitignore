@@ -14,6 +14,12 @@ examples/example*/*.pdf
 examples/example*/*.jpg
 examples/example*/*.png
 
+############################
+# Re-creatable Directories #
+############################
+
+doc/build/_build
+
 #########
 # Other #
 #########
@@ -30,3 +36,4 @@ doc/latex/*.out
 doc/latex/*.toc
 doc/latex/*.aux
 doc/latex/*.log
+doc/latex/kafe~.pdf

@@ -54,7 +54,9 @@ def generate_histogram(output_path, bins=50, N=500):
 #generate_histogram('hdataset.dat',N=250)
 
 # Load the Datasets from files
-hdataset = Dataset(input_file='hdataset.dat', title="Data for example 9")
+hdataset = Dataset(input_file='hdataset.dat', title="Data for example 9",
+                axis_labels=['x', 'entries'] )
+
 
 # error for bins with zero contents is set to 1.
 covmat = hdataset.get_cov_mat('y')

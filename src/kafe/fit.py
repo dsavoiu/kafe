@@ -27,6 +27,15 @@
 #                  added mechanism to constrain parameters within error:
 #                     - provided function constrain_parameters()
 #                     - add corresponding chi2-Term in chi2
+# 05-Dec-14   G.Q. added multiple contours (plot_contour) for different
+#                   DeltaChi^2 values resp. confidence levels
+# 09-Dec-14   G.Q. added profile chi^2
+# 12-Dec-14   G.Q. introudced data members of Fit class for final results
+#                  replaced self.get_error_matrix() by self.par_cov_mat, the
+#                   final covariance matrix
+# 18-Dec-14   G.Q. addes "plot_correlations" to provide a graphical
+#                  representation of the parameter covariance-matrix
+#                  by showing all contours and profiles as an array of plots
 # -------------------------------------------------------------------------
 
 from minuit import Minuit
@@ -156,10 +165,27 @@ class Fit(object):
     If not given, the `FCN` function defaults to :math:`\chi^2`.
 
     **dataset** : `Dataset`
+
         A `Dataset` object containing all information about the data
 
+    **data mebers** for final results
+
+        `final_parameter_values` # [parid][value]
+
+        `final_parameter_errors` # [parid][error]
+
+        `par_cov_mat`            # numpy 2d matrix
+
+        `parabolic_errors`       # boolean, True if :math:`\chi^2` is approx. parabolic
+
+        `minos_errors`           # [parid][err,err+,err-,gcor]
+
+        `contours`               # [parid][id1,id2,dchi2,[xc],[yc]]
+
+        `profiles`               # [parid][id1,[xp],[dchi1(xp)]]
+
     **fit_function** : function
-        A user-defined Python function to be fitted to the data. This
+        A user-defined Python function to fit to the data. This
         function's first argument must be the independent variable `x`. All
         other arguments *must* be named and have default values given. These
         defaults are used as a starting point for the actual minimization. For
@@ -197,6 +223,15 @@ class Fit(object):
         ################################
 
         self.dataset = dataset  #: this Fit instance's child `Dataset`
+
+        # variables to store final results of this fit
+        self.final_parameter_values = None # [parid][value]
+        self.final_parameter_errors = None # [parid][error]
+        self.par_cov_mat = None            # numpy 2d matrix
+        self.parabolic_errors=True
+        self.minos_errors=None             # [parid][err,err+,err-,gcor]
+        self.contours=[]                   # [parid][id1,id2,dchi2,[xc],[yc]]
+        self.profiles=[]                   # [parid][id1,[xp],[dchi1(xp)]]
 
         if isinstance(fit_function, FitFunction):
             #: the fit function used for this `Fit`
@@ -350,7 +385,7 @@ class Fit(object):
             # (with respect to the parameters)
             # use 1/100th of the smallest parameter error as spacing for df/dp
             derivative_spacing = 0.01 * np.sqrt(
-                min(np.diag(self.get_error_matrix()))
+                min(np.diag(self.par_cov_mat))
             )
             par_deriv_outer_prod = outer_product(
                 self.fit_function.derive_by_parameters(
@@ -362,7 +397,7 @@ class Fit(object):
 
             tmp_sum = np.sum(
                 par_deriv_outer_prod * np.asarray(
-                    self.get_error_matrix()
+                    self.par_cov_mat
                 )
             )
             errors[i] = np.sqrt(tmp_sum)
@@ -746,13 +781,45 @@ class Fit(object):
                 if np.allclose(old_matrix, new_matrix, atol=0, rtol=1e-4):
                     logger.debug("Matrix for `x` fit iteration has converged.")
                     break   # interrupt iteration
-
                 iter_nr += 1
 
+# determine, retrieve and analyze errors from MINOS algorithm
+        tol=0.05
+        self.minos_errors = self.minimizer.minos_errors()
+# error analysis:
+        for par_nr, par_val in enumerate(self.current_parameter_values):
+            ep=self.minos_errors[par_nr][0]
+            em=self.minos_errors[par_nr][1]
+            if(ep<>0 and em<>0):
+              if(abs(ep+em)/(ep-em) > tol) or \
+                (abs(1.-0.5*(ep-em)/self.minos_errors[par_nr][2])>tol):
+                  self.parabolic_errors=False
+
+       # store results ...
+        self.final_parameter_values = self.current_parameter_values
+        self.final_parameter_errors = self.current_parameter_errors
+        self.par_cov_mat = self.get_error_matrix()
+       # ... and print at end of fit
         if not quiet:
             self.print_fit_results()
             self.print_rounded_fit_parameters()
             self.print_fit_details()
+
+    def print_raw_results(self):
+        '''
+        unformatted print-out of all fit results in
+        '''
+        print '\n'
+        print 'par values', self.final_parameter_values
+        print 'par errors', self.final_parameter_errors
+        print 'par. covariance matrix:'
+        print self.par_cov_mat
+        print 'MINOS errors', self.minos_errors
+        print 'contours:'
+        print self.contours
+        print 'profiles:'
+        print self.profiles
+
 
     def call_minimizer(self, final_fit=True, verbose=False):
         '''
@@ -865,6 +932,9 @@ class Fit(object):
             print >>self.out_stream, \
                   "# Please review parameterization..."
             print ''
+        if(not self.parabolic_errors):
+            print >>self.out_stream, 'Attention: use uncertainties from MINOS'
+            print ''
 
         print >>self.out_stream, 'FCN      %g'\
             %(self.minimizer.get_fit_info('fcn'))
@@ -884,6 +954,7 @@ class Fit(object):
         print >>self.out_stream, 'HYPTEST ', hypothesis_status
         print >>self.out_stream, ''
 
+
     def print_fit_results(self):
         '''prints fit results'''
 
@@ -892,9 +963,8 @@ class Fit(object):
         print >>self.out_stream, '##############'
         print >>self.out_stream, ''
 
-        par_cov_mat = self.get_error_matrix()
-        par_err = extract_statistical_errors(par_cov_mat)
-        par_cor_mat = MinuitCov_to_cor(par_cov_mat)
+        par_err = extract_statistical_errors(self.par_cov_mat)
+        par_cor_mat = MinuitCov_to_cor(self.par_cov_mat)
 
 
         print >>self.out_stream, '# value        error   ',
@@ -902,7 +972,7 @@ class Fit(object):
             print >>self.out_stream, 'correlations'
         else:
             print >>self.out_stream, ''
-        for par_nr, par_val in enumerate(self.current_parameter_values):
+        for par_nr, par_val in enumerate(self.final_parameter_values):
             print >>self.out_stream, '# '+self.parameter_names[par_nr]
             print >>self.out_stream, format(par_val, '.04e')+'  ',
             if par_err[par_nr]:
@@ -914,61 +984,247 @@ class Fit(object):
                     print >>self.out_stream, format(par_cor_mat[par_nr, i],
                                                     '.3f')+'  ',
             print >>self.out_stream, ''
+      # print MINOS errors if needed
+        if(not self.parabolic_errors):
+            print >>self.out_stream, '!!! uncertainties from MINOS:'
+            for par_nr, par_val in enumerate(self.final_parameter_values):
+                print >>self.out_stream, '# '+self.parameter_names[par_nr]
+                if par_err[par_nr]:
+                    print >>self.out_stream, '     '+\
+                    '+'+format(self.minos_errors[par_nr][0],'.02e')\
+                    +' '+format(self.minos_errors[par_nr][1],'.02e')
+                else:
+                    print >>self.out_stream, '-fixed- ',
+            print >>self.out_stream, ''
         print >>self.out_stream, ''
 
-    def plot_contour(self, parameter1, parameter2, n_points=100, color='red',
-                    alpha=.25 , show=False):
+    def plot_contour(self, parameter1, parameter2, dchi2=2.3,
+         n_points=200, color='gray', alpha=.1 , show=False, axes=None):
         r'''
         Plots a two-dimensional :math:`1\sigma` contour for this fit into
         a separate figure and returns the figure object.
-        
+
         **parameter1** : int or string
             ID or name of the parameter to appear on the `x`-axis.
-            
+
         **parameter2** : int or string
             ID or name of the parameter to appear on the `y`-axis.
-        
+
+        *dchi2* : float or list of floats (otpional)
+            delta-chi^2 value(s) used to evaluate contour(s)
+            1. = 1 sigma
+            2.3 = 68.0%
+            4.  = 2 sigma
+            5.99 = 95.0%
+
         *n_points* : int (optional)
             Number of plot points to use for the contour. Higher
             values yield smoother contours but take longer to
             render. Default is 100.
-        
+
         *color* : string (optional)
             A ``matplotlib`` color identifier specifying the fill color
-            of the contour. Default is 'red'.
-            
+            of the contour. Default is 'gray'.
+
         *alpha* : float (optional)
             Transparency of the contour fill color ranging from 0. (fully
             transparent) to 1. (fully opaque). Default is 0.25
-        
+
         *show* : boolean (optional)
             Specify whether to show the figure before returning it. Defaults
             to ``False``.
-        
-        **returns** : ``matplotlib`` figure object
+
+        *axes* : sub-plot axes to put plot
+
+        **returns** : ``matplotlib`` figure object if no axes given
             A figure object containing the contour plot.
         '''
+#
         # lookup parameter IDs
         par1 = self._find_parameter(parameter1)
         par2 = self._find_parameter(parameter2)
-        _pvals = self.get_parameter_values()
+        _pvals = self.final_parameter_values
+        _perrs = self.final_parameter_errors
         xval, yval = _pvals[par1], _pvals[par2]
-        # plot 1-sigma contour of two parameters into a separate figure
-        xs, ys = self.minimizer.get_contour(parameter1, parameter2, n_points)  # get contour
-        tmp_fig = plt.figure()  # create new figure for contour
-        tmp_ax = tmp_fig.gca()  # get/create axes object for current figure
+        xer, yer = _perrs[par1], _perrs[par2]
+
+        plt.tight_layout()
+        if(axes is None):
+          tmp_fig = plt.figure(figsize=(5., 5.)) # new (square) figure for contour(s)
+          tmp_ax = tmp_fig.gca()   # get/create axes object for current figure
+        else:
+          tmp_ax=axes
         # set axis labels
-        tmp_ax.set_xlabel('$%s$' % (self.latex_parameter_names[par1],))
-        tmp_ax.set_ylabel('$%s$' % (self.latex_parameter_names[par2],))
-        # plot the actual contour
-        tmp_ax.fill(xs, ys, alpha=alpha, color=color, label='$1\\sigma$ contour')
-        tmp_ax.scatter(xval, yval, marker='o', label='parameter values')
+        tmp_ax.set_xlabel('$%s$' % (self.latex_parameter_names[par1],),
+             fontsize='xx-large')
+        tmp_ax.set_ylabel('$%s$' % (self.latex_parameter_names[par2],),
+             fontsize='xx-large')
+        # set size and number of tick labels
+        tmp_ax.tick_params(axis='both',which='both',
+                           labelsize='large')
+        tmp_ax.ticklabel_format(axis='both',style='scientific',
+                                scilimits=(-3,4), useOffset=False)
+        tmp_ax.locator_params(nbins=5)
+        # plot central value and errors
+        tmp_ax.errorbar(xval, yval, xerr=xer, yerr=yer,fmt='o')
+#        tmp_ax.scatter(xval, yval, marker='+', label='parameter values')
+        tmp_ax.set_color_cycle(['black','darkblue','darkgreen','chocolate',
+                       'darmagenta','darkred','darkorange','darkgoldenrod'])
+# plot contours(s)
+        dc2list=[]
+        try:
+          iter_over_dchi2=iter(dchi2)
+        except:
+          dc2list.append(dchi2)  # not iterable, append float
+        else:
+          dc2list.extend(dchi2) # iterable, extend by list
+        ncont=0
+        for dc2 in dc2list:
+          ncont+=ncont # count contours in list
+          self.minimizer.set_err(dc2)
+          xs, ys = self.minimizer.get_contour(par1, par2, n_points)
+# store result
+          self.contours.append([par1,par2,dc2,xs,ys])
+# plot contour lines
+          cl=round(100.*(1.-np.exp(-dc2/2.))) # corresponding confidence level
+          print >>self.out_stream,\
+             'Contour %4.1f %%CL for parameters %d vs. %d with %d points'\
+             %(cl, par1, par2, len(xs))
+          # plot the contour
+          labelstr=str(cl)+"\% CL"
+          tmp_ax.fill(xs, ys, alpha=alpha, color=color)   # as filled area
+          tmp_ax.plot(xs, ys, '--', linewidth=2, label=labelstr) # as line
+        print >>self.out_stream, ''
+        self.minimizer.set_err(1.) # set errdef back to default of 1.
         # plot a legend
-        tmp_leg = tmp_ax.legend(loc='best')
+        tmp_leg = tmp_ax.legend(loc='best', fontsize='small')
         # show the contour, if requested
-        if show:
+        if(axes is None):
+          if show:
             tmp_fig.show()
-        return tmp_fig
+          return tmp_fig
+
+    def plot_profile(self, parid, n_points=21,
+                     color='blue', alpha=.5, show=False, axes=None):
+        r'''
+        Plots a profile :math:`\\chi^2` for this fit into
+        a separate figure and returns the figure object.
+
+        **parid** : int or string
+            ID or name of parameter
+        *n_points* : int (optional)
+            Number of plot points to use for the profile curve.
+
+        *color* : string (optional)
+            A ``matplotlib`` color identifier specifying the line
+            color. Default is 'blue'.
+
+        *alpha* : float (optional)
+            Transparency of the contour fill color ranging from 0. (fully
+            transparent) to 1. (fully opaque). Default is 0.25
+
+        *show* : boolean (optional)
+            Specify whether to show the figure before returning it. Defaults
+            to ``False``.
+
+        *axes* : sub-plot axes to put plot
+
+        **returns** : ``matplotlib`` figure object if axes is None
+            A figure object containing the profile plot.
+        '''
+#
+        from scipy import interpolate
+
+        # lookup parameter ID
+        id = self._find_parameter(parid)
+        _pvals = self.final_parameter_values
+        _perrs = self.final_parameter_errors
+        val= _pvals[id]
+        err = _perrs[id]
+
+        print >>self.out_stream,\
+             'Profile for parameter %d with %d points'\
+             %(id, n_points)
+
+        plt.tight_layout()
+        if(axes is None):
+          tmp_fig = plt.figure(figsize=(5., 5.)) # new (square) figure for contour(s)
+          tmp_ax = tmp_fig.gca()   # get/create axes object for current figure
+        else:
+          tmp_ax= axes
+
+        # set axis labels
+        tmp_ax.set_xlabel('$%s$' % (self.latex_parameter_names[id],),
+             fontsize='xx-large')
+        tmp_ax.set_ylabel('$%s$' % ('$\\Delta \\chi^2$'),
+             fontsize='xx-large' )
+        # set size and number of tick labels
+        tmp_ax.tick_params(axis='both',which='both',
+                           labelsize='large')
+        tmp_ax.ticklabel_format(axis='both',style='scientific',
+                                scilimits=(-3,4),useOffset=False)
+        tmp_ax.locator_params(nbins=5)
+        tmp_ax.set_ylim(0.,9.)
+        tmp_ax.axvline(x=val,linestyle='--',linewidth=1,color='black')
+        tmp_ax.axhline(y=1.,linestyle='--',linewidth=1,color='darkred')
+        tmp_ax.axhline(y=4.,linestyle='-.',linewidth=1,color='darkred')
+        # plot central value and errors
+        tmp_ax.errorbar(val, 1., xerr=err,linewidth=3,fmt='o',color='black')
+#        tmp_ax.scatter(xval, yval, marker='+', label='parameter values')
+# get profile
+        xp, yp= self.minimizer.get_profile(id, n_points)
+        self.profiles.append([id,xp,yp])  # store this result
+# plot (smoothed) profile
+        yp=yp-np.min(yp) # refer to minimum
+        yspline = interpolate.UnivariateSpline(xp, yp, s=0)
+        xnew=np.linspace(xp[0],xp[n_points-1],200)
+        tmp_ax.plot(xnew, yspline(xnew), '-', linewidth=2, color=color,
+            label='profile $\\chi^2$')
+# plot parabolic expectation
+        parabolicChi2=(xnew-val)*(xnew-val)/(err*err)
+        tmp_ax.plot(xnew, parabolicChi2, '-.', linewidth=1, color='green',
+            label='parabolic $\\chi^2$')
+
+        tmp_leg = tmp_ax.legend(loc='best',fontsize='small')
+        # show the plot, if requested
+        if axes is None:
+          if show:
+            tmp_fig.show()
+          return tmp_fig
+
+    def plot_correlations(self):
+        ''' Plots two-dimensional contours for all pairs of parameters
+            and profile for all parameters, arranges as a matrix.
+
+        **returns** : ``matplotlib`` figure object
+            A figure object containing the matrix of plots.
+        '''
+        npar=self.number_of_parameters - self.number_of_fixed_parameters
+        cor_fig, axarr=plt.subplots(npar, npar, figsize=(5.*npar,5.*npar))
+
+        ip=-1
+        for i in range (0, self.number_of_parameters):
+          if not(self._fixed_parameters[i]): ip+=1
+          jp=-1
+          for j in range(0, self.number_of_parameters):
+            if not(self._fixed_parameters[j]): jp+=1
+            # skip fixed parameters
+            if not(self._fixed_parameters[i] or self._fixed_parameters[j]):
+              if ip>jp:
+               # empty space
+                axarr[jp,ip].axis('off')
+              elif ip==jp:
+                # plot profile
+                self.plot_profile(i, axes=axarr[ip,ip])
+              else:
+                # plot contour
+                self.plot_contour(i, j, dchi2=[1.,2.3], axes=axarr[jp,ip])
+
+        return cor_fig
+
+
+
+
 
 def build_fit(dataset, fitfunc,
               fitlabel='untitled', initial_fit_parameters=None,

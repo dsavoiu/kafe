@@ -3,14 +3,14 @@
    :platform: Unix
    :synopsis: This submodule contains several useful tools for getting
      information about a function, including the number, names and default
-     values of its parameters and its derivatives with respect to the 
+     values of its parameters and its derivatives with respect to the
      independent variable or the parameters.
 
 .. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
 .. moduleauthor:: Guenter Quast <G.Quast@kit.edu>
 '''
 # -----------------------------------------------------------------
-# Changes: 
+# Changes:
 # GQ 140803: precision for derive_by_parameteres now takes
 #            as spacing 1% of error, or 1e-7 if error is 0;
 #            same done for derive_by_x (to account for large
@@ -80,7 +80,7 @@ class FitFunction:
     """
     Decorator class for fit functions. If a function definition is decorated
     using this class, some information is collected about the function which
-    is relevant to the fitting process, such as the number of parameters, 
+    is relevant to the fitting process, such as the number of parameters,
     their names and default values. Some details pertaining to display and
     representation are also set, such as :math:`LaTeX` representations of
     the parameter names and the function name. Other decorators can be applied
@@ -152,11 +152,11 @@ class FitFunction:
 
     def evaluate(self, x_0, parameter_list):
         r'''
-        Evaluate the fit function at an x-value or at an array of 
+        Evaluate the fit function at an x-value or at an array of
         x-values for the parameter values in `prarameter_list`.
-        
+
           **x_0** float or array of floats
- 
+
           **parameter_list** values of function parameters
 
           **returns** function value(s)
@@ -202,14 +202,14 @@ class FitFunction:
         r'''
         Returns the gradient of `func` with respect to its parameters, i.e.
         with respect to every variable of `func` except the first one.
-        
+
         **precision_spec** : ``float`` or iterable of ``floats``
             An array of floats indicating the initial point spacing for
             numerically evaluating the derivative. Can be a single float
             value to use the same spacing for every derivation.
         '''
         output_list = []
-        
+
         try:
             iter(precision_spec)
         except TypeError:

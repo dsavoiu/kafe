@@ -48,7 +48,7 @@
 expression='\\frac{\\sigma^0\\, M_Z^2\\Gamma^2}'
                  '{((E^2-M_Z^2)^2+(E^4\\Gamma^2 / M_Z^2))}') 
 @FitFunction
-def fitf(E, M=91.2, G=2.5, s0=41.0):
+def fitf(E, s0=41.0, M=91.2, G=2.5):
 ~~return s0*E*E*G*G/((E*E-M*M)**2+(E**4*G*G/(M*M)))
 
 # standard Breit-Wigner
@@ -57,13 +57,13 @@ def fitf(E, M=91.2, G=2.5, s0=41.0):
 #expression='\\frac{\\sigma_0\\, M_Z^2\\Gamma^2}'
 #           '{ ((E^2-M_Z^2)^2+(\\Gamma^2 \\cdot M_Z^2))}' ) 
 #@FitFunction
-#def breit_wigner(E, M=91.0, G=2.0, s0=40.0):
+#def breit_wigner(E, s0=40.0, M=91.0, G=2.0):
 #~~return s0*M*M*G*G/((E*E-M*M)**2+(G*G*M*M)) 
 
 *InitialParameters # initial values and range
+41.  0.5
 91.2 0.1 
 2.5  0.1
-41.  0.5
 
 #---------------------------------------------------------------------------
 #### official results (LEP Electroweak Working Group):

@@ -9,7 +9,7 @@
     <meta content="kafe - a general, Python-based approach to fit a model function to two-dimensional data points with correlated uncertainties in both dimensions" lang="en" name="description" />
 <meta content="index, follow" name="robots" />
 
-    <title>Welcome to KaFE (Karlsruhe Fit Environment) &mdash; kafe 0.5.2 documentation</title>
+    <title>Welcome to KaFE (Karlsruhe Fit Environment) &mdash; kafe 0.5.3 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,7 +17,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.5.2',
+        VERSION:     '0.5.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="kafe 0.5.2 documentation" href="#" /> 
+    <link rel="top" title="kafe 0.5.3 documentation" href="#" /> 
   </head>
   <body>
     <div class="related">
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="#">kafe 0.5.2 documentation</a> &raquo;</li> 
+        <li><a href="#">kafe 0.5.3 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -52,26 +52,26 @@
 <blockquote>
 <div><strong>kafe</strong> is a data fitting framework designed for use in undergraduate
 physics lab courses. It provides a basic <cite>Python</cite> toolkit for fitting
-models to data as well as visualization of the data and the model function.
-It relies on <cite>Python</cite> packages such as <tt class="xref py py-mod docutils literal"><span class="pre">numpy</span></tt> and <tt class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></tt>, and uses
-the <cite>Python</cite> interface to the minimizer <cite>Minuit</cite> contained in the data
+models to data as well as visualisation of the data and the model function.
+It relies on <cite>Python</cite> packages such as <tt class="xref py py-mod docutils literal"><span class="pre">numpy</span></tt> and <tt class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></tt>,
+and uses the <cite>Python</cite> interface to the minimizer <cite>Minuit</cite> contained in the data
 analysis framework <cite>ROOT</cite>.</div></blockquote>
 <div class="section" id="kafe-overview">
 <h2><tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> Overview<a class="headerlink" href="#kafe-overview" title="Permalink to this headline">¶</a></h2>
 <div class="figure align-right">
-<a class="reference internal image-reference" href="_images/graph_example1.jpg"><img alt="image not found" src="_images/graph_example1.jpg" style="width: 300.0px; height: 300.0px;" /></a>
+<a class="reference internal image-reference" href="_images/kafe_graphics.png"><img alt="image not found" src="_images/kafe_graphics.png" style="width: 450.0px; height: 300.0px;" /></a>
 <p class="caption"><cite>Graphical output generated with kafe</cite>.</p>
 </div>
-<p>The <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> package provides a rather general approach to fitting of a model
-function to two-dimensional data points with correlated uncertainties in both
-dimensions. A typical use-case would be measurements of two quantities,
-an <cite>x</cite>- and a <cite>y</cite>-value, with both uncorrelated (statistical) uncertainties
-and correlated systematic uncertainties.</p>
-<p>Use cases range from performing a simple average of measurements
-to complex situations with correlated uncertainties on the measurements
-of the x and y values. The <cite>Python</cite> API guarantees full flexibility
-for data input. Helper functions, which also serve as examples for
-own implementations,  are available to handle file-based examples.</p>
+<p>The <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> package provides a rather general approach to fitting of
+a model function to two-dimensional data points with correlated uncertainties
+in both dimensions. The <cite>Python</cite> API guarantees full flexibility
+for data input. Helper functions for file-based input and some
+examples are available for own applications.</p>
+<p>Applications range from performing a simple average of measurements
+to complex situations with both correlated (systematic) and
+uncorrelated (statistical) uncertainties on the measurements
+of the x and y values described by a non-linear model function
+depending on a large number of parameters.</p>
 <p>The model function describes the y values as a function of the
 x-values and a set of model parameters {p}, <cite>y=f(x; {p})</cite>. Full
 flexibility exists as model functions are implemented as
@@ -83,47 +83,65 @@ between data points and the fit model is expressed in terms of the
 <cite>χ² probability</cite>, i. e. the probability to find less agreement between
 data and model than actually observed. Full access to the covariance
 matrix of the - typically correlated - model parameters is provided.</p>
-<p>The graphical output visualizes the data and the fit model at the
+<p>The graphical output visualises the data and the fit model at the
 best-fit-point of the parameters and also shows the uncertainty
 of the fit model as a light band surrounding the line representing
-the model function.</p>
+the model function. Plotting of confidence level contours for pairs
+of parameters or profiling of the χ² curves for each of the fit
+parameters are also provided.</p>
 <div class="section" id="code-structure">
 <h3>Code Structure<a class="headerlink" href="#code-structure" title="Permalink to this headline">¶</a></h3>
 <div class="figure align-right">
 <a class="reference internal image-reference" href="_images/kafeDiagram.jpg"><img alt="image not found" src="_images/kafeDiagram.jpg" style="width: 480.0px; height: 240.0px;" /></a>
 <p class="caption"><cite>Code structure of the kafe package</cite></p>
 </div>
-<p>The code of <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> is centered around very few classes to handle Data input,
+<p>The code of <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> is centred around very few classes to handle Data input,
 fitting and plotting, as illustrated in the figure on the right-hand side.</p>
 <p>Data, their uncertainties, and, optionally, the correlations of the
 uncertainties - are passed through the interface of the <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> class
-<a class="reference internal" href="#kafe.dataset.Dataset" title="kafe.dataset.Dataset"><tt class="xref py py-class docutils literal"><span class="pre">Dataset</span></tt></a>. Input can be included in the <cite>Python</cite> code or is read
-from files in standardized or user-defined formats. The representation
-of the data within the <a class="reference internal" href="#kafe.dataset.Dataset" title="kafe.dataset.Dataset"><tt class="xref py py-class docutils literal"><span class="pre">Dataset</span></tt></a> class is minimalistic, consisting
-of the x and y values and the full covariance matrices of their
+<a class="reference internal" href="#kafe.dataset.Dataset" title="kafe.dataset.Dataset"><tt class="xref py py-class docutils literal"><span class="pre">Dataset</span></tt></a>. Input can be included in the <cite>Python</cite> code
+or is read from files in standardised or user-defined formats. The representation
+of the data within the <a class="reference internal" href="#kafe.dataset.Dataset" title="kafe.dataset.Dataset"><tt class="xref py py-class docutils literal"><span class="pre">Dataset</span></tt></a> class is minimalistic,
+consisting of the x and y values and the full covariance matrices of their
 uncertainties. Correlated errors between x and y values are not
-supported yet, as such use cases are extremely rare.</p>
+supported yet, as such use cases are rare.</p>
 <p>A helper function, <a class="reference internal" href="#kafe.dataset.build_dataset" title="kafe.dataset.build_dataset"><tt class="xref py py-func docutils literal"><span class="pre">build_dataset()</span></tt></a>, is available
 to transform various error models, like a combination of independent
 and correlated errors or common absolute or relative errors, to this
 basic format.</p>
 <p>Adding a model function, taken either from a prepared set of fit
 functions within kafe or from a user&#8217;s own <cite>Python</cite> implementation,
-results in a <a class="reference internal" href="#kafe.fit.Fit" title="kafe.fit.Fit"><tt class="xref py py-class docutils literal"><span class="pre">Fit</span></tt></a> object, which controls the minimizer <a class="reference internal" href="#kafe.minuit.Minuit" title="kafe.minuit.Minuit"><tt class="xref py py-class docutils literal"><span class="pre">Minuit</span></tt></a>
-and provides the results through access methods.</p>
+results in a <a class="reference internal" href="#kafe.fit.Fit" title="kafe.fit.Fit"><tt class="xref py py-class docutils literal"><span class="pre">Fit</span></tt></a> object, which controls the
+minimizer <a class="reference internal" href="#kafe.minuit.Minuit" title="kafe.minuit.Minuit"><tt class="xref py py-class docutils literal"><span class="pre">Minuit</span></tt></a>. Access to the final
+results of the fitting procedure is provided by data members of
+the <cite>Fit</cite> class.</p>
 <p>One or multiple fit objects, i. e. the input data and model
 functions(s) at the best-fit point in parameter-space, are
-visualized by the class <a class="reference internal" href="#kafe.plot.Plot" title="kafe.plot.Plot"><tt class="xref py py-class docutils literal"><span class="pre">Plot</span></tt></a> with the help of <tt class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></tt>
-functionality. The <a class="reference internal" href="#module-plot" title="plot: A submodule for plotting `Dataset`s with ``matplotlib``. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">plot</span></tt></a> module also contains functionality to
-display the model uncertainty by surrounding the model function
-at the best-fit values of the parameters by a light band, the one-σ
-uncertainty band, which is obtained by propagation of the uncertainties
-of the fit parameters, taking into account their correlations.</p>
+visualised by the class <a class="reference internal" href="#kafe.plot.Plot" title="kafe.plot.Plot"><tt class="xref py py-class docutils literal"><span class="pre">Plot</span></tt></a> with the help
+of <tt class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></tt> functionality. The <a class="reference internal" href="#module-plot" title="plot: A submodule for plotting `Dataset`s with ``matplotlib``. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">plot</span></tt></a> module
+also contains functionality to display the model uncertainty by
+surrounding the model function at the best-fit values of the parameters
+by a light band, the one-σ uncertainty band, which is obtained by
+propagation of the uncertainties of the fit parameters taking
+into account their correlations.</p>
+<p>Two-dimensional contour lines of pairs of parameters
+are obtained with the method <tt class="xref py py-meth docutils literal"><span class="pre">plot_contour()</span></tt>
+of the <tt class="xref py py-class docutils literal"><span class="pre">Fit</span></tt> class, which internally relies on the
+<cite>mncont</cite> method of the <cite>Minuit</cite> package. Contour curves are
+obtained from a scan of the χ²-function around a fixed value,
+where each point on the curve represents the minimum with
+respect to all other free parameters in the fit, thus taking
+into account the correlation of a pair of parameters with all
+other parameters of the model.</p>
+<p>In a similar way, the method <tt class="xref py py-meth docutils literal"><span class="pre">plot_profile()</span></tt>
+provides profiled χ² curves, i. e. the value of the minimal
+χ² as a function of one parameter while all other parameters
+are allowed to vary.</p>
 </div>
 <div class="section" id="example">
 <h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
-<p>Only very few lines of Python code are needed to perform fits with kafe.
-The snippet of code shown below performs a fit of a quadratic
+<p>Only very few lines of Python code are needed to perform fits with
+kafe. The snippet of code shown below performs a fit of a quadratic
 function to some data points with uncertainties:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">kafe</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">kafe.function_library</span> <span class="kn">import</span> <span class="n">quadratic_3par</span>
@@ -143,26 +161,58 @@ function to some data points with uncertainties:</p>
 <span class="c"># Do the Fit</span>
 <span class="n">myFit</span><span class="o">.</span><span class="n">do_fit</span><span class="p">()</span>
 
-<span class="c">#### Create the plots and output them</span>
+<span class="c">#### Create result plots and output them</span>
 <span class="n">myPlot</span> <span class="o">=</span> <span class="n">Plot</span><span class="p">(</span><span class="n">myFit</span><span class="p">)</span>
 <span class="n">myPlot</span><span class="o">.</span><span class="n">plot_all</span><span class="p">()</span>
 <span class="n">myPlot</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s">&#39;kafe_example0.pdf&#39;</span><span class="p">)</span> <span class="c"># to file</span>
+
 <span class="n">myPlot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>                    <span class="c"># to screen</span>
 </pre></div>
 </div>
 <p>The output in text form (also available via various <tt class="xref py py-meth docutils literal"><span class="pre">get_...()</span></tt> methods
-of the <a class="reference internal" href="#kafe.fit.Fit" title="kafe.fit.Fit"><tt class="xref py py-class docutils literal"><span class="pre">Fit</span></tt></a> class) contains the values of the parameters at the best-fit
-point, their correlation matrix and the fit probability. The example produces
-the following graphical output:</p>
+of the <a class="reference internal" href="#kafe.fit.Fit" title="kafe.fit.Fit"><tt class="xref py py-class docutils literal"><span class="pre">Fit</span></tt></a> class) contains the values of the parameters
+at the best-fit point, their correlation matrix and the fit probability.
+The example produces the following graphical output:</p>
 <div class="figure align-center">
 <a class="reference internal image-reference" href="_images/kafe_example0.png"><img alt="image not found" src="_images/kafe_example0.png" style="width: 600.0px; height: 300.0px;" /></a>
 <p class="caption">Example: <cite>Data points with one-dimensional error bars compared
 to a quadratic model function with</cite> <strong>kafe</strong>.</p>
 </div>
+<p>The parametrisation chosen in this example leads to a
+strong correlation of the fit parameters. This can
+be graphically visualised by adding the following
+lines at the end of the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">### Create and save contour plots</span>
+<span class="n">contour1</span> <span class="o">=</span> <span class="n">myFit</span><span class="o">.</span><span class="n">plot_contour</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dchi2</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.3</span><span class="p">])</span>
+<span class="n">contour2</span> <span class="o">=</span> <span class="n">myFit</span><span class="o">.</span><span class="n">plot_contour</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dchi2</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.3</span><span class="p">])</span>
+<span class="n">contour3</span> <span class="o">=</span> <span class="n">myFit</span><span class="o">.</span><span class="n">plot_contour</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dchi2</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.3</span><span class="p">])</span>
+<span class="n">contour1</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;kafe_example0_contour1.pdf&#39;</span><span class="p">)</span>
+<span class="n">contour2</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;kafe_example0_contour2.pdf&#39;</span><span class="p">)</span>
+<span class="n">contour3</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;kafe_example0_contour3.pdf&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The example code produces two confidence-level contours
+for each pair of parameters (with <cite>id=0</cite>, <cite>id=1</cite> and <cite>id=2</cite>),
+corresponding to an increase of the χ²-function
+with respect to the minimum by the values given
+in the list passed as the third parameter to the
+method <tt class="xref py py-meth docutils literal"><span class="pre">myFit.plot_contour()</span></tt>. The resulting
+graphical representation, as shown below, displays the
+39% contours, corresponding to the one-sigma errors, and
+the 68% contours. The uncertainties on each parameter,
+indicated by the error bars, are also shown. They
+correspond to the projections of the one-sigma contours
+on the axes.</p>
+<div class="figure align-center">
+<img alt="image not found" src="_images/kafe_example0_contours.png" style="width: 900px; height: 300px;" />
+<p class="caption"><cite>Contour curves of a pairs of paramters a, b and c
+of the example above, calculated with</cite> <strong>kafe</strong>.</p>
+</div>
 <p>More and advanced examples - like fitting different models
 to one data set, comparison of different data sets with model
-functions, averaging of correlated measurements or multi-parameter
-fits - are provided as part of the <cite>kafe</cite> distribution and are
+functions, averaging of correlated measurements or fits with
+a large number of parameters -
+are provided as part of the <cite>kafe</cite> distribution and are
 described in the section <cite>Examples</cite> below. They may serve as
 a starting point for own applications.</p>
 </div>
@@ -221,7 +271,7 @@ export PYTHONPATH=$ROOTSYS/lib:$PYTHONPATH</pre>
 </div>
 <p>For more info, refer to [<a class="reference external" href="http://root.cern.ch/drupal/content/pyroot">http://root.cern.ch/drupal/content/pyroot</a>].</p>
 <p><cite>Qt</cite> is needed because it is the supported interactive front-end for
-<tt class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></tt>. Other front-ends are not supported and can cause weird behavior.</p>
+<tt class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></tt>. Other front-ends are not supported and can cause weird behaviour.</p>
 <p><cite>LaTeX</cite> is used by <tt class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></tt> for displaying labels and mathematical
 expressions on graphs.</p>
 </div>
@@ -307,6 +357,17 @@ HYPTEST  accepted (CL 5%)</pre>
 <a class="reference internal image-reference" href="_images/kafe_example1.png"><img alt="image not found" src="_images/kafe_example1.png" style="width: 600.0px; height: 300.0px;" /></a>
 <p class="caption"><cite>Output of example1 - compare two models</cite></p>
 </div>
+<p>The contour curves of the two fits are shown below
+and reflect the large correlations between the fit parameters.
+The right plot of the profile χ² curve shows that there
+is a slight deviation from the parabolic curve in the
+fist fit of a non-linear (exponential) function. For more
+details on the profiled χ² curve see the discussion of
+example 3, where the difference is more prominent.</p>
+<div class="figure align-center">
+<img alt="image not found" src="_images/kafe_example1_contours.png" style="width: 900px; height: 300px;" />
+<p class="caption"><cite>Contour curves and a profile χ² curve for the fits in example 1</cite></p>
+</div>
 </div>
 <div class="section" id="example-2-two-fits-and-models">
 <h3>Example 2 - two fits and models<a class="headerlink" href="#example-2-two-fits-and-models" title="Permalink to this headline">¶</a></h3>
@@ -342,18 +403,84 @@ in the region where the data of Dataset 2 are located, so the data
 are most probably incompatible with the assumption of an underlying
 single linear model.</p>
 </div>
-<div class="section" id="example-3-properties-of-a-gauss-curve">
-<h3>Example 3 - properties of a Gauss curve<a class="headerlink" href="#example-3-properties-of-a-gauss-curve" title="Permalink to this headline">¶</a></h3>
-<p>This example creates a dummy <a class="reference internal" href="#kafe.dataset.Dataset" title="kafe.dataset.Dataset"><tt class="xref py py-class docutils literal"><span class="pre">Dataset</span></tt></a> object whose points lie exactly
-on a Gaussian curve. The <a class="reference internal" href="#kafe.fit.Fit" title="kafe.fit.Fit"><tt class="xref py py-class docutils literal"><span class="pre">Fit</span></tt></a> will then converge toward that very same
-Gaussian. When plotting, the data points used to &#8220;support&#8221; the curve
-can be omitted.</p>
-<p>This example shows how to access the <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> plot objects
-to annotate plots with <tt class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></tt> functionality.</p>
+<div class="section" id="example-3-non-linear-fit-with-non-parabolic-errors">
+<h3>Example 3 - non-linear fit with non-parabolic errors<a class="headerlink" href="#example-3-non-linear-fit-with-non-parabolic-errors" title="Permalink to this headline">¶</a></h3>
+<p>Very often, when the fit model is a non-linear function
+of the parameters, the χ² function is not parabolic around
+the minimum. A very common example of such a case is an
+exponential function prarametrised as shown in the code
+fragment below. <cite>Minuit</cite> contains a spacial algorithm, <cite>Minos</cite>,
+which returns correct errors also in this case. Instead of
+using the curvature the minimum, <cite>Minos</cite> follows the
+χ² function from the minimum to the point where it
+crosses the the value <cite>minimum+up</cite>, where <cite>up=1</cite> corresponds
+to one standard deviation in χ² fits. During the scan of the
+χ² function at different values of each parameter the minimum
+with respect to all other parameters in the fit is determined,
+thus making sure that all correlations among the parameters
+are taken into account. In case of a parabolic χ² function,
+the <cite>Minos</cite> errors are identical to those obtained by
+the <cite>Hesse</cite> algorithm, but are typically larger or
+asymmetric in other cases.</p>
+<p>The method <tt class="xref py py-meth docutils literal"><span class="pre">kafe.do_fit()</span></tt> executes the <cite>Minos</cite> algorithm
+after completion of a fit and prints the <cite>Minos</cite> errors if
+the deviation from the parabolic result are larger than 5% .</p>
+<p>A graphical visualisation is provided
+by the method <tt class="xref py py-meth docutils literal"><span class="pre">plot_profile()</span></tt> , which
+displays the profile χ² curve for the parameter
+with name or index passed as an argument to the method.</p>
+<p>The relevant code fragments and the usage of
+the method <tt class="xref py py-meth docutils literal"><span class="pre">kafe.fit.plot_profile()</span></tt> are
+illustrated here:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="o">...</span>
+<span class="c"># definition of the fit function</span>
+<span class="nd">@ASCII</span><span class="p">(</span><span class="n">x_name</span><span class="o">=</span><span class="s">&quot;t&quot;</span><span class="p">,</span> <span class="n">expression</span><span class="o">=</span><span class="s">&quot;A0*exp(-t/tau)&quot;</span><span class="p">)</span>
+<span class="c"># Set some LaTeX-related parameters for this function</span>
+<span class="nd">@LaTeX</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="n">x_name</span><span class="o">=</span><span class="s">&quot;t&quot;</span><span class="p">,</span>
+   <span class="n">parameter_names</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;A_0&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\\</span><span class="s">tau{}&#39;</span><span class="p">),</span>
+   <span class="n">expression</span><span class="o">=</span><span class="s">&quot;A_0</span><span class="se">\\</span><span class="s">,</span><span class="se">\\</span><span class="s">exp(</span><span class="se">\\</span><span class="s">frac{-t}{</span><span class="se">\\</span><span class="s">tau})&quot;</span><span class="p">)</span>
+<span class="nd">@FitFunction</span>
+<span class="k">def</span> <span class="nf">exponential</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">A0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+   <span class="k">return</span> <span class="n">A0</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">t</span><span class="o">/</span><span class="n">tau</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="c"># Load the data, perform fit and plot</span>
+<span class="n">my_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">input_file</span><span class="o">=</span><span class="s">&#39;dataset.dat&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Example Dataset&quot;</span><span class="p">)</span>
+<span class="n">my_fit</span> <span class="o">=</span> <span class="n">Fit</span><span class="p">(</span><span class="n">my_dataset</span><span class="p">,</span> <span class="n">exponential</span><span class="p">)</span>
+<span class="n">my_fit</span><span class="o">.</span><span class="n">do_fit</span><span class="p">()</span>
+<span class="n">my_plot</span> <span class="o">=</span> <span class="n">Plot</span><span class="p">(</span><span class="n">my_fit</span><span class="p">)</span>
+<span class="n">my_plot</span><span class="o">.</span><span class="n">plot_all</span><span class="p">()</span>
+<span class="c"># --&gt; display contours and profile</span>
+<span class="n">contour</span> <span class="o">=</span> <span class="n">my_fit</span><span class="o">.</span><span class="n">plot_contour</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dchi2</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.3</span><span class="p">])</span>
+<span class="n">profile1</span><span class="o">=</span><span class="n">my_fit</span><span class="o">.</span><span class="n">plot_profile</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">profile2</span><span class="o">=</span><span class="n">my_fit</span><span class="o">.</span><span class="n">plot_profile</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="c"># Show the plots</span>
+<span class="n">my_plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The data points were generated using a normalisation factor
+of <cite>A0=1.</cite> and a lifetime <cite>τ=1.</cite>. The resulting fit output
+below demonstrates that this is well reproduced within
+uncertainties:</p>
 <div class="figure align-center">
 <a class="reference internal image-reference" href="_images/kafe_example3.png"><img alt="image not found" src="_images/kafe_example3.png" style="width: 600.0px; height: 300.0px;" /></a>
-<p class="caption"><cite>Output of example 3 - properties of a Gauss curve.</cite></p>
+<p class="caption"><cite>Output of example 3 - Fit of an exponential</cite></p>
 </div>
+<p>The contour <cite>A</cite><sub>0</sub> <cite>vs τ</cite>, however, is not an ellipse,
+as shown in the figure below. The profiled χ² curves are
+also shown; they deviate significantly from parabolas.
+The proper one-sigma uncertainty in the sense of a 68%
+confidence interval is read from these curves by determining
+the parameter values where the χ² curves cross the horizontal
+lines at a value of Δχ²=1 above the minimum. The two-sigma
+uncertainties correspond to the intersections with the
+horizontal line at Δχ²=4.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/kafe_example3_contours.png"><img alt="image not found" src="_images/kafe_example3_contours.png" style="width: 900.0px; height: 300.0px;" /></a>
+<p class="caption"><cite>Contour and profile χ² curves of example 3</cite></p>
+</div>
+<p>Note: a more parabolic behaviour is achieved
+by using the width parameter λ=1/τ in the
+parametrisation of the exponential function.</p>
 </div>
 <div class="section" id="example-4-average-of-correlated-measurements">
 <h3>Example 4 - average of correlated measurements<a class="headerlink" href="#example-4-average-of-correlated-measurements" title="Permalink to this headline">¶</a></h3>
@@ -439,18 +566,18 @@ averaging example is here:</p>
 80.353  0.068   0.044   0.025 0.025 0.025 0.025 0.044 0.044 0.044 0.044</pre>
 </div>
 </div>
-<div class="section" id="example-5-multi-parameter-fit-damped-oscillation">
-<h3>Example 5 - multi-parameter fit (damped oscillation)<a class="headerlink" href="#example-5-multi-parameter-fit-damped-oscillation" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="example-5-non-linear-multi-parameter-fit-damped-oscillation">
+<h3>Example 5 - non-linear multi-parameter fit (damped oscillation)<a class="headerlink" href="#example-5-non-linear-multi-parameter-fit-damped-oscillation" title="Permalink to this headline">¶</a></h3>
 <p>This example shows the fitting of a more complicated model function
 to data collected from a damped harmonic oscillator. In such
 non-linear fits, stetting the initial values is sometimes crucial
-to let the fit converge at the global minimum. The <a class="reference internal" href="#kafe.fit.Fit" title="kafe.fit.Fit"><tt class="xref py py-class docutils literal"><span class="pre">Fit</span></tt></a> object
-provides the method <a class="reference internal" href="#kafe.fit.Fit.set_parameters" title="kafe.fit.Fit.set_parameters"><tt class="xref py py-meth docutils literal"><span class="pre">set_parameters()</span></tt></a> for this purpose. As the
-fit function for this problem is not a standard one, it is defined
-explicitly making use of the decorator functions available in <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt>
-to provide nice type setting of the parameters. This time, the
-function <a class="reference internal" href="#kafe.file_tools.parse_column_data" title="kafe.file_tools.parse_column_data"><tt class="xref py py-func docutils literal"><span class="pre">parse_column_data()</span></tt></a> is used to read the input,
-which is given as separate columns with the fields</p>
+to let the fit converge at the global minimum. The <a class="reference internal" href="#kafe.fit.Fit" title="kafe.fit.Fit"><tt class="xref py py-class docutils literal"><span class="pre">Fit</span></tt></a>
+object provides the method <a class="reference internal" href="#kafe.fit.Fit.set_parameters" title="kafe.fit.Fit.set_parameters"><tt class="xref py py-meth docutils literal"><span class="pre">set_parameters()</span></tt></a> for this
+purpose. As the fit function for this problem is not a standard one, it is
+defined explicitly making use of the decorator functions available in
+<tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> to provide nice type setting of the parameters. This time,
+the function <a class="reference internal" href="#kafe.file_tools.parse_column_data" title="kafe.file_tools.parse_column_data"><tt class="xref py py-func docutils literal"><span class="pre">parse_column_data()</span></tt></a> is used to read
+the input, which is given as separate columns with the fields</p>
 <blockquote>
 <div><tt class="docutils literal"><span class="pre">&lt;time&gt;</span>&nbsp; <span class="pre">&lt;Amplitude&gt;</span>&nbsp;&nbsp;&nbsp; <span class="pre">&lt;error</span> <span class="pre">on</span> <span class="pre">time&gt;</span>&nbsp;&nbsp; <span class="pre">&lt;error</span> <span class="pre">on</span> <span class="pre">Amplitude&gt;</span></tt></div></blockquote>
 <p>Here is the example code:</p>
@@ -479,22 +606,40 @@ which is given as separate columns with the fields</p>
 <span class="n">my_fit</span> <span class="o">=</span> <span class="n">Fit</span><span class="p">(</span><span class="n">my_dataset</span><span class="p">,</span> <span class="n">damped_oscillator</span><span class="p">)</span>
 <span class="c"># Set the initial values for the fit:</span>
 <span class="c">#                      a_0 tau omega phi</span>
-<span class="n">my_fit</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">((</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">6.28</span><span class="p">,</span> <span class="mf">0.</span><span class="p">))</span>
+<span class="n">my_fit</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">((</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">6.28</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">))</span>
 <span class="n">my_fit</span><span class="o">.</span><span class="n">do_fit</span><span class="p">()</span>
 <span class="c"># --- Create and output the plots</span>
 <span class="n">my_plot</span> <span class="o">=</span> <span class="n">Plot</span><span class="p">(</span><span class="n">my_fit</span><span class="p">)</span>
 <span class="n">my_plot</span><span class="o">.</span><span class="n">plot_all</span><span class="p">()</span>
-<span class="n">my_plot</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s">&#39;plot.pdf&#39;</span><span class="p">)</span>
+<span class="c">#my_plot.save(&#39;plot.pdf&#39;)</span>
+<span class="n">my_fit</span><span class="o">.</span><span class="n">plot_correlations</span><span class="p">()</span> <span class="c"># all contours and profiles</span>
 <span class="n">my_plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+<p>This is the resulting output:</p>
 <div class="figure align-center">
 <a class="reference internal image-reference" href="_images/kafe_example5.png"><img alt="image not found" src="_images/kafe_example5.png" style="width: 600.0px; height: 300.0px;" /></a>
 <p class="caption"><cite>Example 5 - fit of the time dependence of the amplitude of a damped harmonic oscillator.</cite></p>
 </div>
+<p>The fit function is non-linear, and, furthermore, there ist not a single
+local minimum - e.g. a shift in phase of 180° corresonds to a change in
+sign of the amplitude, and valid solutions are also obtained for multiples
+of the base frequency. Checking of the validity of the fit result is
+threfore important. The method
+<tt class="xref py py-meth docutils literal"><span class="pre">plot_correlations()</span></tt> provides the
+contours of all pairs of parameters and the profiles for each of
+the parameters and displays them in a matrix-like arrangement.
+Distorted contour-ellipses show wether the result is affected
+by near-by minima, and the profiles allow to correctly assign
+the parameter uncertainties in cases where the parabolic
+approximation is not precise enough.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/kafe_example5_correlations.png"><img alt="image not found" src="_images/kafe_example5_correlations.png" style="width: 675.0px; height: 675.0px;" /></a>
+<p class="caption"><cite>Confidence contours and profiles for example 5.</cite></p>
 </div>
-<div class="section" id="example-6-another-multi-parameter-fit">
-<h3>Example 6 - another multi-parameter fit<a class="headerlink" href="#example-6-another-multi-parameter-fit" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="example-6-linear-multi-parameter-fit">
+<h3>Example 6 - linear multi-parameter fit<a class="headerlink" href="#example-6-linear-multi-parameter-fit" title="Permalink to this headline">¶</a></h3>
 <p>This example is not much different from the previous one, except that
 the fit function, a standard fourth-degree polynomial from the module
 <a class="reference internal" href="#module-function_library" title="function_library: A submodule containing a collection of model functions. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">function_library</span></tt></a>, is modified to reflect the names of the problem
@@ -574,8 +719,8 @@ internal interfaces:</p>
 <p class="caption"><cite>Output of example 6 - counting rate.</cite></p>
 </div>
 </div>
-<div class="section" id="example-7-non-linear-multi-parameter-fit">
-<h3>Example 7 - non-linear multi-parameter fit<a class="headerlink" href="#example-7-non-linear-multi-parameter-fit" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="example-7-another-non-linear-multi-parameter-fit-double-slit-spectrum">
+<h3>Example 7 - another non-linear multi-parameter fit (double-slit spectrum)<a class="headerlink" href="#example-7-another-non-linear-multi-parameter-fit-double-slit-spectrum" title="Permalink to this headline">¶</a></h3>
 <p>Again, not much new in this example, except that the
 model is now very non-linear, the intensity distribution
 of light after passing through a double-slit. The
@@ -629,7 +774,7 @@ of the <a class="reference internal" href="#kafe.fit.Fit" title="kafe.fit.Fit"><
 is is more appropriate to constrain it within its uncertainty (which
 may be known from an independent measurement or from the specifications
 of the laser used in the experiment). To take into account a
-wave number <cite>k</cite> known with a precision of 10&#8216;000, the
+wave number <cite>k</cite> known with a precision of 10&#8216;000 the
 last line in the example above should be replaced by:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="o">...</span>
 <span class="n">my_fit</span><span class="o">.</span><span class="n">constrain_parameters</span><span class="p">([</span><span class="s">&#39;k&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mf">9.67e6</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.e4</span><span class="p">])</span>
@@ -737,24 +882,23 @@ def fitf(E, M=91.2, G=2.5, s0=41.0):
 <p class="caption"><cite>Output of example 8 - Fit of a Breit-Wigner function.</cite></p>
 </div>
 <p>This example also contains a code snippet demonstrating how to plot
-contours with <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt>. A <em>contour</em> is a region of the parameter
-space containing all parameter values consistent with the fit, within
-uncertainty.</p>
-<p>Contours are useful because they provide a way to visualize parameter
-uncertainties and correlations. <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> supports plotting
-2D <img class="math" src="_images/math/070fe743455ad95e644411607dc18d8e72f1d23f.png" alt="1\sigma"/> contours for any pair of parameters by getting the
-relevant data from <tt class="xref cpp cpp-class docutils literal"><span class="pre">TMinuit</span></tt> and plotting it using <tt class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></tt>.
-This can be achieved by calling a <a class="reference internal" href="#kafe.fit.Fit" title="kafe.fit.Fit"><tt class="xref py py-class docutils literal"><span class="pre">Fit</span></tt></a> object&#8217;s
-<a class="reference internal" href="#kafe.fit.Fit.plot_contour" title="kafe.fit.Fit.plot_contour"><tt class="xref py py-meth docutils literal"><span class="pre">plot_contour()</span></tt></a> method:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># plot 1-sigma contour of first two parameters into a separate figure</span>
-<span class="n">cont_fig</span> <span class="o">=</span> <span class="n">BWfit</span><span class="o">.</span><span class="n">plot_contour</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c"># plot contour</span>
-<span class="c"># save figure</span>
-<span class="n">cont_fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&quot;kafe_BreitWignerFit_contour12.pdf&quot;</span><span class="p">)</span>
+contours by calling the <a class="reference internal" href="#kafe.fit.Fit" title="kafe.fit.Fit"><tt class="xref py py-class docutils literal"><span class="pre">Fit</span></tt></a> object&#8217;s
+<tt class="xref py py-meth docutils literal"><span class="pre">plot_contour()</span></tt> method. This is the code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># plot pairs of contours at 1 sigma, 68%, 2 sigma and 95%</span>
+<span class="n">cont_fig1</span> <span class="o">=</span> <span class="n">BWfit</span><span class="o">.</span><span class="n">plot_contour</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dchi2</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.3</span><span class="p">,</span><span class="mf">4.</span><span class="p">,</span><span class="mf">5.99</span><span class="p">])</span>
+<span class="n">cont_fig2</span> <span class="o">=</span> <span class="n">BWfit</span><span class="o">.</span><span class="n">plot_contour</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dchi2</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.3</span><span class="p">,</span><span class="mf">4.</span><span class="p">,</span><span class="mf">5.99</span><span class="p">])</span>
+<span class="n">cont_fig3</span> <span class="o">=</span> <span class="n">BWfit</span><span class="o">.</span><span class="n">plot_contour</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dchi2</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.3</span><span class="p">,</span><span class="mf">4.</span><span class="p">,</span><span class="mf">5.99</span><span class="p">])</span>
+<span class="c"># save to files</span>
+<span class="n">cont_fig1</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&quot;kafe_BreitWignerFit_contour12.pdf&quot;</span><span class="p">)</span>
+<span class="n">cont_fig2</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&quot;kafe_BreitWignerFit_contour13.pdf&quot;</span><span class="p">)</span>
+<span class="n">cont_fig3</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&quot;kafe_BreitWignerFit_contour23.pdf&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>The resulting pictures show that parameter correlations are
+relatively small:</p>
 <div class="figure align-center">
-<a class="reference internal image-reference" href="_images/kafe_BreitWignerFit_contour12.png"><img alt="image not found" src="_images/kafe_BreitWignerFit_contour12.png" style="width: 600.0px; height: 300.0px;" /></a>
-<p class="caption"><cite>Contour generated in example 8 - Fit of a Breit-Wigner function.</cite></p>
+<img alt="image not found" src="_images/kafe_BreitWignerFit_contours.png" style="width: 900px; height: 300px;" />
+<p class="caption"><cite>Contours generated in example 8 - Fit of a Breit-Wigner function.</cite></p>
 </div>
 </div>
 <div class="section" id="example-9-fit-of-a-function-to-histogram-data">
@@ -822,11 +966,25 @@ more fundamental methods of the <cite>Dataset</cite>, <cite>Fit</cite> and
 </pre></div>
 </div>
 <p>Here is the output, which shows that the parameters of the
-normal distribution, from which the data were generated, are
-well reproduced within the uncertainties by the fit result:</p>
+standard normal distribution, from which the data were generated,
+are reproduced well by the fit result:</p>
 <div class="figure align-center">
 <a class="reference internal image-reference" href="_images/kafe_example9.png"><img alt="image not found" src="_images/kafe_example9.png" style="width: 600.0px; height: 300.0px;" /></a>
 <p class="caption"><cite>Output of example 9 - Fit of a Gaussian distribution to histogram data</cite></p>
+</div>
+</div>
+<div class="section" id="example-10-plotting-with-kafe-properties-of-a-gauss-curve">
+<h3>Example 10 - Plotting with <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt>: properties of a Gauss curve<a class="headerlink" href="#example-10-plotting-with-kafe-properties-of-a-gauss-curve" title="Permalink to this headline">¶</a></h3>
+<p>This example shows how to access the <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> plot objects
+to annotate plots with <tt class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></tt> functionality.</p>
+<p>A dummy object <a class="reference internal" href="#kafe.dataset.Dataset" title="kafe.dataset.Dataset"><tt class="xref py py-class docutils literal"><span class="pre">Dataset</span></tt></a> is
+created with points lying exactly on a Gaussian curve.
+The <a class="reference internal" href="#kafe.fit.Fit" title="kafe.fit.Fit"><tt class="xref py py-class docutils literal"><span class="pre">Fit</span></tt></a> will then converge toward
+that very same Gaussian. When plotting, the data points
+used to &#8220;support&#8221; the curve can be omitted.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/kafe_example10.png"><img alt="image not found" src="_images/kafe_example10.png" style="width: 600.0px; height: 300.0px;" /></a>
+<p class="caption"><cite>Output of example 10 - properties of a Gauss curve.</cite></p>
 </div>
 </div>
 </div>
@@ -1228,28 +1386,28 @@ plotting more than one <cite>Fit</cite> in the same <cite>Plot</cite>.</dd>
 <span class="target" id="module-file_tools"></span><dl class="function">
 <dt id="kafe.file_tools.buildDataset_fromFile">
 <tt class="descclassname">kafe.file_tools.</tt><tt class="descname">buildDataset_fromFile</tt><big>(</big><em>file_to_parse</em><big>)</big><a class="headerlink" href="#kafe.file_tools.buildDataset_fromFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>build a kafe <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt> object from input file with key words
+<dd><p>build a kafe <tt class="docutils literal"><span class="pre">Dataset</span></tt> object from input file with key words
 and file format defined in <tt class="docutils literal"><span class="pre">parse_general_inputfile</span></tt></p>
 <dl class="docutils">
-<dt><strong>file_to_parse</strong> <span class="classifier-delimiter">:</span> <span class="classifier">file-like object or string containing a file path</span></dt>
+<dt><strong>file_to_parse</strong>:  file-like object or string containing a file path</dt>
 <dd>The file to parse.</dd>
-<dt><strong>returns</strong> <span class="classifier-delimiter">:</span> <span class="classifier">an instance of the <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt> class,</span></dt>
-<dd>constructed with the help of the method <tt class="xref py py-func docutils literal"><span class="pre">Dataset.build_dataset()</span></tt></dd>
+<dt><strong>returns</strong> an instance of the <tt class="docutils literal"><span class="pre">Dataset</span></tt> class,</dt>
+<dd>constructed with the help of the method <tt class="docutils literal"><span class="pre">Dataset.build_dataset()</span></tt></dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="kafe.file_tools.buildFit_fromFile">
 <tt class="descclassname">kafe.file_tools.</tt><tt class="descname">buildFit_fromFile</tt><big>(</big><em>file_to_parse</em><big>)</big><a class="headerlink" href="#kafe.file_tools.buildFit_fromFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>build a kafe <tt class="xref py py-obj docutils literal"><span class="pre">Fit</span></tt> object from input file with keywords
-and file format defined in <tt class="xref py py-func docutils literal"><span class="pre">parse_general_input_file()</span></tt></p>
+<dd><p>build a kafe <tt class="docutils literal"><span class="pre">Fit</span></tt> object from input file with keywords
+and file format defined in <tt class="docutils literal"><span class="pre">parse_general_input_file</span></tt></p>
 <dl class="docutils">
 <dt><strong>file_to_parse</strong>:  file-like object or string containing a file path</dt>
 <dd>The file to parse.</dd>
-<dt><strong>returns</strong> <span class="classifier-delimiter">:</span> <span class="classifier">an instance of the <tt class="xref py py-obj docutils literal"><span class="pre">Fit</span></tt> class,</span></dt>
+<dt><strong>returns</strong> an instance of the <tt class="docutils literal"><span class="pre">Fit</span></tt> class,</dt>
 <dd>constructed with the help of the methods
-<tt class="xref py py-func docutils literal"><span class="pre">Dataset.build_dataset()</span></tt> and
-<tt class="xref py py-func docutils literal"><span class="pre">Fit.build_fit()</span></tt></dd>
+<tt class="docutils literal"><span class="pre">Dataset.build_dataset()</span></tt> and
+<tt class="docutils literal"><span class="pre">Fit.build_fit()</span></tt></dd>
 </dl>
 </dd></dl>
 
@@ -1257,9 +1415,8 @@ and file format defined in <tt class="xref py py-func docutils literal"><span cl
 <dt id="kafe.file_tools.parse_column_data">
 <tt class="descclassname">kafe.file_tools.</tt><tt class="descname">parse_column_data</tt><big>(</big><em>file_to_parse, field_order='x,y', delimiter=' ', cov_mat_files=None, title='Untitled Dataset', basename=None, axis_labels=['x', 'y'], axis_units=['', '']</em><big>)</big><a class="headerlink" href="#kafe.file_tools.parse_column_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses a file which contains measurement data in a one-measurement-per-row
-format. The field (column) order can be specified. It defaults to
-<tt class="docutils literal"><span class="pre">&quot;x,y&quot;</span></tt>.
-Valid field names are <cite>x</cite>, <cite>y</cite>, <cite>xabserr</cite>, <cite>yabserr</cite>, <cite>xrelerr</cite>,
+format. The field (column) order can be specified. It defaults to <cite>x,y&#8217;.
+Valid field names are `x</cite>, <cite>y</cite>, <cite>xabserr</cite>, <cite>yabserr</cite>, <cite>xrelerr</cite>,
 <cite>yrelerr</cite>. Another valid field name is <cite>ignore</cite> which can be used to skip
 a field.</p>
 <p>A certain type of field can appear several times. If this is the case, all
@@ -1290,23 +1447,23 @@ passed.</p>
 <p>Each element of this tuple may be either <tt class="docutils literal"><span class="pre">None</span></tt>, a file or file-like
 object, or an iterable containing files and file-like objects. Each
 file should contain a covariance matrix for the respective axis.</p>
-<p class="last">When creating the <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt>, all given matrices are summed over.</p>
+<p class="last">When creating the <cite>Dataset</cite>, all given matrices are summed over.</p>
 </dd>
 <dt><em>title</em> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
-<dd>The title of the <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt>.</dd>
+<dd>The title of the <cite>Dataset</cite>.</dd>
 <dt><em>basename</em> <span class="classifier-delimiter">:</span> <span class="classifier">string or <tt class="docutils literal"><span class="pre">None</span></tt> (optional)</span></dt>
-<dd>A basename for the <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt>. All output files related to this dataset
+<dd>A basename for the <cite>Dataset</cite>. All output files related to this dataset
 will use this as a basename. If this is <tt class="docutils literal"><span class="pre">None</span></tt> (default), the
 basename will be inferred from the filename.</dd>
 <dt><em>axis_labels</em> <span class="classifier-delimiter">:</span> <span class="classifier">2-tuple of strings (optional)</span></dt>
-<dd>a 2-tuple containing the axis labels for the <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt>. This is
-relevant when plotting <tt class="xref py py-obj docutils literal"><span class="pre">Fits</span></tt> of the <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt>, but is ignored when
-plotting more than one <tt class="xref py py-obj docutils literal"><span class="pre">Fit</span></tt> in the same <tt class="xref py py-obj docutils literal"><span class="pre">Plot</span></tt>.</dd>
+<dd>a 2-tuple containing the axis labels for the <cite>Dataset</cite>. This is
+relevant when plotting <cite>Fits</cite> of the <cite>Dataset</cite>, but is ignored when
+plotting more than one <cite>Fit</cite> in the same <cite>Plot</cite>.</dd>
 <dt><em>axis_units</em> <span class="classifier-delimiter">:</span> <span class="classifier">2-tuple of strings (optional)</span></dt>
-<dd>a 2-tuple containing the axis units for the <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt>. This is
-relevant when plotting <tt class="xref py py-obj docutils literal"><span class="pre">Fits</span></tt> of the <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt>, but is ignored when
-plotting more than one <tt class="xref py py-obj docutils literal"><span class="pre">Fit</span></tt> in the same <tt class="xref py py-obj docutils literal"><span class="pre">Plot</span></tt>.</dd>
-<dt><strong>return</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt></span></dt>
+<dd>a 2-tuple containing the axis units for the <cite>Dataset</cite>. This is
+relevant when plotting <cite>Fits</cite> of the <cite>Dataset</cite>, but is ignored when
+plotting more than one <cite>Fit</cite> in the same <cite>Plot</cite>.</dd>
+<dt><strong>return</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><cite>Dataset</cite></span></dt>
 <dd>A Dataset built from the parsed file.</dd>
 </dl>
 </dd></dl>
@@ -1314,39 +1471,38 @@ plotting more than one <tt class="xref py py-obj docutils literal"><span class="
 <dl class="function">
 <dt id="kafe.file_tools.parse_general_inputfile">
 <tt class="descclassname">kafe.file_tools.</tt><tt class="descname">parse_general_inputfile</tt><big>(</big><em>file_to_parse</em><big>)</big><a class="headerlink" href="#kafe.file_tools.parse_general_inputfile" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function can be used to specify <cite>kafe</cite> <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt>
-or <tt class="xref py py-obj docutils literal"><span class="pre">Fit</span></tt> objects in a single input file, thus requiring
+<dd><p>This function can be used to specify <cite>kafe</cite> <tt class="docutils literal"><span class="pre">Dataset</span></tt>
+or <tt class="docutils literal"><span class="pre">Fit</span></tt> objects in a single input file, thus requiring
 minimal Python code. Keywords as specified in a dictionary
 <tt class="docutils literal"><span class="pre">tokens</span></tt> specify all objects and parameters needed by the
-functions <tt class="xref py py-func docutils literal"><span class="pre">build_dataset()</span></tt> in  module <a class="reference internal" href="#module-dataset" title="dataset: This sub-module defines a `Dataset` object, a container class for storing measurement data and error data. It also provides functions to build a Dataset object from pyhton arrays or read from or export data to a file (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">dataset</span></tt></a> and
-<tt class="xref py py-func docutils literal"><span class="pre">build_fit()</span></tt> in module <a class="reference internal" href="#module-fit" title="fit: This submodule defines a `Fit` object which performs the actual fitting given a `Dataset` and a fit function. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">fit</span></tt></a>.</p>
+functions <tt class="docutils literal"><span class="pre">build_dataset()</span></tt> in  module <tt class="docutils literal"><span class="pre">dataset</span></tt> and
+<tt class="docutils literal"><span class="pre">build_fit()</span></tt> in module <tt class="docutils literal"><span class="pre">fit</span></tt>.</p>
 <dl class="docutils">
 <dt><strong>file_to_parse</strong>:  file-like object or string containing a file path</dt>
 <dd>The file to parse.</dd>
 <dt><strong>return</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dataset_kwargs, fit_kwargs</span></dt>
-<dd>keyword lists to build a kafe <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt> or <tt class="xref py py-obj docutils literal"><span class="pre">Fit</span></tt> object
-with the helper functions <cite>build_dataset</cite> or <cite>build_fit</cite></dd>
+<dd>keyword lists to build a kafe <tt class="docutils literal"><span class="pre">Dataset</span></tt> or <tt class="docutils literal"><span class="pre">Fit`</span> <span class="pre">object</span>
+<span class="pre">with</span> <span class="pre">the</span> <span class="pre">helper</span> <span class="pre">functions</span> <span class="pre">``build_dataset</span></tt> or <tt class="docutils literal"><span class="pre">build_fit</span></tt></dd>
 </dl>
-<p><strong>Description of the format of the input file</strong></p>
+<p><em>Description of the format of the input file</em></p>
 <p>The interpretation of the input data is driven by keywords.
 All data following a key must be of the same kind, a block of
 data ends when a new key is specified.</p>
 <p>Some keys only expect a single float or string-tpye value, given
 on the same line, separated by a space (<tt class="docutils literal"><span class="pre">'</span> <span class="pre">'</span></tt>):</p>
-<div class="highlight-python"><pre>&lt;key&gt; &lt;value&gt;</pre>
-</div>
+<blockquote>
+<div>&lt;key&gt; &lt;value&gt;</div></blockquote>
 <p>For multiple input, i.e. data, uncertainties and covariance or
 correlation matrices, the format is:</p>
-<div class="highlight-python"><pre>&lt;key&gt;
-&lt;xval&gt;  &lt;xerr&gt;  [&lt;xsyst&gt;  &lt;elements of cov/cor matrix&gt;]
-
-...
-
-&lt;xval&gt;  &lt;xerr&gt;  [&lt;xsyst&gt;  &lt;elements of cov/cor matrix&gt;]</pre>
-</div>
+<blockquote>
+<div><p>&lt;key&gt;
+&lt;xval&gt;  &lt;xerr&gt;  [&lt;xsyst&gt;  &lt;elements of cov/cor matrix&gt;]</p>
+<p>...</p>
+<p>&lt;xval&gt;  &lt;xerr&gt;  [&lt;xsyst&gt;  &lt;elements of cov/cor matrix&gt;]</p>
+</div></blockquote>
 <p>The field separator is space (<tt class="docutils literal"><span class="pre">'</span> <span class="pre">'</span></tt>). Note that the number of input
 values in each line must correspond to the specified format of the
-(correlated) uncertainties.</p>
+(correlated) ucertainties.</p>
 <p>The currently implemented keys are:</p>
 <ul>
 <li><p class="first">for metadata:</p>
@@ -1474,9 +1630,10 @@ to be accounted for in the fit. This option is specified via the
 keyword:</p>
 <ul>
 <li><p class="first"><tt class="docutils literal"><span class="pre">*ConstrainedParameters</span></tt> followed by one or more lines with
-the fields:</p>
-<div class="highlight-python"><pre>&lt;parameter name&gt;  &lt;parameter value&gt;  &lt;parameter uncert.&gt;,</pre>
-</div>
+the fields</p>
+<blockquote>
+<div><p>&lt;parameter name&gt;  &lt;parameter value&gt;  &lt;parameter uncert.&gt;,</p>
+</div></blockquote>
 <p>where <cite>parameter name</cite> is the name of the parameter in the fit
 function specification.</p>
 </li>
@@ -1522,7 +1679,7 @@ def fitf(x,av=1.): # fit an average
 <span id="fit-module"></span><h3><a class="reference internal" href="#module-fit" title="fit: This submodule defines a `Fit` object which performs the actual fitting given a `Dataset` and a fit function. (Unix)"><tt class="xref py py-mod docutils literal"><span class="pre">fit</span></tt></a> Module<a class="headerlink" href="#module-kafe.fit" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-fit"></span><dl class="class">
 <dt id="kafe.fit.Fit">
-<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x4bc87d0&gt;</em>, <em>fit_label=None</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">kafe.fit.</tt><tt class="descname">Fit</tt><big>(</big><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2 at 0x4001848&gt;</em>, <em>fit_label=None</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Object representing a fit. This object references the fitted <cite>Dataset</cite>,
 the fit function and the resulting fit parameters.</p>
@@ -1609,7 +1766,7 @@ function, see function <tt class="docutils literal"><span class="pre">chi2</span
 <dt id="kafe.fit.Fit.do_fit">
 <tt class="descname">do_fit</tt><big>(</big><em>quiet=False</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit.do_fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the fit algorithm for this <cite>Fit</cite> object.</p>
-<p>First, the <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt> is fitted considering only uncertainties in the
+<p>First, the <cite>Dataset</cite> is fitted considering only uncertainties in the
 <cite>y</cite> direction. If the <cite>Dataset</cite> has no uncertainties in the <cite>y</cite>
 direction, they are assumed to be equal to 1.0 for this preliminary
 fit, as there is no better information available.</p>
@@ -1644,8 +1801,8 @@ by the projection becomes negligible.</p>
 <dt id="kafe.fit.Fit.fix_parameters">
 <tt class="descname">fix_parameters</tt><big>(</big><em>*parameters_to_fix</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit.fix_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fix the given parameters so that the minimizer works without them
-when <tt class="xref py py-func docutils literal"><span class="pre">do_fit()</span></tt> is called next. Parameters can be given by their
-names or by their IDs.</p>
+when <cite>do_fit</cite> is called next. Parameters can be given by their names
+or by their IDs.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1738,34 +1895,6 @@ around the function in your plot routine.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="kafe.fit.Fit.plot_contour">
-<tt class="descname">plot_contour</tt><big>(</big><em>parameter1</em>, <em>parameter2</em>, <em>n_points=100</em>, <em>color='red'</em>, <em>alpha=0.25</em>, <em>show=False</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit.plot_contour" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots a two-dimensional <img class="math" src="_images/math/070fe743455ad95e644411607dc18d8e72f1d23f.png" alt="1\sigma"/> contour for this fit into
-a separate figure and returns the figure object.</p>
-<dl class="docutils">
-<dt><strong>parameter1</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int or string</span></dt>
-<dd>ID or name of the parameter to appear on the <cite>x</cite>-axis.</dd>
-<dt><strong>parameter2</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int or string</span></dt>
-<dd>ID or name of the parameter to appear on the <cite>y</cite>-axis.</dd>
-<dt><em>n_points</em> <span class="classifier-delimiter">:</span> <span class="classifier">int (optional)</span></dt>
-<dd>Number of plot points to use for the contour. Higher
-values yield smoother contours but take longer to
-render. Default is 100.</dd>
-<dt><em>color</em> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
-<dd>A <tt class="docutils literal"><span class="pre">matplotlib</span></tt> color identifier specifying the fill color
-of the contour. Default is &#8216;red&#8217;.</dd>
-<dt><em>alpha</em> <span class="classifier-delimiter">:</span> <span class="classifier">float (optional)</span></dt>
-<dd>Transparency of the contour fill color ranging from 0. (fully
-transparent) to 1. (fully opaque). Default is 0.25</dd>
-<dt><em>show</em> <span class="classifier-delimiter">:</span> <span class="classifier">boolean (optional)</span></dt>
-<dd>Specify whether to show the figure before returning it. Defaults
-to <tt class="docutils literal"><span class="pre">False</span></tt>.</dd>
-<dt><strong>returns</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="docutils literal"><span class="pre">matplotlib</span></tt> figure object</span></dt>
-<dd>A figure object containing the contour plot.</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="kafe.fit.Fit.print_fit_details">
 <tt class="descname">print_fit_details</tt><big>(</big><big>)</big><a class="headerlink" href="#kafe.fit.Fit.print_fit_details" title="Permalink to this definition">¶</a></dt>
 <dd><p>prints some fit goodness details</p>
@@ -1798,7 +1927,7 @@ matrix.</p>
 <dt id="kafe.fit.Fit.release_parameters">
 <tt class="descname">release_parameters</tt><big>(</big><em>*parameters_to_release</em><big>)</big><a class="headerlink" href="#kafe.fit.Fit.release_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Release the given parameters so that the minimizer begins to work with
-them when <tt class="xref py py-func docutils literal"><span class="pre">do_fit()</span></tt> is called next. Parameters can be given by their
+them when <cite>do_fit</cite> is called next. Parameters can be given by their
 names or by their IDs. If no arguments are provied, then release all
 parameters.</p>
 </dd></dl>
@@ -1809,8 +1938,8 @@ parameters.</p>
 <dd><p>Sets the parameter values (and optionally errors) for this fit.
 This is usually called just before the fit is done, to establish
 the initial parameters. If a parameter error is omitted, it is
-set to 1/10th of the parameter values themselves. If the default
-value of the parameter is 0, it is set, by exception, to 0.1.</p>
+set to 1/1000th of the parameter values themselves. If the default
+value of the parameter is 0, it is set, by exception, to 0.001.</p>
 <p>This method accepts up to two positional arguments and several
 keyword arguments.</p>
 <dl class="docutils">
@@ -1853,21 +1982,22 @@ to be the value and the second to be the parameter error.</dd>
 <dl class="function">
 <dt id="kafe.fit.build_fit">
 <tt class="descclassname">kafe.fit.</tt><tt class="descname">build_fit</tt><big>(</big><em>dataset</em>, <em>fitfunc</em>, <em>fitlabel='untitled'</em>, <em>initial_fit_parameters=None</em>, <em>constrained_parameters=None</em><big>)</big><a class="headerlink" href="#kafe.fit.build_fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>This helper fuction creates a <tt class="xref py py-obj docutils literal"><span class="pre">Fit</span></tt> from a series of keyword arguments.</p>
+<dd><p>This helper fuction creates a <tt class="docutils literal"><span class="pre">Fit</span></tt> from a series of keyword arguments.</p>
 <p>Valid keywords are:</p>
-<p><strong>dataset</strong> : a <tt class="xref py py-mod docutils literal"><span class="pre">kafe</span></tt> <tt class="xref py py-obj docutils literal"><span class="pre">Dataset</span></tt></p>
+<p><strong>dataset</strong> : a <cite>kafe</cite> <tt class="docutils literal"><span class="pre">Dataset</span></tt></p>
 <dl class="docutils">
-<dt><strong>fitfunc</strong> <span class="classifier-delimiter">:</span> <span class="classifier">a python function, optionally with</span></dt>
+<dt><strong>fitfunc</strong> <span class="classifier-delimiter">:</span> <span class="classifier">a python function, eventually with</span></dt>
 <dd><tt class="docutils literal"><span class="pre">&#64;FitFunction</span></tt>, <tt class="docutils literal"><span class="pre">&#64;LATEX</span></tt> and <tt class="docutils literal"><span class="pre">&#64;FitFunction</span></tt> decorators</dd>
-<dt><em>fitlabel</em> <span class="classifier-delimiter">:</span> <span class="classifier">name for this fit (optional)</span></dt>
-<dd>Defaults to &#8220;untitled&#8221;.</dd>
-<dt><em>initial_fit_parameters</em> <span class="classifier-delimiter">:</span> <span class="classifier">None or 2-tuple of list, tuple/<cite>np.array</cite> of floats</span></dt>
+</dl>
+<p><strong>fitlabel</strong> : name for this fit</p>
+<dl class="docutils">
+<dt><strong>fitparameters</strong> <span class="classifier-delimiter">:</span> <span class="classifier">None or 2-tuple of list, tuple/<cite>np.array</cite> of floats</span></dt>
 <dd>specifying initial parameter values and errors</dd>
-<dt><em>constrained_parameters</em>: None or 3-tuple of list, tuple/np.array`</dt>
+<dt><strong>constrained_parameters</strong>: None or 3-tuple of list, tuple/np.array`</dt>
 <dd>of one string and 2 floats specifiying the names, values and
 uncertainties of constraints to apply to model parameters</dd>
 </dl>
-<p><strong>returns</strong> : <tt class="xref py py-obj docutils literal"><span class="pre">Fit</span></tt> object</p>
+<p><strong>returns</strong> <cite>Fit</cite> object</p>
 </dd></dl>
 
 <dl class="function">
@@ -1879,10 +2009,10 @@ to the formula:</p>
 <p><img src="_images/math/f8c456962536a9bcf2afe8e93d06249c2e0924da.png" alt="\chi^2 = \lambda^T C^{-1} \lambda"/></p>
 </div><p>Here, <img class="math" src="_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/> is the residual vector <img class="math" src="_images/math/b4a9f878bd30b7d5b83cca751a92a2675e72201a.png" alt="\lambda = \vec{y} -
 \vec{f}(\vec{x})"/> and <img class="math" src="_images/math/c3355896da590fc491a10150a50416687626d7cc.png" alt="C"/> is the covariance matrix.</p>
-<p>If a constraint <img class="math" src="_images/math/ce91fa21da4f2ba0b6673e880bcfc0fba37f0c85.png" alt="c_i\pm\sigma_i"/> is applied to a parameter <img class="math" src="_images/math/245a5501248a6ea24f520f76d4140cedf08e1674.png" alt="p_i"/>,
-a <cite>penalty term</cite> is added for each constrained parameter:</p>
+<p>If a constraint <img class="math" src="_images/math/ce91fa21da4f2ba0b6673e880bcfc0fba37f0c85.png" alt="c_i\pm\sigma_i"/> is applied to  a parameter i,
+a <cite>penalty term</cite> is added for each constrained parameter according to:</p>
 <div class="math">
-<p><img src="_images/math/00951437a41e87430d8e797698b14fa33405ce0d.png" alt="\chi^2_{\text{cons}} = \chi^2 + \sum_i{ \left( \frac{p_i - c_i}{\sigma_i} \right)^2 }"/></p>
+<p><img src="_images/math/6bffc8258500ff710f1ed6d7511004475de7088d.png" alt="\chi^2 += \left( \frac{v_i - c_i}{\sigma_i} \right)^2"/></p>
 </div><dl class="docutils">
 <dt><strong>xdata</strong> <span class="classifier-delimiter">:</span> <span class="classifier">iterable</span></dt>
 <dd>The <em>x</em> measurement data</dd>
@@ -1892,13 +2022,13 @@ a <cite>penalty term</cite> is added for each constrained parameter:</p>
 <dd>The total covariance matrix</dd>
 <dt><strong>fit_function</strong> <span class="classifier-delimiter">:</span> <span class="classifier">function</span></dt>
 <dd>The fit function <img class="math" src="_images/math/c96dd6ec1dc4ad7520fbdc78fcdbec9edd068d0c.png" alt="f(x)"/></dd>
+</dl>
+<p><strong>constrained_parameters</strong> : None or list of two iterables
+with a length equal to the number of parameters. An uncertainty of
+0 means that a parameter remains unconstrained.</p>
+<dl class="docutils">
 <dt><strong>parameter_values</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list/tuple</span></dt>
 <dd>The values of the parameters at which <img class="math" src="_images/math/c96dd6ec1dc4ad7520fbdc78fcdbec9edd068d0c.png" alt="f(x)"/> should be evaluated.</dd>
-<dt><em>constrained_parameters</em> <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="docutils literal"><span class="pre">None</span></tt> or list of two iterables (optional)</span></dt>
-<dd>The first iterable (<img class="math" src="_images/math/61ac54033f92d9102c9351f520da8ef02b8418d8.png" alt="{c_i}"/>) contains the constrained parameters&#8217;
-expected values and the second iterable (<img class="math" src="_images/math/8140344872360c1062af24c4b37cc3330f3157d0.png" alt="{\sigma_i}"/>) contains
-the constraint uncertainties. A parameter with constraint uncertainty
-set to 0 remains unconstrained.</dd>
 </dl>
 </dd></dl>
 
@@ -2454,7 +2584,7 @@ nothing.</dd>
 <dl class="attribute">
 <dt id="kafe.plot.Plot.fits">
 <tt class="descname">fits</tt><em class="property"> = None</em><a class="headerlink" href="#kafe.plot.Plot.fits" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of <tt class="xref py py-obj docutils literal"><span class="pre">Fit</span></tt> objects to plot</p>
+<dd><p>list of <a href="#id1"><span class="problematic" id="id2">`</span></a>Fit`s to plot</p>
 </dd></dl>
 
 <dl class="method">
@@ -2778,13 +2908,14 @@ check occurs.</p>
 <li><a class="reference internal" href="#fit-examples-utilities-tips-and-tricks">Fit examples, utilities, tips and tricks</a><ul>
 <li><a class="reference internal" href="#example-1-model-comparison">Example 1 - model comparison</a></li>
 <li><a class="reference internal" href="#example-2-two-fits-and-models">Example 2 - two fits and models</a></li>
-<li><a class="reference internal" href="#example-3-properties-of-a-gauss-curve">Example 3 - properties of a Gauss curve</a></li>
+<li><a class="reference internal" href="#example-3-non-linear-fit-with-non-parabolic-errors">Example 3 - non-linear fit with non-parabolic errors</a></li>
 <li><a class="reference internal" href="#example-4-average-of-correlated-measurements">Example 4 - average of correlated measurements</a></li>
-<li><a class="reference internal" href="#example-5-multi-parameter-fit-damped-oscillation">Example 5 - multi-parameter fit (damped oscillation)</a></li>
-<li><a class="reference internal" href="#example-6-another-multi-parameter-fit">Example 6 - another multi-parameter fit</a></li>
-<li><a class="reference internal" href="#example-7-non-linear-multi-parameter-fit">Example 7 - non-linear multi-parameter fit</a></li>
+<li><a class="reference internal" href="#example-5-non-linear-multi-parameter-fit-damped-oscillation">Example 5 - non-linear multi-parameter fit (damped oscillation)</a></li>
+<li><a class="reference internal" href="#example-6-linear-multi-parameter-fit">Example 6 - linear multi-parameter fit</a></li>
+<li><a class="reference internal" href="#example-7-another-non-linear-multi-parameter-fit-double-slit-spectrum">Example 7 - another non-linear multi-parameter fit (double-slit spectrum)</a></li>
 <li><a class="reference internal" href="#example-8-fit-of-a-breit-wigner-resonance-to-data-with-correlated-errors">Example 8 - fit of a Breit-Wigner Resonance to data with correlated errors</a></li>
 <li><a class="reference internal" href="#example-9-fit-of-a-function-to-histogram-data">Example 9 - fit of a function to histogram data</a></li>
+<li><a class="reference internal" href="#example-10-plotting-with-kafe-properties-of-a-gauss-curve">Example 10 - Plotting with <tt class="docutils literal"><span class="pre">kafe</span></tt>: properties of a Gauss curve</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#kafe-documentation-module-descriptions"><tt class="docutils literal"><span class="pre">kafe</span></tt> Documentation &#8211; module descriptions</a><ul>
@@ -2851,7 +2982,7 @@ check occurs.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="#">kafe 0.5.2 documentation</a> &raquo;</li> 
+        <li><a href="#">kafe 0.5.3 documentation</a> &raquo;</li> 
       </ul>
     </div>
     

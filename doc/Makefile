@@ -19,3 +19,7 @@ html:
 
 latex:
 	$(MAKE) -C $(SPHINXSRCDIR) latex && $(MAKE) -C $(SPHINXSRCDIR) latexpdf && rm -rf latex && cp -R "$(SPHINXSRCDIR)/_build/latex" .
+
+clean:
+	rm -rf build/_build
+

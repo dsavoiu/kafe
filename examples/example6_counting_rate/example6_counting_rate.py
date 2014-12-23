@@ -84,5 +84,7 @@ my_plot.plot_all()
 # Save the plots
 my_plot.save('plot.pdf')
 
+#my_fit.plot_correlations()
+
 # Show the plots
 my_plot.show()

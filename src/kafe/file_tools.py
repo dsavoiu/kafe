@@ -773,6 +773,6 @@ def buildFit_fromFile(file_to_parse):
   '''
   dataset_kwargs,fit_kwargs=parse_general_inputfile(file_to_parse)
   if fit_kwargs is None:
-    sys.exit("*==* no valid fit function in specifed in input file")
+    sys.exit("*==* no valid fit function specifed in input file")
   else:
     return build_fit(build_dataset(**dataset_kwargs),**fit_kwargs)

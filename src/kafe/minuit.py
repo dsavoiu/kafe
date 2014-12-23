@@ -11,7 +11,9 @@
 # ----------------------------------------------------------------
 # Changes:
 #  06-Aug-14  G.Q.  default parameter errors set to 10% (not 0.1%)
-#  10-Aug-14  G.Q.  mimimize(): allowed for initial fits w.o. HESSE
+#  10-Aug-14  G.Q.  minimize(): allowed for initial fits w.o. HESSE
+#  08-Dec-14  G.Q.  added execution of MINOS for final fit
+#  09-Dec-14  G.Q.  added chi2 profiling (function get_profile)
 # ----------------------------------------------------------------
 
 # ROOT's data types needed to use TMinuit:
@@ -371,11 +373,11 @@ class Minuit:
         ndf = Long(n_deg_of_freedom)
         return TMath.Prob(chi2, ndf)
 
-    def get_contour(self, parameter1, parameter2, n_points=20):
+    def get_contour(self, parameter1, parameter2, n_points=21):
         '''
         Returns a list of points (2-tuples) representing a sampling of
-        the :math:`1\\sigma` contour of the TMinuit fit. The ``FCN`` has to be
-        minimized before calling this.
+        the :math:`1\\sigma` contour of the TMinuit fit. The ``FCN`` has
+        to be minimized before calling this.
 
         **parameter1** : int
             ID of the parameter to be displayed on the `x`-axis.
@@ -384,13 +386,27 @@ class Minuit:
             ID of the parameter to be displayed on the `y`-axis.
 
         *n_points* : int (optional)
-            number of points used to draw the contour. Default is 20.
+            number of points used to draw the contour. Default is 21.
 
         *returns* : 2-tuple of tuples
             a 2-tuple (x, y) containing ``n_points+1`` points sampled
             along the contour. The first point is repeated at the end
             of the list to generate a closed contour.
         '''
+
+        self.out_file.write('\n')
+        # entry in log-file
+        self.out_file.write('\n')
+        self.out_file.write('#'*(5+28))
+        self.out_file.write('\n')
+        self.out_file.write('# Contour for parameters %2d, %2d #\n'\
+                            %(parameter1, parameter2) )
+        self.out_file.write('#'*(5+28))
+        self.out_file.write('\n\n')
+        self.out_file.flush()
+#
+# first, make sure we are at minimum
+        self.minimize(final_fit=True,log_print_level=0)
 
         # get the TGraph object from ROOT
         g = self.__gMinuit.Contour(n_points, parameter1, parameter2)
@@ -405,6 +421,79 @@ class Minuit:
 
         #
         return (x, y)
+
+    def get_profile(self, parid, n_points=21):
+        '''
+        Returns a list of points (2-tuples) the profile
+        the :math:`\\chi^2`  of the TMinuit fit.
+
+
+        **parid** : int
+            ID of the parameter to be displayed on the `x`-axis.
+
+        *n_points* : int (optional)
+            number of points used for profile. Default is 21.
+
+        *returns* : two arrays, par. values and corresp. :math:`\\chi^2`
+            containing ``n_points`` sampled profile points.
+        '''
+
+        self.out_file.write('\n')
+        # entry in log-file
+        self.out_file.write('\n')
+        self.out_file.write('#'*(2+26))
+        self.out_file.write('\n')
+        self.out_file.write("# Profile for parameter %2d #\n" % (parid))
+        self.out_file.write('#'*(2+26))
+        self.out_file.write('\n\n')
+        self.out_file.flush()
+        # save the old stdout stream
+        old_out_stream = os.dup(sys.stdout.fileno())
+        os.dup2(self.out_file.fileno(), sys.stdout.fileno())
+
+        pv=[]
+        chi2=[]
+        error_code = Long(0)
+        self.__gMinuit.mnexcm("SET PRINT",
+                 arr('d', [0.0]), 1, error_code)  # no printout
+
+# first, make sure we are at minimum, i.e. re-minimize
+        self.minimize(final_fit=True,log_print_level=0)
+        minuit_id=Double(parid+1) # Minuit parameter numbers start with 1
+
+        # retrieve information about parameter with id=parid
+        pmin=Double(0)
+        perr=Double(0)
+        self.__gMinuit.GetParameter(parid, pmin, perr)  # retrieve fitresult
+
+        # fix parameter parid ...
+        self.__gMinuit.mnexcm("FIX",
+                                arr('d', [minuit_id]),
+                                1, error_code)
+        # ... and scan parameter values, minimizing at each point
+        for v in np.linspace(pmin-3.*perr, pmin+3.*perr, n_points):
+            pv.append(v)
+            self.__gMinuit.mnexcm("SET PAR",
+                 arr('d', [minuit_id, Double(v)]),
+                               2, error_code)
+            self.__gMinuit.mnexcm("MIGRAD",
+                 arr('d', [self.max_iterations, self.tolerance]),
+                               2, error_code)
+            chi2.append(self.get_fit_info('fcn'))
+
+        # release parameter to back to initial value and release
+        self.__gMinuit.mnexcm("SET PAR",
+                              arr('d', [minuit_id, Double(pmin)]),
+                               2, error_code)
+        self.__gMinuit.mnexcm("RELEASE",
+                                arr('d', [minuit_id]),
+                                1, error_code)
+
+        # restore the previous output stream
+        os.dup2(old_out_stream, sys.stdout.fileno())
+
+        return pv,chi2
+
 
     # Other methods
     ################
@@ -524,3 +613,49 @@ class Minuit:
 
         # restore the previous output stream
         os.dup2(old_out_stream, sys.stdout.fileno())
+
+
+    def minos_errors(self):
+        '''
+           Get (asymmetric) parameter uncertainties from MINOS
+           algorithm. This calls `Minuit`'s algorithms ``MINOS``,
+           which determines parameter uncertainties using profiling
+           of the chi2 function.
+
+           returns : tuple
+             A tuple of [err+, err-, parabolic error, global correlation]
+        '''
+
+        # Set the FCN again. This HAS to be done EVERY
+        # time the minimize method is called because of
+        # the implementation of SetFCN, which is not
+        # object-oriented but sets a global pointer!!!
+        logger.debug("Updating current FCN")
+        self.__gMinuit.SetFCN(self.FCN_wrapper)
+
+        # save the old stdout stream
+        old_out_stream = os.dup(sys.stdout.fileno())
+        os.dup2(self.out_file.fileno(), sys.stdout.fileno())
+
+        self.__gMinuit.SetPrintLevel(1)  # verboseness level 1 is sufficient
+        logger.debug("Running MINOS")
+        error_code = Long(0)
+        self.__gMinuit.mnexcm("MINOS", arr('d', [6000]), 1, error_code)
+
+        # return to normal print level
+        self.__gMinuit.SetPrintLevel(self.print_level)
+
+        # restore the previous output stream
+        os.dup2(old_out_stream, sys.stdout.fileno())
+
+        output = []
+        errpos=Double(0) # positive parameter error
+        errneg=Double(0) # negative parameter error
+        err=Double(0)    # parabolic error
+        gcor=Double(0)   # global correlation coefficient
+
+        for i in xrange(0, self.number_of_parameters):
+            self.__gMinuit.mnerrs(i, errpos, errneg, err, gcor)
+            output.append([float(errpos),float(errneg),float(err),float(gcor)])
+
+        return output

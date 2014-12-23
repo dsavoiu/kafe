@@ -11,35 +11,35 @@ Welcome to KaFE (Karlsruhe Fit Environment)
 
    **kafe** is a data fitting framework designed for use in undergraduate
    physics lab courses. It provides a basic `Python` toolkit for fitting
-   models to data as well as visualization of the data and the model function.
-   It relies on `Python` packages such as :py:mod:`numpy` and :py:mod:`matplotlib`, and uses
-   the `Python` interface to the minimizer `Minuit` contained in the data
+   models to data as well as visualisation of the data and the model function.
+   It relies on `Python` packages such as :py:mod:`numpy` and :py:mod:`matplotlib`,
+   and uses the `Python` interface to the minimizer `Minuit` contained in the data
    analysis framework `ROOT`.
 
 
 :py:mod:`kafe` Overview
 =======================
 
-.. figure:: _static/img/graph_example1.jpg
-   :height: 300px
-   :width: 300 px
-   :scale: 100 %
+.. figure:: _static/img/kafe_graphics.png
+   :height: 600px
+   :width: 900px
+   :scale: 50 %
    :alt: image not found
    :align: right
 
    `Graphical output generated with kafe`.
 
-The :py:mod:`kafe` package provides a rather general approach to fitting of a model
-function to two-dimensional data points with correlated uncertainties in both
-dimensions. A typical use-case would be measurements of two quantities,
-an `x`- and a `y`-value, with both uncorrelated (statistical) uncertainties
-and correlated systematic uncertainties.
+The :py:mod:`kafe` package provides a rather general approach to fitting of
+a model function to two-dimensional data points with correlated uncertainties
+in both dimensions. The `Python` API guarantees full flexibility
+for data input. Helper functions for file-based input and some
+examples are available for own applications.
 
-Use cases range from performing a simple average of measurements
-to complex situations with correlated uncertainties on the measurements
-of the x and y values. The `Python` API guarantees full flexibility
-for data input. Helper functions, which also serve as examples for
-own implementations,  are available to handle file-based examples.
+Applications range from performing a simple average of measurements
+to complex situations with both correlated (systematic) and
+uncorrelated (statistical) uncertainties on the measurements
+of the x and y values described by a non-linear model function
+depending on a large number of parameters.
 
 The model function describes the y values as a function of the
 x-values and a set of model parameters {p}, `y=f(x; {p})`. Full
@@ -54,10 +54,12 @@ between data points and the fit model is expressed in terms of the
 data and model than actually observed. Full access to the covariance
 matrix of the - typically correlated - model parameters is provided.
 
-The graphical output visualizes the data and the fit model at the
+The graphical output visualises the data and the fit model at the
 best-fit-point of the parameters and also shows the uncertainty
 of the fit model as a light band surrounding the line representing
-the model function.
+the model function. Plotting of confidence level contours for pairs
+of parameters or profiling of the χ² curves for each of the fit
+parameters are also provided.
 
 
 Code Structure
@@ -65,24 +67,24 @@ Code Structure
 
 .. figure:: _static/img/kafeDiagram.jpg
    :height: 300px
-   :width: 600 px
+   :width: 600px
    :scale: 80 %
    :alt: image not found
    :align: right
 
    `Code structure of the kafe package`
 
-The code of :py:mod:`kafe` is centered around very few classes to handle Data input,
+The code of :py:mod:`kafe` is centred around very few classes to handle Data input,
 fitting and plotting, as illustrated in the figure on the right-hand side.
 
 Data, their uncertainties, and, optionally, the correlations of the
 uncertainties - are passed through the interface of the :py:mod:`kafe` class
-:py:class:`~kafe.dataset.Dataset`. Input can be included in the `Python` code or is read
-from files in standardized or user-defined formats. The representation
-of the data within the :py:class:`~kafe.dataset.Dataset` class is minimalistic, consisting
-of the x and y values and the full covariance matrices of their
+:py:class:`~kafe.dataset.Dataset`. Input can be included in the `Python` code
+or is read from files in standardised or user-defined formats. The representation
+of the data within the :py:class:`~kafe.dataset.Dataset` class is minimalistic,
+consisting of the x and y values and the full covariance matrices of their
 uncertainties. Correlated errors between x and y values are not
-supported yet, as such use cases are extremely rare.
+supported yet, as such use cases are rare.
 
 A helper function, :py:func:`~kafe.dataset.build_dataset`, is available
 to transform various error models, like a combination of independent
@@ -91,25 +93,42 @@ basic format.
 
 Adding a model function, taken either from a prepared set of fit
 functions within kafe or from a user's own `Python` implementation,
-results in a :py:class:`~kafe.fit.Fit` object, which controls the minimizer :py:class:`~kafe.minuit.Minuit`
-and provides the results through access methods.
+results in a :py:class:`~kafe.fit.Fit` object, which controls the
+minimizer :py:class:`~kafe.minuit.Minuit`. Access to the final
+results of the fitting procedure is provided by data members of
+the `Fit` class.
 
 One or multiple fit objects, i. e. the input data and model
 functions(s) at the best-fit point in parameter-space, are
-visualized by the class :py:class:`~kafe.plot.Plot` with the help of :py:mod:`matplotlib`
-functionality. The :py:mod:`plot` module also contains functionality to
-display the model uncertainty by surrounding the model function
-at the best-fit values of the parameters by a light band, the one-σ
-uncertainty band, which is obtained by propagation of the uncertainties
-of the fit parameters, taking into account their correlations.
+visualised by the class :py:class:`~kafe.plot.Plot` with the help
+of :py:mod:`matplotlib` functionality. The :py:mod:`plot` module
+also contains functionality to display the model uncertainty by
+surrounding the model function at the best-fit values of the parameters
+by a light band, the one-σ uncertainty band, which is obtained by
+propagation of the uncertainties of the fit parameters taking
+into account their correlations.
 
+Two-dimensional contour lines of pairs of parameters
+are obtained with the method :py:meth:`~kafe.fit.Fit.plot_contour`
+of the :py:class:`Fit` class, which internally relies on the
+`mncont` method of the `Minuit` package. Contour curves are
+obtained from a scan of the χ²-function around a fixed value,
+where each point on the curve represents the minimum with
+respect to all other free parameters in the fit, thus taking
+into account the correlation of a pair of parameters with all
+other parameters of the model.
+
+In a similar way, the method :py:meth:`~kafe.fit.Fit.plot_profile`
+provides profiled χ² curves, i. e. the value of the minimal
+χ² as a function of one parameter while all other parameters
+are allowed to vary.
 
 
 Example
 -------
 
-Only very few lines of Python code are needed to perform fits with kafe.
-The snippet of code shown below performs a fit of a quadratic
+Only very few lines of Python code are needed to perform fits with
+kafe. The snippet of code shown below performs a fit of a quadratic
 function to some data points with uncertainties:
 
 .. code-block:: python
@@ -132,20 +151,21 @@ function to some data points with uncertainties:
     # Do the Fit
     myFit.do_fit()
 
-    #### Create the plots and output them
+    #### Create result plots and output them
     myPlot = Plot(myFit)
     myPlot.plot_all()
     myPlot.save('kafe_example0.pdf') # to file
+
     myPlot.show()                    # to screen
 
 The output in text form (also available via various :py:meth:`get_...` methods
-of the :py:class:`~kafe.fit.Fit` class) contains the values of the parameters at the best-fit
-point, their correlation matrix and the fit probability. The example produces
-the following graphical output:
+of the :py:class:`~kafe.fit.Fit` class) contains the values of the parameters
+at the best-fit point, their correlation matrix and the fit probability.
+The example produces the following graphical output:
 
 .. figure:: _static/img/kafe_example0.png
    :height: 300px
-   :width: 600 px
+   :width: 600px
    :scale: 100 %
    :alt: image not found
    :align: center
@@ -153,10 +173,51 @@ the following graphical output:
    Example: `Data points with one-dimensional error bars compared
    to a quadratic model function with` **kafe**.
 
+
+The parametrisation chosen in this example leads to a
+strong correlation of the fit parameters. This can
+be graphically visualised by adding the following
+lines at the end of the example:
+
+.. code-block:: python
+
+    ### Create and save contour plots
+    contour1 = myFit.plot_contour(0, 1, dchi2=[1.,2.3])
+    contour2 = myFit.plot_contour(0, 2, dchi2=[1.,2.3])
+    contour3 = myFit.plot_contour(1, 2, dchi2=[1.,2.3])
+    contour1.savefig('kafe_example0_contour1.pdf')
+    contour2.savefig('kafe_example0_contour2.pdf')
+    contour3.savefig('kafe_example0_contour3.pdf')
+
+
+The example code produces two confidence-level contours
+for each pair of parameters (with `id=0`, `id=1` and `id=2`),
+corresponding to an increase of the χ²-function
+with respect to the minimum by the values given
+in the list passed as the third parameter to the
+method :py:meth:`myFit.plot_contour`. The resulting
+graphical representation, as shown below, displays the
+39% contours, corresponding to the one-sigma errors, and
+the 68% contours. The uncertainties on each parameter,
+indicated by the error bars, are also shown. They
+correspond to the projections of the one-sigma contours
+on the axes.
+
+.. figure:: _static/img/kafe_example0_contours.png
+   :height: 300px
+   :width: 900px
+   :alt: image not found
+   :align: center
+
+   `Contour curves of a pairs of paramters a, b and c
+   of the example above, calculated with` **kafe**.
+
+
 More and advanced examples - like fitting different models
 to one data set, comparison of different data sets with model
-functions, averaging of correlated measurements or multi-parameter
-fits - are provided as part of the `kafe` distribution and are
+functions, averaging of correlated measurements or fits with
+a large number of parameters -
+are provided as part of the `kafe` distribution and are
 described in the section `Examples` below. They may serve as
 a starting point for own applications.
 
@@ -224,7 +285,7 @@ must be set correctly::
 For more info, refer to [http://root.cern.ch/drupal/content/pyroot].
 
 `Qt` is needed because it is the supported interactive front-end for
-:py:mod:`matplotlib`. Other front-ends are not supported and can cause weird behavior.
+:py:mod:`matplotlib`. Other front-ends are not supported and can cause weird behaviour.
 
 `LaTeX` is used by :py:mod:`matplotlib` for displaying labels and mathematical
 expressions on graphs.
@@ -319,12 +380,31 @@ that the linear model would be marginally acceptable as well::
 
 .. figure:: _static/img/kafe_example1.png
    :height: 300px
-   :width: 600 px
+   :width: 600px
    :scale: 100 %
    :alt: image not found
    :align: center
 
    `Output of example1 - compare two models`
+
+
+The contour curves of the two fits are shown below
+and reflect the large correlations between the fit parameters.
+The right plot of the profile χ² curve shows that there
+is a slight deviation from the parabolic curve in the
+fist fit of a non-linear (exponential) function. For more
+details on the profiled χ² curve see the discussion of
+example 3, where the difference is more prominent.
+
+
+.. figure:: _static/img/kafe_example1_contours.png
+   :height: 300px
+   :width: 900px
+   :alt: image not found
+   :align: center
+
+   `Contour curves and a profile χ² curve for the fits in example 1`
+
 
 
 Example 2 - two fits and models
@@ -358,7 +438,7 @@ This results in the following output:
 
 .. figure:: _static/img/kafe_example2.png
    :height: 300px
-   :width: 600 px
+   :width: 600px
    :scale: 100 %
    :alt: image not found
    :align: center
@@ -372,25 +452,100 @@ are most probably incompatible with the assumption of an underlying
 single linear model.
 
 
-Example 3 - properties of a Gauss curve
----------------------------------------
+Example 3 - non-linear fit with non-parabolic errors
+-----------------------------------------------------
 
-This example creates a dummy :py:class:`~kafe.dataset.Dataset` object whose points lie exactly
-on a Gaussian curve. The :py:class:`~kafe.fit.Fit` will then converge toward that very same
-Gaussian. When plotting, the data points used to "support" the curve
-can be omitted.
+Very often, when the fit model is a non-linear function
+of the parameters, the χ² function is not parabolic around
+the minimum. A very common example of such a case is an
+exponential function prarametrised as shown in the code
+fragment below. `Minuit` contains a spacial algorithm, `Minos`,
+which returns correct errors also in this case. Instead of
+using the curvature the minimum, `Minos` follows the
+χ² function from the minimum to the point where it
+crosses the the value `minimum+up`, where `up=1` corresponds
+to one standard deviation in χ² fits. During the scan of the
+χ² function at different values of each parameter the minimum
+with respect to all other parameters in the fit is determined,
+thus making sure that all correlations among the parameters
+are taken into account. In case of a parabolic χ² function,
+the `Minos` errors are identical to those obtained by
+the `Hesse` algorithm, but are typically larger or
+asymmetric in other cases.
 
-This example shows how to access the :py:mod:`kafe` plot objects
-to annotate plots with :py:mod:`matplotlib` functionality.
+The method :py:meth:`kafe.do_fit` executes the `Minos` algorithm
+after completion of a fit and prints the `Minos` errors if
+the deviation from the parabolic result are larger than 5% .
+
+A graphical visualisation is provided
+by the method :py:meth:`plot_profile` , which
+displays the profile χ² curve for the parameter
+with name or index passed as an argument to the method.
+
+The relevant code fragments and the usage of
+the method :py:meth:`kafe.fit.plot_profile` are
+illustrated here::
+
+    ...
+    # definition of the fit function
+    @ASCII(x_name="t", expression="A0*exp(-t/tau)")
+    # Set some LaTeX-related parameters for this function
+    @LaTeX(name='A', x_name="t",
+       parameter_names=('A_0', '\\tau{}'),
+       expression="A_0\\,\\exp(\\frac{-t}{\\tau})")
+    @FitFunction
+    def exponential(t, A0=1, tau=1):
+       return A0 * exp(-t/tau)
+    ...
+    # Load the data, perform fit and plot
+    my_dataset = Dataset(input_file='dataset.dat', title="Example Dataset")
+    my_fit = Fit(my_dataset, exponential)
+    my_fit.do_fit()
+    my_plot = Plot(my_fit)
+    my_plot.plot_all()
+    # --> display contours and profile
+    contour = my_fit.plot_contour(0, 1, dchi2=[1.,2.3])
+    profile1=my_fit.plot_profile(0)
+    profile2=my_fit.plot_profile(1)
+    # Show the plots
+    my_plot.show()
+
+The data points were generated using a normalisation factor
+of `A0=1.` and a lifetime `τ=1.`. The resulting fit output
+below demonstrates that this is well reproduced within
+uncertainties:
 
 .. figure:: _static/img/kafe_example3.png
    :height: 300px
-   :width: 600 px
-   :scale: 100 %
+   :width: 600px
+   :scale: 100%
    :alt: image not found
    :align: center
 
-   `Output of example 3 - properties of a Gauss curve.`
+   `Output of example 3 - Fit of an exponential`
+
+The contour `A`\ :sub:`0`\  `vs τ`, however, is not an ellipse,
+as shown in the figure below. The profiled χ² curves are
+also shown; they deviate significantly from parabolas.
+The proper one-sigma uncertainty in the sense of a 68%
+confidence interval is read from these curves by determining
+the parameter values where the χ² curves cross the horizontal
+lines at a value of Δχ²=1 above the minimum. The two-sigma
+uncertainties correspond to the intersections with the
+horizontal line at Δχ²=4.
+
+.. figure:: _static/img/kafe_example3_contours.png
+   :height: 300px
+   :width: 900px
+   :scale: 100%
+   :alt: image not found
+   :align: center
+
+   `Contour and profile χ² curves of example 3`
+
+Note: a more parabolic behaviour is achieved
+by using the width parameter λ=1/τ in the
+parametrisation of the exponential function.
 
 
 
@@ -483,19 +638,19 @@ averaging example is here::
     80.353  0.068   0.044   0.025 0.025 0.025 0.025 0.044 0.044 0.044 0.044
 
 
-Example 5 - multi-parameter fit (damped oscillation)
-----------------------------------------------------
+Example 5 - non-linear multi-parameter fit (damped oscillation)
+---------------------------------------------------------------
 
 This example shows the fitting of a more complicated model function
 to data collected from a damped harmonic oscillator. In such
 non-linear fits, stetting the initial values is sometimes crucial
-to let the fit converge at the global minimum. The :py:class:`~kafe.fit.Fit` object
-provides the method :py:meth:`~kafe.fit.Fit.set_parameters` for this purpose. As the
-fit function for this problem is not a standard one, it is defined
-explicitly making use of the decorator functions available in :py:mod:`kafe`
-to provide nice type setting of the parameters. This time, the
-function :py:func:`~kafe.file_tools.parse_column_data` is used to read the input,
-which is given as separate columns with the fields
+to let the fit converge at the global minimum. The :py:class:`~kafe.fit.Fit`
+object provides the method :py:meth:`~kafe.fit.Fit.set_parameters` for this
+purpose. As the fit function for this problem is not a standard one, it is
+defined explicitly making use of the decorator functions available in
+:py:mod:`kafe` to provide nice type setting of the parameters. This time,
+the function :py:func:`~kafe.file_tools.parse_column_data` is used to read
+the input, which is given as separate columns with the fields
 
   ``<time>  <Amplitude>    <error on time>   <error on Amplitude>``
 
@@ -529,17 +684,21 @@ Here is the example code:
     my_fit = Fit(my_dataset, damped_oscillator)
     # Set the initial values for the fit:
     #                      a_0 tau omega phi
-    my_fit.set_parameters((1., 3., 6.28, 0.))
+    my_fit.set_parameters((1., 2., 6.28, 0.8))
     my_fit.do_fit()
     # --- Create and output the plots
     my_plot = Plot(my_fit)
     my_plot.plot_all()
-    my_plot.save('plot.pdf')
+    #my_plot.save('plot.pdf')
+    my_fit.plot_correlations() # all contours and profiles
     my_plot.show()
+
+
+This is the resulting output:
 
 .. figure:: _static/img/kafe_example5.png
    :height: 300px
-   :width: 600 px
+   :width: 600px
    :scale: 100 %
    :alt: image not found
    :align: center
@@ -547,9 +706,33 @@ Here is the example code:
    `Example 5 - fit of the time dependence of the amplitude of a damped harmonic oscillator.`
 
 
-Example 6 - another multi-parameter fit
----------------------------------------
+The fit function is non-linear, and, furthermore, there ist not a single
+local minimum - e.g. a shift in phase of 180° corresonds to a change in
+sign of the amplitude, and valid solutions are also obtained for multiples
+of the base frequency. Checking of the validity of the fit result is
+threfore important. The method
+:py:meth:`~kafe.fit.Fit.plot_correlations` provides the
+contours of all pairs of parameters and the profiles for each of
+the parameters and displays them in a matrix-like arrangement.
+Distorted contour-ellipses show wether the result is affected
+by near-by minima, and the profiles allow to correctly assign
+the parameter uncertainties in cases where the parabolic
+approximation is not precise enough.
 
+
+.. figure:: _static/img/kafe_example5_correlations.png
+   :height: 900px
+   :width: 900px
+   :scale: 75 %
+   :alt: image not found
+   :align: center
+
+   `Confidence contours and profiles for example 5.`
+
+
+
+Example 6 - linear multi-parameter fit
+--------------------------------------
 
 This example is not much different from the previous one, except that
 the fit function, a standard fourth-degree polynomial from the module
@@ -634,7 +817,7 @@ This is the resulting output:
 
 .. figure:: _static/img/kafe_example6.png
    :height: 300px
-   :width: 600 px
+   :width: 600px
    :scale: 100 %
    :alt: image not found
    :align: center
@@ -642,8 +825,8 @@ This is the resulting output:
    `Output of example 6 - counting rate.`
 
 
-Example 7 - non-linear multi-parameter fit
-------------------------------------------
+Example 7 - another non-linear multi-parameter fit (double-slit spectrum)
+-------------------------------------------------------------------------
 
 Again, not much new in this example, except that the
 model is now very non-linear, the intensity distribution
@@ -702,7 +885,7 @@ If the parameter `k` in the example above has a (known) uncertainty,
 is is more appropriate to constrain it within its uncertainty (which
 may be known from an independent measurement or from the specifications
 of the laser used in the experiment). To take into account a
-wave number `k` known with a precision of 10'000, the
+wave number `k` known with a precision of 10'000 the
 last line in the example above should be replaced by::
 
     ...
@@ -714,7 +897,7 @@ This is the resulting output:
 
 .. figure:: _static/img/kafe_example7.png
    :height: 300px
-   :width: 600 px
+   :width: 600px
    :scale: 100 %
    :alt: image not found
    :align: center
@@ -818,7 +1001,7 @@ Here is the output:
 
 .. figure:: _static/img/kafe_BreitWignerFit.png
    :height: 300px
-   :width: 600 px
+   :width: 600px
    :scale: 100 %
    :alt: image not found
    :align: center
@@ -826,34 +1009,32 @@ Here is the output:
    `Output of example 8 - Fit of a Breit-Wigner function.`
 
 This example also contains a code snippet demonstrating how to plot
-contours with :py:mod:`kafe`. A *contour* is a region of the parameter
-space containing all parameter values consistent with the fit, within
-uncertainty.
-
-.. TODO: Need short, correct explanation of contours.
-
-Contours are useful because they provide a way to visualize parameter
-uncertainties and correlations. :py:mod:`kafe` supports plotting
-2D :math:`1\sigma` contours for any pair of parameters by getting the
-relevant data from :cpp:class:`TMinuit` and plotting it using :py:mod:`matplotlib`.
-This can be achieved by calling a :py:class:`~kafe.fit.Fit` object's
-:py:meth:`~kafe.fit.Fit.plot_contour` method:
+contours by calling the :py:class:`~kafe.fit.Fit` object's
+:py:meth:`~kafe.fit.Fit.plot_contour` method. This is the code:
 
 .. code-block:: python
 
-    # plot 1-sigma contour of first two parameters into a separate figure
-    cont_fig = BWfit.plot_contour(0, 1)  # plot contour
-    # save figure
-    cont_fig.savefig("kafe_BreitWignerFit_contour12.pdf")
+   # plot pairs of contours at 1 sigma, 68%, 2 sigma and 95%
+   cont_fig1 = BWfit.plot_contour(0, 1, dchi2=[1.,2.3,4.,5.99])
+   cont_fig2 = BWfit.plot_contour(0, 2, dchi2=[1.,2.3,4.,5.99])
+   cont_fig3 = BWfit.plot_contour(1, 2, dchi2=[1.,2.3,4.,5.99])
+   # save to files
+   cont_fig1.savefig("kafe_BreitWignerFit_contour12.pdf")
+   cont_fig2.savefig("kafe_BreitWignerFit_contour13.pdf")
+   cont_fig3.savefig("kafe_BreitWignerFit_contour23.pdf")
 
-.. figure:: _static/img/kafe_BreitWignerFit_contour12.png
+
+The resulting pictures show that parameter correlations are
+relatively small:
+
+.. figure:: _static/img/kafe_BreitWignerFit_contours.png
    :height: 300px
-   :width: 600 px
-   :scale: 100 %
+   :width: 900px
    :alt: image not found
    :align: center
 
-   `Contour generated in example 8 - Fit of a Breit-Wigner function.`
+   `Contours generated in example 8 - Fit of a Breit-Wigner function.`
+
 
 Example 9 - fit of a function to histogram data
 -----------------------------------------------
@@ -924,17 +1105,42 @@ more fundamental methods of the `Dataset`, `Fit` and
 
 
 Here is the output, which shows that the parameters of the
-normal distribution, from which the data were generated, are
-well reproduced within the uncertainties by the fit result:
+standard normal distribution, from which the data were generated,
+are reproduced well by the fit result:
 
 .. figure:: _static/img/kafe_example9.png
    :height: 300px
-   :width: 600 px
+   :width: 600px
    :scale: 100 %
    :alt: image not found
    :align: center
 
    `Output of example 9 - Fit of a Gaussian distribution to histogram data`
+
+
+Example 10 - Plotting with :py:mod:`kafe`: properties of a Gauss curve
+----------------------------------------------------------------------
+
+This example shows how to access the :py:mod:`kafe` plot objects
+to annotate plots with :py:mod:`matplotlib` functionality.
+
+A dummy object :py:class:`~kafe.dataset.Dataset` is
+created with points lying exactly on a Gaussian curve.
+The :py:class:`~kafe.fit.Fit` will then converge toward
+that very same Gaussian. When plotting, the data points
+used to "support" the curve can be omitted.
+
+
+.. figure:: _static/img/kafe_example10.png
+   :height: 300px
+   :width: 600px
+   :scale: 100 %
+   :alt: image not found
+   :align: center
+
+   `Output of example 10 - properties of a Gauss curve.`
+
+
 
 
 :py:mod:`kafe` Documentation -- module descriptions

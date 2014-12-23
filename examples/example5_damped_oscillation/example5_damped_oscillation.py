@@ -19,7 +19,6 @@ from kafe import *
 # import some functions from numpy
 from numpy import exp, cos
 
-
 #############################
 # Model function definition #
 #############################
@@ -32,17 +31,42 @@ from numpy import exp, cos
        expression="a_0\\,\\exp(-\\frac{t}{\\tau})\,"
                   "\cos(\\omega{}\\,t+\\varphi{})")
 @FitFunction
-def damped_oscillator(t, a0=1, tau=1, omega=1, phi=0):
+def damped_oscillator(t, a0=1., tau=1., omega=1., phi=0.):
     return a0 * exp(-t/tau) * cos(omega*t + phi)
 
+###################
+# Helper function #
+###################
+def generate_dataset(outfile):
+    '''The following block generates the data'''
+
+    import numpy as np  # need some functions from numpy
+
+    n_p = 20
+    tmin, tmax = 0.2, 10.
+    sigt=0.1
+    sigArel=0.3
+    tdat = np.linspace(tmin, tmax, n_p) + np.random.normal(0.0, sigt, n_p)
+    a0=1.
+    tau=2.
+    omega=6.28
+    phi=3.14/4.
+    terr=[sigt for i in range(n_p)]
+    Adat = map(lambda x: damped_oscillator(x, a0, tau, omega, phi), tdat)
+    Aerr=sigArel*np.fabs(np.array(Adat))
+    Adat *= np.random.normal(1.0, sigArel, n_p)
+    np.savetxt(outfile,np.column_stack( (tdat, Adat, terr, Aerr) ))
 
 ############
 # Workflow #
 ############
 
+# Generate the Dataset and store it in a file
+#generate_dataset('oscillation.dat')
+
 # load the experimental data from a file
 my_dataset = parse_column_data(
-    'damped_oscillation.dat',
+    'oscillation.dat',
     field_order="x,y,xabserr,yabserr",
     title="Damped Oscillator",
     axis_labels=['Time $t$','Amplitude'])
@@ -54,7 +78,7 @@ my_fit = Fit(my_dataset,
 
 # Set the initial values for the fit:
 #                      a_0 tau omega phi
-my_fit.set_parameters((1., 3., 6.28, 0.))
+my_fit.set_parameters((1., 2., 6., 0.8))
 
 # Do the Fits
 my_fit.do_fit()
@@ -71,6 +95,8 @@ my_plot.plot_all()
 
 # Save the plots
 my_plot.save('kafe_example5.pdf')
+
+my_fit.plot_correlations()
 
 # Show the plots
 my_plot.show()

@@ -13,8 +13,8 @@
 
 
 \title{kafe Documentation}
-\date{October 16, 2014}
-\release{0.5.2}
+\date{December 23, 2014}
+\release{0.5.3}
 \author{D. Savoiu, G. Quast}
 \newcommand{\sphinxlogo}{}
 \renewcommand{\releasename}{Release}
@@ -123,9 +123,9 @@
 
 \textbf{kafe} is a data fitting framework designed for use in undergraduate
 physics lab courses. It provides a basic \emph{Python} toolkit for fitting
-models to data as well as visualization of the data and the model function.
-It relies on \emph{Python} packages such as \code{numpy} and \code{matplotlib}, and uses
-the \emph{Python} interface to the minimizer \emph{Minuit} contained in the data
+models to data as well as visualisation of the data and the model function.
+It relies on \emph{Python} packages such as \code{numpy} and \code{matplotlib},
+and uses the \emph{Python} interface to the minimizer \emph{Minuit} contained in the data
 analysis framework \emph{ROOT}.
 \end{quote}
 
@@ -134,20 +134,20 @@ analysis framework \emph{ROOT}.
 \label{index:welcome-to-kafe-karlsruhe-fit-environment}\label{index:kafe-overview}\begin{figure}[htbp]\begin{flushright}
 \capstart
 
-\scalebox{1.000000}{\includegraphics{graph_example1.jpg}}
+\scalebox{0.500000}{\includegraphics{kafe_graphics.png}}
 \caption{\emph{Graphical output generated with kafe}.}\end{flushright}\end{figure}
 
-The \code{kafe} package provides a rather general approach to fitting of a model
-function to two-dimensional data points with correlated uncertainties in both
-dimensions. A typical use-case would be measurements of two quantities,
-an \emph{x}- and a \emph{y}-value, with both uncorrelated (statistical) uncertainties
-and correlated systematic uncertainties.
+The \code{kafe} package provides a rather general approach to fitting of
+a model function to two-dimensional data points with correlated uncertainties
+in both dimensions. The \emph{Python} API guarantees full flexibility
+for data input. Helper functions for file-based input and some
+examples are available for own applications.
 
-Use cases range from performing a simple average of measurements
-to complex situations with correlated uncertainties on the measurements
-of the x and y values. The \emph{Python} API guarantees full flexibility
-for data input. Helper functions, which also serve as examples for
-own implementations,  are available to handle file-based examples.
+Applications range from performing a simple average of measurements
+to complex situations with both correlated (systematic) and
+uncorrelated (statistical) uncertainties on the measurements
+of the x and y values described by a non-linear model function
+depending on a large number of parameters.
 
 The model function describes the y values as a function of the
 x-values and a set of model parameters \{p\}, \emph{y=f(x; \{p\})}. Full
@@ -162,10 +162,12 @@ between data points and the fit model is expressed in terms of the
 data and model than actually observed. Full access to the covariance
 matrix of the - typically correlated - model parameters is provided.
 
-The graphical output visualizes the data and the fit model at the
+The graphical output visualises the data and the fit model at the
 best-fit-point of the parameters and also shows the uncertainty
 of the fit model as a light band surrounding the line representing
-the model function.
+the model function. Plotting of confidence level contours for pairs
+of parameters or profiling of the \(\chi\)² curves for each of the fit
+parameters are also provided.
 
 
 \section{Code Structure}
@@ -175,17 +177,17 @@ the model function.
 \scalebox{0.800000}{\includegraphics{kafeDiagram.jpg}}
 \caption{\emph{Code structure of the kafe package}}\end{flushright}\end{figure}
 
-The code of \code{kafe} is centered around very few classes to handle Data input,
+The code of \code{kafe} is centred around very few classes to handle Data input,
 fitting and plotting, as illustrated in the figure on the right-hand side.
 
 Data, their uncertainties, and, optionally, the correlations of the
 uncertainties - are passed through the interface of the \code{kafe} class
-{\hyperref[index:kafe.dataset.Dataset]{\code{Dataset}}}. Input can be included in the \emph{Python} code or is read
-from files in standardized or user-defined formats. The representation
-of the data within the {\hyperref[index:kafe.dataset.Dataset]{\code{Dataset}}} class is minimalistic, consisting
-of the x and y values and the full covariance matrices of their
+{\hyperref[index:kafe.dataset.Dataset]{\code{Dataset}}}. Input can be included in the \emph{Python} code
+or is read from files in standardised or user-defined formats. The representation
+of the data within the {\hyperref[index:kafe.dataset.Dataset]{\code{Dataset}}} class is minimalistic,
+consisting of the x and y values and the full covariance matrices of their
 uncertainties. Correlated errors between x and y values are not
-supported yet, as such use cases are extremely rare.
+supported yet, as such use cases are rare.
 
 A helper function, {\hyperref[index:kafe.dataset.build_dataset]{\code{build\_dataset()}}}, is available
 to transform various error models, like a combination of independent
@@ -194,23 +196,41 @@ basic format.
 
 Adding a model function, taken either from a prepared set of fit
 functions within kafe or from a user's own \emph{Python} implementation,
-results in a {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} object, which controls the minimizer {\hyperref[index:kafe.minuit.Minuit]{\code{Minuit}}}
-and provides the results through access methods.
+results in a {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} object, which controls the
+minimizer {\hyperref[index:kafe.minuit.Minuit]{\code{Minuit}}}. Access to the final
+results of the fitting procedure is provided by data members of
+the \emph{Fit} class.
 
 One or multiple fit objects, i. e. the input data and model
 functions(s) at the best-fit point in parameter-space, are
-visualized by the class {\hyperref[index:kafe.plot.Plot]{\code{Plot}}} with the help of \code{matplotlib}
-functionality. The {\hyperref[index:module-plot]{\code{plot}}} module also contains functionality to
-display the model uncertainty by surrounding the model function
-at the best-fit values of the parameters by a light band, the one-\(\sigma\)
-uncertainty band, which is obtained by propagation of the uncertainties
-of the fit parameters, taking into account their correlations.
+visualised by the class {\hyperref[index:kafe.plot.Plot]{\code{Plot}}} with the help
+of \code{matplotlib} functionality. The {\hyperref[index:module-plot]{\code{plot}}} module
+also contains functionality to display the model uncertainty by
+surrounding the model function at the best-fit values of the parameters
+by a light band, the one-\(\sigma\) uncertainty band, which is obtained by
+propagation of the uncertainties of the fit parameters taking
+into account their correlations.
+
+Two-dimensional contour lines of pairs of parameters
+are obtained with the method \code{plot\_contour()}
+of the \code{Fit} class, which internally relies on the
+\emph{mncont} method of the \emph{Minuit} package. Contour curves are
+obtained from a scan of the \(\chi\)²-function around a fixed value,
+where each point on the curve represents the minimum with
+respect to all other free parameters in the fit, thus taking
+into account the correlation of a pair of parameters with all
+other parameters of the model.
+
+In a similar way, the method \code{plot\_profile()}
+provides profiled \(\chi\)² curves, i. e. the value of the minimal
+\(\chi\)² as a function of one parameter while all other parameters
+are allowed to vary.
 
 
 \section{Example}
 \label{index:example}
-Only very few lines of Python code are needed to perform fits with kafe.
-The snippet of code shown below performs a fit of a quadratic
+Only very few lines of Python code are needed to perform fits with
+kafe. The snippet of code shown below performs a fit of a quadratic
 function to some data points with uncertainties:
 
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -232,17 +252,18 @@ function to some data points with uncertainties:
 \PYG{c}{\PYGZsh{} Do the Fit}
 \PYG{n}{myFit}\PYG{o}{.}\PYG{n}{do\PYGZus{}fit}\PYG{p}{(}\PYG{p}{)}
 
-\PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Create the plots and output them}
+\PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Create result plots and output them}
 \PYG{n}{myPlot} \PYG{o}{=} \PYG{n}{Plot}\PYG{p}{(}\PYG{n}{myFit}\PYG{p}{)}
 \PYG{n}{myPlot}\PYG{o}{.}\PYG{n}{plot\PYGZus{}all}\PYG{p}{(}\PYG{p}{)}
 \PYG{n}{myPlot}\PYG{o}{.}\PYG{n}{save}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{kafe\PYGZus{}example0.pdf}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)} \PYG{c}{\PYGZsh{} to file}
+
 \PYG{n}{myPlot}\PYG{o}{.}\PYG{n}{show}\PYG{p}{(}\PYG{p}{)}                    \PYG{c}{\PYGZsh{} to screen}
 \end{Verbatim}
 
 The output in text form (also available via various \code{get\_...()} methods
-of the {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} class) contains the values of the parameters at the best-fit
-point, their correlation matrix and the fit probability. The example produces
-the following graphical output:
+of the {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} class) contains the values of the parameters
+at the best-fit point, their correlation matrix and the fit probability.
+The example produces the following graphical output:
 \begin{figure}[htbp]
 \centering
 \capstart
@@ -251,10 +272,46 @@ the following graphical output:
 \caption{Example: \emph{Data points with one-dimensional error bars compared
 to a quadratic model function with} \textbf{kafe}.}\end{figure}
 
+The parametrisation chosen in this example leads to a
+strong correlation of the fit parameters. This can
+be graphically visualised by adding the following
+lines at the end of the example:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c}{\PYGZsh{}\PYGZsh{}\PYGZsh{} Create and save contour plots}
+\PYG{n}{contour1} \PYG{o}{=} \PYG{n}{myFit}\PYG{o}{.}\PYG{n}{plot\PYGZus{}contour}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{dchi2}\PYG{o}{=}\PYG{p}{[}\PYG{l+m+mf}{1.}\PYG{p}{,}\PYG{l+m+mf}{2.3}\PYG{p}{]}\PYG{p}{)}
+\PYG{n}{contour2} \PYG{o}{=} \PYG{n}{myFit}\PYG{o}{.}\PYG{n}{plot\PYGZus{}contour}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{dchi2}\PYG{o}{=}\PYG{p}{[}\PYG{l+m+mf}{1.}\PYG{p}{,}\PYG{l+m+mf}{2.3}\PYG{p}{]}\PYG{p}{)}
+\PYG{n}{contour3} \PYG{o}{=} \PYG{n}{myFit}\PYG{o}{.}\PYG{n}{plot\PYGZus{}contour}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{dchi2}\PYG{o}{=}\PYG{p}{[}\PYG{l+m+mf}{1.}\PYG{p}{,}\PYG{l+m+mf}{2.3}\PYG{p}{]}\PYG{p}{)}
+\PYG{n}{contour1}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{kafe\PYGZus{}example0\PYGZus{}contour1.pdf}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{contour2}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{kafe\PYGZus{}example0\PYGZus{}contour2.pdf}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{contour3}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{kafe\PYGZus{}example0\PYGZus{}contour3.pdf}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
+\end{Verbatim}
+
+The example code produces two confidence-level contours
+for each pair of parameters (with \emph{id=0}, \emph{id=1} and \emph{id=2}),
+corresponding to an increase of the \(\chi\)²-function
+with respect to the minimum by the values given
+in the list passed as the third parameter to the
+method \code{myFit.plot\_contour()}. The resulting
+graphical representation, as shown below, displays the
+39\% contours, corresponding to the one-sigma errors, and
+the 68\% contours. The uncertainties on each parameter,
+indicated by the error bars, are also shown. They
+correspond to the projections of the one-sigma contours
+on the axes.
+\begin{figure}[htbp]
+\centering
+\capstart
+
+\includegraphics{kafe_example0_contours.png}
+\caption{\emph{Contour curves of a pairs of paramters a, b and c
+of the example above, calculated with} \textbf{kafe}.}\end{figure}
+
 More and advanced examples - like fitting different models
 to one data set, comparison of different data sets with model
-functions, averaging of correlated measurements or multi-parameter
-fits - are provided as part of the \emph{kafe} distribution and are
+functions, averaging of correlated measurements or fits with
+a large number of parameters -
+are provided as part of the \emph{kafe} distribution and are
 described in the section \emph{Examples} below. They may serve as
 a starting point for own applications.
 
@@ -338,7 +395,7 @@ export PYTHONPATH=\$ROOTSYS/lib:\$PYTHONPATH
 For more info, refer to {[}\href{http://root.cern.ch/drupal/content/pyroot}{http://root.cern.ch/drupal/content/pyroot}{]}.
 
 \emph{Qt} is needed because it is the supported interactive front-end for
-\code{matplotlib}. Other front-ends are not supported and can cause weird behavior.
+\code{matplotlib}. Other front-ends are not supported and can cause weird behaviour.
 
 \emph{LaTeX} is used by \code{matplotlib} for displaying labels and mathematical
 expressions on graphs.
@@ -436,6 +493,20 @@ HYPTEST  accepted (CL 5\%)
 \scalebox{1.000000}{\includegraphics{kafe_example1.png}}
 \caption{\emph{Output of example1 - compare two models}}\end{figure}
 
+The contour curves of the two fits are shown below
+and reflect the large correlations between the fit parameters.
+The right plot of the profile \(\chi\)² curve shows that there
+is a slight deviation from the parabolic curve in the
+fist fit of a non-linear (exponential) function. For more
+details on the profiled \(\chi\)² curve see the discussion of
+example 3, where the difference is more prominent.
+\begin{figure}[htbp]
+\centering
+\capstart
+
+\includegraphics{kafe_example1_contours.png}
+\caption{\emph{Contour curves and a profile \(\chi\)² curve for the fits in example 1}}\end{figure}
+
 
 \section{Example 2 - two fits and models}
 \label{index:example-2-two-fits-and-models}
@@ -477,21 +548,95 @@ are most probably incompatible with the assumption of an underlying
 single linear model.
 
 
-\section{Example 3 - properties of a Gauss curve}
-\label{index:example-3-properties-of-a-gauss-curve}
-This example creates a dummy {\hyperref[index:kafe.dataset.Dataset]{\code{Dataset}}} object whose points lie exactly
-on a Gaussian curve. The {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} will then converge toward that very same
-Gaussian. When plotting, the data points used to ``support'' the curve
-can be omitted.
+\section{Example 3 - non-linear fit with non-parabolic errors}
+\label{index:example-3-non-linear-fit-with-non-parabolic-errors}
+Very often, when the fit model is a non-linear function
+of the parameters, the \(\chi\)² function is not parabolic around
+the minimum. A very common example of such a case is an
+exponential function prarametrised as shown in the code
+fragment below. \emph{Minuit} contains a spacial algorithm, \emph{Minos},
+which returns correct errors also in this case. Instead of
+using the curvature the minimum, \emph{Minos} follows the
+\(\chi\)² function from the minimum to the point where it
+crosses the the value \emph{minimum+up}, where \emph{up=1} corresponds
+to one standard deviation in \(\chi\)² fits. During the scan of the
+\(\chi\)² function at different values of each parameter the minimum
+with respect to all other parameters in the fit is determined,
+thus making sure that all correlations among the parameters
+are taken into account. In case of a parabolic \(\chi\)² function,
+the \emph{Minos} errors are identical to those obtained by
+the \emph{Hesse} algorithm, but are typically larger or
+asymmetric in other cases.
 
-This example shows how to access the \code{kafe} plot objects
-to annotate plots with \code{matplotlib} functionality.
+The method \code{kafe.do\_fit()} executes the \emph{Minos} algorithm
+after completion of a fit and prints the \emph{Minos} errors if
+the deviation from the parabolic result are larger than 5\% .
+
+A graphical visualisation is provided
+by the method \code{plot\_profile()} , which
+displays the profile \(\chi\)² curve for the parameter
+with name or index passed as an argument to the method.
+
+The relevant code fragments and the usage of
+the method \code{kafe.fit.plot\_profile()} are
+illustrated here:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\PYG{c}{\PYGZsh{} definition of the fit function}
+\PYG{n+nd}{@ASCII}\PYG{p}{(}\PYG{n}{x\PYGZus{}name}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{t}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{expression}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{A0*exp(\PYGZhy{}t/tau)}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{c}{\PYGZsh{} Set some LaTeX\PYGZhy{}related parameters for this function}
+\PYG{n+nd}{@LaTeX}\PYG{p}{(}\PYG{n}{name}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{A}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{x\PYGZus{}name}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{t}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+   \PYG{n}{parameter\PYGZus{}names}\PYG{o}{=}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{A\PYGZus{}0}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{tau\PYGZob{}\PYGZcb{}}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{,}
+   \PYG{n}{expression}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{A\PYGZus{}0}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{,}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{exp(}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{frac\PYGZob{}\PYGZhy{}t\PYGZcb{}\PYGZob{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s}{tau\PYGZcb{})}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{n+nd}{@FitFunction}
+\PYG{k}{def} \PYG{n+nf}{exponential}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,} \PYG{n}{A0}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{tau}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{:}
+   \PYG{k}{return} \PYG{n}{A0} \PYG{o}{*} \PYG{n}{exp}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{t}\PYG{o}{/}\PYG{n}{tau}\PYG{p}{)}
+\PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\PYG{c}{\PYGZsh{} Load the data, perform fit and plot}
+\PYG{n}{my\PYGZus{}dataset} \PYG{o}{=} \PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{input\PYGZus{}file}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{dataset.dat}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{title}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Example Dataset}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{my\PYGZus{}fit} \PYG{o}{=} \PYG{n}{Fit}\PYG{p}{(}\PYG{n}{my\PYGZus{}dataset}\PYG{p}{,} \PYG{n}{exponential}\PYG{p}{)}
+\PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{do\PYGZus{}fit}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{my\PYGZus{}plot} \PYG{o}{=} \PYG{n}{Plot}\PYG{p}{(}\PYG{n}{my\PYGZus{}fit}\PYG{p}{)}
+\PYG{n}{my\PYGZus{}plot}\PYG{o}{.}\PYG{n}{plot\PYGZus{}all}\PYG{p}{(}\PYG{p}{)}
+\PYG{c}{\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZgt{} display contours and profile}
+\PYG{n}{contour} \PYG{o}{=} \PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{plot\PYGZus{}contour}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{dchi2}\PYG{o}{=}\PYG{p}{[}\PYG{l+m+mf}{1.}\PYG{p}{,}\PYG{l+m+mf}{2.3}\PYG{p}{]}\PYG{p}{)}
+\PYG{n}{profile1}\PYG{o}{=}\PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{plot\PYGZus{}profile}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{n}{profile2}\PYG{o}{=}\PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{plot\PYGZus{}profile}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{c}{\PYGZsh{} Show the plots}
+\PYG{n}{my\PYGZus{}plot}\PYG{o}{.}\PYG{n}{show}\PYG{p}{(}\PYG{p}{)}
+\end{Verbatim}
+
+The data points were generated using a normalisation factor
+of \emph{A0=1.} and a lifetime \emph{\(\tau\)=1.}. The resulting fit output
+below demonstrates that this is well reproduced within
+uncertainties:
 \begin{figure}[htbp]
 \centering
 \capstart
 
 \scalebox{1.000000}{\includegraphics{kafe_example3.png}}
-\caption{\emph{Output of example 3 - properties of a Gauss curve.}}\end{figure}
+\caption{\emph{Output of example 3 - Fit of an exponential}}\end{figure}
+
+The contour \emph{A}$_{\text{0}}$ \emph{vs \(\tau\)}, however, is not an ellipse,
+as shown in the figure below. The profiled \(\chi\)² curves are
+also shown; they deviate significantly from parabolas.
+The proper one-sigma uncertainty in the sense of a 68\%
+confidence interval is read from these curves by determining
+the parameter values where the \(\chi\)² curves cross the horizontal
+lines at a value of \(\Delta\)\(\chi\)²=1 above the minimum. The two-sigma
+uncertainties correspond to the intersections with the
+horizontal line at \(\Delta\)\(\chi\)²=4.
+\begin{figure}[htbp]
+\centering
+\capstart
+
+\scalebox{1.000000}{\includegraphics{kafe_example3_contours.png}}
+\caption{\emph{Contour and profile \(\chi\)² curves of example 3}}\end{figure}
+
+Note: a more parabolic behaviour is achieved
+by using the width parameter \(\lambda\)=1/\(\tau\) in the
+parametrisation of the exponential function.
 
 
 \section{Example 4 - average of correlated measurements}
@@ -587,18 +732,18 @@ averaging example is here:
 \end{Verbatim}
 
 
-\section{Example 5 - multi-parameter fit (damped oscillation)}
-\label{index:example-5-multi-parameter-fit-damped-oscillation}
+\section{Example 5 - non-linear multi-parameter fit (damped oscillation)}
+\label{index:example-5-non-linear-multi-parameter-fit-damped-oscillation}
 This example shows the fitting of a more complicated model function
 to data collected from a damped harmonic oscillator. In such
 non-linear fits, stetting the initial values is sometimes crucial
-to let the fit converge at the global minimum. The {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} object
-provides the method {\hyperref[index:kafe.fit.Fit.set_parameters]{\code{set\_parameters()}}} for this purpose. As the
-fit function for this problem is not a standard one, it is defined
-explicitly making use of the decorator functions available in \code{kafe}
-to provide nice type setting of the parameters. This time, the
-function {\hyperref[index:kafe.file_tools.parse_column_data]{\code{parse\_column\_data()}}} is used to read the input,
-which is given as separate columns with the fields
+to let the fit converge at the global minimum. The {\hyperref[index:kafe.fit.Fit]{\code{Fit}}}
+object provides the method {\hyperref[index:kafe.fit.Fit.set_parameters]{\code{set\_parameters()}}} for this
+purpose. As the fit function for this problem is not a standard one, it is
+defined explicitly making use of the decorator functions available in
+\code{kafe} to provide nice type setting of the parameters. This time,
+the function {\hyperref[index:kafe.file_tools.parse_column_data]{\code{parse\_column\_data()}}} is used to read
+the input, which is given as separate columns with the fields
 \begin{quote}
 
 \code{\textless{}time\textgreater{}  \textless{}Amplitude\textgreater{}    \textless{}error on time\textgreater{}   \textless{}error on Amplitude\textgreater{}}
@@ -632,14 +777,17 @@ Here is the example code:
 \PYG{n}{my\PYGZus{}fit} \PYG{o}{=} \PYG{n}{Fit}\PYG{p}{(}\PYG{n}{my\PYGZus{}dataset}\PYG{p}{,} \PYG{n}{damped\PYGZus{}oscillator}\PYG{p}{)}
 \PYG{c}{\PYGZsh{} Set the initial values for the fit:}
 \PYG{c}{\PYGZsh{}                      a\PYGZus{}0 tau omega phi}
-\PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{set\PYGZus{}parameters}\PYG{p}{(}\PYG{p}{(}\PYG{l+m+mf}{1.}\PYG{p}{,} \PYG{l+m+mf}{3.}\PYG{p}{,} \PYG{l+m+mf}{6.28}\PYG{p}{,} \PYG{l+m+mf}{0.}\PYG{p}{)}\PYG{p}{)}
+\PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{set\PYGZus{}parameters}\PYG{p}{(}\PYG{p}{(}\PYG{l+m+mf}{1.}\PYG{p}{,} \PYG{l+m+mf}{2.}\PYG{p}{,} \PYG{l+m+mf}{6.28}\PYG{p}{,} \PYG{l+m+mf}{0.8}\PYG{p}{)}\PYG{p}{)}
 \PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{do\PYGZus{}fit}\PYG{p}{(}\PYG{p}{)}
 \PYG{c}{\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZhy{} Create and output the plots}
 \PYG{n}{my\PYGZus{}plot} \PYG{o}{=} \PYG{n}{Plot}\PYG{p}{(}\PYG{n}{my\PYGZus{}fit}\PYG{p}{)}
 \PYG{n}{my\PYGZus{}plot}\PYG{o}{.}\PYG{n}{plot\PYGZus{}all}\PYG{p}{(}\PYG{p}{)}
-\PYG{n}{my\PYGZus{}plot}\PYG{o}{.}\PYG{n}{save}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{plot.pdf}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
+\PYG{c}{\PYGZsh{}my\PYGZus{}plot.save(\PYGZsq{}plot.pdf\PYGZsq{})}
+\PYG{n}{my\PYGZus{}fit}\PYG{o}{.}\PYG{n}{plot\PYGZus{}correlations}\PYG{p}{(}\PYG{p}{)} \PYG{c}{\PYGZsh{} all contours and profiles}
 \PYG{n}{my\PYGZus{}plot}\PYG{o}{.}\PYG{n}{show}\PYG{p}{(}\PYG{p}{)}
 \end{Verbatim}
+
+This is the resulting output:
 \begin{figure}[htbp]
 \centering
 \capstart
@@ -647,9 +795,28 @@ Here is the example code:
 \scalebox{1.000000}{\includegraphics{kafe_example5.png}}
 \caption{\emph{Example 5 - fit of the time dependence of the amplitude of a damped harmonic oscillator.}}\end{figure}
 
+The fit function is non-linear, and, furthermore, there ist not a single
+local minimum - e.g. a shift in phase of 180° corresonds to a change in
+sign of the amplitude, and valid solutions are also obtained for multiples
+of the base frequency. Checking of the validity of the fit result is
+threfore important. The method
+\code{plot\_correlations()} provides the
+contours of all pairs of parameters and the profiles for each of
+the parameters and displays them in a matrix-like arrangement.
+Distorted contour-ellipses show wether the result is affected
+by near-by minima, and the profiles allow to correctly assign
+the parameter uncertainties in cases where the parabolic
+approximation is not precise enough.
+\begin{figure}[htbp]
+\centering
+\capstart
 
-\section{Example 6 - another multi-parameter fit}
-\label{index:example-6-another-multi-parameter-fit}
+\scalebox{0.750000}{\includegraphics{kafe_example5_correlations.png}}
+\caption{\emph{Confidence contours and profiles for example 5.}}\end{figure}
+
+
+\section{Example 6 - linear multi-parameter fit}
+\label{index:example-6-linear-multi-parameter-fit}
 This example is not much different from the previous one, except that
 the fit function, a standard fourth-degree polynomial from the module
 {\hyperref[index:module-function_library]{\code{function\_library}}}, is modified to reflect the names of the problem
@@ -737,8 +904,8 @@ This is the resulting output:
 \caption{\emph{Output of example 6 - counting rate.}}\end{figure}
 
 
-\section{Example 7 - non-linear multi-parameter fit}
-\label{index:example-7-non-linear-multi-parameter-fit}
+\section{Example 7 - another non-linear multi-parameter fit (double-slit spectrum)}
+\label{index:example-7-another-non-linear-multi-parameter-fit-double-slit-spectrum}
 Again, not much new in this example, except that the
 model is now very non-linear, the intensity distribution
 of light after passing through a double-slit. The
@@ -797,7 +964,7 @@ If the parameter \emph{k} in the example above has a (known) uncertainty,
 is is more appropriate to constrain it within its uncertainty (which
 may be known from an independent measurement or from the specifications
 of the laser used in the experiment). To take into account a
-wave number \emph{k} known with a precision of 10`000, the
+wave number \emph{k} known with a precision of 10`000 the
 last line in the example above should be replaced by:
 
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -919,29 +1086,28 @@ Here is the output:
 \caption{\emph{Output of example 8 - Fit of a Breit-Wigner function.}}\end{figure}
 
 This example also contains a code snippet demonstrating how to plot
-contours with \code{kafe}. A \emph{contour} is a region of the parameter
-space containing all parameter values consistent with the fit, within
-uncertainty.
-
-Contours are useful because they provide a way to visualize parameter
-uncertainties and correlations. \code{kafe} supports plotting
-2D $1\sigma$ contours for any pair of parameters by getting the
-relevant data from \code{TMinuit} and plotting it using \code{matplotlib}.
-This can be achieved by calling a {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} object's
-{\hyperref[index:kafe.fit.Fit.plot_contour]{\code{plot\_contour()}}} method:
+contours by calling the {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} object's
+\code{plot\_contour()} method. This is the code:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c}{\PYGZsh{} plot 1\PYGZhy{}sigma contour of first two parameters into a separate figure}
-\PYG{n}{cont\PYGZus{}fig} \PYG{o}{=} \PYG{n}{BWfit}\PYG{o}{.}\PYG{n}{plot\PYGZus{}contour}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}  \PYG{c}{\PYGZsh{} plot contour}
-\PYG{c}{\PYGZsh{} save figure}
-\PYG{n}{cont\PYGZus{}fig}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{kafe\PYGZus{}BreitWignerFit\PYGZus{}contour12.pdf}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{c}{\PYGZsh{} plot pairs of contours at 1 sigma, 68\PYGZpc{}, 2 sigma and 95\PYGZpc{}}
+\PYG{n}{cont\PYGZus{}fig1} \PYG{o}{=} \PYG{n}{BWfit}\PYG{o}{.}\PYG{n}{plot\PYGZus{}contour}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{dchi2}\PYG{o}{=}\PYG{p}{[}\PYG{l+m+mf}{1.}\PYG{p}{,}\PYG{l+m+mf}{2.3}\PYG{p}{,}\PYG{l+m+mf}{4.}\PYG{p}{,}\PYG{l+m+mf}{5.99}\PYG{p}{]}\PYG{p}{)}
+\PYG{n}{cont\PYGZus{}fig2} \PYG{o}{=} \PYG{n}{BWfit}\PYG{o}{.}\PYG{n}{plot\PYGZus{}contour}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{dchi2}\PYG{o}{=}\PYG{p}{[}\PYG{l+m+mf}{1.}\PYG{p}{,}\PYG{l+m+mf}{2.3}\PYG{p}{,}\PYG{l+m+mf}{4.}\PYG{p}{,}\PYG{l+m+mf}{5.99}\PYG{p}{]}\PYG{p}{)}
+\PYG{n}{cont\PYGZus{}fig3} \PYG{o}{=} \PYG{n}{BWfit}\PYG{o}{.}\PYG{n}{plot\PYGZus{}contour}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{dchi2}\PYG{o}{=}\PYG{p}{[}\PYG{l+m+mf}{1.}\PYG{p}{,}\PYG{l+m+mf}{2.3}\PYG{p}{,}\PYG{l+m+mf}{4.}\PYG{p}{,}\PYG{l+m+mf}{5.99}\PYG{p}{]}\PYG{p}{)}
+\PYG{c}{\PYGZsh{} save to files}
+\PYG{n}{cont\PYGZus{}fig1}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{kafe\PYGZus{}BreitWignerFit\PYGZus{}contour12.pdf}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{cont\PYGZus{}fig2}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{kafe\PYGZus{}BreitWignerFit\PYGZus{}contour13.pdf}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{cont\PYGZus{}fig3}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{kafe\PYGZus{}BreitWignerFit\PYGZus{}contour23.pdf}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
 \end{Verbatim}
+
+The resulting pictures show that parameter correlations are
+relatively small:
 \begin{figure}[htbp]
 \centering
 \capstart
 
-\scalebox{1.000000}{\includegraphics{kafe_BreitWignerFit_contour12.png}}
-\caption{\emph{Contour generated in example 8 - Fit of a Breit-Wigner function.}}\end{figure}
+\includegraphics{kafe_BreitWignerFit_contours.png}
+\caption{\emph{Contours generated in example 8 - Fit of a Breit-Wigner function.}}\end{figure}
 
 
 \section{Example 9 - fit of a function to histogram data}
@@ -1013,14 +1179,32 @@ more fundamental methods of the \emph{Dataset}, \emph{Fit} and
 \end{Verbatim}
 
 Here is the output, which shows that the parameters of the
-normal distribution, from which the data were generated, are
-well reproduced within the uncertainties by the fit result:
+standard normal distribution, from which the data were generated,
+are reproduced well by the fit result:
 \begin{figure}[htbp]
 \centering
 \capstart
 
 \scalebox{1.000000}{\includegraphics{kafe_example9.png}}
 \caption{\emph{Output of example 9 - Fit of a Gaussian distribution to histogram data}}\end{figure}
+
+
+\section{Example 10 - Plotting with \texttt{kafe}: properties of a Gauss curve}
+\label{index:example-10-plotting-with-kafe-properties-of-a-gauss-curve}
+This example shows how to access the \code{kafe} plot objects
+to annotate plots with \code{matplotlib} functionality.
+
+A dummy object {\hyperref[index:kafe.dataset.Dataset]{\code{Dataset}}} is
+created with points lying exactly on a Gaussian curve.
+The {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} will then converge toward
+that very same Gaussian. When plotting, the data points
+used to ``support'' the curve can be omitted.
+\begin{figure}[htbp]
+\centering
+\capstart
+
+\scalebox{1.000000}{\includegraphics{kafe_example10.png}}
+\caption{\emph{Output of example 10 - properties of a Gauss curve.}}\end{figure}
 
 
 \chapter{\texttt{kafe} Documentation -- module descriptions}
@@ -1535,10 +1719,10 @@ plotting more than one \emph{Fit} in the same \emph{Plot}.
 build a kafe \code{Dataset} object from input file with key words
 and file format defined in \code{parse\_general\_inputfile}
 \begin{description}
-\item[{\textbf{file\_to\_parse}}] \leavevmode{[}file-like object or string containing a file path{]}
+\item[{\textbf{file\_to\_parse}:  file-like object or string containing a file path}] \leavevmode
 The file to parse.
 
-\item[{\textbf{returns}}] \leavevmode{[}an instance of the \code{Dataset} class,{]}
+\item[{\textbf{returns} an instance of the \code{Dataset} class,}] \leavevmode
 constructed with the help of the method \code{Dataset.build\_dataset()}
 
 \end{description}
@@ -1550,12 +1734,12 @@ constructed with the help of the method \code{Dataset.build\_dataset()}
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.file_tools.buildFit_fromFile}\pysiglinewithargsret{\code{kafe.file\_tools.}\bfcode{buildFit\_fromFile}}{\emph{file\_to\_parse}}{}
 build a kafe \code{Fit} object from input file with keywords
-and file format defined in \code{parse\_general\_input\_file()}
+and file format defined in \code{parse\_general\_input\_file}
 \begin{description}
 \item[{\textbf{file\_to\_parse}:  file-like object or string containing a file path}] \leavevmode
 The file to parse.
 
-\item[{\textbf{returns}}] \leavevmode{[}an instance of the \code{Fit} class,{]}
+\item[{\textbf{returns} an instance of the \code{Fit} class,}] \leavevmode
 constructed with the help of the methods
 \code{Dataset.build\_dataset()} and
 \code{Fit.build\_fit()}
@@ -1569,9 +1753,8 @@ constructed with the help of the methods
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.file_tools.parse_column_data}\pysiglinewithargsret{\code{kafe.file\_tools.}\bfcode{parse\_column\_data}}{\emph{file\_to\_parse, field\_order='x,y', delimiter=' `, cov\_mat\_files=None, title='Untitled Dataset', basename=None, axis\_labels={[}'x', `y'{]}, axis\_units={[}'`, `'{]}}}{}
 Parses a file which contains measurement data in a one-measurement-per-row
-format. The field (column) order can be specified. It defaults to
-\code{"x,y"}.
-Valid field names are \emph{x}, \emph{y}, \emph{xabserr}, \emph{yabserr}, \emph{xrelerr},
+format. The field (column) order can be specified. It defaults to \emph{x,y'.
+Valid field names are {}`x}, \emph{y}, \emph{xabserr}, \emph{yabserr}, \emph{xrelerr},
 \emph{yrelerr}. Another valid field name is \emph{ignore} which can be used to skip
 a field.
 
@@ -1611,27 +1794,27 @@ Each element of this tuple may be either \code{None}, a file or file-like
 object, or an iterable containing files and file-like objects. Each
 file should contain a covariance matrix for the respective axis.
 
-When creating the \code{Dataset}, all given matrices are summed over.
+When creating the \emph{Dataset}, all given matrices are summed over.
 
 \item[{\emph{title}}] \leavevmode{[}string (optional){]}
-The title of the \code{Dataset}.
+The title of the \emph{Dataset}.
 
 \item[{\emph{basename}}] \leavevmode{[}string or \code{None} (optional){]}
-A basename for the \code{Dataset}. All output files related to this dataset
+A basename for the \emph{Dataset}. All output files related to this dataset
 will use this as a basename. If this is \code{None} (default), the
 basename will be inferred from the filename.
 
 \item[{\emph{axis\_labels}}] \leavevmode{[}2-tuple of strings (optional){]}
-a 2-tuple containing the axis labels for the \code{Dataset}. This is
-relevant when plotting \code{Fits} of the \code{Dataset}, but is ignored when
-plotting more than one \code{Fit} in the same \code{Plot}.
+a 2-tuple containing the axis labels for the \emph{Dataset}. This is
+relevant when plotting \emph{Fits} of the \emph{Dataset}, but is ignored when
+plotting more than one \emph{Fit} in the same \emph{Plot}.
 
 \item[{\emph{axis\_units}}] \leavevmode{[}2-tuple of strings (optional){]}
-a 2-tuple containing the axis units for the \code{Dataset}. This is
-relevant when plotting \code{Fits} of the \code{Dataset}, but is ignored when
-plotting more than one \code{Fit} in the same \code{Plot}.
+a 2-tuple containing the axis units for the \emph{Dataset}. This is
+relevant when plotting \emph{Fits} of the \emph{Dataset}, but is ignored when
+plotting more than one \emph{Fit} in the same \emph{Plot}.
 
-\item[{\textbf{return}}] \leavevmode{[}\code{Dataset}{]}
+\item[{\textbf{return}}] \leavevmode{[}\emph{Dataset}{]}
 A Dataset built from the parsed file.
 
 \end{description}
@@ -1646,19 +1829,19 @@ This function can be used to specify \emph{kafe} \code{Dataset}
 or \code{Fit} objects in a single input file, thus requiring
 minimal Python code. Keywords as specified in a dictionary
 \code{tokens} specify all objects and parameters needed by the
-functions \code{build\_dataset()} in  module {\hyperref[index:module-dataset]{\code{dataset}}} and
-\code{build\_fit()} in module {\hyperref[index:module-fit]{\code{fit}}}.
+functions \code{build\_dataset()} in  module \code{dataset} and
+\code{build\_fit()} in module \code{fit}.
 \begin{description}
 \item[{\textbf{file\_to\_parse}:  file-like object or string containing a file path}] \leavevmode
 The file to parse.
 
 \item[{\textbf{return}}] \leavevmode{[}dataset\_kwargs, fit\_kwargs{]}
-keyword lists to build a kafe \code{Dataset} or \code{Fit} object
-with the helper functions \emph{build\_dataset} or \emph{build\_fit}
+keyword lists to build a kafe \code{Dataset} or \code{Fit{}` object
+with the helper functions {}`{}`build\_dataset} or \code{build\_fit}
 
 \end{description}
 
-\textbf{Description of the format of the input file}
+\emph{Description of the format of the input file}
 
 The interpretation of the input data is driven by keywords.
 All data following a key must be of the same kind, a block of
@@ -1666,26 +1849,26 @@ data ends when a new key is specified.
 
 Some keys only expect a single float or string-tpye value, given
 on the same line, separated by a space (\code{' '}):
+\begin{quote}
 
-\begin{Verbatim}[commandchars=\\\{\}]
 \textless{}key\textgreater{} \textless{}value\textgreater{}
-\end{Verbatim}
+\end{quote}
 
 For multiple input, i.e. data, uncertainties and covariance or
 correlation matrices, the format is:
+\begin{quote}
 
-\begin{Verbatim}[commandchars=\\\{\}]
 \textless{}key\textgreater{}
-\textless{}xval\textgreater{}  \textless{}xerr\textgreater{}  [\textless{}xsyst\textgreater{}  \textless{}elements of cov/cor matrix\textgreater{}]
+\textless{}xval\textgreater{}  \textless{}xerr\textgreater{}  {[}\textless{}xsyst\textgreater{}  \textless{}elements of cov/cor matrix\textgreater{}{]}
 
 ...
 
-\textless{}xval\textgreater{}  \textless{}xerr\textgreater{}  [\textless{}xsyst\textgreater{}  \textless{}elements of cov/cor matrix\textgreater{}]
-\end{Verbatim}
+\textless{}xval\textgreater{}  \textless{}xerr\textgreater{}  {[}\textless{}xsyst\textgreater{}  \textless{}elements of cov/cor matrix\textgreater{}{]}
+\end{quote}
 
 The field separator is space (\code{' '}). Note that the number of input
 values in each line must correspond to the specified format of the
-(correlated) uncertainties.
+(correlated) ucertainties.
 
 The currently implemented keys are:
 \begin{itemize}
@@ -1848,11 +2031,11 @@ keyword:
 \begin{itemize}
 \item {} 
 \code{*ConstrainedParameters} followed by one or more lines with
-the fields:
+the fields
+\begin{quote}
 
-\begin{Verbatim}[commandchars=\\\{\}]
 \textless{}parameter name\textgreater{}  \textless{}parameter value\textgreater{}  \textless{}parameter uncert.\textgreater{},
-\end{Verbatim}
+\end{quote}
 
 where \emph{parameter name} is the name of the parameter in the fit
 function specification.
@@ -1904,7 +2087,7 @@ def fitf(x,av=1.): \# fit an average
 \label{index:fit-module}\label{index:module-kafe.fit}\index{kafe.fit (module)}\phantomsection\label{index:module-fit}\index{fit (module)}\index{Fit (class in kafe.fit)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x4bc87d0\textgreater{}}, \emph{fit\_label=None}}{}
+\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x4001848\textgreater{}}, \emph{fit\_label=None}}{}
 Bases: \code{object}
 
 Object representing a fit. This object references the fitted \emph{Dataset},
@@ -2016,7 +2199,7 @@ this Fit instance's child \emph{Dataset}
 \phantomsection\label{index:kafe.fit.Fit.do_fit}\pysiglinewithargsret{\bfcode{do\_fit}}{\emph{quiet=False}, \emph{verbose=False}}{}
 Runs the fit algorithm for this \emph{Fit} object.
 
-First, the \code{Dataset} is fitted considering only uncertainties in the
+First, the \emph{Dataset} is fitted considering only uncertainties in the
 \emph{y} direction. If the \emph{Dataset} has no uncertainties in the \emph{y}
 direction, they are assumed to be equal to 1.0 for this preliminary
 fit, as there is no better information available.
@@ -2061,8 +2244,8 @@ the fit function used for this \emph{Fit}
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.fit.Fit.fix_parameters}\pysiglinewithargsret{\bfcode{fix\_parameters}}{\emph{*parameters\_to\_fix}}{}
 Fix the given parameters so that the minimizer works without them
-when \code{do\_fit()} is called next. Parameters can be given by their
-names or by their IDs.
+when \emph{do\_fit} is called next. Parameters can be given by their names
+or by their IDs.
 
 \end{fulllineitems}
 
@@ -2182,43 +2365,6 @@ the names of the parameters
 
 \end{fulllineitems}
 
-\index{plot\_contour() (kafe.fit.Fit method)}
-
-\begin{fulllineitems}
-\phantomsection\label{index:kafe.fit.Fit.plot_contour}\pysiglinewithargsret{\bfcode{plot\_contour}}{\emph{parameter1}, \emph{parameter2}, \emph{n\_points=100}, \emph{color='red'}, \emph{alpha=0.25}, \emph{show=False}}{}
-Plots a two-dimensional $1\sigma$ contour for this fit into
-a separate figure and returns the figure object.
-\begin{description}
-\item[{\textbf{parameter1}}] \leavevmode{[}int or string{]}
-ID or name of the parameter to appear on the \emph{x}-axis.
-
-\item[{\textbf{parameter2}}] \leavevmode{[}int or string{]}
-ID or name of the parameter to appear on the \emph{y}-axis.
-
-\item[{\emph{n\_points}}] \leavevmode{[}int (optional){]}
-Number of plot points to use for the contour. Higher
-values yield smoother contours but take longer to
-render. Default is 100.
-
-\item[{\emph{color}}] \leavevmode{[}string (optional){]}
-A \code{matplotlib} color identifier specifying the fill color
-of the contour. Default is `red'.
-
-\item[{\emph{alpha}}] \leavevmode{[}float (optional){]}
-Transparency of the contour fill color ranging from 0. (fully
-transparent) to 1. (fully opaque). Default is 0.25
-
-\item[{\emph{show}}] \leavevmode{[}boolean (optional){]}
-Specify whether to show the figure before returning it. Defaults
-to \code{False}.
-
-\item[{\textbf{returns}}] \leavevmode{[}\code{matplotlib} figure object{]}
-A figure object containing the contour plot.
-
-\end{description}
-
-\end{fulllineitems}
-
 \index{print\_fit\_details() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
@@ -2262,7 +2408,7 @@ This is done element-wise, according to the formula:
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.fit.Fit.release_parameters}\pysiglinewithargsret{\bfcode{release\_parameters}}{\emph{*parameters\_to\_release}}{}
 Release the given parameters so that the minimizer begins to work with
-them when \code{do\_fit()} is called next. Parameters can be given by their
+them when \emph{do\_fit} is called next. Parameters can be given by their
 names or by their IDs. If no arguments are provied, then release all
 parameters.
 
@@ -2275,8 +2421,8 @@ parameters.
 Sets the parameter values (and optionally errors) for this fit.
 This is usually called just before the fit is done, to establish
 the initial parameters. If a parameter error is omitted, it is
-set to 1/10th of the parameter values themselves. If the default
-value of the parameter is 0, it is set, by exception, to 0.1.
+set to 1/1000th of the parameter values themselves. If the default
+value of the parameter is 0, it is set, by exception, to 0.001.
 
 This method accepts up to two positional arguments and several
 keyword arguments.
@@ -2336,24 +2482,25 @@ This helper fuction creates a \code{Fit} from a series of keyword arguments.
 
 Valid keywords are:
 
-\textbf{dataset} : a \code{kafe} \code{Dataset}
+\textbf{dataset} : a \emph{kafe} \code{Dataset}
 \begin{description}
-\item[{\textbf{fitfunc}}] \leavevmode{[}a python function, optionally with{]}
+\item[{\textbf{fitfunc}}] \leavevmode{[}a python function, eventually with{]}
 \code{@FitFunction}, \code{@LATEX} and \code{@FitFunction} decorators
 
-\item[{\emph{fitlabel}}] \leavevmode{[}name for this fit (optional){]}
-Defaults to ``untitled''.
+\end{description}
 
-\item[{\emph{initial\_fit\_parameters}}] \leavevmode{[}None or 2-tuple of list, tuple/\emph{np.array} of floats{]}
+\textbf{fitlabel} : name for this fit
+\begin{description}
+\item[{\textbf{fitparameters}}] \leavevmode{[}None or 2-tuple of list, tuple/\emph{np.array} of floats{]}
 specifying initial parameter values and errors
 
-\item[{\emph{constrained\_parameters}: None or 3-tuple of list, tuple/np.array{}`}] \leavevmode
+\item[{\textbf{constrained\_parameters}: None or 3-tuple of list, tuple/np.array{}`}] \leavevmode
 of one string and 2 floats specifiying the names, values and
 uncertainties of constraints to apply to model parameters
 
 \end{description}
 
-\textbf{returns} : \code{Fit} object
+\textbf{returns} \emph{Fit} object
 
 \end{fulllineitems}
 
@@ -2369,10 +2516,10 @@ to the formula:
 Here, $\lambda$ is the residual vector $\lambda = \vec{y} -
 \vec{f}(\vec{x})$ and $C$ is the covariance matrix.
 
-If a constraint $c_i\pm\sigma_i$ is applied to a parameter $p_i$,
-a \emph{penalty term} is added for each constrained parameter:
+If a constraint $c_i\pm\sigma_i$ is applied to  a parameter i,
+a \emph{penalty term} is added for each constrained parameter according to:
 \begin{gather}
-\begin{split}\chi^2_{\text{cons}} = \chi^2 + \sum_i{ \left( \frac{p_i - c_i}{\sigma_i} \right)^2 }\end{split}\notag
+\begin{split}\chi^2 += \left( \frac{v_i - c_i}{\sigma_i} \right)^2\end{split}\notag
 \end{gather}\begin{description}
 \item[{\textbf{xdata}}] \leavevmode{[}iterable{]}
 The \emph{x} measurement data
@@ -2386,14 +2533,14 @@ The total covariance matrix
 \item[{\textbf{fit\_function}}] \leavevmode{[}function{]}
 The fit function $f(x)$
 
+\end{description}
+
+\textbf{constrained\_parameters} : None or list of two iterables
+with a length equal to the number of parameters. An uncertainty of
+0 means that a parameter remains unconstrained.
+\begin{description}
 \item[{\textbf{parameter\_values}}] \leavevmode{[}list/tuple{]}
 The values of the parameters at which $f(x)$ should be evaluated.
-
-\item[{\emph{constrained\_parameters}}] \leavevmode{[}\code{None} or list of two iterables (optional){]}
-The first iterable (${c_i}$) contains the constrained parameters'
-expected values and the second iterable (${\sigma_i}$) contains
-the constraint uncertainties. A parameter with constraint uncertainty
-set to 0 remains unconstrained.
 
 \end{description}
 
@@ -3110,7 +3257,7 @@ This method extends the current plot span to include \emph{new\_span}
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.plot.Plot.fits}\pysigline{\bfcode{fits}\strong{ = None}}
-list of \code{Fit} objects to plot
+list of {\color{red}\bfseries{}{}`}Fit{}`s to plot
 
 \end{fulllineitems}
 

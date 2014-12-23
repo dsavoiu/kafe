@@ -19,6 +19,7 @@ Fitting a Breit-Wigner Resonance
 # last modified: 27-JUL-31 <initial version>
 #                06-AUG-14 changed to use buildFit_fromFile()
 #                09-OCT-14 added section to plot contour
+#                05-Dec-14 more comfortable contour plotting
 #---------------------------------------------------------------------
 
 # import everything we need from kafe
@@ -39,11 +40,8 @@ BWplot = Plot(BWfit)
 BWplot.plot_all()
 BWplot.save("kafe_BreitWignerFit.pdf")
 
-cont_fig = BWfit.plot_contour(0, 1)
-
-# save to file
-cont_fig.savefig("kafe_BreitWignerFit_contour12.pdf")
-
+# plot contours and profiles
+BWfit.plot_correlations()
 
 # show everything
 plt.show()

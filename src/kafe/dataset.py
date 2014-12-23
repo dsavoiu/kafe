@@ -10,7 +10,7 @@
 
 '''
 
-# Changes: 
+# Changes:
 # GQ 140724: fixed output format: uncor -> total
 # ---------------------------------------------
 
@@ -29,7 +29,7 @@ import logging
 logger = logging.getLogger('kafe')
 
 
-def build_dataset(xdata, ydata, cov_mats=None, 
+def build_dataset(xdata, ydata, cov_mats=None,
                   xabserr=0.0, xrelerr=0.0, xabscor=0.0, xrelcor=0.0,
                   yabserr=0.0, yrelerr=0.0, yabscor=0.0, yrelcor=0.0,
                   title=None, basename=None, axis_labels=None, axis_units=None):
@@ -120,7 +120,7 @@ correlated error for the axis is then set to that.
             # If `None` is specified, substitute zero matrix
             if mat is None:
                 cov_mats[mat_id] = np.asmatrix(np.zeros((size, size)))
-    
+
     #
     # Construct cor mats from error specifications
     #
@@ -334,7 +334,7 @@ cov_mats=(None, my_cov_mat_y))
             self.axis_labels = list(axis_labels)
         else:
             self.axis_labels = ['x', 'y']
-            
+
         if axis_units is not None:
             self.axis_units = list(axis_units)
         else:

@@ -290,11 +290,12 @@ class Plot(object):
         self.figure.canvas.mpl_connect('draw_event', self.on_draw)
 
     def plot_all(self, show_info_for='all', show_data_for='all',
-                 show_function_for='all'):
+                 show_function_for='all', show_band_for='all'):
         '''
         Plot every `Fit` object to its figure.
         '''
         _show_data_flags = []
+        _show_function_flags = []
         for p_id, _ in enumerate(self.fits):
             if show_data_for != 'all':
                 try:
@@ -320,14 +321,28 @@ class Plot(object):
                     show_function_for = (show_function_for,)
 
                 if p_id in show_function_for:
+                    _show_function_flags.append(True)
+                else:
+                    _show_function_flags.append(False)
+            else:
+                    _show_function_flags.append(True)
+
+            if show_band_for != 'all':
+                try:
+                    iter(show_band_for)
+                except:
+                    # wrap value in tuple
+                    show_band_for = (show_band_for,)
+
+                if p_id in show_band_for:
                     self.plot(p_id, show_data=_show_data_flags[p_id],
-                              show_function=True)
+                      show_function=_show_function_flags[p_id], show_band=True)
                 else:
                     self.plot(p_id, show_data=_show_data_flags[p_id],
-                              show_function=False)
+                      show_function=_show_function_flags[p_id], show_band=False)
             else:
                 self.plot(p_id, show_data=_show_data_flags[p_id],
-                          show_function=True)
+                  show_function=_show_function_flags[p_id], show_band=True)
 
         if self.show_legend:
             self.draw_legend()
@@ -531,7 +546,7 @@ class Plot(object):
             # if plot range in None (undefined), take the new values directly
             self.plot_range[axis] = new_span
 
-    def plot(self, p_id, show_data=True, show_function=True):
+    def plot(self, p_id, show_data=True, show_function=True, show_band=True):
         '''
         Plot the `Fit` object with the number `p_id` to its figure.
         '''
@@ -595,11 +610,14 @@ class Plot(object):
         ##################################################
 
         # go through each data point and calculate the confidence interval
-        confidence_band_data = current_fit.get_function_error(fxdata)
+        if (show_band and current_fit.par_cov_mat is not None):
+          confidence_band_data = current_fit.get_function_error(fxdata)
+          # store upper and lower confidence band limits
+          lower_cb = fydata - confidence_band_data
+          upper_cb = fydata + confidence_band_data
 
-        # store upper and lower confidence band limits
-        lower_cb = fydata - confidence_band_data
-        upper_cb = fydata + confidence_band_data
+        else:
+           show_band = False
 
         # Do the actual plotting
         #########################
@@ -630,9 +648,10 @@ class Plot(object):
         # plot fit function and confidence band
         if show_function:
             # shade confidence band
-            cband = self.axes.fill_between(fxdata, lower_cb, upper_cb,
-                                           alpha='0.1',
-                                           color=_fdata_kw['color'])
+            if show_band:
+                cband = self.axes.fill_between(fxdata, lower_cb, upper_cb,
+                                              alpha='0.1',
+                                              color=_fdata_kw['color'])
 
             # plot fit function
             fplot = self.axes.plot(fxdata, fydata, **_fdata_kw)

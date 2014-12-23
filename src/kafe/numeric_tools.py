@@ -1,7 +1,7 @@
 '''
 .. module:: numeric_tools
    :platform: Unix
-   :synopsis: A submodule containing several numeric algorithms used by the 
+   :synopsis: A submodule containing several numeric algorithms used by the
         fit package, such as methods for converting beween covariance and
         correlation matrices or extracting the statistical errors from a
         covariance matrix.
@@ -12,8 +12,8 @@
 '''
 
 ## Changes:
-#     07-Aug-14 GQ covariance matrix returned by Minuit contains zero-values 
-#                  for lines/colums corresponding to fixed parameters; 
+#     07-Aug-14 GQ covariance matrix returned by Minuit contains zero-values
+#                  for lines/colums corresponding to fixed parameters;
 #                  made a special version of cov_to_cor,
 #                  MinuitCov_to_cor for this case
 
@@ -58,10 +58,10 @@ def cov_to_cor(cov_mat):
 
 def MinuitCov_to_cor(cov_mat):
     r'''
-    Converts a covariance matrix as returned by Minuit to the 
+    Converts a covariance matrix as returned by Minuit to the
     corresponding correlation matrix; note that the Minuit
     covariance matrix may contain lines/rows with zeroes if
-    parameters are fixed 
+    parameters are fixed
 
     **cov_mat** : `numpy.matrix`
         The Minuit covariance matrix to convert.

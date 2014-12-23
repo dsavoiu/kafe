@@ -72,5 +72,16 @@ my_plot.plot_all(show_data_for=0)  # only show data once (it's the same data)
 # Save the plots
 my_plot.save('kafe_example1.pdf')
 
+# check contours
+contour1 = my_fits[0].plot_contour(0, 1, dchi2=[1.,2.3])
+profile00=my_fits[0].plot_profile(0)
+profile01=my_fits[0].plot_profile(1)
+contour2 = my_fits[1].plot_contour(0, 1, dchi2=[1.,2.3])
+
+#contour1.savefig('kafe_example1_contour1.pdf')
+#contour2.savefig('kafe_example1_contour2.pdf')
+#profile00.savefig('kafe_example1_profile00.pdf')
+#profile01.savefig('kafe_example1_profile01.pdf')
+
 # Show the plots
 my_plot.show()

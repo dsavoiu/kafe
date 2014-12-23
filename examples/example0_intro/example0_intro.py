@@ -22,8 +22,19 @@ myFit.set_parameters((0., 1., 0.2), (0.5, 0.5, 0.5))
 # Do the Fit
 myFit.do_fit()
 
-#### Create the plots and output them
+#### Create result plots and output them
 myPlot = Plot(myFit)
 myPlot.plot_all()
 myPlot.save('kafe_example0.pdf') # to file
-myPlot.show()                    # to screen
+
+### Create (and save) contour and profile plots
+contour1 = myFit.plot_contour(0, 1, dchi2=[1.,2.3])
+contour2 = myFit.plot_contour(0, 2, dchi2=[1.,2.3])
+contour3 = myFit.plot_contour(1, 2, dchi2=[1.,2.3])
+#contour1.savefig('kafe_example0_contour1.pdf')
+#contour2.savefig('kafe_example0_contour2.pdf')
+#contour3.savefig('kafe_example0_contour3.pdf')
+profile=myFit.plot_profile(2)
+#profile.savefig('kafe_example0_profile.pdf')
+
+myPlot.show()                    # show everything on screen

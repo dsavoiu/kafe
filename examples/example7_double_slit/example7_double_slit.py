@@ -24,7 +24,7 @@ from numpy import cos, sin
 @ASCII(x_name="x", expression="I0*(sin(k/2*b*sin(x))/(k/2*b*sin(x))"
                               "*cos(k/2*g*sin(x)))^2")
 # Set some LaTeX-related parameters for this function
-@LaTeX(name='I', x_name="\\alpha{}", 
+@LaTeX(name='I', x_name="\\alpha{}",
        parameter_names=('I_0', 'b', 'g', 'k'),
        expression="I_0\\,\\left(\\frac{\\sin(\\frac{k}{2}\\,b\\,\\sin{\\alpha})}"
                   "{\\frac{k}{2}\\,b\\,\\sin{\\alpha}}"
@@ -52,9 +52,9 @@ my_fit = Fit(my_dataset,
 #            fit_label="Linear Regression " + dataset.data_label[-1])
 
 # Set the initial values for the fit
-#                      I   b      g      k 
+#                      I   b      g      k
 my_fit.set_parameters((1., 20e-6, 50e-6, 9.67e6))
-# g, b and k cannot all be determined simultaneously from data, 
+# g, b and k cannot all be determined simultaneously from data,
 my_fit.fix_parameters('k')
 
 # Do the Fits
@@ -72,6 +72,8 @@ my_plot.plot_all()
 
 # Save the plots
 my_plot.save('kafe_example7.pdf')
+
+my_fit.plot_correlations()
 
 # Show the plots
 my_plot.show()
