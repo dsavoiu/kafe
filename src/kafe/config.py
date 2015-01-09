@@ -6,6 +6,7 @@
 .. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
 '''
 
+import sys
 import os
 import ConfigParser
 import kafe
@@ -14,32 +15,81 @@ import kafe
 import logging
 logger = logging.getLogger('kafe')
 
-kafe_config_dir = os.path.expanduser('~/.config/kafe')
+def create_config_file(config_type, force=False):
+    """
+    Create a kafe config file.
 
-# create the config directory if not
-if not os.path.exists(kafe_config_dir):
-    logger.debug("Directory '%s' not found." % kafe_config_dir)
-    os.makedirs(kafe_config_dir)
-    logger.debug("Successfully created directory '%s'." % kafe_config_dir)
+    **config_type** : 'user' or 'local'
+        Create a 'user' config file in '~/.config/kafe' or a
+        'local' one in the current directory.
 
-kafe_config_file = os.path.join(kafe_config_dir, 'kafe.conf')
+    *force* : boolean (optional)
+        If true, overwrites existing files.
 
-if not os.path.isfile(kafe_config_file):
-    logger.debug("Config file '%s' not found." % kafe_config_file)
-    # copy the default config file to the user's conf directory
-    import shutil
-    kafe_default_config_file = \
-        os.path.join(kafe.__path__[0], 'config', 'kafe.default.conf')
-    shutil.copyfile(kafe_default_config_file, kafe_config_file)
-    logger.debug("Successfully copied default config from '%s' to '%s'." % (kafe_default_config_file, kafe_config_file))
+    """
 
+    global kafe_configs, logger
+
+    if config_type not in ('user', 'local'):
+        raise ValueError("config_type is not 'user' or 'local'")
+
+    _dir, _filename = kafe_configs[config_type]
+
+    # create a user-level config directory
+    if config_type == 'user':
+        if not os.path.exists(_dir):
+            os.makedirs(_dir)
+        else:
+            logger.warning("User config directory '%s' already exists." \
+                           % (_dir,))
+
+    _file = os.path.join(_dir, _filename)
+    if force or (not os.path.exists(_file)):
+        # copy the default config file
+        import shutil
+        kafe_default_config_file = \
+            os.path.join(kafe.__path__[0], 'config', 'kafe.default.conf')
+        shutil.copyfile(kafe_default_config_file, _file)
+        logger.debug("Successfully copied default config "
+                     "from '%s' to '%s'." \
+                     % (kafe_default_config_file, _file))
+    else:
+        raise Exception("Cannot create config file at '%s': file exists" \
+                        % (_file,))
+
+
+# initialize config parser
 cp = ConfigParser.ConfigParser()
-cp.read(kafe_config_file)
 
 # Check for kafe.conf in local directory
 if os.path.isfile("kafe.conf"):
     logger.info("Local 'kafe.conf' found in '%s'." % (os.getcwd()))
     cp.read("kafe.conf")
+
+# List of places to look for config files
+kafe_configs = {
+    'local':  (os.path.abspath(sys.path[0]),             'kafe.conf'),
+    'user':   (os.path.expanduser('~/.config/kafe'),     'kafe.conf'),
+    'system': (os.path.join(kafe.__path__[0], 'config'), 'kafe.default.conf')
+}
+
+# Raise Error is no default config file found
+if not os.path.exists(os.path.join(*kafe_configs['system'])):
+    raise IOError, "No default config file for kafe was " \
+                   "found on the system but there should " \
+                   "be one at '%s'. Please check your " \
+                   "installation. " \
+                   % (os.path.join(*kafe_configs['system']),)
+
+# Load all found config files into the ConfigParser
+kafe_config_file = None
+for _type in ('system', 'user', 'local'):
+    _dir, _filename = kafe_configs[_type]
+    if os.path.exists(_dir):
+        _file = os.path.join(_dir, _filename)
+        if os.path.isfile(_file):
+            cp.read(_file)
+            logger.debug("Read '%s' config file at '%s'." % (_type, _file))
 
 # Import "constants" from the configuration
 
@@ -58,3 +108,5 @@ FORMAT_ERROR_SIGNIFICANT_PLACES = cp.getint('Formatting', 'significant_error_pla
 D_DEBUG_MODE = cp.getboolean('Debug', 'debug_mode')
 
 G_FIT_INFOBOX_TITLE = cp.get('Plot', 'fit_infobox_title')
+
+G_MATPLOTLIB_BACKEND = cp.get('Plot', 'matplotlib_backend')

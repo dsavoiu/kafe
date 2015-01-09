@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='kafe',
-    version='0.5.3',
+    version='0.5.4',
     author='Daniel Savoiu, Guenter Quast',
     author_email='danielsavoiu@gmail.com',
     packages=['kafe'],
@@ -16,6 +16,6 @@ setup(
     setup_requires=[
         "NumPy >= 1.6.1",
         "SciPy >= 0.9.0",
-        "matplotlib >= 1.1.1",
+        "matplotlib >= 1.3.0",
     ]
 )

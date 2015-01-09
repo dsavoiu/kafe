@@ -21,6 +21,53 @@ specified), or from a keyword-driven input format.
 
 """
 
+# Import config variables
+import config
+
+# Import version info
+import kafe._version_info
+
+# Import and create logging tools and related stuff
+import logging
+
+_logger = logging.getLogger('kafe')  # create logger
+_ch = logging.StreamHandler()  # create console handler (ch)
+_fmt = "%(name)s %(asctime)s :: " \
+      "%(levelname)s :: %(message)s"
+
+if config.D_DEBUG_MODE:
+    _mode = logging.DEBUG
+else:
+    _mode = logging.WARNING
+
+_logger.setLevel(_mode)
+_ch.setLevel(_mode)
+logging.basicConfig(filename='kafe.log', level=_mode, format=_fmt)
+
+# create formatter
+_formatter = logging.Formatter("%(name)s %(asctime)s :: "
+                              "%(levelname)s :: %(message)s")
+_ch.setFormatter(_formatter)  # add formatter to ch
+_logger.addHandler(_ch)  # add ch to logger
+
+_version_suffix = ""  # for suffixes such as 'rc' or 'beta' or 'alpha'
+
+__version__ = kafe._version_info._get_version_string()
+__version__ += _version_suffix
+
+# Import matplotlib and set backend
+import matplotlib
+try:
+    matplotlib.use(config.G_MATPLOTLIB_BACKEND)
+except ValueError, e:
+    # matplotlib does not provide requested backend
+    logger.error("matplotlib error: %s" % (e,))
+    logger.warning("Failed to load requested backend '%s' for matplotlib. "
+                   "Current backend is '%s'."
+                   % (config.G_MATPLOTLIB_BACKEND, matplotlib.get_backend()))
+
+import matplotlib.pyplot
+
 # Import main kafe components
 from kafe.dataset import Dataset, build_dataset
 from kafe.fit import Fit, chi2
@@ -30,35 +77,5 @@ from kafe.file_tools import (parse_column_data,
 from kafe.numeric_tools import cov_to_cor, cor_to_cov
 from function_tools import FitFunction, LaTeX, ASCII
 
-# Import version info
-from kafe._version_info import major, minor, revision
 
-# Import and create logging tools and related stuff
-import logging
-from config import D_DEBUG_MODE
 
-logger = logging.getLogger('kafe')  # create logger
-ch = logging.StreamHandler()  # create console handler (ch)
-fmt = "%(name)s %(asctime)s :: " \
-      "%(levelname)s :: %(message)s"
-
-if D_DEBUG_MODE:
-    _mode = logging.DEBUG
-else:
-    _mode = logging.WARNING
-
-logger.setLevel(_mode)
-ch.setLevel(_mode)
-logging.basicConfig(filename='kafe.log', level=_mode, format=fmt)
-
-# create formatter
-formatter = logging.Formatter("%(name)s %(asctime)s :: "
-                              "%(levelname)s :: %(message)s")
-ch.setFormatter(formatter)  # add formatter to ch
-logger.addHandler(ch)  # add ch to logger
-
-_version_info = (major, minor, revision)
-_version_suffix = ""  # for suffixes such as 'rc' or 'beta' or 'alpha'
-
-__version__ = "%d.%d.%d" % _version_info
-__version__ += _version_suffix

@@ -1,24 +1,27 @@
-TODO for v0.5
--------------
+TODO for v0.5.x
+---------------
 
-% [FUNC] make config files more flexible
-% [FUNC] allow config files in fit directory
+% [BUGFIX] If Dataset has no errors, don't show error band
+  in Plot or errors in Fit Infobox
+
+% [FUNC] Make config files more flexible
+% [CODE] Most object attributes now accessible via get methods [ ]
+% [CODE] Prefix some "private" class methods and variables by "_"  [ ]
+% [LOOK] Solve some plotting issues like limiting legend size,
+  cutting down on font size if necessary [ ]
+% [LOOK] Include more info in the fit info box, such as FCN/ndf [ ]
+% [CODE] Plot object is now less stiff, allowing for better
+  customization of plot routines [ ]
+  which is shown in the output fit result
+
+
+TODO for v0.6.x
+---------------
+
 % [NEW] `ErrorSource` object: Datasets no longer contain
   a single covariance matrix, but a list of ErrorSource
   objects. [ ]
 % [NEW] `Dataset` objects can now be created empty, allowing
   data and error model to be added later. [ ]
-% [THEO] Reviewed statistics terminology: Confidence Level (CL),
-Significance
-% [CODE] Most object attributes now accessible via get methods [ ]
-% [CODE] Prefixed some "private" class methods and variables by "_"  [ ]
-% [LOOK] Solved some plotting issues like limiting legend size,
-  cutting down on font size if necessary [ ]
-% [LOOK] Included more info in the fit info box, such as FCN/ndf [ ]
-% [FUNC] Made it easier to obtain limits other than 1sigma [ ]
-% [LOOK] Moved axis labels to the end of the axis [ ]
-% [CODE] Plot object is now less stiff, allowing for better
-  customization of plot routines [ ]
 % [NEW] Support for log-scale plots added [ ]
 % [NEW] model function parameters can now have a description
-  which is shown in the output fit result
