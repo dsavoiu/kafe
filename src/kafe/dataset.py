@@ -649,26 +649,32 @@ cov_mats=(None, my_cov_mat_y))
         Returns `True` if the specified axis has correlation data, ``False`` if
         not.
 
-        **axis** :  ``'x'`` or ``'y'``
-            Axis for which to check for correlations.
+        *axis* :  ``'x'`` or ``'y'`` or ``None`` (optional)
+            Axis for which to check for correlations. If ``None``,
+            returns true if there are correlations for at least one axis.
         '''
+        if axis is not None:
+            # get axis id from alias
+            axis = self.get_axis(axis)
+            return self.__query_has_correlations[axis]
+        else:
+            return np.any(self.__query_has_correlations)
 
-        # get axis id from alias
-        axis = self.get_axis(axis)
-        return self.__query_has_correlations[axis]
-
-    def has_errors(self, axis):
+    def has_errors(self, axis=None):
         '''
         Returns `True` if the specified axis has statistical error data.
 
-        **axis** :  ``'x'`` or ``'y'``
-            Axis for which to check for error data.
+        *axis* :  ``'x'`` or ``'y'`` or ``None`` (optional)
+            Axis for which to check for error data. If ``None``,
+            returns true if there are errors for at least one axis.
 
         '''
-
-        # get axis id from alias
-        axis = self.get_axis(axis)
-        return self.__query_has_errors[axis]
+        if axis is not None:
+            # get axis id from alias
+            axis = self.get_axis(axis)
+            return self.__query_has_errors[axis]
+        else:
+            return np.any(self.__query_has_errors)
 
     def get_formatted(self, format_string=".06e", delimiter='\t'):
         '''

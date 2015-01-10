@@ -1245,7 +1245,7 @@ def build_fit(dataset, fitfunc,
   *initial_fit_parameters* : None or 2-tuple of list, tuple/`np.array` of floats
       specifying initial parameter values and errors
 
-  *constrained_parameters*: None or 3-tuple of list, tuple/np.array`
+  *constrained_parameters*: None or 3-tuple of list, tuple/`np.array`
      of one string and 2 floats specifiying the names, values and
      uncertainties of constraints to apply to model parameters
 

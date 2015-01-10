@@ -229,10 +229,8 @@ class Plot(object):
         #: plot style
         self.plot_style = PlotStyle()
 
-        ### TODO ###
-        # Move this bit to routine doing the actual plotting (i.e. plot_all)
-        plt.rcParams.update(self.plot_style.rcparams_kw)
-        plt.rc('font', **self.plot_style.rcfont_kw)
+        # Update matplotlib's rcParams with those from plot_style
+        self._update_rcParams()
 
         self.plot_range = {'x': None, 'y': None}    #: plot range
 
@@ -262,6 +260,14 @@ class Plot(object):
 
 
         self.init_plots()               # initialize the plots
+
+    def _update_rcParams(self):
+        '''
+        Set matplotlib plotting parameters to those from self.plot_style
+        '''
+        # Update matplotlib's rcParams with those from plot_style
+        mpl.rcParams.update(self.plot_style.rcparams_kw)
+        mpl.rc('font', **self.plot_style.rcfont_kw)
 
     def init_plots(self):
         '''
@@ -293,10 +299,14 @@ class Plot(object):
         self.figure.canvas.mpl_connect('draw_event', self.on_draw)
 
     def plot_all(self, show_info_for='all', show_data_for='all',
-                 show_function_for='all', show_band_for='all'):
+                 show_function_for='all', show_band_for='meaningful'):
         '''
         Plot every `Fit` object to its figure.
         '''
+
+        # Update matplotlib's rcParams with those from plot_style
+        self._update_rcParams()
+
         _show_data_flags = []
         _show_function_flags = []
         for p_id, _ in enumerate(self.fits):
@@ -330,7 +340,7 @@ class Plot(object):
             else:
                     _show_function_flags.append(True)
 
-            if show_band_for != 'all':
+            if show_band_for not in ('all', 'meaningful'):
                 try:
                     iter(show_band_for)
                 except:
@@ -344,8 +354,14 @@ class Plot(object):
                     self.plot(p_id, show_data=_show_data_flags[p_id],
                       show_function=_show_function_flags[p_id], show_band=False)
             else:
+                _draw_band = True
+                if show_band_for == 'meaningful':
+                    # only draw error band for datasets with error models
+                    # since otherwise it is meaningless
+                    _draw_band = self.fits[p_id].dataset.has_errors()
+                    
                 self.plot(p_id, show_data=_show_data_flags[p_id],
-                  show_function=_show_function_flags[p_id], show_band=True)
+                  show_function=_show_function_flags[p_id], show_band=_draw_band)
 
         if self.show_legend:
             self.draw_legend()
@@ -360,6 +376,9 @@ class Plot(object):
         if not fig == self.figure:
             return
         else:
+            # update rcParams to match plot style
+            self._update_rcParams()
+            
             if hasattr(self, 'fitinfobox'):
                 # disable callbacks to avoid recursion when redrawing
                 tmp_callbacks = fig.canvas.callbacks.callbacks[event.name]
@@ -394,7 +413,8 @@ class Plot(object):
         self.legend = self.axes.legend(**self.plot_style.legendparams_kw)
         self.legend.draggable()
 
-    def draw_fit_parameters_box(self, plot_spec=0):
+    def draw_fit_parameters_box(self, plot_spec=0,
+                                force_show_uncertainties=False):
         '''Draw the parameter box to the canvas
 
         *plot_spec* : int, list of ints, string or None (optional, default: 0)
@@ -404,6 +424,10 @@ class Plot(object):
             plot ids inside the list. Passing ``'all'`` will print parameters
             for all plots. Passing ``None`` will return immediately doing
             nothing.
+
+        *force_show_uncertainties* : boolean (optional, default: False)
+            If ``True``, shows uncertainties even for Datasets without error
+            data. Note that in that case these values are meaningless!
         '''
         if plot_spec is None:
             return
@@ -468,8 +492,12 @@ class Plot(object):
             for idx, _ in enumerate(fit.parameter_names):
                 parname = fit.latex_parameter_names[idx]
                 parval = fit.get_parameter_values(rounding=True)[idx]
-                parerrs = fit.get_parameter_errors(rounding=True)[idx]
-                text_content += ('$%s=%g\pm%g$\n' % (parname, parval, parerrs))
+                if force_show_uncertainties or fit.dataset.has_errors():
+                    parerrs = fit.get_parameter_errors(rounding=True)[idx]
+                    text_content += ('$%s=%g\pm%g$\n' % (parname, parval, parerrs))
+                else:
+                    text_content += ('$%s=%g$\n' % (parname, parval))
+                    
 
         # replace scientific notation with power of ten
         text_content = re.sub(r'(-?\d*\.?\d+?)0*e\+?(-?[0-9]*[1-9]?)',
@@ -668,9 +696,18 @@ class Plot(object):
 
     def show(self):
         '''
-        Show the `Plot` in a matplotlib interactive window.
-        '''
+        Show graphics in one or more matplotlib interactive windows.
 
+        Note
+        ----
+            This shows all figures/plots generated before it is called. Because
+            of the way ``matplotlib`` handles some plotting parameters
+            (``matplotlib.rcParams``) these cannot be set individually for each
+            figure before it is displayed. This means that all figures will be
+            shown with the same plot style: that of the `Plot` object from
+            which show() is called.
+        '''
+        self._update_rcParams()
         plt.show(self.axes)
 
     def save(self, output_file):
