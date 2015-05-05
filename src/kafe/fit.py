@@ -668,6 +668,21 @@ class Fit(object):
                             % (par_id, self.parameter_names[par_id]))
 
 
+    def parameter_is_fixed(self, parameter):
+        '''
+        Check whether a parameter is fixed. Accepts a parameter's name or ID
+        and returns a boolean value.
+        '''
+        _idx = self._find_parameter(parameter)
+        if _idx is not None:
+            if self._fixed_parameters[_idx]:
+                return True
+            else:
+                return False
+        else:
+            raise ValueError("Cannot check if parameter is fixed. `%s` not "
+                             "a valid ID or parameter name." % parameter)
+
     # Private Methods
     ##################
 
@@ -1091,7 +1106,7 @@ class Fit(object):
              'Contour %4.1f %%CL for parameters %d vs. %d with %d points'\
              %(cl, par1, par2, len(xs))
           # plot the contour
-          labelstr=str(cl)+"\% CL"
+          labelstr=str(cl)+r"\% CL"
           tmp_ax.fill(xs, ys, alpha=alpha, color=color)   # as filled area
           tmp_ax.plot(xs, ys, '--', linewidth=2, label=labelstr) # as line
         print >>self.out_stream, ''
@@ -1156,7 +1171,7 @@ class Fit(object):
         # set axis labels
         tmp_ax.set_xlabel('$%s$' % (self.latex_parameter_names[id],),
              fontsize='xx-large')
-        tmp_ax.set_ylabel('$%s$' % ('$\\Delta \\chi^2$'),
+        tmp_ax.set_ylabel('$%s$' % ('\\Delta \\chi^2'),
              fontsize='xx-large' )
         # set size and number of tick labels
         tmp_ax.tick_params(axis='both',which='both',

@@ -63,6 +63,27 @@ def label_to_latex(label):
     return join(tokens)
 
 
+def pad_span_log(span, pad_coeff=1, additional_pad=None, base=10):
+
+    try:
+        len(span)
+    except:
+        raise TypeError("Span passed to pad_span must be an iterable type"
+                        "(got %s)" % type(span))
+
+    if len(span) != 2:
+        raise IndexError("Span passed to pad_span must be an iterable"
+                         "of length 2 (got %d)" % (len(span),))
+
+    if (np.asarray(span)<0).any():
+        raise ValueError("Span passed to pad_span_log must be "
+                         "on the real positive axis (got %r)" % (span,))
+
+    _logspan = np.log(span) / np.log(base)
+    _logspan2 = np.asarray(pad_span(_logspan, pad_coeff, additional_pad))
+    _span = np.exp(_logspan2 * np.log(base))
+    return list(_span)
+
 def pad_span(span, pad_coeff=1, additional_pad=None):
     '''
     Enlarges the interval `span` (list of two floats) symmetrically around
@@ -256,10 +277,9 @@ class Plot(object):
             self.axis_labels = ('$x$', '$y$')  # set default axis names
         else:
             # Plot with no Fits -> just set axis names
-            self.axis_labels = ('$x$', '$y$')  # set default axis names
-
-
-        self.init_plots()               # initialize the plots
+            self.axis_labels = ('$x$', '$y$')  # set default axis names        
+            
+        self.init_plots(**kwargs)              # initialize the plots
 
     def _update_rcParams(self):
         '''
@@ -269,7 +289,7 @@ class Plot(object):
         mpl.rcParams.update(self.plot_style.rcparams_kw)
         mpl.rc('font', **self.plot_style.rcfont_kw)
 
-    def init_plots(self):
+    def init_plots(self, **kwargs):
         '''
         Initialize the plots for each fit.
         '''
@@ -293,10 +313,67 @@ class Plot(object):
         box = self.axes.get_position()
         self.axes.set_position([box.x0, box.y0, box.width * 1.5, box.height])
 
+        # set axis scales for both axes
+        self.axis_scales = ['linear', 'linear']
+        self.axis_scale_logbases = [10, 10]
+        for _axis in ('x', 'y'):
+            _scale_spec = _axis + 'scale'
+            _scale_base_spec = _axis + 'scalebase'
+
+            _scale = kwargs.get(_scale_spec, 'linear')
+            _scale_base = kwargs.get(_scale_base_spec, 10)
+
+            scale_kwargs = {'base'+_axis: _scale_base}
+            self.set_axis_scale(_axis, _scale, **scale_kwargs)
+
         self.compute_plot_range()
 
         # attach the custom callback function to the draw event
         self.figure.canvas.mpl_connect('draw_event', self.on_draw)
+
+    def set_axis_scale(self, axis, scale_type, **kwargs):
+        '''
+        Set the scale for an axis.
+
+        **axis** : ''x'' or ''y''
+            Axis for which to set the scale.
+
+        **scale_type** : ''linear'' or ''log''
+            Type of scale to set for the axis.
+
+        Keyword Arguments
+        -----------------
+
+        **basex** : int
+            Base of the ''x'' axis scale logarithm. Only relevant for log
+            scales.
+
+        **basey** : int
+            Base of the ''y'' axis scale logarithm. Only relevant for log
+            scales.
+        '''
+        if scale_type not in ('linear', 'log'):
+            raise ValueError("Unknown scale `%s'. Use 'linear' or 'log'." % (scale_type,))
+        if axis == 'x':
+            self.axes.set_xscale(scale_type, **kwargs)
+            if scale_type == 'log':
+                _base = kwargs.get('basex', 10)
+                self.axis_scales[0] = 'log'
+                self.axis_scale_logbases[0] = _base
+            elif scale_type == 'linear':
+                self.axis_scales[0] = 'linear'
+                self.axis_scale_logbases[1] = 10    # irrelevant -> set to 10
+        elif axis == 'y':
+            self.axes.set_yscale(scale_type, **kwargs)
+            if scale_type == 'log':
+                _base = kwargs.get('basey', 10)
+                self.axis_scales[1] = 'log'
+                self.axis_scale_logbases[1] = _base
+            elif scale_type == 'linear':
+                self.axis_scales[1] = 'linear'
+                self.axis_scale_logbases[1] = 10    # irrelevant -> set to 10
+        else:
+            raise SyntaxError("Unknown axis `%s'. Use 'x' and 'y'." % (axis,))
 
     def plot_all(self, show_info_for='all', show_data_for='all',
                  show_function_for='all', show_band_for='meaningful'):
@@ -359,7 +436,7 @@ class Plot(object):
                     # only draw error band for datasets with error models
                     # since otherwise it is meaningless
                     _draw_band = self.fits[p_id].dataset.has_errors()
-                    
+
                 self.plot(p_id, show_data=_show_data_flags[p_id],
                   show_function=_show_function_flags[p_id], show_band=_draw_band)
 
@@ -378,7 +455,7 @@ class Plot(object):
         else:
             # update rcParams to match plot style
             self._update_rcParams()
-            
+
             if hasattr(self, 'fitinfobox'):
                 # disable callbacks to avoid recursion when redrawing
                 tmp_callbacks = fig.canvas.callbacks.callbacks[event.name]
@@ -493,11 +570,15 @@ class Plot(object):
                 parname = fit.latex_parameter_names[idx]
                 parval = fit.get_parameter_values(rounding=True)[idx]
                 if force_show_uncertainties or fit.dataset.has_errors():
-                    parerrs = fit.get_parameter_errors(rounding=True)[idx]
-                    text_content += ('$%s=%g\pm%g$\n' % (parname, parval, parerrs))
+                    if fit.parameter_is_fixed(idx):
+                        # parameter is fixed -> show in infobox
+                        text_content += ('$%s=%g$ (fixed)\n' % (parname, parval))
+                    else:
+                        parerrs = fit.get_parameter_errors(rounding=True)[idx]
+                        text_content += ('$%s=%g\pm%g$\n' % (parname, parval, parerrs))
                 else:
                     text_content += ('$%s=%g$\n' % (parname, parval))
-                    
+
 
         # replace scientific notation with power of ten
         text_content = re.sub(r'(-?\d*\.?\d+?)0*e\+?(-?[0-9]*[1-9]?)',
@@ -549,11 +630,21 @@ class Plot(object):
         # initialize plot spans for axes
         for current_fit in self.fits:
             xspan = current_fit.dataset.get_data_span('x', include_error_bars)
-            xspan = pad_span(xspan, G_PADDING_FACTOR_X)
+            # choose pad function by x scale
+            if self.axis_scales[0] == 'log':
+                xspan = pad_span_log(xspan, G_PADDING_FACTOR_X,
+                                     base=self.axis_scale_logbases[0])
+            else:
+                xspan = pad_span(xspan, G_PADDING_FACTOR_X)
             self.extend_span('x', xspan)
 
             yspan = current_fit.dataset.get_data_span('y', include_error_bars)
-            yspan = pad_span(yspan, G_PADDING_FACTOR_Y)
+            # choose pad function by y scale
+            if self.axis_scales[1] == 'log':
+                yspan = pad_span_log(yspan, G_PADDING_FACTOR_Y,
+                                     base=self.axis_scale_logbases[1])
+            else:
+                yspan = pad_span(yspan, G_PADDING_FACTOR_Y)
             self.extend_span('y', yspan)
 
     def extend_span(self, axis, new_span):
