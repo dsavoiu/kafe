@@ -1,7 +1,7 @@
 '''
 .. module:: config
    :platform: Unix
-   :synopsis: A submodule for working with config files.
+   :synopsis: A submodule for working with config files and the filesystem.
 
 .. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
 '''
@@ -14,6 +14,21 @@ import kafe
 # import main logger for kafe
 import logging
 logger = logging.getLogger('kafe')
+
+def log_file(file_relative_path):
+    '''Returns correct location for placing log files.'''
+    _hdir = '.kafe'
+
+    # create '.kafe' directory, if not present
+    if not os.path.exists(_hdir):
+        os.makedirs(_hdir)
+    elif not os.path.isdir(_hdir):  # this shouldn't happen, but if it does...
+        logger.error('Error finding log file path for `%s\'. Node `%s\' is not '
+                     'a directory.' % (file_relative_path, _hdir))
+        return file_relative_path  # write to parent path instead (!)
+
+    # prepend '.kafe' to given file path
+    return os.path.join(_hdir, file_relative_path)
 
 def create_config_file(config_type, force=False):
     """

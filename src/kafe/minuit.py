@@ -21,7 +21,7 @@ from ROOT import TMinuit, Double, Long
 from ROOT import TMath  # for uning ROOT's chi2prob function
 from array import array as arr  # array needed for TMinuit arguments
 
-from config import M_MAX_ITERATIONS, M_TOLERANCE
+from config import M_MAX_ITERATIONS, M_TOLERANCE, log_file
 from time import gmtime, strftime
 
 import numpy as np
@@ -103,7 +103,7 @@ class Minuit:
         #: number of parameters to minimize for
         self.number_of_parameters = number_of_parameters
 
-        self.out_file = open("minuit.log", 'a')
+        self.out_file = open(log_file("minuit.log"), 'a')
 
         # create a TMinuit instance for that number of parameters
         self.__gMinuit = TMinuit(self.number_of_parameters)

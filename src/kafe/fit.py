@@ -47,7 +47,7 @@ import numpy as np
 from numeric_tools import cov_to_cor, extract_statistical_errors, MinuitCov_to_cor
 
 from config import (FORMAT_ERROR_SIGNIFICANT_PLACES, F_SIGNIFICANCE_LEVEL,
-                    M_MINIMIZER_TO_USE)
+                    M_MINIMIZER_TO_USE, log_file)
 from math import floor, log
 
 import os
@@ -319,7 +319,7 @@ class Fit(object):
         else:
             # assume class reference is given
             _minimizer_handle = minimizer_to_use
-        
+
         self.minimizer = _minimizer_handle(self.number_of_parameters,
                                         self.call_external_fcn, self.parameter_names,
                                         self.current_parameter_values, None)
@@ -340,24 +340,24 @@ class Fit(object):
             _basename = self.dataset.basename
         else:
             _basename = 'untitled'
-        _basenamelog = _basename+'.log'
+        _basenamelog = log_file(_basename+'.log')
 
         # check for old logs
         if os.path.exists(_basenamelog):
-            logger.warning('Old log files found for fit `%s`. kafe will not '
-                           'delete these files, but it is recommended to do '
-                           'so, in order to reduce clutter.'
-                           % (_basename,))
+            logger.info('Old log files found for fit `%s`. kafe will not '
+                        'delete these files, but it is recommended to do '
+                        'so, in order to reduce clutter.'
+                        % (_basename,))
 
             # find first incremental name for which no file exists
             _id = 1
-            while os.path.exists(_basename+'.'+str(_id)+'.log'):
+            while os.path.exists(log_file(_basename+'.'+str(_id)+'.log')):
                 _id += 1
 
             # move existing log to that location
-            os.rename(_basenamelog, _basename+'.'+str(_id)+'.log')
+            os.rename(_basenamelog, log_file(_basename+'.'+str(_id)+'.log'))
 
-        self.out_stream = StreamDup(['fit.log', _basenamelog])
+        self.out_stream = StreamDup([log_file('fit.log'), _basenamelog])
 
 
     def call_external_fcn(self, *parameter_values):

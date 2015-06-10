@@ -42,7 +42,7 @@ else:
 
 _logger.setLevel(_mode)
 _ch.setLevel(_mode)
-logging.basicConfig(filename='kafe.log', level=_mode, format=_fmt)
+logging.basicConfig(filename=config.log_file('kafe.log'), level=_mode, format=_fmt)
 
 # create formatter
 _formatter = logging.Formatter("%(name)s %(asctime)s :: "

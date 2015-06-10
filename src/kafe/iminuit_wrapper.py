@@ -17,7 +17,7 @@
 # import iminuit as python package
 from iminuit import Minuit
 
-from config import M_MAX_ITERATIONS, M_TOLERANCE
+from config import M_MAX_ITERATIONS, M_TOLERANCE, log_file
 from time import gmtime, strftime
 
 import numpy as np
@@ -112,7 +112,7 @@ class IMinuit:
         #: number of parameters to minimize for
         self.number_of_parameters = number_of_parameters
 
-        self.out_file = open("iminuit.log", 'a')
+        self.out_file = open(log_file("iminuit.log"), 'a')
 
         #: maximum number of iterations until ``iminuit`` gives up
         self.max_iterations = M_MAX_ITERATIONS
@@ -283,7 +283,7 @@ class IMinuit:
         _mat = self.__iminuit.matrix(correlation, skip_fixed=True)
         _mat = np.asmatrix(_mat)  # reshape into numpy matrix
         _mat = self._fill_in_zeroes_for_fixed(_mat)  # fill in fixed par 'gaps'
-        
+
         return _mat
 
     def get_parameter_values(self):  # VIEWED OK
@@ -457,7 +457,7 @@ class IMinuit:
                 par_id = self.parameter_names.index(parameter)
             except ValueError:
                 raise ValueError, "No parameter named '%s'" % (parameter,)
-        
+
         self.out_file.write('\n')
         # entry in log-file
         self.out_file.write('\n')
@@ -718,10 +718,10 @@ class IMinuit:
         parameters should go.
         '''
         _mat = submatrix
-        
+
         _fparams = self.__iminuit.list_of_fixed_param()
         _fparam_ids = map(lambda k: self.parameter_names.index(k), _fparams)
         for _id in _fparam_ids:
             _mat = np.insert(np.insert(_mat, _id, 0., axis=0), _id, 0., axis=1)
-        
+
         return _mat
