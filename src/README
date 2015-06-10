@@ -18,17 +18,21 @@ Python packages:
         - NumPy >= 1.7.1 (1.6.1) and 
         - matplotlib >= 1.2.0 (1.1.1)
 
-Other dependencies:
+For the minimizers:
+    * iminuit >= 1.1.1 (1.1.1)
     * ROOT >= 5.34 (http://root.cern.ch)
+
+Other dependencies:
     * Qt4 >= 4.8.5 (could work with other versions)
     * PyQt >= 3.18.1 (could work with other versions)
     * A LaTeX distribution (tested with texlive)
+        - make sure dvipng is installed!
 
-Be sure to compile ROOT with PyROOT support. For Python to see the PyROOT
-bindings, the following environment variables have to be set correctly:
+If you decide to use ROOT's TMinuit minimizer, be sure to compile ROOT
+with PyROOT support. For Python to see the PyROOT bindings, the following
+environment variables have to be set correctly:
 
     export ROOTSYS=<directory where ROOT is installed>
-    export PYTHONDIR=<directory where Python is installed (non-standard)>
     export LD_LIBRARY_PATH=$ROOTSYS/lib:$PYTHONDIR/lib:$LD_LIBRARY_PATH
     export PYTHONPATH=$ROOTSYS/lib:$PYTHONPATH
 

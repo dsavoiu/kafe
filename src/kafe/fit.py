@@ -38,7 +38,7 @@
 #                  by showing all contours and profiles as an array of plots
 # -------------------------------------------------------------------------
 
-from minuit import Minuit
+
 from function_tools import FitFunction, outer_product
 from copy import copy
 
@@ -46,7 +46,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from numeric_tools import cov_to_cor, extract_statistical_errors, MinuitCov_to_cor
 
-from config import FORMAT_ERROR_SIGNIFICANT_PLACES, F_SIGNIFICANCE_LEVEL
+from config import (FORMAT_ERROR_SIGNIFICANT_PLACES, F_SIGNIFICANCE_LEVEL,
+                    M_MINIMIZER_TO_USE)
 from math import floor, log
 
 import os
@@ -211,10 +212,15 @@ class Fit(object):
         A name/label/short description of the fit function. This appears in the
         legend describing the fitter curve. If omitted, this defaults to the
         fit function's :math:`LaTeX` expression.
+
+    *minimizer_to_use* : 'ROOT' or 'minuit' (optional)
+        Which minimizer to use. This defaults to whatever is set in the config
+        file, but can be specifically overridden for some fits using this
+        keyword argument.
     '''
 
     def __init__(self, dataset, fit_function, external_fcn=chi2,
-                 fit_label=None):
+                 fit_label=None, minimizer_to_use=M_MINIMIZER_TO_USE):
         '''
         Construct an instance of a ``Fit``
         '''
@@ -299,9 +305,24 @@ class Fit(object):
                         "data points have the `y`-error 1.0")
 
         #: this `Fit`'s minimizer (`Minuit`)
-        self.minimizer = Minuit(self.number_of_parameters,
-                                self.call_external_fcn, self.parameter_names,
-                                self.current_parameter_values, None)
+        if type(minimizer_to_use) is str:
+            # if specifying the minimizer type using a string
+            if minimizer_to_use.lower() == "root":
+                from minuit import Minuit
+                _minimizer_handle = Minuit
+            elif minimizer_to_use.lower() == "iminuit":
+                from iminuit_wrapper import IMinuit
+                _minimizer_handle = IMinuit
+                #raise NotImplementedError, "'iminuit' minimizer not yet implemented"
+            else:
+                raise ValueError, "Unknown minimizer '%s'" % (minimizer_to_use,)
+        else:
+            # assume class reference is given
+            _minimizer_handle = minimizer_to_use
+        
+        self.minimizer = _minimizer_handle(self.number_of_parameters,
+                                        self.call_external_fcn, self.parameter_names,
+                                        self.current_parameter_values, None)
 
         # set Minuit's initial parameters and parameter errors
         #            may be overwritten via ``set_parameters``
@@ -940,24 +961,22 @@ class Fit(object):
                   "# WARNING: Number of degrees of freedom is zero!"
             print >>self.out_stream, \
                   "# Please review parameterization..."
-            print ''
+            print >>self.out_stream,''
         elif _ndf < 0:
             print >>self.out_stream, \
                   "# WARNING: Number of degrees of freedom is negative!"
             print >>self.out_stream, \
                   "# Please review parameterization..."
-            print ''
+            print >>self.out_stream,''
         if(not self.parabolic_errors):
             print >>self.out_stream, 'Attention: use uncertainties from MINOS'
-            print ''
+            print >>self.out_stream,''
 
-        print >>self.out_stream, 'FCN      %g'\
-            %(self.minimizer.get_fit_info('fcn'))
-        if _ndf:
-            print >>self.out_stream, 'FCN/ndf  %g'\
-                %(self.minimizer.get_fit_info('fcn')/(_ndf))
-        else:
-            print >>self.out_stream, 'FCN/ndf ', "NaN"
+        print >>self.out_stream, 'USING    %s'\
+            %(self.minimizer.name)
+        print >>self.out_stream, 'FCN/ndf  %.3g/%d = %.3g'\
+            %(self.minimizer.get_fit_info('fcn'), _ndf,
+              self.minimizer.get_fit_info('fcn')/(_ndf))
         print >>self.out_stream, 'EdM      %g' \
             %(self.minimizer.get_fit_info('edm'))
         print >>self.out_stream, 'UP       %g' \
@@ -980,7 +999,6 @@ class Fit(object):
 
         par_err = extract_statistical_errors(self.par_cov_mat)
         par_cor_mat = MinuitCov_to_cor(self.par_cov_mat)
-
 
         print >>self.out_stream, '# value        error   ',
         if self.number_of_parameters > 1:
@@ -1014,9 +1032,9 @@ class Fit(object):
         print >>self.out_stream, ''
 
     def plot_contour(self, parameter1, parameter2, dchi2=2.3,
-         n_points=200, color='gray', alpha=.1 , show=False, axes=None):
+         n_points=100, color='gray', alpha=.1 , show=False, axes=None):
         r'''
-        Plots a two-dimensional :math:`1\sigma` contour for this fit into
+        Plots one or more two-dimensional contours for this fit into
         a separate figure and returns the figure object.
 
         **parameter1** : int or string
@@ -1028,7 +1046,7 @@ class Fit(object):
         *dchi2* : float or list of floats (otpional)
             delta-chi^2 value(s) used to evaluate contour(s)
             1. = 1 sigma
-            2.3 = 68.0%
+            2.3 = 68.0% (default)
             4.  = 2 sigma
             5.99 = 95.0%
 

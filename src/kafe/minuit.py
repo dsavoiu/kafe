@@ -94,6 +94,9 @@ class Minuit:
             that all output is logged.
 
         '''
+        #: the name of this minimizer type
+        self.name = "ROOT::TMinuit"
+
         #: the actual `FCN` called in ``FCN_wrapper``
         self.function_to_minimize = function_to_minimize
 
@@ -297,7 +300,6 @@ class Minuit:
 
         for i in xrange(0, self.number_of_parameters):
             self.__gMinuit.GetParameter(i, p, pe)  # retrieve fitresult
-
             result.append((self.get_parameter_name(i), float(p), float(pe)))
 
         return result
@@ -607,7 +609,7 @@ class Minuit:
                               2, error_code)
         if(final_fit):
             logger.debug("Running HESSE")
-            self.__gMinuit.mnexcm("HESSE", arr('d', [6000]), 1, error_code)
+            self.__gMinuit.mnexcm("HESSE", arr('d', [self.max_iterations]), 1, error_code)
         # return to normal print level
         self.__gMinuit.SetPrintLevel(self.print_level)
 
@@ -640,7 +642,7 @@ class Minuit:
         self.__gMinuit.SetPrintLevel(1)  # verboseness level 1 is sufficient
         logger.debug("Running MINOS")
         error_code = Long(0)
-        self.__gMinuit.mnexcm("MINOS", arr('d', [6000]), 1, error_code)
+        self.__gMinuit.mnexcm("MINOS", arr('d', [self.max_iterations]), 1, error_code)
 
         # return to normal print level
         self.__gMinuit.SetPrintLevel(self.print_level)

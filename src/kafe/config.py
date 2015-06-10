@@ -97,6 +97,7 @@ G_PADDING_FACTOR_X = cp.getfloat('Plot', 'padding_factor_x')
 G_PADDING_FACTOR_Y = cp.getfloat('Plot', 'padding_factor_y')
 G_PLOT_POINTS = cp.getint('Plot', 'plot_points')
 
+M_MINIMIZER_TO_USE = cp.get('Minuit', 'minimizer_to_use')
 M_TOLERANCE = cp.getfloat('Minuit', 'tolerance')
 M_MAX_ITERATIONS = cp.getint('Minuit', 'max_iterations')
 M_MAX_X_FIT_ITERATIONS = cp.getint('Minuit', 'max_x_fit_iterations')

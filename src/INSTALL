@@ -1,22 +1,79 @@
-=================
-Install using Pip
-=================
+###########################
+# kafe installation notes #
+###########################
 
-To install kafe using the Pip installer (http://www.pip-installer.org/), simply run the helper script as root:
+====================
+Install dependencies
+====================
 
-    ./install.sh
+kafe needs some packages to be installed in order to work (properly).
 
-If you don't have Pip installed, use:
+Most importantly, it needs a function minimizer. Currently, only two
+are supported: CERN ROOT's TMinuit and iminuit
+
+---------------------
+Install ROOT::TMinuit
+---------------------
+
+If you have a working installation of ROOT with PyROOT support,
+the TMinuit minimizer should work and no further installation
+is needed. Consult the ROOT documentation for more info.
+
+---------------
+Install iminuit
+---------------
+
+iminuit is a Python wrapper for the Minuit minimizer which is
+independent of ROOT. If compiling/installing ROOT is not possible,
+this minimizer can be used instead.
+
+To install the iminuit package for Python, using the Pip installer
+(http://www.pip-installer.org/) is recommended:
+
+    (sudo) pip install
+
+If you don't have Pip installed, get it from the package manager:
+
+    in Ubuntu/Mint/Debian, do:
+	(sudo) apt-get install python-pip
+    in Fedora/RHEL/CentOS, do:
+	(sudo) yum install python-pip
+
+or do:
 
     easy_install pip
 
+You might need to install the python headers for iminuit to compile
+properly:
+
+    in Ubuntu/Mint/Debian, do:
+        (sudo) apt-get install libpython2.7-dev
+    in Fedora/RHEL/CentOS, do:
+	(sudo) yum install python-devel
+
+Read the README file for more information on other dependencies
+(there should be adequate packages for your Linux distribution
+to satisfy these).
+
+============
+Install kafe
+============
+
+---------
+Using pip
+---------
+
+To install kafe using pip, simply run the helper script as root:
+
+    ./install.sh
+
 To remove kafe using pip, just run the helper script:
 
-   ./uninstall.sh
+    ./uninstall.sh
 
-========================
-Install using setuptools
-========================
+----------------
+Using setuptools
+----------------
 
 Installing using Python's setuptools works but does not provide a clean
 uninstall. Use this method if installing with Pip is not possible:
