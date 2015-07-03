@@ -12,8 +12,9 @@ import numpy as np
 import os, sys
 
 from string import split, replace
-from dataset import Dataset, build_dataset
-from fit import build_fit
+from .dataset import Dataset
+from .dataset_tools import build_dataset
+from .fit import build_fit
 
 #from importlib import import_module
 

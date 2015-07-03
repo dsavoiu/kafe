@@ -1,6 +1,7 @@
 """
 
-**kafe** *-- a Python package for fitting and plotting for use in physics lab courses.*
+**kafe** *-- a Python package for fitting and plotting for use in physics lab
+courses.*
 
 This Python package allows fitting of user-defined functions to data. A dataset
 is represented by a `Dataset` object which stores measurement data as `NumPy`
@@ -25,7 +26,7 @@ specified), or from a keyword-driven input format.
 import config
 
 # Import version info
-import kafe._version_info
+from . import _version_info
 
 # Import and create logging tools and related stuff
 import logging
@@ -33,7 +34,7 @@ import logging
 _logger = logging.getLogger('kafe')  # create logger
 _ch = logging.StreamHandler()  # create console handler (ch)
 _fmt = "%(name)s %(asctime)s :: " \
-      "%(levelname)s :: %(message)s"
+       "%(levelname)s :: %(message)s"
 
 if config.D_DEBUG_MODE:
     _mode = logging.DEBUG
@@ -42,17 +43,18 @@ else:
 
 _logger.setLevel(_mode)
 _ch.setLevel(_mode)
-logging.basicConfig(filename=config.log_file('kafe.log'), level=_mode, format=_fmt)
+logging.basicConfig(filename=config.log_file('kafe.log'),
+                    level=_mode, format=_fmt)
 
 # create formatter
 _formatter = logging.Formatter("%(name)s %(asctime)s :: "
-                              "%(levelname)s :: %(message)s")
+                               "%(levelname)s :: %(message)s")
 _ch.setFormatter(_formatter)  # add formatter to ch
 _logger.addHandler(_ch)  # add ch to logger
 
 _version_suffix = ""  # for suffixes such as 'rc' or 'beta' or 'alpha'
 
-__version__ = kafe._version_info._get_version_string()
+__version__ = _version_info._get_version_string()
 __version__ += _version_suffix
 
 # Import matplotlib and set backend
@@ -61,21 +63,19 @@ try:
     matplotlib.use(config.G_MATPLOTLIB_BACKEND)
 except ValueError, e:
     # matplotlib does not provide requested backend
-    logger.error("matplotlib error: %s" % (e,))
-    logger.warning("Failed to load requested backend '%s' for matplotlib. "
-                   "Current backend is '%s'."
-                   % (config.G_MATPLOTLIB_BACKEND, matplotlib.get_backend()))
+    _logger.error("matplotlib error: %s" % (e,))
+    _logger.warning("Failed to load requested backend '%s' for matplotlib. "
+                    "Current backend is '%s'."
+                    % (config.G_MATPLOTLIB_BACKEND, matplotlib.get_backend()))
 
 import matplotlib.pyplot
 
 # Import main kafe components
-from kafe.dataset import Dataset, build_dataset
-from kafe.fit import Fit, chi2
-from kafe.plot import Plot, PlotStyle
-from kafe.file_tools import (parse_column_data,
-    buildDataset_fromFile, buildFit_fromFile)
-from kafe.numeric_tools import cov_to_cor, cor_to_cov
-from function_tools import FitFunction, LaTeX, ASCII
-
-
-
+from .dataset import Dataset
+from .dataset_tools import build_dataset
+from .fit import Fit, chi2
+from .plot import Plot, PlotStyle
+from .file_tools import (parse_column_data,
+                         buildDataset_fromFile, buildFit_fromFile)
+from .numeric_tools import cov_to_cor, cor_to_cov
+from .function_tools import FitFunction, LaTeX, ASCII

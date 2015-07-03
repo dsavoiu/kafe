@@ -12,11 +12,13 @@
 
 # Changes:
 # GQ 140724: fixed output format: uncor -> total
+# DS 150610: add ErrorSource object
 # ---------------------------------------------
 
 from string import join, split
 
 import numpy as np
+from scipy.linalg import LinAlgError
 import os
 
 from numeric_tools import cov_to_cor, cor_to_cov, extract_statistical_errors, \
@@ -28,190 +30,168 @@ NUMBER_OF_AXES = 2
 import logging
 logger = logging.getLogger('kafe')
 
-
-def build_dataset(xdata, ydata, cov_mats=None,
-                  xabserr=0.0, xrelerr=0.0, xabscor=0.0, xrelcor=0.0,
-                  yabserr=0.0, yrelerr=0.0, yabscor=0.0, yrelcor=0.0,
-                  title=None, basename=None, axis_labels=None, axis_units=None):
+class ErrorSource(object):
     '''
-    This helper function creates a `Dataset` from a series of keyword
-    arguments.
+    This object stores the error information for a :py:obj:`Dataset` as a
+    *covariance matrix* :math:`C` (sometimes also referred to as the *error
+    matrix*). This has several advantages: it allows calculating the function
+    to minimize (e.g. the chi-square) for a fit as a matrix product, and it
+    allows specifying multiple error sources for a `Dataset` by simply adding
+    up the corresponding matrices.
 
-    Valid keyword arguments are:
-
-    **xdata** and **ydata** : list/tuple/`np.array` of floats
-        These keyword arguments are mandatory and should be iterables
-        containing the measurement data.
-
-    *cov_mats* : ``None`` or 2-tuple (optional)
-        This argument defaults to ``None``, which means no covariance matrices
-        are used. If covariance matrices are needed, a tuple with two entries
-        (the first for `x` covariance matrices, the second for `y`) must be
-        passed.
-
-        Each element of this tuple may be either ``None`` or a NumPy matrix
-        object containing a covariance matrix for the respective axis.
-
-    *error specification keywords* : iterable or numeric (see below)
-        In addition to covariance matrices, errors can be specified for each
-        axis (*x* or *y*) according to a simplified error model.
-
-        In this respect, a valid keyword is composed of an axis, an error
-        relativity specification (*abs* or *rel*) and error correlation type
-        (*err* or *cor*). The errors are then set as follows:
-
-            1. For totally uncorrelated errors (*err*):
-                - if keyword argument is iterable, the error list is set to \
-that
-                - if keyword argument is a number, an error list with \
-identical entries is generated
-            2. For fully correlated errors (*cor*):
-                - keyword argument *must* be a single number. The global \
-correlated error for the axis is then set to that.
-
-        So, for example:
-
-        >>> myDataset = build_dataset(..., yabserr=0.3, yrelcor=0.1)
-
-        creates a Dataset with an uncorrelated error of 0.3 for each `y`
-        coordinate and a fully correlated (systematic) error of `y` of 0.1.
-
-    *title* : string (optional)
-        The title of the `Dataset`.
-
-    *basename* : string or ``None`` (optional)
-        A basename for the `Dataset`. All output files related to this dataset
-        will use this as a basename. If this is ``None`` (default), the
-        basename will be inferred from the filename.
-
-    *axis_labels* : 2-tuple of strings (optional)
-        a 2-tuple containing the axis labels for the `Dataset`. This is
-        relevant when plotting `Fits` of the `Dataset`, but is ignored when
-        plotting more than one `Fit` in the same `Plot`.
-
-    *axis_units* : 2-tuple of strings (optional)
-        a 2-tuple containing the axis units for the `Dataset`. This is
-        relevant when plotting `Fits` of the `Dataset`, but is ignored when
-        plotting more than one `Fit` in the same `Plot`.
-
+    The object contains methods to generate a covariance matrix for some
+    simple cases, such as when all points have the same relative or absolute
+    errors and the errors are either not correlated or fully correlated. For
+    more complicated error models, a covariance matrix can be specified
+    directly.
     '''
 
-    # cast data to array
-    data = (np.asarray(xdata), np.asarray(ydata))
-    size = len(xdata)
+    def __init__(self):
+        self.size = None            # undefined size
+        self.error_type = None      # undefined type ('simple' or 'matrix')
+        self.error_value = None     # float/floats or the covariance matrix
 
-    # check that x and y data have the same length
-    if size != len(ydata):
-        raise Exception(
-            "xdata and ydata must have matching lengths (%d != %d)"
-            % (size, len(ydata))
-        )
+        # Boolean flags
+        self.has_correlations = False  # assume no correlations
 
-    # if no cov_mats specifies
-    if cov_mats is None:
-        # initialize cov_mats with zero matrices
-        cov_mats = [
-            np.asmatrix(np.zeros((size, size))),
-            np.asmatrix(np.zeros((size, size)))
-        ]
-    else:
-        # go through cov_mat specification
-        for mat_id, mat in enumerate(cov_mats):
-            # If `None` is specified, substitute zero matrix
-            if mat is None:
-                cov_mats[mat_id] = np.asmatrix(np.zeros((size, size)))
+    def make_from_matrix(self, cov_mat, check_singular=False):
+        """
+        Sets the covariance matrix manually.
 
-    #
-    # Construct cor mats from error specifications
-    #
+        **cov_mat** : numpy.matrix
+            A *square*, *symmetric* (and usually *regular*) matrix.
 
-    error_keywords = {'xabserr': xabserr, 'xrelerr': xrelerr, 'xabscor': xabscor, 'xrelcor': xrelcor,
-                      'yabserr': yabserr, 'yrelerr': yrelerr, 'yabscor': yabscor, 'yrelcor': yrelcor}
+        **check_singular** : boolean (optional)
+            Whether to force singularity check. Defaults to ``False``.
+        """
 
-    for key, val in error_keywords.iteritems():   # go through the keyword arguments
+        # Check matrix suitability
+        _mat = np.asmatrix(cov_mat)  # cast to matrix
+        _shp = _mat.shape
+        if not _shp[0] == _shp[1]:   # check square shape
+            raise ValueError("Failed to make ErrorSource: matrix must be "
+                               "square, got shape %r" % (_shp,))
+        if (_mat == _mat.T).all():  # check if symmetric
+            if check_singular:
+                try:
+                    _mat.I  # try to invert matrix
+                except LinAlgError:
+                    raise ValueError("Failed to make ErrorSource: singular "
+                                       "matrix!")
+        else:
+            raise ValueError("Failed to make ErrorSource: covariance "
+                               "matrix not symmetric")
 
-        err_spec = key
-        err_val = val
+        self.error_type = 'matrix'
+        self.error_value = _mat
+        self.size = _shp[0]
+        self.has_correlations = (np.diag(np.diag(_mat)) == _mat).all()
 
-        # interpret the error specification
-        axis = err_spec[0]  # extract the axis from the error specification
-        relativity = err_spec[1:4]  # extract the relativity from the err spec.
-        correlation = err_spec[4:]  # extract the correl. from the error spec.
 
-        # check error specification for integrity
-        if axis not in ('x', 'y'):
-            raise SyntaxError("Unknown axis `%s'." % (axis, ))
-        if relativity not in ('abs', 'rel'):
-            raise SyntaxError(
-                "Unknown relativity specification `%s'. "
-                "Expected `abs' or `rel'."
-                % (relativity, )
-            )
-        if correlation not in ('err', 'cor'):
-            raise SyntaxError(
-                "Unknown correlation specification `%s'. "
-                "Expected `err' or `cor'."
-                % (correlation, )
-            )
+    def make_from_val(self, err_val, fully_correlated=False):
+        """
+        Sets information required to construct the covariance matrix.
 
-        # get axis is from axis name
-        axis = ('x', 'y').index(axis)
+        **err_val** : float or sequence of floats
+            If all data points have the same uncertainty
 
-        # make sure errors are floats. Cast to float if necessary...
-        if isinstance(err_val, np.ndarray) or isinstance(err_val, int):
-            # cast err_val to a float
-            err_val = 1.0 * err_val
+        *fully_correlated* : boolean (optional)
+            Whether the errors are fully correlated. Defaults to ``False``.
+        """
+        try:
+            iter(err_val)
+        except TypeError:
+            # object is not iterable, assume single float
+            self.size = None
+        else:
+            # object is not iterable, assume sequence of floats
+            self.size = len(err_val)  # store length
 
-        if correlation == 'cor':
-            # systematic errors should be floats
-            if not isinstance(err_val, float):
-                # if not, raise error
-                raise SyntaxError(
-                    "Error setting correlated error `%s', "
-                    "expected number." % (err_spec,)
-                )
+        self.error_type = 'simple'
 
-            # otherwise, calculate covariance matrix
-            if relativity == 'rel':
-                err_val *= data[axis]  # relative errors need to be weighted
-                                       # with the actual data
+        # set correlation flag
+        if fully_correlated:
+            self.has_correlations = True
+        else:
+            self.has_correlations = False
 
-                # systematic error matrix given by outer product of err_var
-                # vector with itself
-                cov_mats[axis] += np.asmatrix(np.outer(err_val, err_val))
+        self.error_value = err_val  # float or sequence of floats
+
+
+    ## GET Methods ##
+
+    def get_matrix(self, size=None):
+        """
+        Returns/Generates the covariance matrix for this ErrorSource.
+
+        If the user specified the matrix using
+        :py:method:`kafe.dataset.ErrorSource.make_from_matrix~make_from_matrix`,
+        returns that matrix. If a simple error model is specified, a matrix is
+        constructed as follows:
+
+        For *uncorrelated* errors, the covariance matrix is always diagonal.
+
+        If a single float :math:`\\sigma` is given as the error, the diagonal
+        entries will be equal to :math:`\\sigma^2`. In this case, the matrix
+        size needs to be specified via the ``size`` parameter.
+
+        If a list of floats :math:`\\sigma_i` is given as the error, the
+        *i*-th entry will be equal to :math:`{\\sigma_i}^2`. In this case,
+        the size of the matrix is inferred from the size of the list.
+
+        For *fully correlated* errors, the covariance matrix is the outer
+        product of the error array :math:`\\sigma_i` with itself, i.e. the
+        :math:`(i,j)`-th matrix entry will be equal to
+        :math:`\\sigma_i\\sigma_j`.
+        """
+
+        if self.error_type == 'matrix':
+            if size is not None and self.size != size:
+                # 'matrix'-type errors are fixed-size -> warn about mismatch
+                logger.warning("Ignoring requested size %d of "
+                               "covariance matrix. Does not match "
+                               "`matrix'-type error size %d"
+                               % (size, self.size))
+            return self.error_value
+
+        elif self.error_type == 'simple':
+            # single float case
+            if isinstance(self.error_value, float):
+                if size is None:
+                    raise ValueError("Cannot generate covariance matrix "
+                                     "for this simple error model without "
+                                     "a specified size.")
+                else:
+                    # turn float value into array of identical values
+                    _val = np.ones(size) * self.error_value
+            # error list case
             else:
-                # systematic error matrix is proportional to np.ones
-                cov_mats[axis] += np.asmatrix(
-                    np.ones((size, size)) * err_val**2
-                )
+                # check if iterable
+                try:
+                    iter(self.error_value)
+                except:
+                    raise ValueError, ("Given error `%r' is not iterable."
+                                       % (self.error_value,))
+                else:
+                    # use value given
+                    _val = np.asarray(self.error_value)  # size is implicit
+                    if size is not None and len(_val) != size:
+                        # 'simple'-type error lists are fixed-size -> warn
+                        logger.warning("Ignoring requested size %d of "
+                                       "covariance matrix. Does not match "
+                                       "`simple'-type error list length %d"
+                                       % (size, self.size))
 
-        elif correlation == 'err':
-            # statistical errors should be error lists
-            if isinstance(err_val, float):  # if a float value is given
-                # turn float value into array of identical values
-                err_val = np.ones(size) * err_val
-
-            # check if err_val is iterable
-            try:
-                iter(err_val)
-            except:
-                raise SyntaxError(
-                    "Error setting statistical error `%s', "
-                    "expected number or NumPy array."
-                    % (err_spec,)
-                )
+            # generate covariance matrix
+            if self.has_correlations:
+                _mat = np.outer(_val, _val)
             else:
-                err_val = np.asarray(err_val)   # cast to numpy array
+                _mat = np.matrix(np.diag(_val ** 2))
 
-            if relativity == 'rel':
-                err_val *= data[axis]  # relative errors need to be weighted
-                                       # with the actual data
+            return _mat
 
-            cov_mats[axis] += np.asmatrix(np.diag(err_val)**2)
-
-    return Dataset(data=data, cov_mats=cov_mats,
-                   title=title, basename=basename,
-                   axis_labels=axis_labels, axis_units=axis_units)
+        else:
+            raise ValueError, "Unknown error type `%s'" % (self.error_type,)
 
 
 class Dataset(object):
@@ -221,56 +201,12 @@ class Dataset(object):
     `data`, which is used for storing the measurement data, and another field
     `cov_mats`, used for storing the covariance matrix for each axis.
 
-    There are two ways a `Dataset` can be constructed. The most
-    straightforward way is to specify an input file containing a plain-text
-    representation of the dataset:
-
-    >>> my_dataset = Dataset(input_file='/path/to/file')
-
-    or
-
-    >>> my_dataset = Dataset(input_file=my_file_object)
-
-    If an `input_file` argument is provided, the `data` and `cov_mats`
-    arguments are ignored. The `Dataset` plain-text representation format
-    is as follows::
-
-        # x data
-        x_1  sigma_x_1
-        x_2  sigma_x_2  cor_x_12
-        ...  ...        ...       ...
-        x_N  sigma_x_N  cor_x_1N  ...  cor_x_NN
-
-        # y data
-        y_1  sigma_y_1
-        y_2  sigma_y_2  cor_y_12
-        ...  ...        ...       ...
-        y_N  sigma_y_N  cor_y_1N  ...  cor_y_NN
-
-    Here, the `sigma_...` represents the fully uncorrelated error of the data
-    point and `cor_..._ij` is the correlation coefficient between the *i*-th
-    and *j*-th data point.
+    There are two ways a `Dataset` can be constructed.
 
     Alternatively, field data can be set by passing iterables as arguments.
     Available arguments for this purpose are:
 
-    **data** : tuple/list of tuples/lists/arrays of floats
 
-        a tuple/list of measurement data. Each element of the tuple/list must
-        be iterable and be of the same length. The first element of the
-        **data** tuple/list is assumed to be the `x` data, and the second to be
-        the `y` data:
-
-        >>> my_dataset = Dataset(data=([0., 1., 2.], [1.23, 3.45, 5.62]))
-
-        Alternatively, x-y value pairs can also be passed as **data**. The
-        following is equivalent to the above:
-
-        >>> my_dataset = Dataset(data=([0.0, 1.23], [1.0, 3.45], [2.0, 5.62]))
-
-        In case the `Dataset` contains two data points, the ordering is
-        ambiguous. In this case, the first ordering (`x` data first, then `y`
-        data) is assumed.
 
     *cov_mats* : tuple/list of `numpy.matrix` (optional)
 
@@ -305,28 +241,29 @@ cov_mats=(None, my_cov_mat_y))
         dimensionless, i.e. the unit will be an empty string.
     '''
 
-    def __init__(self, input_file=None,  # Either this
-                       data=None, cov_mats=None,  # or these
+    def __init__(self, data=None,
                        title="Untitled Dataset",
                        basename=None,
                        axis_labels=['x', 'y'], axis_units=['', '']):
 
-        '''Construct the Dataset'''
-
-        kwargs = {'input_file': input_file, 'data': data, 'cov_mats': cov_mats,
-                  'axis_labels': axis_labels, 'axis_units': axis_units,
-                  'basename': basename, 'title': title}
+        '''Create a Dataset'''
 
         # Definitions
         ##############
 
-        self.n_axes = 2
+        self.__n_axes = 2
         """dimensionality of the `Dataset`. Currently, only 2D `Datasets` are
         supported"""
         self.n_datapoints = 0   #: number of data points in the `Dataset`
         self.data = [None, None]
         #: list containing measurement data (axis-ordering)
-        self.cov_mats = [None, None]      #: list of covariance matrices
+
+        self.cov_mats = [None, None]             #: covariance matrices for axes
+        self.__cov_mat_up_to_date = False        # flag need to compute matrix
+
+        self.err_src = [[], []]                  #: lists of ErrorSource objects
+        self.__query_err_src_enabled = [[], []]  # ErrorSource objects enabled?
+        self.__query_err_src_relative = [[], []] # ErrorSources relative?
 
         # Metadata
         #: axis labels
@@ -362,46 +299,60 @@ cov_mats=(None, my_cov_mat_y))
 
         # set the basename
         self.basename = basename
+        
+        # set data, if any
+        if data is not None:        
+            self.set_data(data)
 
-        # check for an input file
-        if input_file is not None:
-            self.read_from_file(input_file)
-            return   # exit constructor after loading input file
+    # Data
+    ##############
+
+    def set_data(self, data):
+        """
+        Set the measurement data for both axes.
+
+        **data** : tuple/list of tuples/lists/arrays of floats
+
+        a tuple/list of measurement data. Each element of the tuple/list must
+        be iterable and be of the same length. The first element of the
+        **data** tuple/list is assumed to be the `x` data, and the second to be
+        the `y` data:
+
+        >>> my_dataset.set_data(([0., 1., 2.], [1.23, 3.45, 5.62]))
+
+        Alternatively, x-y value pairs can also be passed as **data**. The
+        following is equivalent to the above:
+
+        >>> my_dataset.set_data(([0.0, 1.23], [1.0, 3.45], [2.0, 5.62]))
+
+        In case the `Dataset` contains two data points, the ordering is
+        ambiguous. In this case, the first ordering (`x` data first, then `y`
+        data) is assumed.
+        """
 
         # Load data
         ############
 
         # preliminary checks
-        if data is None:
-            raise Exception("No data provided for Dataset.")
-        else:
+        if len(data) != NUMBER_OF_AXES:
+            # in case of xy value pairs, transpose
+            data = np.asarray(data).T.tolist()
             if len(data) != NUMBER_OF_AXES:
-                # in case of xy value pairs, transpose
-                data = np.asarray(data).T.tolist()
-                if len(data) != NUMBER_OF_AXES:
-                    raise Exception(
-                        "Unsupported number of axes: %d"
-                        % (len(data),)
-                    )
-                else:
-                    # set the transposed data as the read data
-                    data = data
-
-        for axis in xrange(self.n_axes):  # go through the axes
-            self.set_data(axis, data[axis])  # load data for axis
-            if cov_mats is not None:
-                # load cov mat for axis
-                self.set_cov_mat(axis, cov_mats[axis])
+                raise Exception(
+                    "Unsupported number of axes: %d"
+                    % (len(data),)
+                )
             else:
-                # don't load cov mat for axis
-                self.set_cov_mat(axis, None)
+                # set the transposed data as the read data
+                #data = data
+                pass
 
-    # Set methods
-    ##############
+        for axis in xrange(self.__n_axes):  # go through the axes
+            self.set_axis_data(axis, data[axis])  # load data for axis
 
-    def set_data(self, axis, data):
+    def set_axis_data(self, axis, data):
         '''
-        Set the measurement data for an axis.
+        Set the measurement data for a single axis.
 
         **axis** : ``'x'`` or ``'y'``
             Axis for which to set the measurement data.
@@ -427,13 +378,168 @@ cov_mats=(None, my_cov_mat_y))
         else:
             # if that succeeds, then this object is iterable:
             # cast the iterable to a numpy array and store data
-            self.data[axis] = np.asarray(data)
+            _da = np.asarray(data)
             if axis == 0:
-                self.n_datapoints = len(self.data[0])  # set the dataset's size
+                self.data[axis] = _da
+                # set the dataset's size
+                self.n_datapoints = len(_da)
+            else:
+                # check the data size
+                if len(_da) == self.n_datapoints:  # size mismatch
+                    self.data[axis] = _da
+                else:
+                    raise ValueError("Cannot set data for axis %d. "
+                                     "Size mismatch: expected %d, got %d."
+                                     % (axis, self.n_datapoints, len(_da)))
+
+
+    # Uncertainties
+    ################
+
+    def add_error_source(self, axis, err_type, err_val, relative=False, correlated=False, recompute_cov_mat=True):
+        """
+        Add an error source for the data. A Dataset can have many
+        error sources for each axis, each corresponding to a covariance matrix.
+        The total error model for the axis is represented by the sum of
+        these matrices.
+
+        Note: whenever an ErrorSource is added, the total covariance matrix
+        is calculated
+
+        ## TODO: DocString ##
+
+        """
+
+        # get axis id from an alias
+        axis = self.get_axis(axis)
+
+        # initialize ErrorSource
+        _es = ErrorSource()
+
+        # specify type of ErrorSource
+        if err_type == 'simple':
+            _es.make_from_val(err_val, fully_correlated=correlated)
+        elif err_type == 'matrix':
+            if correlated:
+                logger.warn("Ignoring 'correlated' when adding a 'matrix' "
+                            "error source. Correlation information is "
+                            "contained within the matrix itself")
+            _es.make_from_matrix(err_val)
+
+        self.err_src[axis].append(_es)  # add ErrorSource
+        self.__query_err_src_enabled[axis].append(True)  # enable ErrorSource
+        self.__query_err_src_relative[axis].append(relative)  # relative flag
+        self.__cov_mat_up_to_date = False  # flag need to recompute matrix
+
+        if recompute_cov_mat:
+            self.calc_cov_mats(axis)  # recompute covariance matrix
+
+        # return error source ID
+        _err_src_id = len(self.err_src[axis]) - 1
+        return _err_src_id
+
+    def remove_error_source(self, axis, err_src_id, recompute_cov_mat=True):
+        """
+        TODO: DocString
+        """
+
+        # get axis id from an alias
+        axis = self.get_axis(axis)
+
+        self.err_src[axis][err_src_id] = None  # remove ErrorSource
+        self.__query_err_src_enabled[axis][err_src_id] = False
+        self.__query_err_src_relative[axis][err_src_id] = False
+        self.__cov_mat_up_to_date = True  # flag need to recompute matrix
+
+        if recompute_cov_mat:
+            self.calc_cov_mats(axis)  # recompute covariance matrix
+
+    def disable_error_source(self, axis, err_src_id):
+        """
+        Disables an ErrorSource by excluding it from the calculation of the
+        total covariance matrix.
+
+        TODO: ##DocString##
+        """
+        # get axis id from an alias
+        axis = self.get_axis(axis)
+        
+        self.__query_err_src_enabled[axis][err_src_id] = False
+
+    def enable_error_source(self, axis, err_src_id):
+        """
+        Enables an ErrorSource by excluding it from the calculation of the
+        total covariance matrix.
+
+        TODO: ##DocString##
+        """
+        # get axis id from an alias
+        axis = self.get_axis(axis)
+        
+        self.__query_err_src_enabled[axis][err_src_id] = True
+
+    def calc_cov_mats(self, axis='all'):
+        """
+        (Re-)Calculate the covariance matrix from the enabled error sources.
+
+        TODO: DocString
+
+        """
+        _size = self.n_datapoints
+        _mats = [np.matrix(np.zeros((_size, _size))),
+                 np.matrix(np.zeros((_size, _size)))]
+
+        if axis is 'all':
+            _axes_list = range(self.__n_axes)
+        else:
+            _axes_list = [self.get_axis(axis)]
+
+        print _axes_list
+
+        for _axis in _axes_list:  # go through the axes
+            for _idx, _es in enumerate(self.err_src[_axis]):  # go through the ErrorSources
+                # skip removed error sources
+                if _es is None:
+                    continue
+
+                # skip disabled error sources
+                if not self.__query_err_src_enabled[_axis][_idx]:
+                    continue
+
+                if _es.size is not None:
+                    # if ErrorSource size fixed
+                    if _es.size == _size:
+                        # if ErrorSource size matches Dataset size
+                        _mat = _es.get_matrix()  # OK to get matrix
+                    else:
+                        # shouldn't happen for ErrorSources added with
+                        # add_error_source(), but still...
+                        raise ValueError("ErrorSource fixed size %d doesn't "
+                                         "match Dataset size %d"
+                                         % (_es.size, _size))
+                else:
+                    # get cov mat with specified size
+                    _mat = _es.get_matrix(size=_size)
+
+                if self.__query_err_src_relative[_axis][_idx]:
+                    # for relative errors, "multiply" covariance matrix by data
+                    _data = self.get_data(_axis)
+                    _mat = np.asmatrix(np.asarray(_mat) *
+                                       np.outer(_data, _data))
+
+                _mats[_axis] += _mat  # add covariance matrix
+
+        # set cov mats for all axes
+        for _axis in _axes_list:  # go through the axes
+            self.set_cov_mat(_axis, _mats[_axis])
+
+        self.__cov_mat_up_to_date = True
 
     def set_cov_mat(self, axis, mat):
         '''
-        Set the error matrix for an axis.
+        Forcibly set the error matrix for an axis, ignoring `ErrorSource`
+        objects. This is useful for adjusting the covariance matrix during the
+        fit process.
 
         **axis** : ``'x'`` or ``'y'``
             Axis for which to load the error matrix.
@@ -486,6 +592,9 @@ cov_mats=(None, my_cov_mat_y))
             )
         else:
             self.cov_mats[axis] = mat
+
+        # forced matrices considered not up to date
+        self.__cov_mat_up_to_date = False
 
     # Get methods
     ##############
@@ -676,6 +785,16 @@ cov_mats=(None, my_cov_mat_y))
         else:
             return np.any(self.__query_has_errors)
 
+
+    def error_source_is_enabled(self, axis, err_src_id):
+        """
+        Returns ``True`` if an ErrorSource is enabled, that is if it is included
+        in the total covariance matrix.
+
+        TODO: ##DocString##
+        """
+        return self.__query_err_src_enabled[axis][err_src_id]
+
     def get_formatted(self, format_string=".06e", delimiter='\t'):
         '''
         Returns the dataset in a plain-text format which is human-readable and
@@ -720,7 +839,7 @@ cov_mats=(None, my_cov_mat_y))
         output_list = []
 
         # go through the axes
-        for axis in xrange(self.n_axes):
+        for axis in xrange(self.__n_axes):
             # define a helper list which we will fill out
             helper_list = []
             # get the statistical errors of the data
@@ -814,6 +933,33 @@ cov_mats=(None, my_cov_mat_y))
         '''
         Reads the `Dataset` object from a file.
 
+        One way to construct a Dataset is to specify an input file containing
+        a plain-text representation of the dataset:
+
+        >>> my_dataset.read_from_file('/path/to/file')
+
+        or
+
+        >>> my_dataset.read_from_file(my_file_object)
+
+        The `Dataset` plain-text representation format is as follows::
+
+            # x data
+            x_1  sigma_x_1
+            x_2  sigma_x_2  cor_x_12
+            ...  ...        ...       ...
+            x_N  sigma_x_N  cor_x_1N  ...  cor_x_NN
+
+            # y data
+            y_1  sigma_y_1
+            y_2  sigma_y_2  cor_y_12
+            ...  ...        ...       ...
+            y_N  sigma_y_N  cor_y_1N  ...  cor_y_NN
+
+        Here, the `sigma_...` represents the fully uncorrelated error of the data
+        point and `cor_..._ij` is the correlation coefficient between the *i*-th
+        and *j*-th data point.
+
         returns : boolean
             ``True`` if the read succeeded, ``False`` if not.
         '''
@@ -869,7 +1015,7 @@ cov_mats=(None, my_cov_mat_y))
                     #######################################
 
                     # commit measurement data
-                    self.set_data(tmp_axis, tmp_data)
+                    self.set_axis_data(tmp_axis, tmp_data)
 
                     if tmp_has_syst_errors:  # if there is a correlation matrix
                         # Turn the lists into a lower triangle matrix
@@ -952,7 +1098,7 @@ cov_mats=(None, my_cov_mat_y))
             #######################################
 
             # commit measurement data
-            self.set_data(tmp_axis, tmp_data)
+            self.set_axis_data(tmp_axis, tmp_data)
 
             if tmp_has_syst_errors:  # if there is a correlation matrix
                 # Turn the lists into a lower triangle matrix
@@ -976,5 +1122,23 @@ cov_mats=(None, my_cov_mat_y))
                 )
             else:  # if there are no errors
                 self.set_cov_mat(tmp_axis, None)  # unset cov mat
+
+        # Turn covariance matrices into ErrorSource objects
+        for axis in xrange(self.__n_axes):
+            _mat = self.get_cov_mat(axis)
+            if _mat is not None:
+                # Replace error model with the computed matrix
+                _es = ErrorSource()
+                _es.make_from_matrix(_mat)                
+                if self.err_src[axis]:
+                    logger.warn("Overwriting existing error model for axis %d "
+                                "of Dataset" % (axis,))
+                self.err_src[axis] = [_es]
+            else:
+                if self.err_src[axis]:
+                    logger.warn("Removing existing error model for axis %d "
+                                "of Dataset" % (axis,))
+                # remove error model
+                self.err_src[axis] = []
 
         return True

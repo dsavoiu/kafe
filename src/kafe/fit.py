@@ -39,19 +39,19 @@
 # -------------------------------------------------------------------------
 
 
-from function_tools import FitFunction, outer_product
+from .function_tools import FitFunction, outer_product
 from copy import copy
 
 import matplotlib.pyplot as plt
 import numpy as np
 from numeric_tools import cov_to_cor, extract_statistical_errors, MinuitCov_to_cor
 
-from config import (FORMAT_ERROR_SIGNIFICANT_PLACES, F_SIGNIFICANCE_LEVEL,
-                    M_MINIMIZER_TO_USE, log_file)
+from .config import (FORMAT_ERROR_SIGNIFICANT_PLACES, F_SIGNIFICANCE_LEVEL,
+                     M_MINIMIZER_TO_USE, log_file)
 from math import floor, log
 
 import os
-from stream import StreamDup
+from .stream import StreamDup
 
 # import main logger for kafe
 import logging

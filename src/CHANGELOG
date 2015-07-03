@@ -1,6 +1,14 @@
 trunk
 =====
 
+v1.0.0
+======
+
+    % [NEW] `ErrorSource` object: Datasets no longer contain
+      a single covariance matrix, but a list of ErrorSource
+      objects.
+    % [NEW] `Dataset` objects can now be created empty, allowing
+      data and error model to be added later. [ ]
 
 v0.5.2
 ======

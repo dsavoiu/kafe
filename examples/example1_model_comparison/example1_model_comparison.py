@@ -48,8 +48,11 @@ def generate_dataset(output_file_path):
 # Generate the Dataset and store it in a file
 #generate_dataset('dataset.dat')
 
+# Initialize Dataset
+my_dataset = Dataset(title="Example Dataset")
+
 # Load the Dataset from the file
-my_dataset = Dataset(input_file='dataset.dat', title="Example Dataset")
+my_dataset.read_from_file('dataset.dat')
 
 # Create the Fits
 my_fits = [Fit(my_dataset, exp_2par),

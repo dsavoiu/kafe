@@ -28,11 +28,11 @@ import numpy as np
 import matplotlib as mpl
 
 import matplotlib.pyplot as plt
-from function_tools import outer_product
-from numeric_tools import extract_statistical_errors
+from .function_tools import outer_product
+from .numeric_tools import extract_statistical_errors
 
-from config import (G_PADDING_FACTOR_X, G_PADDING_FACTOR_Y,
-                    G_PLOT_POINTS, G_FIT_INFOBOX_TITLE)
+from .config import (G_PADDING_FACTOR_X, G_PADDING_FACTOR_Y,
+                     G_PLOT_POINTS, G_FIT_INFOBOX_TITLE)
 import re  # regular expressions
 from string import split, join, lower, replace
 

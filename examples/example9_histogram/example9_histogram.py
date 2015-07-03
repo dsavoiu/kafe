@@ -53,9 +53,12 @@ def generate_histogram(output_path, bins=50, N=500):
 # Generate the Dataseta and store them in files
 #generate_histogram('hdataset.dat',N=250)
 
-# Load the Datasets from files
-hdataset = Dataset(input_file='hdataset.dat', title="Data for example 9",
-                axis_labels=['x', 'entries'] )
+# Initialize the Dataset
+hdataset = Dataset(title="Data for example 9",
+                   axis_labels=['x', 'entries'])
+
+# Load the Datasets from file
+hdataset.read_from_file('hdataset.dat')
 
 
 # error for bins with zero contents is set to 1.

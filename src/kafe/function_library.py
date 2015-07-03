@@ -9,7 +9,7 @@ Collection of model functions
 '''
 
 
-from function_tools import FitFunction, LaTeX, ASCII
+from .function_tools import FitFunction, LaTeX, ASCII
 from numpy import exp, sqrt, pi
 from scipy.special import gamma, wofz
 

@@ -5,6 +5,7 @@
 *.pyc
 *.pyo
 *.log
+#.kafe
 
 ##########
 # Images #

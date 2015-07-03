@@ -61,9 +61,12 @@ def generate_dataset(output_file_path):
 # Generate the Dataset and store it in a file
 #generate_dataset('dataset.dat')
 
-# Load the Dataset from the file
-my_dataset = Dataset(input_file='dataset.dat', title="Example Dataset",
-               axis_labels=['t', 'A'] )
+# Initialize the Dataset
+my_dataset = Dataset(title="Example Dataset",
+                     axis_labels=['t', 'A'] )
+
+# Load the Dataset from the file                     
+my_dataset.read_from_file(input_file='dataset.dat')
 
 
 # Create the Fit

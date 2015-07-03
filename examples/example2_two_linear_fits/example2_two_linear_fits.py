@@ -62,9 +62,13 @@ def generate_datasets(output_file_path1, output_file_path2):
 # Generate the Dataseta and store them in files
 #generate_datasets('dataset1.dat', 'dataset2.dat')
 
+# Initialize the Datasets
+my_datasets = [Dataset(title="Example Dataset 1"),
+               Dataset(title="Example Dataset 2")]
+
 # Load the Datasets from files
-my_datasets = [Dataset(input_file='dataset1.dat', title="Example Dataset 1"),
-               Dataset(input_file='dataset2.dat', title="Example Dataset 2")]
+my_datasets[0].read_from_file(input_file='dataset1.dat')
+my_datasets[1].read_from_file(input_file='dataset2.dat')
 
 # Create the Fits
 my_fits = [Fit(dataset,

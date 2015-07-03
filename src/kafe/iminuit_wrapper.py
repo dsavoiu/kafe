@@ -17,7 +17,7 @@
 # import iminuit as python package
 from iminuit import Minuit
 
-from config import M_MAX_ITERATIONS, M_TOLERANCE, log_file
+from .config import M_MAX_ITERATIONS, M_TOLERANCE, log_file
 from time import gmtime, strftime
 
 import numpy as np

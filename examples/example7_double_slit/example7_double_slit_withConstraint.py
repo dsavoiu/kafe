@@ -49,7 +49,7 @@ my_dataset = parse_column_data('double_slit.dat',
 
 # Create the Fit
 my_fit = Fit(my_dataset,
-             double_slit)
+             double_slit, minimizer_to_use='ROOT')
 #            fit_label="Linear Regression " + dataset.data_label[-1])
 
 # Set the initial values for the fit
