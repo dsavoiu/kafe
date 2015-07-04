@@ -1,7 +1,7 @@
 '''
-.. module:: __version_info
+.. module:: _version_info
    :platform: Unix
-   :synopsis: Version 0.5.4 of kafe, release Jan. 2015
+   :synopsis: Version 1.0.0 of kafe, release Jul. 2015
 
 .. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
                   Guenter Quast <g.quast@kit.edu>

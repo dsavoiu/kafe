@@ -1,5 +1,5 @@
 '''
-.. module:: dataset
+.. module:: dataset_tools
    :platform: Unix
    :synopsis: This sub-module defines some helper functions for creating a
        `Dataset` object.
@@ -27,19 +27,24 @@ logger = logging.getLogger('kafe')
 def build_dataset(xdata, ydata, cov_mats=None,
                   xabserr=0.0, xrelerr=0.0, xabscor=0.0, xrelcor=0.0,
                   yabserr=0.0, yrelerr=0.0, yabscor=0.0, yrelcor=0.0,
-                  title=None, basename=None,
+                  title=None,
                   axis_labels=None, axis_units=None):
     '''
     This helper function creates a `Dataset` from a series of keyword
     arguments.
 
-    Valid keyword arguments are:
+    Parameters
+    ----------
 
-    **xdata** and **ydata** : list/tuple/`np.array` of floats
-        These keyword arguments are mandatory and should be iterables
-        containing the measurement data.
+    **xdata** : list/tuple/`np.array` of floats
+        This keyword argument is mandatory and should be an iterable
+        containing *x*-axis the measurement data.
 
-    *cov_mats* : ``None`` or 2-tuple (optional)
+    **ydata** : list/tuple/`np.array` of floats
+        This keyword argument is mandatory and should be an iterable
+        containing *y*-axis the measurement data.
+
+    *cov_mats* : ``None`` or 2-tuple, optional
         This argument defaults to ``None``, which means no covariance matrices
         are used. If covariance matrices are needed, a tuple with two entries
         (the first for `x` covariance matrices, the second for `y`) must be
@@ -48,7 +53,10 @@ def build_dataset(xdata, ydata, cov_mats=None,
         Each element of this tuple may be either ``None`` or a NumPy matrix
         object containing a covariance matrix for the respective axis.
 
-    *error specification keywords* : iterable or numeric (see below)
+    Keyword Arguments
+    -----------------
+
+    error specification keywords : iterable or numeric (see below)
         In addition to covariance matrices, errors can be specified for each
         axis (*x* or *y*) according to a simplified error model.
 
@@ -67,29 +75,29 @@ correlated error for the axis is then set to that.
 
         So, for example:
 
-        >>> myDataset = build_dataset(..., yabserr=0.3, yrelcor=0.1)
+        >>> my_dataset = build_dataset(..., yabserr=0.3, yrelcor=0.1)
 
         creates a Dataset with an uncorrelated error of 0.3 for each `y`
         coordinate and a fully correlated (systematic) error of `y` of 0.1.
 
-    *title* : string (optional)
+    title : string, optional
         The title of the `Dataset`.
 
-    *basename* : string or ``None`` (optional)
-        A basename for the `Dataset`. All output files related to this dataset
-        will use this as a basename. If this is ``None`` (default), the
-        basename will be inferred from the filename.
-
-    *axis_labels* : 2-tuple of strings (optional)
+    axis_labels : 2-tuple of strings, optional
         a 2-tuple containing the axis labels for the `Dataset`. This is
         relevant when plotting `Fits` of the `Dataset`, but is ignored when
         plotting more than one `Fit` in the same `Plot`.
 
-    *axis_units* : 2-tuple of strings (optional)
+    axis_units : 2-tuple of strings, optional
         a 2-tuple containing the axis units for the `Dataset`. This is
         relevant when plotting `Fits` of the `Dataset`, but is ignored when
         plotting more than one `Fit` in the same `Plot`.
 
+    Returns
+    -------
+
+    ::py:class:`~kafe.dataset.Dataset`
+        `Dataset` object constructed from data and error information
     '''
 
     # cast data to array
@@ -209,7 +217,7 @@ correlated error for the axis is then set to that.
             cov_mats[axis] += np.asmatrix(np.diag(err_val)**2)
 
     _dataset = Dataset(data=data,
-                       title=title, basename=basename,
+                       title=title,
                        axis_labels=axis_labels, axis_units=axis_units)
 
     _dataset.add_error_source('x', 'matrix', cov_mats[0])

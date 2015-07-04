@@ -3,6 +3,7 @@
 \documentclass[a4paper,10pt,english]{sphinxmanual}
 \usepackage[utf8]{inputenc}
 \DeclareUnicodeCharacter{00A0}{\nobreakspace}
+\usepackage{cmap}
 \usepackage[T1]{fontenc}
 \usepackage{babel}
 \usepackage{times}
@@ -11,10 +12,15 @@
 \usepackage{sphinx}
 \usepackage{multirow}
 
+\addto\captionsenglish{\renewcommand{\figurename}{Fig. }}
+\addto\captionsenglish{\renewcommand{\tablename}{Table }}
+\floatname{literal-block}{Listing }
+
+\usepackage{enumitem}\setlistdepth{48}
 
 \title{kafe Documentation}
-\date{January 09, 2015}
-\release{0.5.4}
+\date{July 04, 2015}
+\release{1.0.0}
 \author{D. Savoiu, G. Quast}
 \newcommand{\sphinxlogo}{}
 \renewcommand{\releasename}{Release}
@@ -74,10 +80,11 @@
 \expandafter\def\csname PYG@tok@c\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
 \expandafter\def\csname PYG@tok@mf\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
 \expandafter\def\csname PYG@tok@err\endcsname{\def\PYG@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
-\expandafter\def\csname PYG@tok@kd\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@mb\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
 \expandafter\def\csname PYG@tok@ss\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.32,0.47,0.09}{##1}}}
 \expandafter\def\csname PYG@tok@sr\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.14,0.33,0.53}{##1}}}
 \expandafter\def\csname PYG@tok@mo\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@kd\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
 \expandafter\def\csname PYG@tok@mi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
 \expandafter\def\csname PYG@tok@kn\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
 \expandafter\def\csname PYG@tok@o\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
@@ -112,6 +119,8 @@
 \def\PYGZlb{[}
 \def\PYGZrb{]}
 \makeatother
+
+\renewcommand\PYGZsq{\textquotesingle}
 
 \begin{document}
 
@@ -182,29 +191,29 @@ fitting and plotting, as illustrated in the figure on the right-hand side.
 
 Data, their uncertainties, and, optionally, the correlations of the
 uncertainties - are passed through the interface of the \code{kafe} class
-{\hyperref[index:kafe.dataset.Dataset]{\code{Dataset}}}. Input can be included in the \emph{Python} code
+{\hyperref[index:kafe.dataset.Dataset]{\emph{\code{Dataset}}}} (\autopageref*{index:kafe.dataset.Dataset}). Input can be included in the \emph{Python} code
 or is read from files in standardised or user-defined formats. The representation
-of the data within the {\hyperref[index:kafe.dataset.Dataset]{\code{Dataset}}} class is minimalistic,
+of the data within the {\hyperref[index:kafe.dataset.Dataset]{\emph{\code{Dataset}}}} (\autopageref*{index:kafe.dataset.Dataset}) class is minimalistic,
 consisting of the x and y values and the full covariance matrices of their
 uncertainties. Correlated errors between x and y values are not
 supported yet, as such use cases are rare.
 
-A helper function, {\hyperref[index:kafe.dataset.build_dataset]{\code{build\_dataset()}}}, is available
+A helper function, {\hyperref[index:kafe.dataset_tools.build_dataset]{\emph{\code{build\_dataset()}}}} (\autopageref*{index:kafe.dataset_tools.build_dataset}), is available
 to transform various error models, like a combination of independent
 and correlated errors or common absolute or relative errors, to this
 basic format.
 
 Adding a model function, taken either from a prepared set of fit
 functions within kafe or from a user's own \emph{Python} implementation,
-results in a {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} object, which controls the
-minimizer {\hyperref[index:kafe.minuit.Minuit]{\code{Minuit}}}. Access to the final
+results in a {\hyperref[index:kafe.fit.Fit]{\emph{\code{Fit}}}} (\autopageref*{index:kafe.fit.Fit}) object, which controls the
+minimizer {\hyperref[index:kafe.minuit.Minuit]{\emph{\code{Minuit}}}} (\autopageref*{index:kafe.minuit.Minuit}). Access to the final
 results of the fitting procedure is provided by data members of
 the \emph{Fit} class.
 
 One or multiple fit objects, i. e. the input data and model
 functions(s) at the best-fit point in parameter-space, are
-visualised by the class {\hyperref[index:kafe.plot.Plot]{\code{Plot}}} with the help
-of \code{matplotlib} functionality. The {\hyperref[index:module-plot]{\code{plot}}} module
+visualised by the class {\hyperref[index:kafe.plot.Plot]{\emph{\code{Plot}}}} (\autopageref*{index:kafe.plot.Plot}) with the help
+of \code{matplotlib} functionality. The {\hyperref[index:module-plot]{\emph{\code{plot}}}} (\autopageref*{index:module-plot}) module
 also contains functionality to display the model uncertainty by
 surrounding the model function at the best-fit values of the parameters
 by a light band, the one-\(\sigma\) uncertainty band, which is obtained by
@@ -212,7 +221,7 @@ propagation of the uncertainties of the fit parameters taking
 into account their correlations.
 
 Two-dimensional contour lines of pairs of parameters
-are obtained with the method \code{plot\_contour()}
+are obtained with the method {\hyperref[index:kafe.fit.Fit.plot_contour]{\emph{\code{plot\_contour()}}}} (\autopageref*{index:kafe.fit.Fit.plot_contour})
 of the \code{Fit} class, which internally relies on the
 \emph{mncont} method of the \emph{Minuit} package. Contour curves are
 obtained from a scan of the \(\chi\)²-function around a fixed value,
@@ -221,10 +230,65 @@ respect to all other free parameters in the fit, thus taking
 into account the correlation of a pair of parameters with all
 other parameters of the model.
 
-In a similar way, the method \code{plot\_profile()}
+In a similar way, the method {\hyperref[index:kafe.fit.Fit.plot_profile]{\emph{\code{plot\_profile()}}}} (\autopageref*{index:kafe.fit.Fit.plot_profile})
 provides profiled \(\chi\)² curves, i. e. the value of the minimal
 \(\chi\)² as a function of one parameter while all other parameters
 are allowed to vary.
+
+
+\section{Fitting in a Nutshell}
+\label{index:fitting-in-a-nutshell}
+Fitting with \textbf{kafe} in a nutshell goes like this:
+\begin{enumerate}
+\item {} 
+create a {\hyperref[index:kafe.dataset.Dataset]{\emph{\code{Dataset}}}} (\autopageref*{index:kafe.dataset.Dataset}) object from your measurement
+data:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}d} \PYG{o}{=} \PYG{n}{kafe}\PYG{o}{.}\PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{data}\PYG{o}{=}\PYG{p}{[}\PYG{p}{[}\PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{l+m+mf}{1.}\PYG{p}{,} \PYG{l+m+mf}{2.}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mf}{1.23}\PYG{p}{,} \PYG{l+m+mf}{3.45}\PYG{p}{,} \PYG{l+m+mf}{5.62}\PYG{p}{]}\PYG{p}{]}\PYG{p}{)}
+\end{Verbatim}
+
+\item {} 
+add errors (uncertainties) to your {\hyperref[index:kafe.dataset.Dataset]{\emph{\code{Dataset}}}} (\autopageref*{index:kafe.dataset.Dataset}):
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}d}\PYG{o}{.}\PYG{n}{add\PYGZus{}error\PYGZus{}source}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{y}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{simple}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mf}{0.5}\PYG{p}{)}  \PYG{c}{\PYGZsh{} y errors, all +/\PYGZhy{} 0.5}
+\end{Verbatim}
+
+\item {} 
+import a model function from {\hyperref[index:module-kafe.function_library]{\emph{\code{kafe.function\_library}}}} (\autopageref*{index:module-kafe.function_library}) (or
+define one yourself):
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{kafe.function\PYGZus{}library} \PYG{k+kn}{import} \PYG{n}{linear\PYGZus{}2par}
+\end{Verbatim}
+
+\item {} 
+create a {\hyperref[index:kafe.fit.Fit]{\emph{\code{Fit}}}} (\autopageref*{index:kafe.fit.Fit}) object from your
+{\hyperref[index:kafe.dataset.Dataset]{\emph{\code{Dataset}}}} (\autopageref*{index:kafe.dataset.Dataset}) and your model function:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}f} \PYG{o}{=} \PYG{n}{kafe}\PYG{o}{.}\PYG{n}{Fit}\PYG{p}{(}\PYG{n}{my\PYGZus{}d}\PYG{p}{,} \PYG{n}{linear\PYGZus{}2par}\PYG{p}{)}
+\end{Verbatim}
+
+\item {} 
+do the fit:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}f}\PYG{o}{.}\PYG{n}{do\PYGZus{}fit}\PYG{p}{(}\PYG{p}{)}
+\end{Verbatim}
+
+\item {} 
+\emph{(optional)} if you want to see a plot of the result, use the
+{\hyperref[index:kafe.plot.Plot]{\emph{\code{Plot}}}} (\autopageref*{index:kafe.plot.Plot}) object:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}p} \PYG{o}{=} \PYG{n}{kafe}\PYG{o}{.}\PYG{n}{Plot}\PYG{p}{(}\PYG{n}{my\PYGZus{}f}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}p}\PYG{o}{.}\PYG{n}{plot\PYGZus{}all}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}p}\PYG{o}{.}\PYG{n}{show}\PYG{p}{(}\PYG{p}{)}
+\end{Verbatim}
+
+\end{enumerate}
 
 
 \section{Example}
@@ -261,7 +325,7 @@ function to some data points with uncertainties:
 \end{Verbatim}
 
 The output in text form (also available via various \code{get\_...()} methods
-of the {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} class) contains the values of the parameters
+of the {\hyperref[index:kafe.fit.Fit]{\emph{\code{Fit}}}} (\autopageref*{index:kafe.fit.Fit}) class) contains the values of the parameters
 at the best-fit point, their correlation matrix and the fit probability.
 The example produces the following graphical output:
 \begin{figure}[htbp]
@@ -311,7 +375,7 @@ More and advanced examples - like fitting different models
 to one data set, comparison of different data sets with model
 functions, averaging of correlated measurements or fits with
 a large number of parameters -
-are provided as part of the \emph{kafe} distribution and are
+are provided as part of the \code{kafe} distribution and are
 described in the section \emph{Examples} below. They may serve as
 a starting point for own applications.
 
@@ -371,14 +435,14 @@ the version numbers in parentheses refer to the minimum requirements:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 Python packages:
-  * SciPy \textgreater{}= 0.12.0 (0.9.0), which includes
-      - NumPy \textgreater{}= 1.7.1 (1.6.1) and
-      - matplotlib \textgreater{}= 1.2.0 (1.1.1)
+  * SciPy \PYGZgt{}= 0.12.0 (0.9.0), which includes
+      \PYGZhy{} NumPy \PYGZgt{}= 1.7.1 (1.6.1) and
+      \PYGZhy{} matplotlib \PYGZgt{}= 1.2.0 (1.1.1)
 
 Other dependencies:
-  * ROOT \textgreater{}= 5.34 (http://root.cern.ch)
-  * Qt4 \textgreater{}= 4.8.5 {}`(could work with other versions){}`
-  * PyQt \textgreater{}= 3.18.1 {}`(could work with other versions){}`
+  * ROOT \PYGZgt{}= 5.34 (http://root.cern.ch)
+  * Qt4 \PYGZgt{}= 4.8.5 {}`(could work with other versions){}`
+  * PyQt \PYGZgt{}= 3.18.1 {}`(could work with other versions){}`
   * A LaTeX distribution {}`(tested with texlive){}`
 \end{Verbatim}
 
@@ -387,9 +451,9 @@ For \emph{Python} to see the \emph{PyROOT} bindings, the following environment v
 must be set correctly:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-export ROOTSYS=\textless{}directory where ROOT is installed\textgreater{}
-export LD\_LIBRARY\_PATH=\$\PYGZob{}LD\_LIBRARY\_PATH\PYGZcb{}:\$ROOTSYS/lib
-export PYTHONPATH=\$ROOTSYS/lib:\$PYTHONPATH
+export ROOTSYS=\PYGZlt{}directory where ROOT is installed\PYGZgt{}
+export LD\PYGZus{}LIBRARY\PYGZus{}PATH=\PYGZdl{}\PYGZob{}LD\PYGZus{}LIBRARY\PYGZus{}PATH\PYGZcb{}:\PYGZdl{}ROOTSYS/lib
+export PYTHONPATH=\PYGZdl{}ROOTSYS/lib:\PYGZdl{}PYTHONPATH
 \end{Verbatim}
 
 For more info, refer to {[}\href{http://root.cern.ch/drupal/content/pyroot}{http://root.cern.ch/drupal/content/pyroot}{]}.
@@ -445,31 +509,31 @@ are given for each axis separately. \emph{\#} indicates a comment line, which
 is ignored when reading the data:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\# axis 0: x
-\# datapoints  uncor. err.
-0.957426  3.0e-01
-2.262212  3.0e-01
-3.061167  3.0e-01
-3.607280  3.0e-01
-4.933100  3.0e-01
-5.992332  3.0e-01
-7.021234  3.0e-01
-8.272489  3.0e-01
-9.250817  3.0e-01
-9.757758  3.0e-01
+\PYGZsh{} axis 0: x
+\PYGZsh{} datapoints  uncor. err.
+0.957426  3.0e\PYGZhy{}01
+2.262212  3.0e\PYGZhy{}01
+3.061167  3.0e\PYGZhy{}01
+3.607280  3.0e\PYGZhy{}01
+4.933100  3.0e\PYGZhy{}01
+5.992332  3.0e\PYGZhy{}01
+7.021234  3.0e\PYGZhy{}01
+8.272489  3.0e\PYGZhy{}01
+9.250817  3.0e\PYGZhy{}01
+9.757758  3.0e\PYGZhy{}01
 
-\# axis 1: y
-\# datapoints  uncor. err.
-1.672481  2.0e-01
-1.743410  2.0e-01
-1.805217  2.0e-01
-2.147802  2.0e-01
-2.679615  2.0e-01
-3.110055  2.0e-01
-3.723173  2.0e-01
-4.430122  2.0e-01
-4.944116  2.0e-01
-5.698063  2.0e-01
+\PYGZsh{} axis 1: y
+\PYGZsh{} datapoints  uncor. err.
+1.672481  2.0e\PYGZhy{}01
+1.743410  2.0e\PYGZhy{}01
+1.805217  2.0e\PYGZhy{}01
+2.147802  2.0e\PYGZhy{}01
+2.679615  2.0e\PYGZhy{}01
+3.110055  2.0e\PYGZhy{}01
+3.723173  2.0e\PYGZhy{}01
+4.430122  2.0e\PYGZhy{}01
+4.944116  2.0e\PYGZhy{}01
+5.698063  2.0e\PYGZhy{}01
 \end{Verbatim}
 
 The resulting output is shown below. As can be seen already
@@ -478,13 +542,13 @@ data. The \(\chi\)² probability in the printed output shows, however,
 that the linear model would be marginally acceptable as well:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-linear\_2par
+linear\PYGZus{}2par
 chi2prob 0.052
-HYPTEST  accepted (CL 5\%)
+HYPTEST  accepted (CL 5\PYGZpc{})
 
-exp\_2par
+exp\PYGZus{}2par
 chi2prob 0.96
-HYPTEST  accepted (CL 5\%)
+HYPTEST  accepted (CL 5\PYGZpc{})
 \end{Verbatim}
 \begin{figure}[htbp]
 \centering
@@ -648,20 +712,20 @@ Measurements can have a common error, which may be absolute
 or relative, i. e. depend on the input value.  In more complicated
 cases the full covariance matrix must be constructed.
 
-\code{kafe} has a helper function, {\hyperref[index:kafe.dataset.build_dataset]{\code{build\_dataset()}}} in module {\hyperref[index:module-fit]{\code{fit}}},
+\code{kafe} has a helper function, \code{build\_dataset()} in module {\hyperref[index:module-fit]{\emph{\code{fit}}}} (\autopageref*{index:module-fit}),
 which aids in setting up the covariance matrix and transforming
-the input to the default format used by the {\hyperref[index:kafe.dataset.Dataset]{\code{Dataset}}} and {\hyperref[index:kafe.fit.Fit]{\code{Fit}}}
-classes. Two further helper functions in module {\hyperref[index:module-file_tools]{\code{file\_tools}}}
+the input to the default format used by the {\hyperref[index:kafe.dataset.Dataset]{\emph{\code{Dataset}}}} (\autopageref*{index:kafe.dataset.Dataset}) and {\hyperref[index:kafe.fit.Fit]{\emph{\code{Fit}}}} (\autopageref*{index:kafe.fit.Fit})
+classes. Two further helper functions in module {\hyperref[index:module-file_tools]{\emph{\code{file\_tools}}}} (\autopageref*{index:module-file_tools})
 aid in reading the appropriate information from data files.
 \begin{enumerate}
 \item {} 
-The function  {\hyperref[index:kafe.file_tools.parse_column_data]{\code{parse\_column\_data()}}} reads the input values and their
+The function  {\hyperref[index:kafe.file_tools.parse_column_data]{\emph{\code{parse\_column\_data()}}}} (\autopageref*{index:kafe.file_tools.parse_column_data}) reads the input values and their
 independent errors from one file, and optionally covariance
 matrices for the x and y axes from additional files. The field ordering
 is defined by a control string.
 
 \item {} 
-Another helper function, {\hyperref[index:kafe.file_tools.buildDataset_fromFile]{\code{buildDataset\_fromFile()}}}, specifies
+Another helper function, {\hyperref[index:kafe.file_tools.buildDataset_fromFile]{\emph{\code{buildDataset\_fromFile()}}}} (\autopageref*{index:kafe.file_tools.buildDataset_fromFile}), specifies
 input values or blocks of input data from a single file with
 keywords.
 
@@ -689,42 +753,42 @@ code, as illustrated here:
 
 The input file is necessarily more complicated, but holds
 the full information on the data set in one place. Refer to
-the documentation of the function {\hyperref[index:kafe.file_tools.parse_general_inputfile]{\code{parse\_general\_inputfile()}}}
-in module {\hyperref[index:module-file_tools]{\code{file\_tools}}} for a full description of the
+the documentation of the function {\hyperref[index:kafe.file_tools.parse_general_inputfile]{\emph{\code{parse\_general\_inputfile()}}}} (\autopageref*{index:kafe.file_tools.parse_general_inputfile})
+in module {\hyperref[index:module-file_tools]{\emph{\code{file\_tools}}}} (\autopageref*{index:module-file_tools}) for a full description of the
 currently implemented keywords. The input file for the
 averaging example is here:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\# Measurements of W boson mass (combined LEP2, 2013)
-\# --------------------------------------------------
-\# example to use parse\_general\_inputfile from kafe;
-\#  covariance matrix build from common errors
-\# --
-\#  Meta data for plotting
+\PYGZsh{} Measurements of W boson mass (combined LEP2, 2013)
+\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}
+\PYGZsh{} example to use parse\PYGZus{}general\PYGZus{}inputfile from kafe;
+\PYGZsh{}  covariance matrix build from common errors
+\PYGZsh{} \PYGZhy{}\PYGZhy{}
+\PYGZsh{}  Meta data for plotting
 *TITLE measurements of the W boson mass
 *xLabel number of measurement
-*yLabel \$m\_\PYGZbs{}matrhm\PYGZob{}W\PYGZcb{}\$
-*yUnit GeV/\$c\textasciicircum{}2\$
+*yLabel \PYGZdl{}m\PYGZus{}\PYGZbs{}matrhm\PYGZob{}W\PYGZcb{}\PYGZdl{}
+*yUnit GeV/\PYGZdl{}c\PYGZca{}2\PYGZdl{}
 
-\# x data need not be given for averaging
+\PYGZsh{} x data need not be given for averaging
 
-\# ------------------------------------------------------------
-\#  Measurements of W mass by ALEPH, DELPI, L3 and OPAL
-\#                              from from LEP2 Report Feb. 2013
-\#  common errors within channels
-\#                     2q2l: 0.021 GeV,
-\#                       4q: 0.044 GeV,
-\#     and between channels: 0.025 GeV
-\# ------------------------------------------------------------
+\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}
+\PYGZsh{}  Measurements of W mass by ALEPH, DELPI, L3 and OPAL
+\PYGZsh{}                              from from LEP2 Report Feb. 2013
+\PYGZsh{}  common errors within channels
+\PYGZsh{}                     2q2l: 0.021 GeV,
+\PYGZsh{}                       4q: 0.044 GeV,
+\PYGZsh{}     and between channels: 0.025 GeV
+\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}
 
-*yData\_SCOV
-\# W\_mass  err     syst    sqrt of the off-diagonal
-\# 2q2l channel                           elements of the
-80.429  0.055   0.021          \#         covariance matrix
+*yData\PYGZus{}SCOV
+\PYGZsh{} W\PYGZus{}mass  err     syst    sqrt of the off\PYGZhy{}diagonal
+\PYGZsh{} 2q2l channel                           elements of the
+80.429  0.055   0.021          \PYGZsh{}         covariance matrix
 80.339  0.073   0.021   0.021
 80.217  0.068   0.021   0.021 0.021
 80.449  0.058   0.021   0.021 0.021 0.021
-\# 4q  channel
+\PYGZsh{} 4q  channel
 80.477  0.069   0.044   0.025 0.025 0.025 0.025 0.044
 80.310  0.091   0.044   0.025 0.025 0.025 0.025 0.044 0.044
 80.324  0.078   0.044   0.025 0.025 0.025 0.025 0.044 0.044 0.044
@@ -737,12 +801,12 @@ averaging example is here:
 This example shows the fitting of a more complicated model function
 to data collected from a damped harmonic oscillator. In such
 non-linear fits, stetting the initial values is sometimes crucial
-to let the fit converge at the global minimum. The {\hyperref[index:kafe.fit.Fit]{\code{Fit}}}
-object provides the method {\hyperref[index:kafe.fit.Fit.set_parameters]{\code{set\_parameters()}}} for this
+to let the fit converge at the global minimum. The {\hyperref[index:kafe.fit.Fit]{\emph{\code{Fit}}}} (\autopageref*{index:kafe.fit.Fit})
+object provides the method {\hyperref[index:kafe.fit.Fit.set_parameters]{\emph{\code{set\_parameters()}}}} (\autopageref*{index:kafe.fit.Fit.set_parameters}) for this
 purpose. As the fit function for this problem is not a standard one, it is
 defined explicitly making use of the decorator functions available in
 \code{kafe} to provide nice type setting of the parameters. This time,
-the function {\hyperref[index:kafe.file_tools.parse_column_data]{\code{parse\_column\_data()}}} is used to read
+the function {\hyperref[index:kafe.file_tools.parse_column_data]{\emph{\code{parse\_column\_data()}}}} (\autopageref*{index:kafe.file_tools.parse_column_data}) is used to read
 the input, which is given as separate columns with the fields
 \begin{quote}
 
@@ -800,7 +864,7 @@ local minimum - e.g. a shift in phase of 180° corresonds to a change in
 sign of the amplitude, and valid solutions are also obtained for multiples
 of the base frequency. Checking of the validity of the fit result is
 threfore important. The method
-\code{plot\_correlations()} provides the
+{\hyperref[index:kafe.fit.Fit.plot_correlations]{\emph{\code{plot\_correlations()}}}} (\autopageref*{index:kafe.fit.Fit.plot_correlations}) provides the
 contours of all pairs of parameters and the profiles for each of
 the parameters and displays them in a matrix-like arrangement.
 Distorted contour-ellipses show wether the result is affected
@@ -819,7 +883,7 @@ approximation is not precise enough.
 \label{index:example-6-linear-multi-parameter-fit}
 This example is not much different from the previous one, except that
 the fit function, a standard fourth-degree polynomial from the module
-{\hyperref[index:module-function_library]{\code{function\_library}}}, is modified to reflect the names of the problem
+{\hyperref[index:module-function_library]{\emph{\code{function\_library}}}} (\autopageref*{index:module-function_library}), is modified to reflect the names of the problem
 given, and \code{matplotlib} functionality is used to influence the
 output of the plot, e.g. axis names and linear or logarithmic scale.
 
@@ -924,9 +988,9 @@ Failing to do so will result in large, correlated errors
 on the parameters g, b and k as an indication of the problem.
 
 Fixing parameters of a model function is achieved by the method
-{\hyperref[index:kafe.fit.Fit.fix_parameters]{\code{fix\_parameters()}}}, and a constraint within a given uncertainty
-is achieved by the method {\hyperref[index:kafe.fit.Fit.constrain_parameters]{\code{constrain\_parameters()}}}
-of the {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} class.
+{\hyperref[index:kafe.fit.Fit.fix_parameters]{\emph{\code{fix\_parameters()}}}} (\autopageref*{index:kafe.fit.Fit.fix_parameters}), and a constraint within a given uncertainty
+is achieved by the method {\hyperref[index:kafe.fit.Fit.constrain_parameters]{\emph{\code{constrain\_parameters()}}}} (\autopageref*{index:kafe.fit.Fit.constrain_parameters})
+of the {\hyperref[index:kafe.fit.Fit]{\emph{\code{Fit}}}} (\autopageref*{index:kafe.fit.Fit}) class.
 
 Here are the interesting pieces of code:
 
@@ -985,9 +1049,9 @@ This is the resulting output:
 \section{Example 8 - fit of a Breit-Wigner Resonance to data with correlated errors}
 \label{index:example-8-fit-of-a-breit-wigner-resonance-to-data-with-correlated-errors}
 This example illustrates how to define the data and the fit function
-in a single file - provided by the helper function {\hyperref[index:kafe.file_tools.buildFit_fromFile]{\code{buildFit\_fromFile()}}}
-in module {\hyperref[index:module-file_tools]{\code{file\_tools}}}. Parsing of the input file is done by the
-function {\hyperref[index:kafe.file_tools.parse_general_inputfile]{\code{parse\_general\_inputfile()}}}, which had already been introduced
+in a single file - provided by the helper function {\hyperref[index:kafe.file_tools.buildFit_fromFile]{\emph{\code{buildFit\_fromFile()}}}} (\autopageref*{index:kafe.file_tools.buildFit_fromFile})
+in module {\hyperref[index:module-file_tools]{\emph{\code{file\_tools}}}} (\autopageref*{index:module-file_tools}). Parsing of the input file is done by the
+function {\hyperref[index:kafe.file_tools.parse_general_inputfile]{\emph{\code{parse\_general\_inputfile()}}}} (\autopageref*{index:kafe.file_tools.parse_general_inputfile}), which had already been introduced
 in Example 4. The definition of the fit function as \emph{Python} code
 including the \code{kafe} decorators in the input file, however, is new.
 Note: because spaces are used to to separate data  fields in the
@@ -1021,22 +1085,22 @@ The magic happens in the input file, which now has to provide
 all the information needed to perform the fit:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\# Fit of a Breit-Wigner function to
-\#      measurements of hadronic Z cross sections at LEP
-\# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\#  Meta-data for plotting
-*TITLE  LEP Hadronic Cross Section (\$\PYGZbs{}sigma\textasciicircum{}0\_\PYGZbs{}mathrm\PYGZob{}had\PYGZcb{}\$)
-*xLabel \$E\_CM\$
-*xUnit  \$\PYGZbs{}mathrm\PYGZob{}GeV\PYGZcb{}\$
-*yLabel \$\PYGZbs{}sigma\textasciicircum{}0\_\PYGZob{}\PYGZbs{}mathrm\PYGZob{}had\PYGZcb{}\PYGZcb{}\$
-*yUnit  \$\PYGZbs{}mathrm\PYGZob{}nb\PYGZcb{}\$
+\PYGZsh{} Fit of a Breit\PYGZhy{}Wigner function to
+\PYGZsh{}      measurements of hadronic Z cross sections at LEP
+\PYGZsh{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{} \PYGZhy{}
+\PYGZsh{}  Meta\PYGZhy{}data for plotting
+*TITLE  LEP Hadronic Cross Section (\PYGZdl{}\PYGZbs{}sigma\PYGZca{}0\PYGZus{}\PYGZbs{}mathrm\PYGZob{}had\PYGZcb{}\PYGZdl{})
+*xLabel \PYGZdl{}E\PYGZus{}CM\PYGZdl{}
+*xUnit  \PYGZdl{}\PYGZbs{}mathrm\PYGZob{}GeV\PYGZcb{}\PYGZdl{}
+*yLabel \PYGZdl{}\PYGZbs{}sigma\PYGZca{}0\PYGZus{}\PYGZob{}\PYGZbs{}mathrm\PYGZob{}had\PYGZcb{}\PYGZcb{}\PYGZdl{}
+*yUnit  \PYGZdl{}\PYGZbs{}mathrm\PYGZob{}nb\PYGZcb{}\PYGZdl{}
 
-\#----------------------------------------------------------------------
-\# DATA: average of hadronic cross sections measured by
-\#  ALEPH, DELPHI, L3 and OPAL around 7 energy points at the Z resonance
-\#----------------------------------------------------------------------
+\PYGZsh{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}
+\PYGZsh{} DATA: average of hadronic cross sections measured by
+\PYGZsh{}  ALEPH, DELPHI, L3 and OPAL around 7 energy points at the Z resonance
+\PYGZsh{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}
 
-\# CMenergy E err
+\PYGZsh{} CMenergy E err
 *xData
  88.387  0.005
  89.437  0.0015
@@ -1045,33 +1109,33 @@ all the information needed to perform the fit:
  92.059  0.005
  93.004  0.0015
  93.916  0.005
-\# Centre-of-mass energy has a common uncertainty
+\PYGZsh{} Centre\PYGZhy{}of\PYGZhy{}mass energy has a common uncertainty
 *xAbsCor 0.0017
 
-\# sig\textasciicircum{}0\_h  sig err     \#  rad.cor  sig\_h measured
+\PYGZsh{} sig\PYGZca{}0\PYGZus{}h  sig err     \PYGZsh{}  rad.cor  sig\PYGZus{}h measured
 *yData
- 6.803   0.036      \#  1.7915    5.0114
- 13.965  0.013      \#  4.0213    9.9442
- 26.113  0.075      \#  7.867    18.2460
- 41.364  0.010      \#  10.8617  30.5022
- 27.535  0.088      \#  3.9164   23.6187
- 13.362  0.015      \# -0.6933   14.0552
-  7.302  0.045      \# -1.8181    9.1196
-\# cross-sections have a common relative error
+ 6.803   0.036      \PYGZsh{}  1.7915    5.0114
+ 13.965  0.013      \PYGZsh{}  4.0213    9.9442
+ 26.113  0.075      \PYGZsh{}  7.867    18.2460
+ 41.364  0.010      \PYGZsh{}  10.8617  30.5022
+ 27.535  0.088      \PYGZsh{}  3.9164   23.6187
+ 13.362  0.015      \PYGZsh{} \PYGZhy{}0.6933   14.0552
+  7.302  0.045      \PYGZsh{} \PYGZhy{}1.8181    9.1196
+\PYGZsh{} cross\PYGZhy{}sections have a common relative error
 *yRelCor 0.0007
 
-*FITLABEL Breit-Wigner-Fit \PYGZob{}\PYGZbs{}large\PYGZob{}( with s-dependent width )\PYGZcb{}\PYGZcb{}
+*FITLABEL Breit\PYGZhy{}Wigner\PYGZhy{}Fit \PYGZob{}\PYGZbs{}large\PYGZob{}( with s\PYGZhy{}dependent width )\PYGZcb{}\PYGZcb{}
 *FitFunction
-\# Breit-Wigner with s-dependent width
-@ASCII(expression='s0*E\textasciicircum{}2*G\textasciicircum{}2/[(E\textasciicircum{}2-M\textasciicircum{}2)\textasciicircum{}2+(E\textasciicircum{}4*G\textasciicircum{}2/M\textasciicircum{}2)]')
-@LaTeX(name='f', parameter\_names=('\PYGZbs{}\PYGZbs{}sigma\textasciicircum{}0', 'M\_Z', '\PYGZbs{}\PYGZbs{}Gamma\_Z'),
-expression='\PYGZbs{}\PYGZbs{}frac\PYGZob{}\PYGZbs{}\PYGZbs{}sigma\textasciicircum{}0\PYGZbs{}\PYGZbs{}, M\_Z\textasciicircum{}2\PYGZbs{}\PYGZbs{}Gamma\textasciicircum{}2\PYGZcb{}'
-               '\PYGZob{}((E\textasciicircum{}2-M\_Z\textasciicircum{}2)\textasciicircum{}2+(E\textasciicircum{}4\PYGZbs{}\PYGZbs{}Gamma\textasciicircum{}2 / M\_Z\textasciicircum{}2))\PYGZcb{}')
+\PYGZsh{} Breit\PYGZhy{}Wigner with s\PYGZhy{}dependent width
+@ASCII(expression=\PYGZsq{}s0*E\PYGZca{}2*G\PYGZca{}2/[(E\PYGZca{}2\PYGZhy{}M\PYGZca{}2)\PYGZca{}2+(E\PYGZca{}4*G\PYGZca{}2/M\PYGZca{}2)]\PYGZsq{})
+@LaTeX(name=\PYGZsq{}f\PYGZsq{}, parameter\PYGZus{}names=(\PYGZsq{}\PYGZbs{}\PYGZbs{}sigma\PYGZca{}0\PYGZsq{}, \PYGZsq{}M\PYGZus{}Z\PYGZsq{}, \PYGZsq{}\PYGZbs{}\PYGZbs{}Gamma\PYGZus{}Z\PYGZsq{}),
+expression=\PYGZsq{}\PYGZbs{}\PYGZbs{}frac\PYGZob{}\PYGZbs{}\PYGZbs{}sigma\PYGZca{}0\PYGZbs{}\PYGZbs{}, M\PYGZus{}Z\PYGZca{}2\PYGZbs{}\PYGZbs{}Gamma\PYGZca{}2\PYGZcb{}\PYGZsq{}
+               \PYGZsq{}\PYGZob{}((E\PYGZca{}2\PYGZhy{}M\PYGZus{}Z\PYGZca{}2)\PYGZca{}2+(E\PYGZca{}4\PYGZbs{}\PYGZbs{}Gamma\PYGZca{}2 / M\PYGZus{}Z\PYGZca{}2))\PYGZcb{}\PYGZsq{})
 @FitFunction
 def fitf(E, M=91.2, G=2.5, s0=41.0):
-\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}return s0*E*E*G*G/((E*E-M*M)**2+(E**4*G*G/(M*M)))
+\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}return s0*E*E*G*G/((E*E\PYGZhy{}M*M)**2+(E**4*G*G/(M*M)))
 
-*InitialParameters    \# set initial values and ranges
+*InitialParameters    \PYGZsh{} set initial values and ranges
 91.2 0.1
 2.5  0.1
 41.  0.5
@@ -1086,8 +1150,8 @@ Here is the output:
 \caption{\emph{Output of example 8 - Fit of a Breit-Wigner function.}}\end{figure}
 
 This example also contains a code snippet demonstrating how to plot
-contours by calling the {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} object's
-\code{plot\_contour()} method. This is the code:
+contours by calling the {\hyperref[index:kafe.fit.Fit]{\emph{\code{Fit}}}} (\autopageref*{index:kafe.fit.Fit}) object's
+{\hyperref[index:kafe.fit.Fit.plot_contour]{\emph{\code{plot\_contour()}}}} (\autopageref*{index:kafe.fit.Fit.plot_contour}) method. This is the code:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c}{\PYGZsh{} plot pairs of contours at 1 sigma, 68\PYGZpc{}, 2 sigma and 95\PYGZpc{}}
@@ -1114,7 +1178,7 @@ relatively small:
 \label{index:example-9-fit-of-a-function-to-histogram-data}
 This example brings us to the limit of what is currently
 possible with \code{kafe}. Here, the data represent the
-center of a histogram bins ad the number of entries, $n_i$,
+center of a histogram bins ad the number of entries, \(n_i\),
 in each bin. The (statistical) error is typically estimated
 as the square root of the (observed) number of entries in each bin.
 For large numbers of entries, this is not a problem,
@@ -1194,9 +1258,9 @@ are reproduced well by the fit result:
 This example shows how to access the \code{kafe} plot objects
 to annotate plots with \code{matplotlib} functionality.
 
-A dummy object {\hyperref[index:kafe.dataset.Dataset]{\code{Dataset}}} is
+A dummy object {\hyperref[index:kafe.dataset.Dataset]{\emph{\code{Dataset}}}} (\autopageref*{index:kafe.dataset.Dataset}) is
 created with points lying exactly on a Gaussian curve.
-The {\hyperref[index:kafe.fit.Fit]{\code{Fit}}} will then converge toward
+The {\hyperref[index:kafe.fit.Fit]{\emph{\code{Fit}}}} (\autopageref*{index:kafe.fit.Fit}) will then converge toward
 that very same Gaussian. When plotting, the data points
 used to ``support'' the curve can be omitted.
 \begin{figure}[htbp]
@@ -1220,162 +1284,256 @@ code.
 
 \section{\texttt{\_\_init\_\_} Module}
 \label{index:init-module}\label{index:module-kafe.__init__}\index{kafe.\_\_init\_\_ (module)}
-\textbf{kafe} \emph{-- a Python package for fitting and plotting for use in physics lab courses.}
+\textbf{kafe} \emph{-- a Python package for fitting and plotting for use in physics lab
+courses.}
 
 This Python package allows fitting of user-defined functions to data. A dataset
 is represented by a \emph{Dataset} object which stores measurement data as \emph{NumPy}
-arrays. The uncertainties of the data are also stored in the \emph{Dataset} as an
-\emph{error matrix}, allowing for both correlated and uncorrelated errors to be
-accurately represented.
+arrays. The uncertainties (errors) of the data are also stored in the \emph{Dataset}
+as a list of one or more \emph{ErrorSource} objects, each of which stores a part of
+the uncertainty information as a so-called \emph{covariance matrix} (also called an
+\emph{error matrix}). This allows \textbf{kafe} to work with uncertainties of different
+kinds for a \emph{Dataset}, particularly when there is a degree of correlation
+between the uncertainties of the datapoints.
 
-The constructor of a \emph{Dataset} object accepts several keyword arguments and can
-be used to construct a \emph{Dataset} from input data which has been loaded into
-\emph{Python} as \emph{NumPy} arrays. Alternatively, a plain-text representations of a
-\emph{Dataset} can be read from a file.
+Fitting with \textbf{kafe} in a nutshell goes like this:
+\begin{quote}
+\begin{enumerate}
+\item {} 
+create a \emph{Dataset} object from your measurement data
 
-Also provided are helper functions which construct a \emph{Dataset} object from a
-file containing column data (one measurement per row, column order can be
-specified), or from a keyword-driven input format.
+\end{enumerate}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}d} \PYG{o}{=} \PYG{n}{kafe}\PYG{o}{.}\PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{data}\PYG{o}{=}\PYG{p}{[}\PYG{p}{[}\PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{l+m+mf}{1.}\PYG{p}{,} \PYG{l+m+mf}{2.}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mf}{1.23}\PYG{p}{,} \PYG{l+m+mf}{3.45}\PYG{p}{,} \PYG{l+m+mf}{5.62}\PYG{p}{]}\PYG{p}{]}\PYG{p}{)}
+\end{Verbatim}
+\begin{enumerate}
+\setcounter{enumi}{1}
+\item {} 
+add errors (uncertainties) to your \emph{Dataset}
+
+\end{enumerate}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}d}\PYG{o}{.}\PYG{n}{add\PYGZus{}error\PYGZus{}source}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{y}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{simple}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mf}{0.5}\PYG{p}{)}  \PYG{c}{\PYGZsh{} y errors, all +/\PYGZhy{} 0.5}
+\end{Verbatim}
+\begin{enumerate}
+\setcounter{enumi}{2}
+\item {} 
+import a model function from \emph{kafe.function\_library} (or define one
+yourself)
+
+\end{enumerate}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{kafe.function\PYGZus{}library} \PYG{k+kn}{import} \PYG{n}{linear\PYGZus{}2par}
+\end{Verbatim}
+\begin{enumerate}
+\setcounter{enumi}{3}
+\item {} 
+create a \emph{Fit} object from your \emph{Dataset} and your model function
+
+\end{enumerate}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}f} \PYG{o}{=} \PYG{n}{kafe}\PYG{o}{.}\PYG{n}{Fit}\PYG{p}{(}\PYG{n}{my\PYGZus{}d}\PYG{p}{,} \PYG{n}{linear\PYGZus{}2par}\PYG{p}{)}
+\end{Verbatim}
+\begin{enumerate}
+\setcounter{enumi}{4}
+\item {} 
+do the fit
+
+\end{enumerate}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}f}\PYG{o}{.}\PYG{n}{do\PYGZus{}fit}\PYG{p}{(}\PYG{p}{)}
+\end{Verbatim}
+\begin{enumerate}
+\setcounter{enumi}{5}
+\item {} 
+\emph{(optional)} if you want to see a plot of the result, use the \emph{Plot}
+object
+
+\end{enumerate}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}p} \PYG{o}{=} \PYG{n}{kafe}\PYG{o}{.}\PYG{n}{Plot}\PYG{p}{(}\PYG{n}{my\PYGZus{}f}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}p}\PYG{o}{.}\PYG{n}{plot\PYGZus{}all}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}p}\PYG{o}{.}\PYG{n}{show}\PYG{p}{(}\PYG{p}{)}
+\end{Verbatim}
+\end{quote}
+
+For more in-depth information on \textbf{kafe}`s features, feel free to consult the
+documentation.
 
 
 \section{\texttt{\_version\_info} Module}
-\label{index:module-kafe._version_info}\label{index:version-info-module}\index{kafe.\_version\_info (module)}\phantomsection\label{index:module-__version_info}\index{\_\_version\_info (module)}\index{get\_version() (in module kafe.\_version\_info)}
-
-\begin{fulllineitems}
-\phantomsection\label{index:kafe._version_info.get_version}\pysiglinewithargsret{\code{kafe.\_version\_info.}\bfcode{get\_version}}{}{}
-kafe version 0.5.2
-
-\end{fulllineitems}
-
-
+\label{index:module-kafe._version_info}\label{index:version-info-module}\index{kafe.\_version\_info (module)}\phantomsection\label{index:module-_version_info}\index{\_version\_info (module)}
 
 \section{\texttt{dataset} Module}
 \label{index:dataset-module}\label{index:module-kafe.dataset}\index{kafe.dataset (module)}\phantomsection\label{index:module-dataset}\index{dataset (module)}\index{Dataset (class in kafe.dataset)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.dataset.Dataset}\pysiglinewithargsret{\strong{class }\code{kafe.dataset.}\bfcode{Dataset}}{\emph{input\_file=None, data=None, cov\_mats=None, title='Untitled Dataset', basename=None, axis\_labels={[}'x', `y'{]}, axis\_units={[}'`, `'{]}}}{}
+\phantomsection\label{index:kafe.dataset.Dataset}\pysiglinewithargsret{\strong{class }\code{kafe.dataset.}\bfcode{Dataset}}{\emph{data=None, title='Untitled Dataset', axis\_labels={[}'x', `y'{]}, axis\_units={[}'`, `'{]}}}{}
 Bases: \code{object}
 
 The \emph{Dataset} object is a data structure for storing measurement and error
-data. In this implementation, the \emph{Dataset} has the compulsory field
-\emph{data}, which is used for storing the measurement data, and another field
-\emph{cov\_mats}, used for storing the covariance matrix for each axis.
+data.
 
-There are two ways a \emph{Dataset} can be constructed. The most
-straightforward way is to specify an input file containing a plain-text
-representation of the dataset:
+It contains the measurement \emph{data} as \emph{NumPy} arrays and the error
+information as a list of {\hyperref[index:kafe.dataset.ErrorSource]{\emph{\code{ErrorSource}}}} (\autopageref*{index:kafe.dataset.ErrorSource}) objects for
+each axis, each of which represents a separate contribution to the
+uncertainty of the measurement data, expressed as a \emph{covariance matrix}.
 
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}dataset} \PYG{o}{=} \PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{input\PYGZus{}file}\PYG{o}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{/path/to/file}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
-\end{Verbatim}
+The \emph{Dataset} object calculates a \emph{total covariance matrix} by adding
+up all the individual \emph{ErrorSource} covariance matrices. This
+\emph{total covariance matrix} is the one used for fitting.
 
-or
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}dataset} \PYG{o}{=} \PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{input\PYGZus{}file}\PYG{o}{=}\PYG{n}{my\PYGZus{}file\PYGZus{}object}\PYG{p}{)}
-\end{Verbatim}
-
-If an \emph{input\_file} argument is provided, the \emph{data} and \emph{cov\_mats}
-arguments are ignored. The \emph{Dataset} plain-text representation format
-is as follows:
+A \emph{Dataset} can be constructed directly from the measurement data, and can
+optionally be given a \emph{title}, \emph{axis labels} and \emph{axis units}, as well as
+a \emph{base name} for log or output files:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\# x data
-x\_1  sigma\_x\_1
-x\_2  sigma\_x\_2  cor\_x\_12
-...  ...        ...       ...
-x\_N  sigma\_x\_N  cor\_x\_1N  ...  cor\_x\_NN
-
-\# y data
-y\_1  sigma\_y\_1
-y\_2  sigma\_y\_2  cor\_y\_12
-...  ...        ...       ...
-y\_N  sigma\_y\_N  cor\_y\_1N  ...  cor\_y\_NN
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}d} \PYG{o}{=} \PYG{n}{kafe}\PYG{o}{.}\PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{data}\PYG{o}{=}\PYG{p}{[}\PYG{p}{[}\PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{l+m+mf}{1.}\PYG{p}{,} \PYG{l+m+mf}{2.}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mf}{1.23}\PYG{p}{,} \PYG{l+m+mf}{3.45}\PYG{p}{,} \PYG{l+m+mf}{5.62}\PYG{p}{]}\PYG{p}{]}\PYG{p}{)}
 \end{Verbatim}
 
-Here, the \emph{sigma\_...} represents the fully uncorrelated error of the data
-point and \emph{cor\_...\_ij} is the correlation coefficient between the \emph{i}-th
-and \emph{j}-th data point.
-
-Alternatively, field data can be set by passing iterables as arguments.
-Available arguments for this purpose are:
-
-\textbf{data} : tuple/list of tuples/lists/arrays of floats
-\begin{quote}
-
-a tuple/list of measurement data. Each element of the tuple/list must
-be iterable and be of the same length. The first element of the
-\textbf{data} tuple/list is assumed to be the \emph{x} data, and the second to be
-the \emph{y} data:
+After constructing the \emph{Dataset}, an error model may be added using
+{\hyperref[index:kafe.dataset.Dataset.add_error_source]{\emph{\code{add\_error\_source()}}}} (\autopageref*{index:kafe.dataset.Dataset.add_error_source}) (here, an absolute
+\emph{y}-uncertainty of 0.5):
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}dataset} \PYG{o}{=} \PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{data}\PYG{o}{=}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{l+m+mf}{1.}\PYG{p}{,} \PYG{l+m+mf}{2.}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mf}{1.23}\PYG{p}{,} \PYG{l+m+mf}{3.45}\PYG{p}{,} \PYG{l+m+mf}{5.62}\PYG{p}{]}\PYG{p}{)}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}d}\PYG{o}{.}\PYG{n}{add\PYGZus{}error\PYGZus{}source}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{y}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{simple}\PYG{l+s}{\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mf}{0.5}\PYG{p}{)}  \PYG{c}{\PYGZsh{} y errors, all +/\PYGZhy{} 0.5}
 \end{Verbatim}
 
-Alternatively, x-y value pairs can also be passed as \textbf{data}. The
-following is equivalent to the above:
+The \emph{Dataset} may then be used for fitting. For more information, see the
+{\hyperref[index:kafe.fit.Fit]{\emph{\code{Fit}}}} (\autopageref*{index:kafe.fit.Fit}) object documentation.
+\begin{quote}\begin{description}
+\item[{Keyword Arguments}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{data} (\emph{iterable (optional)}) --
+the measurement data. Either of the form (xdata, ydata) or
+{[}(x1, y1), (x2, y2),... (xn, yn){]}
 
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}dataset} \PYG{o}{=} \PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{data}\PYG{o}{=}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mf}{0.0}\PYG{p}{,} \PYG{l+m+mf}{1.23}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mf}{1.0}\PYG{p}{,} \PYG{l+m+mf}{3.45}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mf}{2.0}\PYG{p}{,} \PYG{l+m+mf}{5.62}\PYG{p}{]}\PYG{p}{)}\PYG{p}{)}
-\end{Verbatim}
-
-In case the \emph{Dataset} contains two data points, the ordering is
-ambiguous. In this case, the first ordering (\emph{x} data first, then \emph{y}
-data) is assumed.
-\end{quote}
-
-\emph{cov\_mats} : tuple/list of \emph{numpy.matrix} (optional)
-\begin{quote}
-
-a tuple/list of two-dimensional iterables containing the covariance
-matrices for \emph{x} and \emph{y}, in that order. Covariance matrices can be any
-sort of two-dimensional NxN iterables, assuming N is the number of data
-points.
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}dataset} \PYG{o}{=} \PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{data}\PYG{o}{=}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{l+m+mf}{1.}\PYG{p}{,} \PYG{l+m+mf}{2.}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mf}{1.23}\PYG{p}{,} \PYG{l+m+mf}{3.45}\PYG{p}{,} \PYG{l+m+mf}{5.62}\PYG{p}{]}\PYG{p}{)}\PYG{p}{,} \PYG{n}{cov\PYGZus{}mats}\PYG{o}{=}\PYG{p}{(}\PYG{n}{my\PYGZus{}cov\PYGZus{}mat\PYGZus{}x}\PYG{p}{,} \PYG{n}{my\PYGZus{}cov\PYGZus{}mat\PYGZus{}y}\PYG{p}{)}\PYG{p}{)}
-\end{Verbatim}
-
-This keyword argument can be omitted, in which case covariance matrices
-of zero are assumed. To specify a covariance matrix for a single axis,
-replace the other with \code{None}.
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}dataset} \PYG{o}{=} \PYG{n}{Dataset}\PYG{p}{(}\PYG{n}{data}\PYG{o}{=}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{l+m+mf}{1.}\PYG{p}{,} \PYG{l+m+mf}{2.}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mf}{1.23}\PYG{p}{,} \PYG{l+m+mf}{3.45}\PYG{p}{,} \PYG{l+m+mf}{5.62}\PYG{p}{]}\PYG{p}{)}\PYG{p}{,} \PYG{n}{cov\PYGZus{}mats}\PYG{o}{=}\PYG{p}{(}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{my\PYGZus{}cov\PYGZus{}mat\PYGZus{}y}\PYG{p}{)}\PYG{p}{)}
-\end{Verbatim}
-\end{quote}
-
-\emph{title} : string (optional)
-\begin{quote}
-
+\item {} 
+\textbf{title} (\emph{string (optional)}) --
 the name of the \emph{Dataset}. If omitted, the \emph{Dataset} will be given the
 generic name `Untitled Dataset'.
-\end{quote}
 
-\emph{axis\_labels} : list of strings (optional)
-\begin{quote}
+\item {} 
+\textbf{axis\_labels} (\emph{list of strings (optional)}) --
 
 labels for the \emph{x} and \emph{y} axes. If omitted, these will be set to
 \code{'x'} and \code{'y'}, respectively.
-\end{quote}
 
-\emph{axis\_units} : list of strings (optional)
-\begin{quote}
+\item {} 
+\textbf{axis\_units} (\emph{list of strings (optional)}) --
 
 units for the \emph{x} and \emph{y} axes. If omitted, these will be assumed to be
 dimensionless, i.e. the unit will be an empty string.
-\end{quote}
+
+\end{itemize}
+
+\end{description}\end{quote}
+\index{add\_error\_source() (kafe.dataset.Dataset method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.dataset.Dataset.add_error_source}\pysiglinewithargsret{\bfcode{add\_error\_source}}{\emph{axis}, \emph{err\_type}, \emph{err\_val}, \emph{relative=False}, \emph{correlated=False}, \emph{recompute\_cov\_mat=True}}{}
+Add an error source for the data. A \emph{Dataset} can have many
+error sources for each axis, each corresponding to a covariance matrix.
+The total error model for the axis is represented by the sum of
+these matrices.
+
+Note: whenever an ErrorSource is added, the total covariance matrix
+is (re-)calculated, unless \emph{recompute\_cov\_mat} is \code{False}.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{axis}} (\code{'x'} or \code{'y'}) -- axis for which to add error source.
+
+\item {} 
+\textbf{\texttt{err\_type}} (\code{'simple'} or \code{'matrix'}) -- 
+a \code{'simple'} error source is constructed from a single float or
+a list of \emph{N} floats (\emph{N} being the size of the \emph{Dataset}),
+representing the uncertainty of the corresponding data points.
+
+A \code{'matrix'} error source is a user-constructed covariance
+matrix.
+
+
+\item {} 
+\textbf{\texttt{err\_val}} (float/list of floats \emph{or} numpy.matrix) -- 
+for a \code{'simple'} error source, a float of a list of \emph{N} floats
+(\emph{N} being the size of the \emph{Dataset}). The float/each float in the
+list represents the uncertainty of the corresponding data point.
+
+For a \code{'matrix'} error source, the user-constructed covariance
+matrix (type: \emph{numpy.matrix}).
+
+
+\end{itemize}
+
+\item[{Keyword Arguments}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{relative} (boolean (optional, default \code{False})) --
+errors relative to the data (\code{True}) or absolute (\code{False}).
+
+\item {} 
+\textbf{correlated} (boolean (optional, default \code{False})) --
+errors fully correlated (\code{True}) or totally uncorrelated
+(\code{False}).
+
+\item {} 
+\textbf{recompute\_cov\_mat} (boolean (optional, default \code{True})) --
+recalculate the total covariance matrix after adding the error
+source
+
+\end{itemize}
+
+\item[{Returns}] \leavevmode
+this integer may later be used to remove or disable/enable the
+error source using
+{\hyperref[index:kafe.dataset.Dataset.remove_error_source]{\emph{\code{remove\_error\_source()}}}} (\autopageref*{index:kafe.dataset.Dataset.remove_error_source}),
+{\hyperref[index:kafe.dataset.Dataset.disable_error_source]{\emph{\code{disable\_error\_source()}}}} (\autopageref*{index:kafe.dataset.Dataset.disable_error_source}) or
+{\hyperref[index:kafe.dataset.Dataset.enable_error_source]{\emph{\code{enable\_error\_source()}}}} (\autopageref*{index:kafe.dataset.Dataset.enable_error_source}).
+
+\item[{Return type}] \leavevmode
+int
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{calc\_cov\_mats() (kafe.dataset.Dataset method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.dataset.Dataset.calc_cov_mats}\pysiglinewithargsret{\bfcode{calc\_cov\_mats}}{\emph{axis='all'}}{}
+(Re-)Calculate the covariance matrix from the enabled error sources.
+\begin{quote}\begin{description}
+\item[{Keyword Arguments}] \leavevmode
+\textbf{axis} (\code{'x'} or \code{'y'} or \code{'all'}) --
+axis/axes for which to (re-)calcuate covariance matrix.
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
 \index{cov\_mat\_is\_regular() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.dataset.Dataset.cov_mat_is_regular}\pysiglinewithargsret{\bfcode{cov\_mat\_is\_regular}}{\emph{axis}}{}
 Returns \emph{True} if the covariance matrix for an axis is regular and
 \code{False} if it is singular.
-\begin{description}
-\item[{\textbf{axis}}] \leavevmode{[}\code{'x'} or \code{'y'}{]}
-Axis for which to check for regularity of the covariance matrix.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{\texttt{axis}} (\code{'x'} or \code{'y'}) -- Axis for which to check for regularity of the covariance matrix.
 
-\end{description}
+\item[{Returns}] \leavevmode
+\code{True} if covariance matrix is regular
+
+\item[{Return type}] \leavevmode
+boolean
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -1383,7 +1541,90 @@ Axis for which to check for regularity of the covariance matrix.
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.dataset.Dataset.cov_mats}\pysigline{\bfcode{cov\_mats}\strong{ = None}}
-list of covariance matrices
+covariance matrices for axes
+
+\end{fulllineitems}
+
+\index{disable\_error\_source() (kafe.dataset.Dataset method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.dataset.Dataset.disable_error_source}\pysiglinewithargsret{\bfcode{disable\_error\_source}}{\emph{axis}, \emph{err\_src\_id}}{}
+Disables an ErrorSource by excluding it from the calculation of the
+total covariance matrix.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{axis}} (\code{'x'} or \code{'y'}) -- axis for which to add error source.
+
+\item {} 
+\textbf{\texttt{err\_src\_id}} (\emph{int}) -- error source ID, as returned by
+{\hyperref[index:kafe.dataset.Dataset.add_error_source]{\emph{\code{add\_error\_source()}}}} (\autopageref*{index:kafe.dataset.Dataset.add_error_source}).
+
+\end{itemize}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{enable\_error\_source() (kafe.dataset.Dataset method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.dataset.Dataset.enable_error_source}\pysiglinewithargsret{\bfcode{enable\_error\_source}}{\emph{axis}, \emph{err\_src\_id}}{}
+Enables an ErrorSource by excluding it from the calculation of the
+total covariance matrix.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{axis}} (\code{'x'} or \code{'y'}) -- axis for which to add error source.
+
+\item {} 
+\textbf{\texttt{err\_src\_id}} (\emph{int}) -- error source ID, as returned by
+{\hyperref[index:kafe.dataset.Dataset.add_error_source]{\emph{\code{add\_error\_source()}}}} (\autopageref*{index:kafe.dataset.Dataset.add_error_source}).
+
+\end{itemize}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{err\_src (kafe.dataset.Dataset attribute)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.dataset.Dataset.err_src}\pysigline{\bfcode{err\_src}\strong{ = None}}
+lists of ErrorSource objects
+
+\end{fulllineitems}
+
+\index{error\_source\_is\_enabled() (kafe.dataset.Dataset method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.dataset.Dataset.error_source_is_enabled}\pysiglinewithargsret{\bfcode{error\_source\_is\_enabled}}{\emph{axis}, \emph{err\_src\_id}}{}
+Returns \code{True} if an ErrorSource is enabled, that is if it is included
+in the total covariance matrix.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{axis}} (\code{'x'} or \code{'y'}) -- Axis for which to load the error matrix.
+
+\item {} 
+\textbf{\texttt{err\_src\_id}} (\emph{int}) -- error source ID, as returned by
+{\hyperref[index:kafe.dataset.Dataset.add_error_source]{\emph{\code{add\_error\_source()}}}} (\autopageref*{index:kafe.dataset.Dataset.add_error_source}).
+
+\end{itemize}
+
+\item[{Returns}] \leavevmode
+\begin{itemize}
+\item {} 
+\emph{bool} --
+\emph{True} if the specified error source is enables
+
+\item {} 
+\textbf{TODO} (\emph{\#\#DocString\#\#})
+
+\end{itemize}
+
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -1392,12 +1633,18 @@ list of covariance matrices
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.dataset.Dataset.get_axis}\pysiglinewithargsret{\bfcode{get\_axis}}{\emph{axis\_alias}}{}
 Get axis id from an alias.
-\begin{description}
-\item[{\textbf{axis\_alias}}] \leavevmode{[}string or int{]}
-Alias of the axis whose id should be returned. This is for example
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{\texttt{axis\_alias}} (\emph{string or int}) -- Alias of the axis whose id should be returned. This is for example
 either \code{'0'} or \code{'x'} for the \emph{x}-axis (id 0).
 
-\end{description}
+\item[{Returns}] \leavevmode
+the axis ID
+
+\item[{Return type}] \leavevmode
+int
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -1406,11 +1653,12 @@ either \code{'0'} or \code{'x'} for the \emph{x}-axis (id 0).
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.dataset.Dataset.get_cov_mat}\pysiglinewithargsret{\bfcode{get\_cov\_mat}}{\emph{axis}, \emph{fallback\_on\_singular=None}}{}
 Get the error matrix for an axis.
-\begin{description}
-\item[{\textbf{axis}}] \leavevmode{[}\code{'x'} or \code{'y'}{]}
-Axis for which to load the error matrix.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{\texttt{axis}} (\code{'x'} or \code{'y'}) -- Axis for which to load the error matrix.
 
-\item[{\emph{fallback\_on\_singular}}] \leavevmode{[}\emph{numpy.matrix} or string (optional){]}
+\item[{Keyword Arguments}] \leavevmode
+\textbf{fallback\_on\_singular} (\emph{numpy.matrix} or string (optional)) --
 What to return if the matrix is singular. If this is \code{None}
 (default), the matrix is returned anyway. If this is a
 \emph{numpy.matrix} object or similar, that is returned istead.
@@ -1418,7 +1666,13 @@ Alternatively, the shortcuts \code{'identity'} or \code{1} and \code{'zero'}
 or \code{0} can be used to return the identity and zero matrix
 respectively.
 
-\end{description}
+\item[{Returns}] \leavevmode
+the current covariance matrix
+
+\item[{Return type}] \leavevmode
+\emph{numpy.matrix}
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -1427,12 +1681,18 @@ respectively.
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.dataset.Dataset.get_data}\pysiglinewithargsret{\bfcode{get\_data}}{\emph{axis}}{}
 Get the measurement data for an axis.
-\begin{description}
-\item[{\textbf{axis}}] \leavevmode{[}string{]}
-Axis for which to get the measurement data. Can be \code{'x'} or
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{\texttt{axis}} (\emph{string}) -- Axis for which to get the measurement data. Can be \code{'x'} or
 \code{'y'}.
 
-\end{description}
+\item[{Returns}] \leavevmode
+the measurement data for the axis
+
+\item[{Return type}] \leavevmode
+\emph{numpy.array}
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -1442,40 +1702,47 @@ Axis for which to get the measurement data. Can be \code{'x'} or
 \phantomsection\label{index:kafe.dataset.Dataset.get_data_span}\pysiglinewithargsret{\bfcode{get\_data\_span}}{\emph{axis}, \emph{include\_error\_bars=False}}{}
 Get the data span for an axis. The data span is a tuple (\emph{min}, \emph{max})
 containing the smallest and highest coordinates for an axis.
-\begin{description}
-\item[{\textbf{axis}}] \leavevmode{[}\code{'x'} or \code{'y'}{]}
-Axis for which to get the data span.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{\texttt{axis}} (\code{'x'} or \code{'y'}) -- Axis for which to get the data span.
 
-\item[{\emph{include\_error\_bars}}] \leavevmode{[}boolean (optional){]}
+\item[{Keyword Arguments}] \leavevmode
+\textbf{include\_error\_bars} (\emph{boolean (optional)}) --
 \code{True} if the returned span should be enlarged to
 contain the error bars of the smallest and largest datapoints
 (default: \code{False})
 
-\end{description}
+\item[{Returns}] \leavevmode
+the data span for the axis
+
+\item[{Return type}] \leavevmode
+a tuple (\emph{min}, \emph{max})
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
 \index{get\_formatted() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.dataset.Dataset.get_formatted}\pysiglinewithargsret{\bfcode{get\_formatted}}{\emph{format\_string='.06e'}, \emph{delimiter='t'}}{}
+\phantomsection\label{index:kafe.dataset.Dataset.get_formatted}\pysiglinewithargsret{\bfcode{get\_formatted}}{\emph{format\_string='.06e'}, \emph{delimiter='\textbackslash{}t'}}{}
 Returns the dataset in a plain-text format which is human-readable and
 can later be used as an input file for the creation of a new \emph{Dataset}.
-\phantomsection\label{index:get-formatted}
+
 The format is as follows:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\# x data
-x\_1  sigma\_x\_1
-x\_2  sigma\_x\_2  cor\_x\_12
+\PYGZsh{} x data
+x\PYGZus{}1  sigma\PYGZus{}x\PYGZus{}1
+x\PYGZus{}2  sigma\PYGZus{}x\PYGZus{}2  cor\PYGZus{}x\PYGZus{}12
 ...  ...        ...       ...
-x\_N  sigma\_x\_N  cor\_x\_1N  ...  cor\_x\_NN
+x\PYGZus{}N  sigma\PYGZus{}x\PYGZus{}N  cor\PYGZus{}x\PYGZus{}1N  ...  cor\PYGZus{}x\PYGZus{}NN
 
-\# y data
-y\_1  sigma\_y\_1
-y\_2  sigma\_y\_2  cor\_y\_12
+\PYGZsh{} y data
+y\PYGZus{}1  sigma\PYGZus{}y\PYGZus{}1
+y\PYGZus{}2  sigma\PYGZus{}y\PYGZus{}2  cor\PYGZus{}y\PYGZus{}12
 ...  ...        ...       ...
-y\_N  sigma\_y\_N  cor\_y\_1N  ...  cor\_y\_NN
+y\PYGZus{}N  sigma\PYGZus{}y\PYGZus{}N  cor\PYGZus{}y\PYGZus{}1N  ...  cor\PYGZus{}y\PYGZus{}NN
 \end{Verbatim}
 
 Here, the \code{x\_i} and \code{y\_i} represent the measurement data, the
@@ -1487,16 +1754,27 @@ If the \code{x} or \code{y} errors are not correlated, then the entire
 correlation coefficient matrix can be omitted. If there are no
 statistical uncertainties for an axis, the second column can also be
 omitted. A blank line is required at the end of each data block!
-\begin{description}
-\item[{\emph{format\_string}}] \leavevmode{[}string (optional){]}
+\begin{quote}\begin{description}
+\item[{Keyword Arguments}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{format\_string} (\emph{string (optional)}) --
 A format string with which each entry will be rendered. Default is
 \code{'.06e'}, which means the numbers are represented in scientific
 notation with six significant digits.
 
-\item[{\emph{delimiter}}] \leavevmode{[}string (optional){]}
+\item {} 
+\textbf{delimiter} (\emph{string (optional)}) --
 A delimiter used to separate columns in the output.
 
-\end{description}
+\end{itemize}
+
+\item[{Returns}] \leavevmode
+a plain-text representation of the \emph{Dataset}
+
+\item[{Return type}] \leavevmode
+str
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -1506,42 +1784,55 @@ A delimiter used to separate columns in the output.
 \phantomsection\label{index:kafe.dataset.Dataset.get_size}\pysiglinewithargsret{\bfcode{get\_size}}{}{}
 Get the size of the \emph{Dataset}. This is equivalent to the length of the
 \emph{x}-axis data.
+\begin{quote}\begin{description}
+\item[{Returns}] \leavevmode
+the number of datapoints in the \emph{Dataset}.
+
+\item[{Return type}] \leavevmode
+int
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
 \index{has\_correlations() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.dataset.Dataset.has_correlations}\pysiglinewithargsret{\bfcode{has\_correlations}}{\emph{axis}}{}
+\phantomsection\label{index:kafe.dataset.Dataset.has_correlations}\pysiglinewithargsret{\bfcode{has\_correlations}}{\emph{axis=None}}{}
 Returns \emph{True} if the specified axis has correlation data, \code{False} if
 not.
-\begin{description}
-\item[{\textbf{axis}}] \leavevmode{[}\code{'x'} or \code{'y'}{]}
-Axis for which to check for correlations.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{\texttt{axis}} (\code{'x'} or \code{'y'} or \code{None} (optional)) -- Axis for which to check for correlations. If \code{None},
+returns true if there are correlations for at least one axis.
 
-\end{description}
+\item[{Returns}] \leavevmode
+\emph{True} if the specified axis has correlation data
+
+\item[{Return type}] \leavevmode
+bool
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
 \index{has\_errors() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.dataset.Dataset.has_errors}\pysiglinewithargsret{\bfcode{has\_errors}}{\emph{axis}}{}
-Returns \emph{True} if the specified axis has statistical error data.
-\begin{description}
-\item[{\textbf{axis}}] \leavevmode{[}\code{'x'} or \code{'y'}{]}
-Axis for which to check for error data.
+\phantomsection\label{index:kafe.dataset.Dataset.has_errors}\pysiglinewithargsret{\bfcode{has\_errors}}{\emph{axis=None}}{}
+Returns \emph{True} if the specified axis has any kind of error data.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{\texttt{axis}} (\code{'x'} or \code{'y'} or \code{None} (optional)) -- Axis for which to check for error data. If \code{None},
+returns true if there are errors for at least one axis.
 
-\end{description}
+\item[{Returns}] \leavevmode
+\emph{True} if the specified axis has any kind of error data.
 
-\end{fulllineitems}
+\item[{Return type}] \leavevmode
+bool
 
-\index{n\_axes (kafe.dataset.Dataset attribute)}
-
-\begin{fulllineitems}
-\phantomsection\label{index:kafe.dataset.Dataset.n_axes}\pysigline{\bfcode{n\_axes}\strong{ = None}}
-dimensionality of the \emph{Dataset}. Currently, only 2D \emph{Datasets} are
-supported
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -1558,11 +1849,77 @@ number of data points in the \emph{Dataset}
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.dataset.Dataset.read_from_file}\pysiglinewithargsret{\bfcode{read\_from\_file}}{\emph{input\_file}}{}
 Reads the \emph{Dataset} object from a file.
-\begin{description}
-\item[{returns}] \leavevmode{[}boolean{]}
+
+One way to construct a Dataset is to specify an input file containing
+a plain-text representation of the dataset:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}dataset}\PYG{o}{.}\PYG{n}{read\PYGZus{}from\PYGZus{}file}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{/path/to/file}\PYG{l+s}{\PYGZsq{}}\PYG{p}{)}
+\end{Verbatim}
+
+or
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}dataset}\PYG{o}{.}\PYG{n}{read\PYGZus{}from\PYGZus{}file}\PYG{p}{(}\PYG{n}{my\PYGZus{}file\PYGZus{}object}\PYG{p}{)}
+\end{Verbatim}
+
+For details on the format, see
+{\hyperref[index:kafe.dataset.Dataset.get_formatted]{\emph{\code{get\_formatted()}}}} (\autopageref*{index:kafe.dataset.Dataset.get_formatted})
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{\texttt{input\_file}} (\emph{str}) -- path to the file
+
+\item[{Returns}] \leavevmode
 \code{True} if the read succeeded, \code{False} if not.
 
-\end{description}
+\item[{Return type}] \leavevmode
+boolean
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{remove\_error\_source() (kafe.dataset.Dataset method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.dataset.Dataset.remove_error_source}\pysiglinewithargsret{\bfcode{remove\_error\_source}}{\emph{axis}, \emph{err\_src\_id}, \emph{recompute\_cov\_mat=True}}{}
+Remove the error source from the \emph{Dataset}.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{axis}} (\code{'x'} or \code{'y'}) -- axis for which to add error source.
+
+\item {} 
+\textbf{\texttt{err\_src\_id}} (\emph{int}) -- error source ID, as returned by
+{\hyperref[index:kafe.dataset.Dataset.add_error_source]{\emph{\code{add\_error\_source()}}}} (\autopageref*{index:kafe.dataset.Dataset.add_error_source}).
+
+\end{itemize}
+
+\item[{Keyword Arguments}] \leavevmode
+\textbf{recompute\_cov\_mat} (boolean (optional, default \code{True})) --
+recalculate the total covariance matrix after removing the error
+source
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{set\_axis\_data() (kafe.dataset.Dataset method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.dataset.Dataset.set_axis_data}\pysiglinewithargsret{\bfcode{set\_axis\_data}}{\emph{axis}, \emph{data}}{}
+Set the measurement data for a single axis.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{axis}} (\code{'x'} or \code{'y'}) -- Axis for which to set the measurement data.
+
+\item {} 
+\textbf{\texttt{data}} (\emph{iterable}) -- Measurement data for axis.
+
+\end{itemize}
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -1570,75 +1927,200 @@ Reads the \emph{Dataset} object from a file.
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.dataset.Dataset.set_cov_mat}\pysiglinewithargsret{\bfcode{set\_cov\_mat}}{\emph{axis}, \emph{mat}}{}
-Set the error matrix for an axis.
-\begin{description}
-\item[{\textbf{axis}}] \leavevmode{[}\code{'x'} or \code{'y'}{]}
-Axis for which to load the error matrix.
+Forcibly set the error matrix for an axis, ignoring {\hyperref[index:kafe.dataset.ErrorSource]{\emph{\code{ErrorSource}}}} (\autopageref*{index:kafe.dataset.ErrorSource})
+objects. This is useful for adjusting the covariance matrix during the
+fit process.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{axis}} (\code{'x'} or \code{'y'}) -- Axis for which to load the error matrix.
 
-\item[{\textbf{mat}}] \leavevmode{[}\emph{numpy.matrix} or \code{None}{]}
-Error matrix for the axis. Passing \code{None} unsets the error
+\item {} 
+\textbf{\texttt{mat}} (\emph{numpy.matrix} or \code{None}) -- Error matrix for the axis. Passing \code{None} unsets the error
 matrix.
 
-\end{description}
+\end{itemize}
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
 \index{set\_data() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.dataset.Dataset.set_data}\pysiglinewithargsret{\bfcode{set\_data}}{\emph{axis}, \emph{data}}{}
-Set the measurement data for an axis.
-\begin{description}
-\item[{\textbf{axis}}] \leavevmode{[}\code{'x'} or \code{'y'}{]}
-Axis for which to set the measurement data.
+\phantomsection\label{index:kafe.dataset.Dataset.set_data}\pysiglinewithargsret{\bfcode{set\_data}}{\emph{data}}{}
+Set the measurement data for both axes.
 
-\item[{\textbf{data}}] \leavevmode{[}iterable{]}
-Measurement data for axis.
+Each element of \textbf{data} must be iterable and be of the same length.
+The first element of the \textbf{data} tuple/list is assumed to be the \emph{x}
+data, and the second to be the \emph{y} data:
 
-\end{description}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}dataset}\PYG{o}{.}\PYG{n}{set\PYGZus{}data}\PYG{p}{(}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{l+m+mf}{1.}\PYG{p}{,} \PYG{l+m+mf}{2.}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mf}{1.23}\PYG{p}{,} \PYG{l+m+mf}{3.45}\PYG{p}{,} \PYG{l+m+mf}{5.62}\PYG{p}{]}\PYG{p}{)}\PYG{p}{)}
+\end{Verbatim}
+
+Alternatively, \emph{x}-\emph{y} value pairs can also be passed as \textbf{data}. The
+following is equivalent to the above:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}dataset}\PYG{o}{.}\PYG{n}{set\PYGZus{}data}\PYG{p}{(}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mf}{0.0}\PYG{p}{,} \PYG{l+m+mf}{1.23}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mf}{1.0}\PYG{p}{,} \PYG{l+m+mf}{3.45}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mf}{2.0}\PYG{p}{,} \PYG{l+m+mf}{5.62}\PYG{p}{]}\PYG{p}{)}\PYG{p}{)}
+\end{Verbatim}
+
+In case the \emph{Dataset} contains two data points, the ordering is
+ambiguous. In this case, the first ordering (\emph{x} data first, then \emph{y}
+data) is assumed.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{\texttt{data}} (\emph{iterable}) -- the measurement data. Either of the form (xdata, ydata) or
+{[}(x1, y1), (x2, y2),... (xn, yn){]}
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
 \index{write\_formatted() (kafe.dataset.Dataset method)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.dataset.Dataset.write_formatted}\pysiglinewithargsret{\bfcode{write\_formatted}}{\emph{file\_path}, \emph{format\_string='.06e'}, \emph{delimiter='t'}}{}
+\phantomsection\label{index:kafe.dataset.Dataset.write_formatted}\pysiglinewithargsret{\bfcode{write\_formatted}}{\emph{file\_path}, \emph{format\_string='.06e'}, \emph{delimiter='\textbackslash{}t'}}{}
 Writes the dataset to a plain-text file. For details on the format, see
-{\hyperref[index:get-formatted]{get\_formatted}}.
-\begin{description}
-\item[{\textbf{file\_path}}] \leavevmode{[}string{]}
-Path of the file object to write. \textbf{WARNING}: \emph{overwrites existing
+{\hyperref[index:kafe.dataset.Dataset.read_from_file]{\emph{\code{read\_from\_file()}}}} (\autopageref*{index:kafe.dataset.Dataset.read_from_file}).
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{\texttt{file\_path}} (\emph{string}) -- Path of the file object to write. \textbf{WARNING}: \emph{overwrites existing
 files}!
 
-\item[{\emph{format\_string}}] \leavevmode{[}string (optional){]}
+\item[{Keyword Arguments}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{format\_string} (\emph{string (optional)}) --
 A format string with which each entry will be rendered. Default is
 \code{'.06e'}, which means the numbers are represented in scientific
 notation with six significant digits.
 
-\item[{\emph{delimiter}}] \leavevmode{[}string (optional){]}
+\item {} 
+\textbf{delimiter} (\emph{string (optional)}) --
 A delimiter used to separate columns in the output.
 
-\end{description}
+\end{itemize}
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
 
 \end{fulllineitems}
 
-\index{build\_dataset() (in module kafe.dataset)}
+\index{ErrorSource (class in kafe.dataset)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.dataset.build_dataset}\pysiglinewithargsret{\code{kafe.dataset.}\bfcode{build\_dataset}}{\emph{xdata}, \emph{ydata}, \emph{cov\_mats=None}, \emph{xabserr=0.0}, \emph{xrelerr=0.0}, \emph{xabscor=0.0}, \emph{xrelcor=0.0}, \emph{yabserr=0.0}, \emph{yrelerr=0.0}, \emph{yabscor=0.0}, \emph{yrelcor=0.0}, \emph{title=None}, \emph{basename=None}, \emph{axis\_labels=None}, \emph{axis\_units=None}}{}
+\phantomsection\label{index:kafe.dataset.ErrorSource}\pysigline{\strong{class }\code{kafe.dataset.}\bfcode{ErrorSource}}
+Bases: \code{object}
+
+This object stores the error information for a \code{Dataset} as a
+\emph{covariance matrix} \(C\) (sometimes also referred to as the \emph{error
+matrix}). This has several advantages: it allows calculating the function
+to minimize (e.g. the chi-square) for a fit as a matrix product, and it
+allows specifying multiple error sources for a \emph{Dataset} by simply adding
+up the corresponding matrices.
+
+The object contains methods to generate a covariance matrix for some
+simple cases, such as when all points have the same relative or absolute
+errors and the errors are either not correlated or fully correlated. For
+more complicated error models, a covariance matrix can be specified
+directly.
+\index{get\_matrix() (kafe.dataset.ErrorSource method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.dataset.ErrorSource.get_matrix}\pysiglinewithargsret{\bfcode{get\_matrix}}{\emph{size=None}}{}
+Returns/Generates the covariance matrix for this ErrorSource.
+
+If the user specified the matrix using
+{\hyperref[index:kafe.dataset.ErrorSource.make_from_matrix]{\emph{\code{make\_from\_matrix()}}}} (\autopageref*{index:kafe.dataset.ErrorSource.make_from_matrix}),
+returns that matrix. If a simple error model is specified, a matrix is
+constructed as follows:
+
+For \emph{uncorrelated} errors, the covariance matrix is always diagonal.
+
+If a single float \(\sigma\) is given as the error, the diagonal
+entries will be equal to \(\sigma^2\). In this case, the matrix
+size needs to be specified via the \code{size} parameter.
+
+If a list of floats \(\sigma_i\) is given as the error, the
+\emph{i}-th entry will be equal to \({\sigma_i}^2\). In this case,
+the size of the matrix is inferred from the size of the list.
+
+For \emph{fully correlated} errors, the covariance matrix is the outer
+product of the error array \(\sigma_i\) with itself, i.e. the
+\((i,j)\)-th matrix entry will be equal to
+\(\sigma_i\sigma_j\).
+\begin{quote}\begin{description}
+\item[{Keyword Arguments}] \leavevmode
+\textbf{size} (\emph{int (sometimes required)}) --
+Size of the matrix to return. Only relevant if the error value
+is a single float, since in that case there is no way to deduce
+the matrix size.
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{make\_from\_matrix() (kafe.dataset.ErrorSource method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.dataset.ErrorSource.make_from_matrix}\pysiglinewithargsret{\bfcode{make\_from\_matrix}}{\emph{cov\_mat}, \emph{check\_singular=False}}{}
+Sets the covariance matrix manually.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{\texttt{cov\_mat}} (\emph{numpy.matrix}) -- A \emph{square}, \emph{symmetric} (and usually \emph{regular}) matrix.
+
+\item[{Keyword Arguments}] \leavevmode
+\textbf{check\_singular} (\emph{boolean (optional)}) --
+Whether to force singularity check. Defaults to \code{False}.
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{make\_from\_val() (kafe.dataset.ErrorSource method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.dataset.ErrorSource.make_from_val}\pysiglinewithargsret{\bfcode{make\_from\_val}}{\emph{err\_val}, \emph{fully\_correlated=False}}{}
+Sets information required to construct the covariance matrix.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{\texttt{err\_val}} (\emph{float or sequence of floats}) -- If all data points have the same uncertainty
+
+\item[{Keyword Arguments}] \leavevmode
+\textbf{fully\_correlated} (\emph{boolean (optional)}) --
+Whether the errors are fully correlated. Defaults to \code{False}.
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
+\end{fulllineitems}
+
+
+
+\section{\texttt{dataset\_tools} Module}
+\label{index:module-kafe.dataset_tools}\label{index:dataset-tools-module}\index{kafe.dataset\_tools (module)}\phantomsection\label{index:module-dataset_tools}\index{dataset\_tools (module)}\index{build\_dataset() (in module kafe.dataset\_tools)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.dataset_tools.build_dataset}\pysiglinewithargsret{\code{kafe.dataset\_tools.}\bfcode{build\_dataset}}{\emph{xdata}, \emph{ydata}, \emph{cov\_mats=None}, \emph{xabserr=0.0}, \emph{xrelerr=0.0}, \emph{xabscor=0.0}, \emph{xrelcor=0.0}, \emph{yabserr=0.0}, \emph{yrelerr=0.0}, \emph{yabscor=0.0}, \emph{yrelcor=0.0}, \emph{title=None}, \emph{axis\_labels=None}, \emph{axis\_units=None}}{}
 This helper function creates a \emph{Dataset} from a series of keyword
 arguments.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{xdata}} (list/tuple/\emph{np.array} of floats) -- This keyword argument is mandatory and should be an iterable
+containing \emph{x}-axis the measurement data.
 
-Valid keyword arguments are:
-\begin{description}
-\item[{\textbf{xdata} and \textbf{ydata}}] \leavevmode{[}list/tuple/\emph{np.array} of floats{]}
-These keyword arguments are mandatory and should be iterables
-containing the measurement data.
+\item {} 
+\textbf{\texttt{ydata}} (list/tuple/\emph{np.array} of floats) -- This keyword argument is mandatory and should be an iterable
+containing \emph{y}-axis the measurement data.
 
-\item[{\emph{cov\_mats}}] \leavevmode{[}\code{None} or 2-tuple (optional){]}
+\item {} 
+\textbf{\texttt{cov\_mats}} (\code{None} or 2-tuple (optional)) -- 
 This argument defaults to \code{None}, which means no covariance matrices
 are used. If covariance matrices are needed, a tuple with two entries
 (the first for \emph{x} covariance matrices, the second for \emph{y}) must be
@@ -1647,7 +2129,12 @@ passed.
 Each element of this tuple may be either \code{None} or a NumPy matrix
 object containing a covariance matrix for the respective axis.
 
-\item[{\emph{error specification keywords}}] \leavevmode{[}iterable or numeric (see below){]}
+
+\end{itemize}
+
+\item[{Keyword Arguments}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{error specification keywords} (\emph{iterable or numeric (see below)}) --
 In addition to covariance matrices, errors can be specified for each
 axis (\emph{x} or \emph{y}) according to a simplified error model.
 
@@ -1681,31 +2168,37 @@ keyword argument \emph{must} be a single number. The global correlated error for
 So, for example:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{myDataset} \PYG{o}{=} \PYG{n}{build\PYGZus{}dataset}\PYG{p}{(}\PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{,} \PYG{n}{yabserr}\PYG{o}{=}\PYG{l+m+mf}{0.3}\PYG{p}{,} \PYG{n}{yrelcor}\PYG{o}{=}\PYG{l+m+mf}{0.1}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{my\PYGZus{}dataset} \PYG{o}{=} \PYG{n}{build\PYGZus{}dataset}\PYG{p}{(}\PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{,} \PYG{n}{yabserr}\PYG{o}{=}\PYG{l+m+mf}{0.3}\PYG{p}{,} \PYG{n}{yrelcor}\PYG{o}{=}\PYG{l+m+mf}{0.1}\PYG{p}{)}
 \end{Verbatim}
 
 creates a Dataset with an uncorrelated error of 0.3 for each \emph{y}
 coordinate and a fully correlated (systematic) error of \emph{y} of 0.1.
 
-\item[{\emph{title}}] \leavevmode{[}string (optional){]}
+\item {} 
+\textbf{title} (\emph{string (optional)}) --
 The title of the \emph{Dataset}.
 
-\item[{\emph{basename}}] \leavevmode{[}string or \code{None} (optional){]}
-A basename for the \emph{Dataset}. All output files related to this dataset
-will use this as a basename. If this is \code{None} (default), the
-basename will be inferred from the filename.
-
-\item[{\emph{axis\_labels}}] \leavevmode{[}2-tuple of strings (optional){]}
+\item {} 
+\textbf{axis\_labels} (\emph{2-tuple of strings (optional)}) --
 a 2-tuple containing the axis labels for the \emph{Dataset}. This is
 relevant when plotting \emph{Fits} of the \emph{Dataset}, but is ignored when
 plotting more than one \emph{Fit} in the same \emph{Plot}.
 
-\item[{\emph{axis\_units}}] \leavevmode{[}2-tuple of strings (optional){]}
+\item {} 
+\textbf{axis\_units} (\emph{2-tuple of strings (optional)}) --
 a 2-tuple containing the axis units for the \emph{Dataset}. This is
 relevant when plotting \emph{Fits} of the \emph{Dataset}, but is ignored when
 plotting more than one \emph{Fit} in the same \emph{Plot}.
 
-\end{description}
+\end{itemize}
+
+\item[{Returns}] \leavevmode
+\emph{Dataset} object constructed from data and error information
+
+\item[{Return type}] \leavevmode
+{\hyperref[index:kafe.dataset.Dataset]{\emph{\code{Dataset}}}} (\autopageref*{index:kafe.dataset.Dataset})
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -1716,16 +2209,21 @@ plotting more than one \emph{Fit} in the same \emph{Plot}.
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.file_tools.buildDataset_fromFile}\pysiglinewithargsret{\code{kafe.file\_tools.}\bfcode{buildDataset\_fromFile}}{\emph{file\_to\_parse}}{}
-build a kafe \code{Dataset} object from input file with key words
-and file format defined in \code{parse\_general\_inputfile}
-\begin{description}
-\item[{\textbf{file\_to\_parse}:  file-like object or string containing a file path}] \leavevmode
-The file to parse.
+Build a kafe {\hyperref[index:kafe.dataset.Dataset]{\emph{\code{Dataset}}}} (\autopageref*{index:kafe.dataset.Dataset}) object from input file
+with key words and file format defined in
+{\hyperref[index:kafe.file_tools.parse_general_inputfile]{\emph{\code{parse\_general\_inputfile()}}}} (\autopageref*{index:kafe.file_tools.parse_general_inputfile})
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{file\_to\_parse}} (\emph{file-like object or string containing a file path}) -- The file to parse.
 
-\item[{\textbf{returns} an instance of the \code{Dataset} class,}] \leavevmode
-constructed with the help of the method \code{Dataset.build\_dataset()}
+\item {} 
+\textbf{\texttt{returns}} (an instance of the {\hyperref[index:kafe.dataset.Dataset]{\emph{\code{Dataset}}}} (\autopageref*{index:kafe.dataset.Dataset}) class,) -- constructed with the help of the method
+\code{kafe.dataset.Dataset.build\_dataset()}
 
-\end{description}
+\end{itemize}
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -1733,18 +2231,22 @@ constructed with the help of the method \code{Dataset.build\_dataset()}
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.file_tools.buildFit_fromFile}\pysiglinewithargsret{\code{kafe.file\_tools.}\bfcode{buildFit\_fromFile}}{\emph{file\_to\_parse}}{}
-build a kafe \code{Fit} object from input file with keywords
-and file format defined in \code{parse\_general\_input\_file}
-\begin{description}
-\item[{\textbf{file\_to\_parse}:  file-like object or string containing a file path}] \leavevmode
-The file to parse.
+Build a kafe {\hyperref[index:kafe.fit.Fit]{\emph{\code{Fit}}}} (\autopageref*{index:kafe.fit.Fit}) object from input file with
+keywords and file format defined in
+{\hyperref[index:kafe.file_tools.parse_general_inputfile]{\emph{\code{parse\_general\_inputfile()}}}} (\autopageref*{index:kafe.file_tools.parse_general_inputfile})
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{file\_to\_parse}} (\emph{file-like object or string containing a file path}) -- The file to parse.
 
-\item[{\textbf{returns} an instance of the \code{Fit} class,}] \leavevmode
-constructed with the help of the methods
-\code{Dataset.build\_dataset()} and
-\code{Fit.build\_fit()}
+\item {} 
+\textbf{\texttt{returns}} (an instance of the {\hyperref[index:kafe.fit.Fit]{\emph{\code{Fit}}}} (\autopageref*{index:kafe.fit.Fit}) class,) -- constructed with the help of the methods
+\code{build\_dataset()} and
+\code{build\_fit()}
 
-\end{description}
+\end{itemize}
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -1753,8 +2255,9 @@ constructed with the help of the methods
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.file_tools.parse_column_data}\pysiglinewithargsret{\code{kafe.file\_tools.}\bfcode{parse\_column\_data}}{\emph{file\_to\_parse, field\_order='x,y', delimiter=' `, cov\_mat\_files=None, title='Untitled Dataset', basename=None, axis\_labels={[}'x', `y'{]}, axis\_units={[}'`, `'{]}}}{}
 Parses a file which contains measurement data in a one-measurement-per-row
-format. The field (column) order can be specified. It defaults to \emph{x,y'.
-Valid field names are {}`x}, \emph{y}, \emph{xabserr}, \emph{yabserr}, \emph{xrelerr},
+format. The field (column) order can be specified. It defaults to
+\code{"x,y"}.
+Valid field names are \emph{x}, \emph{y}, \emph{xabserr}, \emph{yabserr}, \emph{xrelerr},
 \emph{yrelerr}. Another valid field name is \emph{ignore} which can be used to skip
 a field.
 
@@ -1773,18 +2276,20 @@ using the \emph{cov\_mat\_files} argument.
 Additionally, a delimiter can be specified. If this is a whitespace
 character or omitted, any sequence of whitespace characters is assumed to
 separate the data.
-\begin{description}
-\item[{\textbf{file\_to\_parse}}] \leavevmode{[}file-like object or string containing a file path{]}
-The file to parse.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{file\_to\_parse}} (\emph{file-like object or string containing a file path}) -- The file to parse.
 
-\item[{\emph{field\_order}}] \leavevmode{[}string (optional){]}
-A string of comma-separated field names giving the order of the columns
+\item {} 
+\textbf{\texttt{field\_order}} (\emph{string (optional)}) -- A string of comma-separated field names giving the order of the columns
 in the file. Defaults to \code{'x,y'}.
 
-\item[{\emph{delimiter}}] \leavevmode{[}string (optional){]}
-The field delimiter used in the file. Defaults to any whitespace.
+\item {} 
+\textbf{\texttt{delimiter}} (\emph{string (optional)}) -- The field delimiter used in the file. Defaults to any whitespace.
 
-\item[{\emph{cov\_mat\_files}}] \leavevmode{[}\emph{several} (see below, optional){]}
+\item {} 
+\textbf{\texttt{cov\_mat\_files}} (\emph{several} (see below, optional)) -- 
 This argument defaults to \code{None}, which means no covariance matrices
 are used. If covariance matrices are needed, a tuple with two entries
 (the first for \emph{x} covariance matrices, the second for \emph{y}) must be
@@ -1794,30 +2299,36 @@ Each element of this tuple may be either \code{None}, a file or file-like
 object, or an iterable containing files and file-like objects. Each
 file should contain a covariance matrix for the respective axis.
 
-When creating the \emph{Dataset}, all given matrices are summed over.
+When creating the \code{Dataset}, all given matrices are summed over.
 
-\item[{\emph{title}}] \leavevmode{[}string (optional){]}
-The title of the \emph{Dataset}.
 
-\item[{\emph{basename}}] \leavevmode{[}string or \code{None} (optional){]}
-A basename for the \emph{Dataset}. All output files related to this dataset
+\item {} 
+\textbf{\texttt{title}} (\emph{string (optional)}) -- The title of the \code{Dataset}.
+
+\item {} 
+\textbf{\texttt{basename}} (string or \code{None} (optional)) -- A basename for the \code{Dataset}. All output files related to this dataset
 will use this as a basename. If this is \code{None} (default), the
 basename will be inferred from the filename.
 
-\item[{\emph{axis\_labels}}] \leavevmode{[}2-tuple of strings (optional){]}
-a 2-tuple containing the axis labels for the \emph{Dataset}. This is
-relevant when plotting \emph{Fits} of the \emph{Dataset}, but is ignored when
-plotting more than one \emph{Fit} in the same \emph{Plot}.
+\item {} 
+\textbf{\texttt{axis\_labels}} (\emph{2-tuple of strings (optional)}) -- a 2-tuple containing the axis labels for the \code{Dataset}. This is
+relevant when plotting \code{Fits} of the \code{Dataset}, but is ignored when
+plotting more than one \code{Fit} in the same \code{Plot}.
 
-\item[{\emph{axis\_units}}] \leavevmode{[}2-tuple of strings (optional){]}
-a 2-tuple containing the axis units for the \emph{Dataset}. This is
-relevant when plotting \emph{Fits} of the \emph{Dataset}, but is ignored when
-plotting more than one \emph{Fit} in the same \emph{Plot}.
+\item {} 
+\textbf{\texttt{axis\_units}} (\emph{2-tuple of strings (optional)}) -- a 2-tuple containing the axis units for the \code{Dataset}. This is
+relevant when plotting \code{Fits} of the \code{Dataset}, but is ignored when
+plotting more than one \code{Fit} in the same \code{Plot}.
 
-\item[{\textbf{return}}] \leavevmode{[}\emph{Dataset}{]}
-A Dataset built from the parsed file.
+\end{itemize}
 
-\end{description}
+\item[{Returns}] \leavevmode
+A \emph{Dataset} built from the parsed file.
+
+\item[{Return type}] \leavevmode
+py:class:\emph{\textasciitilde{}kafe.dataset.Dataset}
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -1825,23 +2336,28 @@ A Dataset built from the parsed file.
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.file_tools.parse_general_inputfile}\pysiglinewithargsret{\code{kafe.file\_tools.}\bfcode{parse\_general\_inputfile}}{\emph{file\_to\_parse}}{}
-This function can be used to specify \emph{kafe} \code{Dataset}
-or \code{Fit} objects in a single input file, thus requiring
-minimal Python code. Keywords as specified in a dictionary
-\code{tokens} specify all objects and parameters needed by the
-functions \code{build\_dataset()} in  module \code{dataset} and
-\code{build\_fit()} in module \code{fit}.
-\begin{description}
-\item[{\textbf{file\_to\_parse}:  file-like object or string containing a file path}] \leavevmode
-The file to parse.
+This function can be used to specify \emph{kafe}
+{\hyperref[index:kafe.dataset.Dataset]{\emph{\code{Dataset}}}} (\autopageref*{index:kafe.dataset.Dataset}) or {\hyperref[index:kafe.fit.Fit]{\emph{\code{Fit}}}} (\autopageref*{index:kafe.fit.Fit}) objects
+in a single input file, thus requiring minimal Python code. Keywords as
+specified in a dictionary \code{tokens} specify all objects and parameters
+needed by the functions {\hyperref[index:kafe.dataset_tools.build_dataset]{\emph{\code{build\_dataset()}}}} (\autopageref*{index:kafe.dataset_tools.build_dataset}) in
+module {\hyperref[index:module-kafe.dataset]{\emph{\code{dataset}}}} (\autopageref*{index:module-kafe.dataset}) and {\hyperref[index:kafe.fit.build_fit]{\emph{\code{build\_fit()}}}} (\autopageref*{index:kafe.fit.build_fit}) in
+module \code{fit}.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{file\_to\_parse}} (\emph{file-like object or string containing a file path}) -- The file to parse.
 
-\item[{\textbf{return}}] \leavevmode{[}dataset\_kwargs, fit\_kwargs{]}
-keyword lists to build a kafe \code{Dataset} or \code{Fit{}` object
-with the helper functions {}`{}`build\_dataset} or \code{build\_fit}
+\item {} 
+\textbf{\texttt{return}} (\emph{dataset\_kwargs, fit\_kwargs}) -- keyword lists to build a kafe {\hyperref[index:kafe.dataset.Dataset]{\emph{\code{Dataset}}}} (\autopageref*{index:kafe.dataset.Dataset}) or
+{\hyperref[index:kafe.fit.Fit]{\emph{\code{Fit}}}} (\autopageref*{index:kafe.fit.Fit}) object with the helper functions
+\emph{build\_dataset} or \emph{build\_fit}
 
-\end{description}
+\end{itemize}
 
-\emph{Description of the format of the input file}
+\end{description}\end{quote}
+
+\textbf{Description of the format of the input file}
 
 The interpretation of the input data is driven by keywords.
 All data following a key must be of the same kind, a block of
@@ -1849,26 +2365,26 @@ data ends when a new key is specified.
 
 Some keys only expect a single float or string-tpye value, given
 on the same line, separated by a space (\code{' '}):
-\begin{quote}
 
-\textless{}key\textgreater{} \textless{}value\textgreater{}
-\end{quote}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZlt{}key\PYGZgt{} \PYGZlt{}value\PYGZgt{}
+\end{Verbatim}
 
 For multiple input, i.e. data, uncertainties and covariance or
 correlation matrices, the format is:
-\begin{quote}
 
-\textless{}key\textgreater{}
-\textless{}xval\textgreater{}  \textless{}xerr\textgreater{}  {[}\textless{}xsyst\textgreater{}  \textless{}elements of cov/cor matrix\textgreater{}{]}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZlt{}key\PYGZgt{}
+\PYGZlt{}xval\PYGZgt{}  \PYGZlt{}xerr\PYGZgt{}  [\PYGZlt{}xsyst\PYGZgt{}  \PYGZlt{}elements of cov/cor matrix\PYGZgt{}]
 
 ...
 
-\textless{}xval\textgreater{}  \textless{}xerr\textgreater{}  {[}\textless{}xsyst\textgreater{}  \textless{}elements of cov/cor matrix\textgreater{}{]}
-\end{quote}
+\PYGZlt{}xval\PYGZgt{}  \PYGZlt{}xerr\PYGZgt{}  [\PYGZlt{}xsyst\PYGZgt{}  \PYGZlt{}elements of cov/cor matrix\PYGZgt{}]
+\end{Verbatim}
 
 The field separator is space (\code{' '}). Note that the number of input
 values in each line must correspond to the specified format of the
-(correlated) ucertainties.
+(correlated) uncertainties.
 
 The currently implemented keys are:
 \begin{itemize}
@@ -1920,7 +2436,8 @@ for input data:
 
 \item {} 
 \emph{x} or \emph{y} data, independent and correlated uncertainties and elements of
-correlation matrix, given as as a lower triangular matrix with no diagonal:
+correlation matrix, given as as a lower triangular matrix with no
+diagonal:
 \begin{itemize}
 \item {} 
 \code{*xData\_COR}
@@ -2001,8 +2518,8 @@ indent must be replaced by `\textasciitilde{}'):
 
 \begin{Verbatim}[commandchars=\\\{\}]
 def fitf(x, ...):
-\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}...
-\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}return ...
+\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}...
+\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}return ...
 \end{Verbatim}
 
 The name \emph{fitf} is mandatory. The kafe decorator functions
@@ -2031,11 +2548,11 @@ keyword:
 \begin{itemize}
 \item {} 
 \code{*ConstrainedParameters} followed by one or more lines with
-the fields
-\begin{quote}
+the fields:
 
-\textless{}parameter name\textgreater{}  \textless{}parameter value\textgreater{}  \textless{}parameter uncert.\textgreater{},
-\end{quote}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZlt{}parameter name\PYGZgt{}  \PYGZlt{}parameter value\PYGZgt{}  \PYGZlt{}parameter uncert.\PYGZgt{},
+\end{Verbatim}
 
 where \emph{parameter name} is the name of the parameter in the fit
 function specification.
@@ -2048,32 +2565,32 @@ Here is an example of an input file to calculate the average
 of correlated measurements:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\#  Meta data for plotting
-*TITLE Higgs-mass measurements
+\PYGZsh{}  Meta data for plotting
+*TITLE Higgs\PYGZhy{}mass measurements
 *xLabel number of measurement
-*yLabel \$m\_\PYGZbs{}mathrm\PYGZob{}H\PYGZcb{}\$
-*yUnit GeV/\$c\textasciicircum{}2\$
+*yLabel \PYGZdl{}m\PYGZus{}\PYGZbs{}mathrm\PYGZob{}H\PYGZcb{}\PYGZdl{}
+*yUnit GeV/\PYGZdl{}c\PYGZca{}2\PYGZdl{}
 
-\#*xData  \# commented out, as not needed for simple average
+\PYGZsh{}*xData  \PYGZsh{} commented out, as not needed for simple average
 
-*yData\_SCOV  \# assume that minimum of syst. errors is a common error
-\# mH      err     syst as sqrt(cov)
+*yData\PYGZus{}SCOV  \PYGZsh{} assume that minimum of syst. errors is a common error
+\PYGZsh{} mH      err     syst as sqrt(cov)
 124.51   0.52    0.06
 125.60   0.40    0.20  0.06
 125.98   0.42    0.28  0.   0.
 124.70   0.31    0.15  0.   0.  0.15
 
-\# set Python code of fit function
-\#\#\# there are some restrictions:
-\#\#     function name must be 'fitf'
-\#\#     blanks must be replaced by '\textasciitilde{}'
-\#  kafe fit function decorators are supported
+\PYGZsh{} set Python code of fit function
+\PYGZsh{}\PYGZsh{}\PYGZsh{} there are some restrictions:
+\PYGZsh{}\PYGZsh{}     function name must be \PYGZsq{}fitf\PYGZsq{}
+\PYGZsh{}\PYGZsh{}     blanks must be replaced by \PYGZsq{}\PYGZti{}\PYGZsq{}
+\PYGZsh{}  kafe fit function decorators are supported
 *FitFunction
-@ASCII(expression='av')
-@LaTeX(name='f', parameter\_names=('av'), expression='av')
+@ASCII(expression=\PYGZsq{}av\PYGZsq{})
+@LaTeX(name=\PYGZsq{}f\PYGZsq{}, parameter\PYGZus{}names=(\PYGZsq{}av\PYGZsq{}), expression=\PYGZsq{}av\PYGZsq{})
 @FitFunction
-def fitf(x,av=1.): \# fit an average
-\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}return av
+def fitf(x,av=1.): \PYGZsh{} fit an average
+\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}return av
 *FITLABEL Average
 *InitialParameters
 120. 1.
@@ -2087,7 +2604,7 @@ def fitf(x,av=1.): \# fit an average
 \label{index:fit-module}\label{index:module-kafe.fit}\index{kafe.fit (module)}\phantomsection\label{index:module-fit}\index{fit (module)}\index{Fit (class in kafe.fit)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2 at 0x2d49848\textgreater{}}, \emph{fit\_label=None}}{}
+\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2\textgreater{}}, \emph{fit\_label=None}, \emph{minimizer\_to\_use='iminuit'}}{}
 Bases: \code{object}
 
 Object representing a fit. This object references the fitted \emph{Dataset},
@@ -2096,13 +2613,15 @@ the fit function and the resulting fit parameters.
 Necessary arguments are a \emph{Dataset} object and a fit function (which should
 be fitted to the \emph{Dataset}). Optionally, an external function \emph{FCN} (the
 minimum of which should be located to find the best fit) can be specified.
-If not given, the \emph{FCN} function defaults to $\chi^2$.
-\begin{description}
-\item[{\textbf{dataset}}] \leavevmode{[}\emph{Dataset}{]}
-A \emph{Dataset} object containing all information about the data
+If not given, the \emph{FCN} function defaults to \(\chi^2\).
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{dataset}} (\emph{Dataset}) -- A \emph{Dataset} object containing all information about the data
 
-\item[{\textbf{fit\_function}}] \leavevmode{[}function{]}
-A user-defined Python function to be fitted to the data. This
+\item {} 
+\textbf{\texttt{fit\_function}} (\emph{function}) -- 
+A user-defined Python function to fit to the data. This
 function's first argument must be the independent variable \emph{x}. All
 other arguments \emph{must} be named and have default values given. These
 defaults are used as a starting point for the actual minimization. For
@@ -2117,7 +2636,12 @@ Be aware that choosing sensible initial values for the parameters is
 often crucial for a succesful fit, particularly for functions of many
 parameters.
 
-\item[{\emph{external\_fcn}}] \leavevmode{[}function (optional){]}
+
+\end{itemize}
+
+\item[{Keyword Arguments}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{external\_fcn} (\emph{function (optional)}) --
 An external \emph{FCN} (function to minimize). This function must have the
 following call signature:
 
@@ -2125,15 +2649,24 @@ following call signature:
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{FCN}\PYG{p}{(}\PYG{n}{xdata}\PYG{p}{,} \PYG{n}{ydata}\PYG{p}{,} \PYG{n}{cov\PYGZus{}mat}\PYG{p}{,} \PYG{n}{fit\PYGZus{}function}\PYG{p}{,} \PYG{n}{parameter\PYGZus{}values}\PYG{p}{)}
 \end{Verbatim}
 
-It should return a float. If not specified, the default $\chi^2$
+It should return a float. If not specified, the default \(\chi^2\)
 \emph{FCN} is used. This should be sufficient for most fits.
 
-\item[{\emph{fit\_label}}] \leavevmode{[}$LaTeX$-formatted string (optional){]}
+\item {} 
+\textbf{fit\_label} (\(LaTeX\)-formatted string (optional)) --
 A name/label/short description of the fit function. This appears in the
 legend describing the fitter curve. If omitted, this defaults to the
-fit function's $LaTeX$ expression.
+fit function's \(LaTeX\) expression.
 
-\end{description}
+\item {} 
+\textbf{minimizer\_to\_use} (\emph{`ROOT' or `minuit' (optional)}) --
+Which minimizer to use. This defaults to whatever is set in the config
+file, but can be specifically overridden for some fits using this
+keyword argument.
+
+\end{itemize}
+
+\end{description}\end{quote}
 \index{call\_external\_fcn() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
@@ -2142,11 +2675,11 @@ Wrapper for the external \emph{FCN}. Since the actual fit process depends on
 finding the right parameter values and keeping everything else constant
 we can use the \emph{Dataset} object to pass known, fixed information to the
 external \emph{FCN}, varying only the parameter values.
-\begin{description}
-\item[{\textbf{parameter\_values}}] \leavevmode{[}sequence of values{]}
-the parameter values at which \emph{FCN} is to be evaluated
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{\texttt{parameter\_values}} (\emph{sequence of values}) -- the parameter values at which \emph{FCN} is to be evaluated
 
-\end{description}
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -2162,18 +2695,32 @@ Instructs the minimizer to do a minimization.
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.fit.Fit.constrain_parameters}\pysiglinewithargsret{\bfcode{constrain\_parameters}}{\emph{parameters}, \emph{parvals}, \emph{parerrs}}{}
-Constrain the parameter with the given name to $c\pm\sigma$.
+Constrain the parameter with the given name to \(c\pm\sigma\).
 
-This is achieved by adding an appropriate \emph{penalty term} to the $\chi^2$
-function, see function \code{chi2}.
-\begin{quote}
+This is achieved by adding an appropriate \emph{penalty term} to the
+\(\chi^2\) function, see function {\hyperref[index:kafe.fit.chi2]{\emph{\code{chi2()}}}} (\autopageref*{index:kafe.fit.chi2}).
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{parameters}} (\emph{list of int}) -- list of paramter id's or names to constrain
 
-\textbf{parameters} list of paramter id's or names to constrain
+\item {} 
+\textbf{\texttt{parvals}} (\emph{list of float}) -- list of parameter values
 
-\textbf{parvals}    list of parameter values
+\item {} 
+\textbf{\texttt{parerrs}} (\emph{list of float}) -- list of errors on parameters
 
-\textbf{parerrs}    list of errors on parameters
-\end{quote}
+\end{itemize}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{contours (kafe.fit.Fit attribute)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.fit.Fit.contours}\pysigline{\bfcode{contours}\strong{ = None}}
+Parameter Contours {[}id1, id2, dchi2, {[}xc{]}, {[}yc{]}{]}
 
 \end{fulllineitems}
 
@@ -2199,7 +2746,8 @@ this Fit instance's child \emph{Dataset}
 \phantomsection\label{index:kafe.fit.Fit.do_fit}\pysiglinewithargsret{\bfcode{do\_fit}}{\emph{quiet=False}, \emph{verbose=False}}{}
 Runs the fit algorithm for this \emph{Fit} object.
 
-First, the \emph{Dataset} is fitted considering only uncertainties in the
+First, the \code{Dataset} is fitted considering only uncertainties
+in the
 \emph{y} direction. If the \emph{Dataset} has no uncertainties in the \emph{y}
 direction, they are assumed to be equal to 1.0 for this preliminary
 fit, as there is no better information available.
@@ -2212,14 +2760,19 @@ error onto the resulting tangent to the curve.
 
 This last step is repeated until the change in the error matrix caused
 by the projection becomes negligible.
-\begin{description}
-\item[{\emph{quiet}}] \leavevmode{[}boolean (optional){]}
+\begin{quote}\begin{description}
+\item[{Keyword Arguments}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{quiet} (\emph{boolean (optional)}) --
 Set to \code{True} if no output should be printed.
 
-\item[{\emph{verbose}}] \leavevmode{[}boolean (optional){]}
+\item {} 
+\textbf{verbose} (\emph{boolean (optional)}) --
 Set to \code{True} if more output should be printed.
 
-\end{description}
+\end{itemize}
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -2228,6 +2781,22 @@ Set to \code{True} if more output should be printed.
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.fit.Fit.external_fcn}\pysigline{\bfcode{external\_fcn}\strong{ = None}}
 the (external) function to be minimized for this \emph{Fit}
+
+\end{fulllineitems}
+
+\index{final\_parameter\_errors (kafe.fit.Fit attribute)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.fit.Fit.final_parameter_errors}\pysigline{\bfcode{final\_parameter\_errors}\strong{ = None}}
+Final parameter errors
+
+\end{fulllineitems}
+
+\index{final\_parameter\_values (kafe.fit.Fit attribute)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.fit.Fit.final_parameter_values}\pysigline{\bfcode{final\_parameter\_values}\strong{ = None}}
+Final parameter values
 
 \end{fulllineitems}
 
@@ -2244,8 +2813,8 @@ the fit function used for this \emph{Fit}
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.fit.Fit.fix_parameters}\pysiglinewithargsret{\bfcode{fix\_parameters}}{\emph{*parameters\_to\_fix}}{}
 Fix the given parameters so that the minimizer works without them
-when \emph{do\_fit} is called next. Parameters can be given by their names
-or by their IDs.
+when {\hyperref[index:kafe.fit.Fit.do_fit]{\emph{\code{do\_fit()}}}} (\autopageref*{index:kafe.fit.Fit.do_fit}) is called next. Parameters can be
+given by their names or by their IDs.
 
 \end{fulllineitems}
 
@@ -2256,12 +2825,15 @@ or by their IDs.
 This method returns a function object corresponding to the fit function
 for the current parameter values. The returned function is a function
 of a single variable.
-\begin{description}
-\item[{returns}] \leavevmode{[}function{]}
+\begin{quote}\begin{description}
+\item[{Returns}] \leavevmode
 A function of a single variable corresponding to the fit function
 at the current parameter values.
 
-\end{description}
+\item[{Return type}] \leavevmode
+function handle
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -2271,11 +2843,14 @@ at the current parameter values.
 \phantomsection\label{index:kafe.fit.Fit.get_error_matrix}\pysiglinewithargsret{\bfcode{get\_error\_matrix}}{}{}
 This method returns the covariance matrix of the fit parameters which
 is obtained by querying the minimizer object for this \emph{Fit}
-\begin{description}
-\item[{returns}] \leavevmode{[}\emph{numpy.matrix}{]}
+\begin{quote}\begin{description}
+\item[{Returns}] \leavevmode
 The covariance matrix of the parameters.
 
-\end{description}
+\item[{Return type}] \leavevmode
+\emph{numpy.matrix}
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -2290,14 +2865,17 @@ that it also accounts for correlations.
 
 The method is useful if, e.g., you want to draw a confidence band
 around the function in your plot routine.
-\begin{description}
-\item[{\textbf{x}}] \leavevmode{[}\emph{float} or sequence of \emph{float}{]}
-the values at which the function error is to be estimated
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{\texttt{x}} (\emph{float} or sequence of \emph{float}) -- the values at which the function error is to be estimated
 
-\item[{returns}] \leavevmode{[}\emph{float} or sequence of \emph{float}{]}
+\item[{Returns}] \leavevmode
 the estimated error at the given point(s)
 
-\end{description}
+\item[{Return type}] \leavevmode
+float or sequence of float
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -2306,14 +2884,18 @@ the estimated error at the given point(s)
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.fit.Fit.get_parameter_errors}\pysiglinewithargsret{\bfcode{get\_parameter\_errors}}{\emph{rounding=False}}{}
 Get the current parameter uncertainties from the minimizer.
-\begin{description}
-\item[{\emph{rounding}}] \leavevmode{[}boolean (optional){]}
+\begin{quote}\begin{description}
+\item[{Keyword Arguments}] \leavevmode
+\textbf{rounding} (\emph{boolean (optional)}) --
 Whether or not to round the returned values to significance.
 
-\item[{returns}] \leavevmode{[}tuple{]}
+\item[{Returns}] \leavevmode
 A tuple of the parameter uncertainties
 
-\end{description}
+\item[{Return type}] \leavevmode
+tuple
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -2322,14 +2904,18 @@ A tuple of the parameter uncertainties
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.fit.Fit.get_parameter_values}\pysiglinewithargsret{\bfcode{get\_parameter\_values}}{\emph{rounding=False}}{}
 Get the current parameter values from the minimizer.
-\begin{description}
-\item[{\emph{rounding}}] \leavevmode{[}boolean (optional){]}
+\begin{quote}\begin{description}
+\item[{Keyword Arguments}] \leavevmode
+\textbf{rounding} (\emph{boolean (optional)}) --
 Whether or not to round the returned values to significance.
 
-\item[{returns}] \leavevmode{[}tuple{]}
+\item[{Returns}] \leavevmode
 A tuple of the parameter values
 
-\end{description}
+\item[{Return type}] \leavevmode
+tuple
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -2337,15 +2923,15 @@ A tuple of the parameter values
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.fit.Fit.latex_parameter_names}\pysigline{\bfcode{latex\_parameter\_names}\strong{ = None}}
-$LaTeX$ parameter names
+\(LaTeX\) parameter names
 
 \end{fulllineitems}
 
-\index{minimizer (kafe.fit.Fit attribute)}
+\index{minos\_errors (kafe.fit.Fit attribute)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.fit.Fit.minimizer}\pysigline{\bfcode{minimizer}\strong{ = None}}
-this \emph{Fit}`s minimizer (\emph{Minuit})
+\phantomsection\label{index:kafe.fit.Fit.minos_errors}\pysigline{\bfcode{minos\_errors}\strong{ = None}}
+MINOS Errors {[}err, err+, err-, gcor{]}
 
 \end{fulllineitems}
 
@@ -2357,11 +2943,160 @@ the total number of parameters
 
 \end{fulllineitems}
 
+\index{par\_cov\_mat (kafe.fit.Fit attribute)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.fit.Fit.par_cov_mat}\pysigline{\bfcode{par\_cov\_mat}\strong{ = None}}
+Parameter covariance matrix (\emph{numpy.matrix})
+
+\end{fulllineitems}
+
+\index{parabolic\_errors (kafe.fit.Fit attribute)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.fit.Fit.parabolic_errors}\pysigline{\bfcode{parabolic\_errors}\strong{ = None}}
+\code{True} if \(\chi^2\) is approx. parabolic (boolean)
+
+\end{fulllineitems}
+
+\index{parameter\_is\_fixed() (kafe.fit.Fit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.fit.Fit.parameter_is_fixed}\pysiglinewithargsret{\bfcode{parameter\_is\_fixed}}{\emph{parameter}}{}
+Check whether a parameter is fixed. Accepts a parameter's name or ID
+and returns a boolean value.
+
+\end{fulllineitems}
+
 \index{parameter\_names (kafe.fit.Fit attribute)}
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.fit.Fit.parameter_names}\pysigline{\bfcode{parameter\_names}\strong{ = None}}
 the names of the parameters
+
+\end{fulllineitems}
+
+\index{plot\_contour() (kafe.fit.Fit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.fit.Fit.plot_contour}\pysiglinewithargsret{\bfcode{plot\_contour}}{\emph{parameter1}, \emph{parameter2}, \emph{dchi2=2.3}, \emph{n\_points=100}, \emph{color='gray'}, \emph{alpha=0.1}, \emph{show=False}, \emph{axes=None}}{}
+Plots one or more two-dimensional contours for this fit into
+a separate figure and returns the figure object.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{parameter1}} (\emph{int or string}) -- ID or name of the parameter to appear on the \emph{x}-axis.
+
+\item {} 
+\textbf{\texttt{parameter2}} (\emph{int or string}) -- ID or name of the parameter to appear on the \emph{y}-axis.
+
+\end{itemize}
+
+\item[{Keyword Arguments}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{dchi2} (\emph{float or list of floats (otpional)}) --
+delta-chi\textasciicircum{}2 value(s) used to evaluate contour(s)
+1. = 1 sigma
+2.3 = 68.0\% (default)
+4.  = 2 sigma
+5.99 = 95.0\%
+
+\item {} 
+\textbf{n\_points} (\emph{int (optional)}) --
+Number of plot points to use for the contour. Higher
+values yield smoother contours but take longer to
+render. Default is 100.
+
+\item {} 
+\textbf{color} (\emph{string (optional)}) --
+A \code{matplotlib} color identifier specifying the fill color
+of the contour. Default is `gray'.
+
+\item {} 
+\textbf{alpha} (\emph{float (optional)}) --
+Transparency of the contour fill color ranging from 0. (fully
+transparent) to 1. (fully opaque). Default is 0.25
+
+\item {} 
+\textbf{show} (\emph{boolean (optional)}) --
+Specify whether to show the figure before returning it. Defaults
+to \code{False}.
+
+\item {} 
+\textbf{axes} (\emph{maplotlib.pyplot.axes}) --
+Sub-plot axes to add plot to
+
+\end{itemize}
+
+\item[{Returns}] \leavevmode
+A figure object containing the contour plot.
+
+\item[{Return type}] \leavevmode
+\code{matplotlib} figure object if no axes given
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{plot\_correlations() (kafe.fit.Fit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.fit.Fit.plot_correlations}\pysiglinewithargsret{\bfcode{plot\_correlations}}{}{}
+Plots two-dimensional contours for all pairs of parameters
+and profile for all parameters, arranges as a matrix.
+\begin{quote}\begin{description}
+\item[{Returns}] \leavevmode
+A figure object containing the matrix of plots.
+
+\item[{Return type}] \leavevmode
+\code{matplotlib} figure object
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{plot\_profile() (kafe.fit.Fit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.fit.Fit.plot_profile}\pysiglinewithargsret{\bfcode{plot\_profile}}{\emph{parid}, \emph{n\_points=21}, \emph{color='blue'}, \emph{alpha=0.5}, \emph{show=False}, \emph{axes=None}}{}
+Plots a profile \(\\chi^2\) for this fit into
+a separate figure and returns the figure object.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{\texttt{parid}} (\emph{int or string}) -- ID or name of parameter
+
+\item[{Keyword Arguments}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{n\_points} (\emph{int (optional)}) --
+Number of plot points to use for the profile curve.
+
+\item {} 
+\textbf{color} (\emph{string (optional)}) --
+A \code{matplotlib} color identifier specifying the line
+color. Default is `blue'.
+
+\item {} 
+\textbf{alpha} (\emph{float (optional)}) --
+Transparency of the contour fill color ranging from 0. (fully
+transparent) to 1. (fully opaque). Default is 0.25
+
+\item {} 
+\textbf{show} (\emph{boolean (optional)}) --
+Specify whether to show the figure before returning it. Defaults
+to \code{False}.
+
+\item {} 
+\textbf{axes} (\emph{sub-plot axes to put plot})
+
+\end{itemize}
+
+\item[{Returns}] \leavevmode
+A figure object containing the profile plot.
+
+\item[{Return type}] \leavevmode
+\code{matplotlib} figure object if axes is None
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -2381,11 +3116,27 @@ prints fit results
 
 \end{fulllineitems}
 
+\index{print\_raw\_results() (kafe.fit.Fit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.fit.Fit.print_raw_results}\pysiglinewithargsret{\bfcode{print\_raw\_results}}{}{}
+unformatted print-out of all fit results in
+
+\end{fulllineitems}
+
 \index{print\_rounded\_fit\_parameters() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.fit.Fit.print_rounded_fit_parameters}\pysiglinewithargsret{\bfcode{print\_rounded\_fit\_parameters}}{}{}
 prints the fit parameters
+
+\end{fulllineitems}
+
+\index{profiles (kafe.fit.Fit attribute)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.fit.Fit.profiles}\pysigline{\bfcode{profiles}\strong{ = None}}
+Parameter Profiles {[}id1, {[}xp{]}, {[}dchi1(xp){]}{]}
 
 \end{fulllineitems}
 
@@ -2408,7 +3159,8 @@ This is done element-wise, according to the formula:
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.fit.Fit.release_parameters}\pysiglinewithargsret{\bfcode{release\_parameters}}{\emph{*parameters\_to\_release}}{}
 Release the given parameters so that the minimizer begins to work with
-them when \emph{do\_fit} is called next. Parameters can be given by their
+them when \code{do\_fit()} is called next. Parameters can be given by
+their
 names or by their IDs. If no arguments are provied, then release all
 parameters.
 
@@ -2421,37 +3173,48 @@ parameters.
 Sets the parameter values (and optionally errors) for this fit.
 This is usually called just before the fit is done, to establish
 the initial parameters. If a parameter error is omitted, it is
-set to 1/1000th of the parameter values themselves. If the default
-value of the parameter is 0, it is set, by exception, to 0.001.
+set to 1/10th of the parameter values themselves. If the default
+value of the parameter is 0, it is set, by exception, to 0.1.
 
 This method accepts up to two positional arguments and several
 keyword arguments.
-\begin{description}
-\item[{\emph{args{[}0{]}}}] \leavevmode{[}tuple/list of floats (optional){]}
-The first positional argument is expected to be
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{args{[}0{]}}} (\emph{tuple/list of floats (optional)}) -- The first positional argument is expected to be
 a tuple/list containing the parameter values.
 
-\item[{\emph{args{[}1{]}}}] \leavevmode{[}tuple/list of floats (optional){]}
-The second positional argument is expected to be a
+\item {} 
+\textbf{\texttt{args{[}1{]}}} (\emph{tuple/list of floats (optional)}) -- The second positional argument is expected to be a
 tuple/list of parameter errors, which can also be set as an
 approximate estimate of the problem's uncertainty.
 
-\item[{\emph{no\_warning}}] \leavevmode{[}boolean (optional){]}
+\end{itemize}
+
+\item[{Keyword Arguments}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{no\_warning} (\emph{boolean (optional)}) --
 Whether to issue warnings (\code{False}) or not (\code{True}) when
 communicating with the minimizer fails. Defaults to \code{False}.
 
-\end{description}
+\item {} 
+\textbf{Valid keyword argument names are parameter names. The keyword arguments}
 
-Valid keyword argument names are parameter names. The keyword arguments
-themselves may be floats (parameter values) or 2-tuples containing the
-parameter values and the parameter error in that order:
-\begin{description}
-\item[{\emph{\textless{}parameter\_name\textgreater{}}}] \leavevmode{[}float or 2-tuple of floats (optional){]}
+\item {} 
+\textbf{themselves may be floats (parameter values) or 2-tuples containing the}
+
+\item {} 
+\textbf{parameter values and the parameter error in that order}
+
+\item {} 
+\textbf{*\textless{}parameter\_name\textgreater{}*} (\emph{float or 2-tuple of floats (optional)}) --
 Set the parameter with the name \textless{}'parameter\_name'\textgreater{} to the value
 given. If a 2-tuple is given, the first element is understood
 to be the value and the second to be the parameter error.
 
-\end{description}
+\end{itemize}
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -2478,29 +3241,41 @@ the \emph{y} coordinates of the data points used for this \emph{Fit}
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.fit.build_fit}\pysiglinewithargsret{\code{kafe.fit.}\bfcode{build\_fit}}{\emph{dataset}, \emph{fitfunc}, \emph{fitlabel='untitled'}, \emph{initial\_fit\_parameters=None}, \emph{constrained\_parameters=None}}{}
-This helper fuction creates a \code{Fit} from a series of keyword arguments.
+This helper fuction creates a {\hyperref[index:kafe.fit.Fit]{\emph{\code{Fit}}}} (\autopageref*{index:kafe.fit.Fit}) from a series of
+keyword arguments.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{dataset}} (a \code{kafe} {\hyperref[index:kafe.dataset.Dataset]{\emph{\code{Dataset}}}} (\autopageref*{index:kafe.dataset.Dataset})) -- 
 
-Valid keywords are:
+\item {} 
+\textbf{\texttt{fitfunc}} (\emph{a python function, optionally with}) -- \code{@FitFunction}, \code{@LATEX} and \code{@FitFunction} decorators
 
-\textbf{dataset} : a \emph{kafe} \code{Dataset}
-\begin{description}
-\item[{\textbf{fitfunc}}] \leavevmode{[}a python function, eventually with{]}
-\code{@FitFunction}, \code{@LATEX} and \code{@FitFunction} decorators
+\end{itemize}
 
-\end{description}
+\item[{Keyword Arguments}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{fitlabel} (\emph{name for this fit (optional)}) --
+Defaults to ``untitled''.
 
-\textbf{fitlabel} : name for this fit
-\begin{description}
-\item[{\textbf{fitparameters}}] \leavevmode{[}None or 2-tuple of list, tuple/\emph{np.array} of floats{]}
+\item {} 
+\textbf{initial\_fit\_parameters} (\code{None} or 2-tuple of list, sequence of floats) --
 specifying initial parameter values and errors
 
-\item[{\textbf{constrained\_parameters}: None or 3-tuple of list, tuple/np.array{}`}] \leavevmode
+\item {} 
+\textbf{constrained\_parameters} (\code{None} or 3-tuple of list, tuple/\emph{np.array}) --
 of one string and 2 floats specifiying the names, values and
 uncertainties of constraints to apply to model parameters
 
-\end{description}
+\end{itemize}
 
-\textbf{returns} \emph{Fit} object
+\item[{Returns}] \leavevmode
+
+
+\item[{Return type}] \leavevmode
+{\hyperref[index:kafe.fit.Fit]{\emph{\code{Fit}}}} (\autopageref*{index:kafe.fit.Fit}) object
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -2508,41 +3283,45 @@ uncertainties of constraints to apply to model parameters
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.fit.chi2}\pysiglinewithargsret{\code{kafe.fit.}\bfcode{chi2}}{\emph{xdata}, \emph{ydata}, \emph{cov\_mat}, \emph{fit\_function}, \emph{parameter\_values}, \emph{constrained\_parameters=None}}{}
-The $\chi^2$ implementation. Calculates $\chi^2$ according
+The \(\chi^2\) implementation. Calculates \(\chi^2\) according
 to the formula:
 \begin{gather}
 \begin{split}\chi^2 = \lambda^T C^{-1} \lambda\end{split}\notag
 \end{gather}
-Here, $\lambda$ is the residual vector $\lambda = \vec{y} -
-\vec{f}(\vec{x})$ and $C$ is the covariance matrix.
+Here, \(\lambda\) is the residual vector \(\lambda = \vec{y} -
+\vec{f}(\vec{x})\) and \(C\) is the covariance matrix.
 
-If a constraint $c_i\pm\sigma_i$ is applied to  a parameter i,
-a \emph{penalty term} is added for each constrained parameter according to:
+If a constraint \(c_i\pm\sigma_i\) is applied to a parameter \(p_i\),
+a \emph{penalty term} is added for each constrained parameter:
 \begin{gather}
-\begin{split}\chi^2 += \left( \frac{v_i - c_i}{\sigma_i} \right)^2\end{split}\notag
-\end{gather}\begin{description}
-\item[{\textbf{xdata}}] \leavevmode{[}iterable{]}
-The \emph{x} measurement data
+\begin{split}\chi^2_{\text{cons}} = \chi^2 + \sum_i{ \left( \frac{p_i - c_i}{\sigma_i} \right)^2 }\end{split}\notag
+\end{gather}\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{xdata}} (\emph{iterable}) -- The \emph{x} measurement data
 
-\item[{\textbf{ydata}}] \leavevmode{[}iterable{]}
-The \emph{y} measurement data
+\item {} 
+\textbf{\texttt{ydata}} (\emph{iterable}) -- The \emph{y} measurement data
 
-\item[{\textbf{cov\_mat}}] \leavevmode{[}\emph{numpy.matrix}{]}
-The total covariance matrix
+\item {} 
+\textbf{\texttt{cov\_mat}} (\emph{numpy.matrix}) -- The total covariance matrix
 
-\item[{\textbf{fit\_function}}] \leavevmode{[}function{]}
-The fit function $f(x)$
+\item {} 
+\textbf{\texttt{fit\_function}} (\emph{function}) -- The fit function \(f(x)\)
 
-\end{description}
+\item {} 
+\textbf{\texttt{parameter\_values}} (\emph{list/tuple}) -- The values of the parameters at which \(f(x)\) should be evaluated.
 
-\textbf{constrained\_parameters} : None or list of two iterables
-with a length equal to the number of parameters. An uncertainty of
-0 means that a parameter remains unconstrained.
-\begin{description}
-\item[{\textbf{parameter\_values}}] \leavevmode{[}list/tuple{]}
-The values of the parameters at which $f(x)$ should be evaluated.
+\end{itemize}
 
-\end{description}
+\item[{Keyword Arguments}] \leavevmode
+\textbf{constrained\_parameters} (\code{None} or list of two iterables (optional)) --
+The first iterable (\({c_i}\)) contains the constrained parameters'
+expected values and the second iterable (\({\sigma_i}\)) contains
+the constraint uncertainties. A parameter with constraint uncertainty
+set to 0 remains unconstrained.
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -2552,17 +3331,21 @@ The values of the parameters at which $f(x)$ should be evaluated.
 \phantomsection\label{index:kafe.fit.round_to_significance}\pysiglinewithargsret{\code{kafe.fit.}\bfcode{round\_to\_significance}}{\emph{value}, \emph{error}, \emph{significance=2}}{}
 Rounds the error to the established number of significant digits, then
 rounds the value to the same order of magnitude as the error.
-\begin{description}
-\item[{\textbf{value}}] \leavevmode{[}float{]}
-value to round to significance
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{value}} (\emph{float}) -- value to round to significance
 
-\item[{\textbf{error}}] \leavevmode{[}float{]}
-uncertainty of the value
+\item {} 
+\textbf{\texttt{error}} (\emph{float}) -- uncertainty of the value
 
-\item[{\emph{significance}}] \leavevmode{[}int (optional){]}
+\end{itemize}
+
+\item[{Keyword Arguments}] \leavevmode
+\textbf{significance} (\emph{int (optional)}) --
 number of significant digits of the error to consider
 
-\end{description}
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -2608,11 +3391,11 @@ function's formula.
 \phantomsection\label{index:kafe.function_tools.FitFunction}\pysiglinewithargsret{\strong{class }\code{kafe.function\_tools.}\bfcode{FitFunction}}{\emph{f}}{}
 Decorator class for fit functions. If a function definition is decorated
 using this class, some information is collected about the function which
-is relevant to the fitting process, such as the number of parameters, 
+is relevant to the fitting process, such as the number of parameters,
 their names and default values. Some details pertaining to display and
-representation are also set, such as $LaTeX$ representations of
+representation are also set, such as \(LaTeX\) representations of
 the parameter names and the function name. Other decorators can be applied
-to a function object to specify things such as a $LaTeX$ or
+to a function object to specify things such as a \(LaTeX\) or
 plain-text expression for the fit function.
 \index{derive\_by\_parameters() (kafe.function\_tools.FitFunction method)}
 
@@ -2635,10 +3418,10 @@ value to use the same spacing for every derivation.
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.function_tools.FitFunction.derive_by_x}\pysiglinewithargsret{\bfcode{derive\_by\_x}}{\emph{x\_0}, \emph{precision\_list}, \emph{parameter\_list}}{}
 If \emph{x\_0} is iterable, gives the array of derivatives of a function
-$f(x, par_1, par_2, \ldots)$ around $x = x_i$ at every
-$x_i$ in $\vec{x}$. If \emph{x\_0} is not iterable, gives the
-derivative of a function $f(x, par_1, par_2, \ldots)$ around
-$x = \verb!x_0!$.
+\(f(x, par_1, par_2, \ldots)\) around \(x = x_i\) at every
+\(x_i\) in \(\vec{x}\). If \emph{x\_0} is not iterable, gives the
+derivative of a function \(f(x, par_1, par_2, \ldots)\) around
+\(x = \verb!x_0!\).
 
 \end{fulllineitems}
 
@@ -2646,7 +3429,7 @@ $x = \verb!x_0!$.
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.function_tools.FitFunction.evaluate}\pysiglinewithargsret{\bfcode{evaluate}}{\emph{x\_0}, \emph{parameter\_list}}{}
-Evaluate the fit function at an x-value or at an array of 
+Evaluate the fit function at an x-value or at an array of
 x-values for the parameter values in \emph{prarameter\_list}.
 \begin{quote}
 
@@ -2672,7 +3455,7 @@ a math expression (string) representing the function's result
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.function_tools.FitFunction.get_function_equation}\pysiglinewithargsret{\bfcode{get\_function\_equation}}{\emph{equation\_format='latex'}, \emph{equation\_type='full'}, \emph{ensuremath=True}}{}
 Returns a string representing the function equation. Supported formats
-are $LaTeX$ and ASCII inline math. Note that $LaTeX$
+are \(LaTeX\) and ASCII inline math. Note that \(LaTeX\)
 math is wrapped by default in an \code{\textbackslash{}ensuremath\{\}} expression. If this
 is not desired behaviour, the flag \code{ensuremath} can be set to
 \code{False}.
@@ -2703,7 +3486,7 @@ calculates:
 \end{Verbatim}
 
 \item[{\emph{ensuremath}}] \leavevmode{[}boolean (optional){]}
-If a $LaTeX$ math equation is requested, \code{True}
+If a \(LaTeX\) math equation is requested, \code{True}
 (default) will wrap the resulting expression in an
 \code{\textbackslash{}ensuremath\{\}} tag. Otherwise, no wrapping is done.
 
@@ -2715,7 +3498,7 @@ If a $LaTeX$ math equation is requested, \code{True}
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.function_tools.FitFunction.latex_expression}\pysigline{\bfcode{latex\_expression}\strong{ = None}}
-a $LaTeX$ math expression, the function's result
+a \(LaTeX\) math expression, the function's result
 
 \end{fulllineitems}
 
@@ -2723,7 +3506,7 @@ a $LaTeX$ math expression, the function's result
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.function_tools.FitFunction.latex_name}\pysigline{\bfcode{latex\_name}\strong{ = None}}
-The function's name in $LaTeX$
+The function's name in \(LaTeX\)
 
 \end{fulllineitems}
 
@@ -2731,7 +3514,7 @@ The function's name in $LaTeX$
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.function_tools.FitFunction.latex_parameter_names}\pysigline{\bfcode{latex\_parameter\_names}\strong{ = None}}
-A list of parameter names in $LaTeX$
+A list of parameter names in \(LaTeX\)
 
 \end{fulllineitems}
 
@@ -2739,7 +3522,7 @@ A list of parameter names in $LaTeX$
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.function_tools.FitFunction.latex_x_name}\pysigline{\bfcode{latex\_x\_name}\strong{ = None}}
-A $LaTeX$ symbol for the independent variable.
+A \(LaTeX\) symbol for the independent variable.
 
 \end{fulllineitems}
 
@@ -2795,19 +3578,19 @@ Optional decorator for fit functions. This overrides a FitFunction's
 passed as keyword arguments to the decorator. Possible arguments:
 \begin{description}
 \item[{\emph{name}}] \leavevmode{[}string{]}
-$LaTeX$ representation of the function name.
+\(LaTeX\) representation of the function name.
 
 \item[{\emph{parameter\_names}}] \leavevmode{[}list of strings{]}
-List of $LaTeX$ representations of the function's arguments.
+List of \(LaTeX\) representations of the function's arguments.
 The length of this list must be equal to the function's argument
 number. The argument names should be in the same order as in the
 function definition.
 
 \item[{\emph{x\_name}}] \leavevmode{[}string{]}
-$LaTeX$ representation of the independent variable's name.
+\(LaTeX\) representation of the independent variable's name.
 
 \item[{\emph{expression}}] \leavevmode{[}string{]}
-$LaTeX$-formatted expression representing the
+\(LaTeX\)-formatted expression representing the
 function's formula.
 
 \end{description}
@@ -2818,9 +3601,9 @@ function's formula.
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.function_tools.derivative}\pysiglinewithargsret{\code{kafe.function\_tools.}\bfcode{derivative}}{\emph{func}, \emph{derive\_by\_index}, \emph{variables\_tuple}, \emph{derivative\_spacing}}{}
-Gives $\frac{\partial f}{\partial x_k}$ for $f = f(x_0, x_1,
-\ldots)$. \emph{func} is $f$, \emph{variables\_tuple} is $\{x_i\}$ and
-\emph{derive\_by\_index} is $k$.
+Gives \(\frac{\partial f}{\partial x_k}\) for \(f = f(x_0, x_1,
+\ldots)\). \emph{func} is \(f\), \emph{variables\_tuple} is \(\{x_i\}\) and
+\emph{derive\_by\_index} is \(k\).
 
 \end{fulllineitems}
 
@@ -2829,8 +3612,8 @@ Gives $\frac{\partial f}{\partial x_k}$ for $f = f(x_0, x_1,
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.function_tools.outer_product}\pysiglinewithargsret{\code{kafe.function\_tools.}\bfcode{outer\_product}}{\emph{input\_array}}{}
 Takes a \emph{NumPy} array and returns the outer (dyadic, Kronecker) product
-with itself. If \emph{input\_array} is a vector $\mathbf{x}$, this returns
-$\mathbf{x}\mathbf{x}^T$.
+with itself. If \emph{input\_array} is a vector \(\mathbf{x}\), this returns
+\(\mathbf{x}\mathbf{x}^T\).
 
 \end{fulllineitems}
 
@@ -2911,8 +3694,8 @@ the actual \emph{FCN} called in \code{FCN\_wrapper}
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.minuit.Minuit.get_chi2_probability}\pysiglinewithargsret{\bfcode{get\_chi2\_probability}}{\emph{n\_deg\_of\_freedom}}{}
-Returns the probability that an observed $\chi^2$ exceeds
-the calculated value of $\chi^2$ for this fit by chance,
+Returns the probability that an observed \(\chi^2\) exceeds
+the calculated value of \(\chi^2\) for this fit by chance,
 even for a correct model. In other words, returns the probability that
 a worse fit of the model to the data exists. If this is a small value
 (typically \textless{}5\%), this means the fit is pretty bad. For values below
@@ -2920,7 +3703,7 @@ this threshold, the model very probably does not fit the data.
 \begin{description}
 \item[{n\_def\_of\_freedom}] \leavevmode{[}int{]}
 The number of degrees of freedom. This is typically
-$n_   ext{datapoints} - n_    ext{parameters}$.
+\(n_   ext{datapoints} - n_    ext{parameters}\).
 
 \end{description}
 
@@ -2929,10 +3712,10 @@ $n_   ext{datapoints} - n_    ext{parameters}$.
 \index{get\_contour() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.minuit.Minuit.get_contour}\pysiglinewithargsret{\bfcode{get\_contour}}{\emph{parameter1}, \emph{parameter2}, \emph{n\_points=20}}{}
+\phantomsection\label{index:kafe.minuit.Minuit.get_contour}\pysiglinewithargsret{\bfcode{get\_contour}}{\emph{parameter1}, \emph{parameter2}, \emph{n\_points=21}}{}
 Returns a list of points (2-tuples) representing a sampling of
-the $1\sigma$ contour of the TMinuit fit. The \code{FCN} has to be
-minimized before calling this.
+the \(1\sigma\) contour of the TMinuit fit. The \code{FCN} has
+to be minimized before calling this.
 \begin{description}
 \item[{\textbf{parameter1}}] \leavevmode{[}int{]}
 ID of the parameter to be displayed on the \emph{x}-axis.
@@ -2941,7 +3724,7 @@ ID of the parameter to be displayed on the \emph{x}-axis.
 ID of the parameter to be displayed on the \emph{y}-axis.
 
 \item[{\emph{n\_points}}] \leavevmode{[}int (optional){]}
-number of points used to draw the contour. Default is 20.
+number of points used to draw the contour. Default is 21.
 
 \item[{\emph{returns}}] \leavevmode{[}2-tuple of tuples{]}
 a 2-tuple (x, y) containing \code{n\_points+1} points sampled
@@ -3042,6 +3825,26 @@ Current \emph{Minuit} parameter values
 
 \end{fulllineitems}
 
+\index{get\_profile() (kafe.minuit.Minuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.minuit.Minuit.get_profile}\pysiglinewithargsret{\bfcode{get\_profile}}{\emph{parid}, \emph{n\_points=21}}{}
+Returns a list of points (2-tuples) the profile
+the \(\chi^2\)  of the TMinuit fit.
+\begin{description}
+\item[{\textbf{parid}}] \leavevmode{[}int{]}
+ID of the parameter to be displayed on the \emph{x}-axis.
+
+\item[{\emph{n\_points}}] \leavevmode{[}int (optional){]}
+number of points used for profile. Default is 21.
+
+\item[{\emph{returns}}] \leavevmode{[}two arrays, par. values and corresp. \(\chi^2\){]}
+containing \code{n\_points} sampled profile points.
+
+\end{description}
+
+\end{fulllineitems}
+
 \index{max\_iterations (kafe.minuit.Minuit attribute)}
 
 \begin{fulllineitems}
@@ -3057,6 +3860,30 @@ maximum number of iterations until \code{TMinuit} gives up
 Do the minimization. This calls \emph{Minuit}`s algorithms \code{MIGRAD}
 for minimization and, if \emph{final\_fit} is \emph{True}, also \code{HESSE}
 for computing/checking the parameter error matrix.
+
+\end{fulllineitems}
+
+\index{minos\_errors() (kafe.minuit.Minuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.minuit.Minuit.minos_errors}\pysiglinewithargsret{\bfcode{minos\_errors}}{}{}
+Get (asymmetric) parameter uncertainties from MINOS
+algorithm. This calls \emph{Minuit}`s algorithms \code{MINOS},
+which determines parameter uncertainties using profiling
+of the chi2 function.
+\begin{description}
+\item[{returns}] \leavevmode{[}tuple{]}
+A tuple of {[}err+, err-, parabolic error, global correlation{]}
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{name (kafe.minuit.Minuit attribute)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.minuit.Minuit.name}\pysigline{\bfcode{name}\strong{ = None}}
+the name of this minimizer type
 
 \end{fulllineitems}
 
@@ -3123,9 +3950,11 @@ defaults from the function\_to\_minimize.
 \index{set\_parameter\_values() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.minuit.Minuit.set_parameter_values}\pysiglinewithargsret{\bfcode{set\_parameter\_values}}{\emph{parameter\_values}}{}
-Sets the fit parameters. If parameter\_values={}`None{}`, tries to infer
+\phantomsection\label{index:kafe.minuit.Minuit.set_parameter_values}\pysiglinewithargsret{\bfcode{set\_parameter\_values}}{\emph{parameter\_values}}{}~\begin{description}
+\item[{Sets the fit parameters. If parameter\_values={}`None{}`, tries to infer}] \leavevmode
 defaults from the function\_to\_minimize.
+
+\end{description}
 
 \end{fulllineitems}
 
@@ -3189,7 +4018,32 @@ default level of detail for TMinuit's output
 
 
 \section{\texttt{config} Module}
-\label{index:module-kafe.config}\label{index:config-module}\index{kafe.config (module)}\phantomsection\label{index:module-config}\index{config (module)}
+\label{index:module-kafe.config}\label{index:config-module}\index{kafe.config (module)}\phantomsection\label{index:module-config}\index{config (module)}\index{create\_config\_file() (in module kafe.config)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.config.create_config_file}\pysiglinewithargsret{\code{kafe.config.}\bfcode{create\_config\_file}}{\emph{config\_type}, \emph{force=False}}{}
+Create a kafe config file.
+\begin{description}
+\item[{\textbf{config\_type}}] \leavevmode{[}`user' or `local'{]}
+Create a `user' config file in `\textasciitilde{}/.config/kafe' or a
+`local' one in the current directory.
+
+\item[{\emph{force}}] \leavevmode{[}boolean (optional){]}
+If true, overwrites existing files.
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{log\_file() (in module kafe.config)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.config.log_file}\pysiglinewithargsret{\code{kafe.config.}\bfcode{log\_file}}{\emph{file\_relative\_path}}{}
+Returns correct location for placing log files.
+
+\end{fulllineitems}
+
+
 
 \section{\texttt{plot} Module}
 \label{index:module-kafe.plot}\label{index:plot-module}\index{kafe.plot (module)}\phantomsection\label{index:module-plot}\index{plot (module)}\index{Plot (class in kafe.plot)}
@@ -3220,18 +4074,25 @@ Compute the span of all child datasets and sets the plot range to that
 \index{draw\_fit\_parameters\_box() (kafe.plot.Plot method)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.plot.Plot.draw_fit_parameters_box}\pysiglinewithargsret{\bfcode{draw\_fit\_parameters\_box}}{\emph{plot\_spec=0}}{}
+\phantomsection\label{index:kafe.plot.Plot.draw_fit_parameters_box}\pysiglinewithargsret{\bfcode{draw\_fit\_parameters\_box}}{\emph{plot\_spec=0}, \emph{force\_show\_uncertainties=False}}{}
 Draw the parameter box to the canvas
-\begin{description}
-\item[{\emph{plot\_spec}}] \leavevmode{[}int, list of ints, string or None (optional, default: 0){]}
-Specify the plot id of the plot for which to draw the parameters.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{plot\_spec}} (\emph{int, list of ints, string or None (optional, default: 0)}) -- Specify the plot id of the plot for which to draw the parameters.
 Passing 0 will only draw the parameter box for the first plot, and
 so on. Passing a list of ints will only draw the parameters for
 plot ids inside the list. Passing \code{'all'} will print parameters
 for all plots. Passing \code{None} will return immediately doing
 nothing.
 
-\end{description}
+\item {} 
+\textbf{\texttt{force\_show\_uncertainties}} (\emph{boolean (optional, default: False)}) -- If \code{True}, shows uncertainties even for Datasets without error
+data. Note that in that case these values are meaningless!
+
+\end{itemize}
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -3257,14 +4118,14 @@ This method extends the current plot span to include \emph{new\_span}
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.plot.Plot.fits}\pysigline{\bfcode{fits}\strong{ = None}}
-list of {\color{red}\bfseries{}{}`}Fit{}`s to plot
+list of \code{Fit} objects to plot
 
 \end{fulllineitems}
 
 \index{init\_plots() (kafe.plot.Plot method)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.plot.Plot.init_plots}\pysiglinewithargsret{\bfcode{init\_plots}}{}{}
+\phantomsection\label{index:kafe.plot.Plot.init_plots}\pysiglinewithargsret{\bfcode{init\_plots}}{\emph{**kwargs}}{}
 Initialize the plots for each fit.
 
 \end{fulllineitems}
@@ -3280,7 +4141,7 @@ Function to call when a draw event occurs.
 \index{plot() (kafe.plot.Plot method)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.plot.Plot.plot}\pysiglinewithargsret{\bfcode{plot}}{\emph{p\_id}, \emph{show\_data=True}, \emph{show\_function=True}}{}
+\phantomsection\label{index:kafe.plot.Plot.plot}\pysiglinewithargsret{\bfcode{plot}}{\emph{p\_id}, \emph{show\_data=True}, \emph{show\_function=True}, \emph{show\_band=True}}{}
 Plot the \emph{Fit} object with the number \emph{p\_id} to its figure.
 
 \end{fulllineitems}
@@ -3288,7 +4149,7 @@ Plot the \emph{Fit} object with the number \emph{p\_id} to its figure.
 \index{plot\_all() (kafe.plot.Plot method)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.plot.Plot.plot_all}\pysiglinewithargsret{\bfcode{plot\_all}}{\emph{show\_info\_for='all'}, \emph{show\_data\_for='all'}, \emph{show\_function\_for='all'}}{}
+\phantomsection\label{index:kafe.plot.Plot.plot_all}\pysiglinewithargsret{\bfcode{plot\_all}}{\emph{show\_info\_for='all'}, \emph{show\_data\_for='all'}, \emph{show\_function\_for='all'}, \emph{show\_band\_for='meaningful'}}{}
 Plot every \emph{Fit} object to its figure.
 
 \end{fulllineitems}
@@ -3317,11 +4178,52 @@ Save the \emph{Plot} to a file.
 
 \end{fulllineitems}
 
+\index{set\_axis\_scale() (kafe.plot.Plot method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.plot.Plot.set_axis_scale}\pysiglinewithargsret{\bfcode{set\_axis\_scale}}{\emph{axis}, \emph{scale\_type}, \emph{**kwargs}}{}
+Set the scale for an axis.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{\texttt{axis}} (\emph{`'x'' or `'y'`}) -- Axis for which to set the scale.
+
+\item {} 
+\textbf{\texttt{scale\_type}} (\emph{`'linear'' or `'log'`}) -- Type of scale to set for the axis.
+
+\end{itemize}
+
+\item[{Keyword Arguments}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{**basex**} (\emph{int}) --
+Base of the `'x'' axis scale logarithm. Only relevant for log
+scales.
+
+\item {} 
+\textbf{**basey**} (\emph{int}) --
+Base of the `'y'' axis scale logarithm. Only relevant for log
+scales.
+
+\end{itemize}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
 \index{show() (kafe.plot.Plot method)}
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.plot.Plot.show}\pysiglinewithargsret{\bfcode{show}}{}{}
-Show the \emph{Plot} in a matplotlib interactive window.
+Show graphics in one or more matplotlib interactive windows.
+
+\begin{notice}{note}{Note:}
+This shows all figures/plots generated before it is called. Because
+of the way \code{matplotlib} handles some plotting parameters
+(\code{matplotlib.rcParams}) these cannot be set individually for each
+figure before it is displayed. This means that all figures will be
+shown with the same plot style: that of the \emph{Plot} object from
+which show() is called.
+\end{notice}
 
 \end{fulllineitems}
 
@@ -3400,11 +4302,11 @@ defaults.
 Generates a simple LaTeX-formatted label from a plain-text label.
 This treats isolated characters and words beginning with a backslash
 as mathematical expressions and surround them with \$ signs accordingly.
-\begin{description}
-\item[{\textbf{label}}] \leavevmode{[}string{]}
-Plain-text string to convert to LaTeX.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{\texttt{label}} (\emph{string}) -- Plain-text string to convert to LaTeX.
 
-\end{description}
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -3425,6 +4327,12 @@ shorten it (move the interval end towards the interval center).
 
 \end{fulllineitems}
 
+\index{pad\_span\_log() (in module kafe.plot)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.plot.pad_span_log}\pysiglinewithargsret{\code{kafe.plot.}\bfcode{pad\_span\_log}}{\emph{span}, \emph{pad\_coeff=1}, \emph{additional\_pad=None}, \emph{base=10}}{}
+\end{fulllineitems}
+
 
 
 \section{\texttt{latex\_tools} Module}
@@ -3437,7 +4345,7 @@ can be included in math mode without error.
 \begin{description}
 \item[{\textbf{str\_ascii}}] \leavevmode{[}string{]}
 A plain-text string containing characters to be escaped for
-$LaTeX$ math mode.
+\(LaTeX\) math mode.
 
 \item[{\emph{monospace}}] \leavevmode{[}boolean (optional){]}
 Whether to render the whole expression as monospace. Defaults to
@@ -3458,7 +4366,7 @@ an \code{\textbackslash{}ensuremath\{\}} tag. Defaults to \code{True}.
 
 \begin{fulllineitems}
 \phantomsection\label{index:kafe.numeric_tools.MinuitCov_to_cor}\pysiglinewithargsret{\code{kafe.numeric\_tools.}\bfcode{MinuitCov\_to\_cor}}{\emph{cov\_mat}}{}
-Converts a covariance matrix as returned by Minuit to the 
+Converts a covariance matrix as returned by Minuit to the
 corresponding correlation matrix; note that the Minuit
 covariance matrix may contain lines/rows with zeroes if
 parameters are fixed
@@ -3641,13 +4549,14 @@ check occurs.
 \begin{theindex}
 \def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
 \bigletter{\_}
-\item {\texttt{\_\_version\_info}} \emph{(Unix)}, \pageref{index:module-__version_info}
+\item {\texttt{\_version\_info}} \emph{(Unix)}, \pageref{index:module-_version_info}
 \indexspace
 \bigletter{c}
 \item {\texttt{config}} \emph{(Unix)}, \pageref{index:module-config}
 \indexspace
 \bigletter{d}
 \item {\texttt{dataset}} \emph{(Unix)}, \pageref{index:module-dataset}
+\item {\texttt{dataset\_tools}} \emph{(Unix)}, \pageref{index:module-dataset_tools}
 \indexspace
 \bigletter{f}
 \item {\texttt{file\_tools}} \emph{(Unix)}, \pageref{index:module-file_tools}
@@ -3660,6 +4569,7 @@ check occurs.
 \item {\texttt{kafe.\_version\_info}}, \pageref{index:module-kafe._version_info}
 \item {\texttt{kafe.config}}, \pageref{index:module-kafe.config}
 \item {\texttt{kafe.dataset}}, \pageref{index:module-kafe.dataset}
+\item {\texttt{kafe.dataset\_tools}}, \pageref{index:module-kafe.dataset_tools}
 \item {\texttt{kafe.file\_tools}}, \pageref{index:module-kafe.file_tools}
 \item {\texttt{kafe.fit}}, \pageref{index:module-kafe.fit}
 \item {\texttt{kafe.function\_library}}, \pageref{index:module-kafe.function_library}

@@ -86,7 +86,7 @@ consisting of the x and y values and the full covariance matrices of their
 uncertainties. Correlated errors between x and y values are not
 supported yet, as such use cases are rare.
 
-A helper function, :py:func:`~kafe.dataset.build_dataset`, is available
+A helper function, :py:func:`~kafe.dataset_tools.build_dataset`, is available
 to transform various error models, like a combination of independent
 and correlated errors or common absolute or relative errors, to this
 basic format.
@@ -122,6 +122,41 @@ In a similar way, the method :py:meth:`~kafe.fit.Fit.plot_profile`
 provides profiled χ² curves, i. e. the value of the minimal
 χ² as a function of one parameter while all other parameters
 are allowed to vary.
+
+Fitting in a Nutshell
+---------------------
+
+Fitting with **kafe** in a nutshell goes like this:
+
+    1. create a :py:class:`~kafe.dataset.Dataset` object from your measurement
+       data:
+    
+       >>> my_d = kafe.Dataset(data=[[0., 1., 2.], [1.23, 3.45, 5.62]])
+    
+    2. add errors (uncertainties) to your :py:class:`~kafe.dataset.Dataset`:
+    
+       >>> my_d.add_error_source('y', 'simple', 0.5)  # y errors, all +/- 0.5
+    
+    3. import a model function from :py:class:`kafe.function_library` (or
+       define one yourself):
+       
+       >>> from kafe.function_library import linear_2par
+    
+    4. create a :py:class:`~kafe.fit.Fit` object from your
+       :py:class:`~kafe.dataset.Dataset` and your model function:
+    
+       >>> my_f = kafe.Fit(my_d, linear_2par)
+    
+    5. do the fit:
+    
+       >>> my_f.do_fit()
+    
+    6. *(optional)* if you want to see a plot of the result, use the
+       :py:class:`~kafe.plot.Plot` object:
+       
+       >>> my_p = kafe.Plot(my_f)
+       >>> my_p.plot_all()
+       >>> my_p.show()
 
 
 Example
@@ -217,7 +252,7 @@ More and advanced examples - like fitting different models
 to one data set, comparison of different data sets with model
 functions, averaging of correlated measurements or fits with
 a large number of parameters -
-are provided as part of the `kafe` distribution and are
+are provided as part of the :py:mod:`kafe` distribution and are
 described in the section `Examples` below. They may serve as
 a starting point for own applications.
 
@@ -1172,6 +1207,14 @@ code.
 ------------------------
 
 .. automodule:: kafe.dataset
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:py:mod:`dataset_tools` Module
+------------------------------
+
+.. automodule:: kafe.dataset_tools
     :members:
     :undoc-members:
     :show-inheritance:

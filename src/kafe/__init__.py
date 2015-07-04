@@ -5,18 +5,45 @@ courses.*
 
 This Python package allows fitting of user-defined functions to data. A dataset
 is represented by a `Dataset` object which stores measurement data as `NumPy`
-arrays. The uncertainties of the data are also stored in the `Dataset` as an
-`error matrix`, allowing for both correlated and uncorrelated errors to be
-accurately represented.
+arrays. The uncertainties (errors) of the data are also stored in the `Dataset`
+as a list of one or more `ErrorSource` objects, each of which stores a part of
+the uncertainty information as a so-called *covariance matrix* (also called an
+*error matrix*). This allows **kafe** to work with uncertainties of different
+kinds for a `Dataset`, particularly when there is a degree of correlation
+between the uncertainties of the datapoints.
 
-The constructor of a `Dataset` object accepts several keyword arguments and can
-be used to construct a `Dataset` from input data which has been loaded into
-`Python` as `NumPy` arrays. Alternatively, a plain-text representations of a
-`Dataset` can be read from a file.
+Fitting with **kafe** in a nutshell goes like this:
 
-Also provided are helper functions which construct a `Dataset` object from a
-file containing column data (one measurement per row, column order can be
-specified), or from a keyword-driven input format.
+    1) create a `Dataset` object from your measurement data
+    
+    >>> my_d = kafe.Dataset(data=[[0., 1., 2.], [1.23, 3.45, 5.62]])
+    
+    2) add errors (uncertainties) to your `Dataset`
+    
+    >>> my_d.add_error_source('y', 'simple', 0.5)  # y errors, all +/- 0.5
+    
+    3) import a model function from `kafe.function_library` (or define one
+       yourself)
+       
+    >>> from kafe.function_library import linear_2par
+    
+    4) create a `Fit` object from your `Dataset` and your model function
+    
+    >>> my_f = kafe.Fit(my_d, linear_2par)
+    
+    5) do the fit
+    
+    >>> my_f.do_fit()
+    
+    6) *(optional)* if you want to see a plot of the result, use the `Plot`
+       object
+       
+    >>> my_p = kafe.Plot(my_f)
+    >>> my_p.plot_all()
+    >>> my_p.show()
+
+For more in-depth information on **kafe**'s features, feel free to consult the
+documentation.
 
 .. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
 

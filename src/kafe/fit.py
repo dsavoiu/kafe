@@ -81,6 +81,8 @@ def chi2(xdata, ydata, cov_mat,
 
         \chi^2_{\text{cons}} = \chi^2 + \sum_i{ \left( \frac{p_i - c_i}{\sigma_i} \right)^2 }
 
+    Parameters
+    ----------
 
     **xdata** : iterable
         The *x* measurement data
@@ -97,7 +99,10 @@ def chi2(xdata, ydata, cov_mat,
     **parameter_values** : list/tuple
         The values of the parameters at which :math:`f(x)` should be evaluated.
 
-    *constrained_parameters* : ``None`` or list of two iterables (optional)
+    Keyword Arguments
+    -----------------
+
+    constrained_parameters : ``None`` or list of two iterables, optional
         The first iterable (:math:`{c_i}`) contains the constrained parameters'
         expected values and the second iterable (:math:`{\sigma_i}`) contains
         the constraint uncertainties. A parameter with constraint uncertainty
@@ -136,13 +141,19 @@ def round_to_significance(value, error, significance=FORMAT_ERROR_SIGNIFICANT_PL
     Rounds the error to the established number of significant digits, then
     rounds the value to the same order of magnitude as the error.
 
+    Parameters
+    ----------
+
     **value** : float
         value to round to significance
 
     **error** : float
         uncertainty of the value
 
-    *significance* : int (optional)
+    Keyword Arguments
+    -----------------
+
+    significance : int, optional
         number of significant digits of the error to consider
 
     '''
@@ -165,25 +176,11 @@ class Fit(object):
     minimum of which should be located to find the best fit) can be specified.
     If not given, the `FCN` function defaults to :math:`\chi^2`.
 
+    Parameters
+    ----------
+
     **dataset** : `Dataset`
-
         A `Dataset` object containing all information about the data
-
-    **data mebers** for final results
-
-        `final_parameter_values` # [parid][value]
-
-        `final_parameter_errors` # [parid][error]
-
-        `par_cov_mat`            # numpy 2d matrix
-
-        `parabolic_errors`       # boolean, True if :math:`\chi^2` is approx. parabolic
-
-        `minos_errors`           # [parid][err,err+,err-,gcor]
-
-        `contours`               # [parid][id1,id2,dchi2,[xc],[yc]]
-
-        `profiles`               # [parid][id1,[xp],[dchi1(xp)]]
 
     **fit_function** : function
         A user-defined Python function to fit to the data. This
@@ -199,7 +196,10 @@ class Fit(object):
         often crucial for a succesful fit, particularly for functions of many
         parameters.
 
-    *external_fcn* : function (optional)
+    Keyword Arguments
+    -----------------
+
+    external_fcn : function, optional
         An external `FCN` (function to minimize). This function must have the
         following call signature:
 
@@ -208,12 +208,12 @@ class Fit(object):
         It should return a float. If not specified, the default :math:`\chi^2`
         `FCN` is used. This should be sufficient for most fits.
 
-    *fit_label* : :math:`LaTeX`-formatted string (optional)
+    fit_label : :math:`LaTeX`-formatted string, optional
         A name/label/short description of the fit function. This appears in the
         legend describing the fitter curve. If omitted, this defaults to the
         fit function's :math:`LaTeX` expression.
 
-    *minimizer_to_use* : 'ROOT' or 'minuit' (optional)
+    minimizer_to_use : 'ROOT' or 'minuit', optional
         Which minimizer to use. This defaults to whatever is set in the config
         file, but can be specifically overridden for some fits using this
         keyword argument.
@@ -231,13 +231,20 @@ class Fit(object):
         self.dataset = dataset  #: this Fit instance's child `Dataset`
 
         # variables to store final results of this fit
-        self.final_parameter_values = None # [parid][value]
-        self.final_parameter_errors = None # [parid][error]
-        self.par_cov_mat = None            # numpy 2d matrix
+        self.final_parameter_values = None
+        """Final parameter values"""
+        self.final_parameter_errors = None
+        """Final parameter errors"""
+        self.par_cov_mat = None
+        """Parameter covariance matrix (`numpy.matrix`)"""
         self.parabolic_errors=True
-        self.minos_errors=None             # [parid][err,err+,err-,gcor]
-        self.contours=[]                   # [parid][id1,id2,dchi2,[xc],[yc]]
-        self.profiles=[]                   # [parid][id1,[xp],[dchi1(xp)]]
+        """``True`` if :math:`\chi^2` is approx. parabolic (boolean)"""
+        self.minos_errors=None
+        """MINOS Errors [err, err+, err-, gcor]"""
+        self.contours=[]
+        """Parameter Contours [id1, id2, dchi2, [xc], [yc]]"""
+        self.profiles=[]
+        """Parameter Profiles [id1, [xp], [dchi1(xp)]]"""
 
         if isinstance(fit_function, FitFunction):
             #: the fit function used for this `Fit`
@@ -367,6 +374,9 @@ class Fit(object):
         we can use the `Dataset` object to pass known, fixed information to the
         external `FCN`, varying only the parameter values.
 
+        Parameters
+        ----------
+
         **parameter_values** : sequence of values
             the parameter values at which `FCN` is to be evaluated
 
@@ -386,10 +396,16 @@ class Fit(object):
         The method is useful if, e.g., you want to draw a confidence band
         around the function in your plot routine.
 
+        Parameters
+        ----------
+
         **x** : `float` or sequence of `float`
             the values at which the function error is to be estimated
 
-        returns : `float` or sequence of `float`
+        Returns
+        -------
+
+        float or sequence of float
             the estimated error at the given point(s)
         '''
 
@@ -431,7 +447,10 @@ class Fit(object):
         for the current parameter values. The returned function is a function
         of a single variable.
 
-        returns : function
+        Returns
+        -------
+
+        function handle
             A function of a single variable corresponding to the fit function
             at the current parameter values.
         '''
@@ -446,7 +465,10 @@ class Fit(object):
         This method returns the covariance matrix of the fit parameters which
         is obtained by querying the minimizer object for this `Fit`
 
-        returns : `numpy.matrix`
+        Returns
+        -------
+
+        *numpy.matrix*
             The covariance matrix of the parameters.
         '''
         return self.minimizer.get_error_matrix()
@@ -455,10 +477,15 @@ class Fit(object):
         '''
         Get the current parameter uncertainties from the minimizer.
 
-        *rounding* : boolean (optional)
+        Keyword Arguments
+        -----------------
+
+        rounding : boolean, optional
             Whether or not to round the returned values to significance.
 
-        returns : tuple
+        Returns
+        -------
+        tuple
             A tuple of the parameter uncertainties
         '''
         output = []
@@ -474,10 +501,16 @@ class Fit(object):
         '''
         Get the current parameter values from the minimizer.
 
-        *rounding* : boolean (optional)
+        Keyword Arguments
+        -----------------
+
+        rounding : boolean, optional
             Whether or not to round the returned values to significance.
 
-        returns : tuple
+        Returns
+        -------
+
+        tuple
             A tuple of the parameter values
         '''
 
@@ -501,16 +534,22 @@ class Fit(object):
         This method accepts up to two positional arguments and several
         keyword arguments.
 
-        *args[0]* : tuple/list of floats (optional)
+        Parameters
+        ----------
+
+        *args[0]* : tuple/list of floats, optional
             The first positional argument is expected to be
             a tuple/list containing the parameter values.
 
-        *args[1]* : tuple/list of floats (optional)
+        *args[1]* : tuple/list of floats, optional
             The second positional argument is expected to be a
             tuple/list of parameter errors, which can also be set as an
             approximate estimate of the problem's uncertainty.
 
-        *no_warning* : boolean (optional)
+        Keyword Arguments
+        -----------------
+
+        no_warning : boolean, optional
             Whether to issue warnings (``False``) or not (``True``) when
             communicating with the minimizer fails. Defaults to ``False``.
 
@@ -518,7 +557,7 @@ class Fit(object):
         themselves may be floats (parameter values) or 2-tuples containing the
         parameter values and the parameter error in that order:
 
-        *<parameter_name>* : float or 2-tuple of floats (optional)
+        *<parameter_name>* : float or 2-tuple of floats, optional
             Set the parameter with the name <'parameter_name'> to the value
             given. If a 2-tuple is given, the first element is understood
             to be the value and the second to be the parameter error.
@@ -607,8 +646,8 @@ class Fit(object):
     def fix_parameters(self, *parameters_to_fix):
         '''
         Fix the given parameters so that the minimizer works without them
-        when :py:func:`do_fit` is called next. Parameters can be given by their
-        names or by their IDs.
+        when :py:meth:`~kafe.fit.Fit.do_fit` is called next. Parameters can be
+        given by their names or by their IDs.
         '''
         for parameter in parameters_to_fix:
             # turn names into IDs, if needed
@@ -627,7 +666,8 @@ class Fit(object):
     def release_parameters(self, *parameters_to_release):
         '''
         Release the given parameters so that the minimizer begins to work with
-        them when :py:func:`do_fit` is called next. Parameters can be given by their
+        them when :py:func:`do_fit` is called next. Parameters can be given by
+        their
         names or by their IDs. If no arguments are provied, then release all
         parameters.
         '''
@@ -659,16 +699,20 @@ class Fit(object):
       r'''
       Constrain the parameter with the given name to :math:`c\pm\sigma`.
 
-      This is achieved by adding an appropriate `penalty term` to the :math:`\chi^2`
-      function, see function ``chi2``.
+      This is achieved by adding an appropriate `penalty term` to the
+      :math:`\chi^2` function, see function :py:func:`~kafe.fit.chi2`.
 
+      Parameters
+      ----------
 
-         **parameters** list of paramter id's or names to constrain
+      **parameters**: list of int
+          list of paramter id's or names to constrain
 
-         **parvals**    list of parameter values
+      **parvals**: list of float
+          list of parameter values
 
-         **parerrs**    list of errors on parameters
-
+      **parerrs**: list of float
+          list of errors on parameters
       '''
 
       # turn name(s) into Id(s), if needed
@@ -733,7 +777,8 @@ class Fit(object):
         '''
         Runs the fit algorithm for this `Fit` object.
 
-        First, the :py:obj:`Dataset` is fitted considering only uncertainties in the
+        First, the :py:obj:`Dataset` is fitted considering only uncertainties
+        in the
         `y` direction. If the `Dataset` has no uncertainties in the `y`
         direction, they are assumed to be equal to 1.0 for this preliminary
         fit, as there is no better information available.
@@ -747,10 +792,13 @@ class Fit(object):
         This last step is repeated until the change in the error matrix caused
         by the projection becomes negligible.
 
-        *quiet* : boolean (optional)
+        Keyword Arguments
+        -----------------
+
+        quiet : boolean, optional
             Set to ``True`` if no output should be printed.
 
-        *verbose* : boolean (optional)
+        verbose : boolean, optional
             Set to ``True`` if more output should be printed.
         '''
 
@@ -781,8 +829,9 @@ class Fit(object):
                 for i, err in enumerate(self.constrained_parameters[1]):
                     if(err):
                         print >>self.out_stream, "%s: %g +\- %g" % (
-                            self.parameter_names[i], self.constrained_parameters[0][i],
-                                                  err )
+                            self.parameter_names[i],
+                            self.constrained_parameters[0][i],
+                            err)
                 print >>self.out_stream, ''
 
 
@@ -813,29 +862,30 @@ class Fit(object):
                 new_matrix = self.current_cov_mat
 
                 # stop if the matrix has not changed within tolerance)
-     # GQ: adjusted precision: rtol 1e-4 on cov-matrix is clearly sufficient
+                # GQ: adjusted precision: rtol 1e-4 on cov-matrix is
+                # clearly sufficient
                 if np.allclose(old_matrix, new_matrix, atol=0, rtol=1e-4):
                     logger.debug("Matrix for `x` fit iteration has converged.")
                     break   # interrupt iteration
                 iter_nr += 1
 
-# determine, retrieve and analyze errors from MINOS algorithm
-        tol=0.05
+        # determine, retrieve and analyze errors from MINOS algorithm
+        tol = 0.05
         self.minos_errors = self.minimizer.minos_errors()
-# error analysis:
+        # error analysis:
         for par_nr, par_val in enumerate(self.current_parameter_values):
-            ep=self.minos_errors[par_nr][0]
-            em=self.minos_errors[par_nr][1]
-            if(ep<>0 and em<>0):
-              if(abs(ep+em)/(ep-em) > tol) or \
-                (abs(1.-0.5*(ep-em)/self.minos_errors[par_nr][2])>tol):
+            ep = self.minos_errors[par_nr][0]
+            em = self.minos_errors[par_nr][1]
+            if ep != 0 and em != 0:
+              if (abs(ep + em)/(ep - em) > tol) or \
+                 (abs(1. - 0.5*(ep - em)/self.minos_errors[par_nr][2])>tol):
                   self.parabolic_errors=False
 
-       # store results ...
+        # store results ...
         self.final_parameter_values = self.current_parameter_values
         self.final_parameter_errors = self.current_parameter_errors
         self.par_cov_mat = self.get_error_matrix()
-       # ... and print at end of fit
+        # ... and print at end of fit
         if not quiet:
             self.print_fit_results()
             self.print_rounded_fit_parameters()
@@ -1032,10 +1082,14 @@ class Fit(object):
         print >>self.out_stream, ''
 
     def plot_contour(self, parameter1, parameter2, dchi2=2.3,
-         n_points=100, color='gray', alpha=.1 , show=False, axes=None):
+                     n_points=100, color='gray', alpha=.1, show=False,
+                     axes=None):
         r'''
         Plots one or more two-dimensional contours for this fit into
         a separate figure and returns the figure object.
+
+        Parameters
+        ----------
 
         **parameter1** : int or string
             ID or name of the parameter to appear on the `x`-axis.
@@ -1043,36 +1097,43 @@ class Fit(object):
         **parameter2** : int or string
             ID or name of the parameter to appear on the `y`-axis.
 
-        *dchi2* : float or list of floats (otpional)
+        Keyword Arguments
+        -----------------
+
+        dchi2 : float or list of floats (otpional)
             delta-chi^2 value(s) used to evaluate contour(s)
             1. = 1 sigma
             2.3 = 68.0% (default)
             4.  = 2 sigma
             5.99 = 95.0%
 
-        *n_points* : int (optional)
+        n_points : int, optional
             Number of plot points to use for the contour. Higher
             values yield smoother contours but take longer to
             render. Default is 100.
 
-        *color* : string (optional)
+        color : string, optional
             A ``matplotlib`` color identifier specifying the fill color
             of the contour. Default is 'gray'.
 
-        *alpha* : float (optional)
+        alpha : float, optional
             Transparency of the contour fill color ranging from 0. (fully
             transparent) to 1. (fully opaque). Default is 0.25
 
-        *show* : boolean (optional)
+        show : boolean, optional
             Specify whether to show the figure before returning it. Defaults
             to ``False``.
 
-        *axes* : sub-plot axes to put plot
+        axes : `maplotlib.pyplot.axes`
+            Sub-plot axes to add plot to
 
-        **returns** : ``matplotlib`` figure object if no axes given
+        Returns
+        -------
+
+        ``matplotlib`` figure object if no axes given
             A figure object containing the contour plot.
         '''
-#
+
         # lookup parameter IDs
         par1 = self._find_parameter(parameter1)
         par2 = self._find_parameter(parameter2)
@@ -1082,60 +1143,65 @@ class Fit(object):
         xer, yer = _perrs[par1], _perrs[par2]
 
         plt.tight_layout()
-        if(axes is None):
-          tmp_fig = plt.figure(figsize=(5., 5.)) # new (square) figure for contour(s)
-          tmp_ax = tmp_fig.gca()   # get/create axes object for current figure
+        if axes is None:
+            #new (square) figure for contour(s)
+            tmp_fig = plt.figure(figsize=(5., 5.))
+            # get/create axes object for current figure
+            tmp_ax = tmp_fig.gca()
+
         else:
-          tmp_ax=axes
+            tmp_ax = axes
         # set axis labels
         tmp_ax.set_xlabel('$%s$' % (self.latex_parameter_names[par1],),
-             fontsize='xx-large')
+                          fontsize='xx-large')
         tmp_ax.set_ylabel('$%s$' % (self.latex_parameter_names[par2],),
-             fontsize='xx-large')
+                          fontsize='xx-large')
         # set size and number of tick labels
-        tmp_ax.tick_params(axis='both',which='both',
+        tmp_ax.tick_params(axis='both', which='both',
                            labelsize='large')
-        tmp_ax.ticklabel_format(axis='both',style='scientific',
-                                scilimits=(-3,4), useOffset=False)
+        tmp_ax.ticklabel_format(axis='both', style='scientific',
+                                scilimits=(-3, 4), useOffset=False)
         tmp_ax.locator_params(nbins=5)
         # plot central value and errors
-        tmp_ax.errorbar(xval, yval, xerr=xer, yerr=yer,fmt='o')
-#        tmp_ax.scatter(xval, yval, marker='+', label='parameter values')
-        tmp_ax.set_color_cycle(['black','darkblue','darkgreen','chocolate',
-                       'darmagenta','darkred','darkorange','darkgoldenrod'])
-# plot contours(s)
-        dc2list=[]
+        tmp_ax.errorbar(xval, yval, xerr=xer, yerr=yer, fmt='o')
+        # tmp_ax.scatter(xval, yval, marker='+', label='parameter values')
+        tmp_ax.set_color_cycle(['black', 'darkblue', 'darkgreen', 'chocolate',
+                                'darmagenta', 'darkred', 'darkorange',
+                                'darkgoldenrod'])
+        # plot contours(s)
+        dc2list = []
         try:
-          iter_over_dchi2=iter(dchi2)
+            iter_over_dchi2 = iter(dchi2)
         except:
-          dc2list.append(dchi2)  # not iterable, append float
+            dc2list.append(dchi2)  # not iterable, append float
         else:
-          dc2list.extend(dchi2) # iterable, extend by list
-        ncont=0
+            dc2list.extend(dchi2)  # iterable, extend by list
+        ncont = 0
         for dc2 in dc2list:
-          ncont+=ncont # count contours in list
-          self.minimizer.set_err(dc2)
-          xs, ys = self.minimizer.get_contour(par1, par2, n_points)
-# store result
-          self.contours.append([par1,par2,dc2,xs,ys])
-# plot contour lines
-          cl=round(100.*(1.-np.exp(-dc2/2.))) # corresponding confidence level
-          print >>self.out_stream,\
-             'Contour %4.1f %%CL for parameters %d vs. %d with %d points'\
-             %(cl, par1, par2, len(xs))
-          # plot the contour
-          labelstr=str(cl)+r"\% CL"
-          tmp_ax.fill(xs, ys, alpha=alpha, color=color)   # as filled area
-          tmp_ax.plot(xs, ys, '--', linewidth=2, label=labelstr) # as line
+            ncont += ncont  # count contours in list
+            self.minimizer.set_err(dc2)
+            xs, ys = self.minimizer.get_contour(par1, par2, n_points)
+            # store result
+            self.contours.append([par1, par2, dc2, xs, ys])
+            # plot contour lines
+            cl = round(100. * (1. - np.exp(-dc2 / 2.)))
+                       # corresponding confidence level
+            print >>self.out_stream,\
+                'Contour %4.1f %%CL for parameters %d vs. %d with %d points'\
+                % (cl, par1, par2, len(xs))
+            # plot the contour
+            labelstr = str(cl) + r"\% CL"
+            tmp_ax.fill(xs, ys, alpha=alpha, color=color)   # as filled area
+            tmp_ax.plot(xs, ys, '--', linewidth=2, label=labelstr)  # as line
         print >>self.out_stream, ''
-        self.minimizer.set_err(1.) # set errdef back to default of 1.
+        self.minimizer.set_err(1.)  # set errdef back to default of 1.
         # plot a legend
         tmp_leg = tmp_ax.legend(loc='best', fontsize='small')
         # show the contour, if requested
-        if(axes is None):
-          if show:
-            tmp_fig.show()
-          return tmp_fig
+        if axes is None:
+            if show:
+                tmp_fig.show()
+            return tmp_fig
 
     def plot_profile(self, parid, n_points=21,
                      color='blue', alpha=.5, show=False, axes=None):
@@ -1143,159 +1209,183 @@ class Fit(object):
         Plots a profile :math:`\\chi^2` for this fit into
         a separate figure and returns the figure object.
 
+        Parameters
+        ----------
+
         **parid** : int or string
             ID or name of parameter
-        *n_points* : int (optional)
-            Number of plot points to use for the profile curve.
 
-        *color* : string (optional)
-            A ``matplotlib`` color identifier specifying the line
-            color. Default is 'blue'.
+        Keyword Arguments
+        -----------------
 
-        *alpha* : float (optional)
-            Transparency of the contour fill color ranging from 0. (fully
-            transparent) to 1. (fully opaque). Default is 0.25
+        n_points : int, optional
+           Number of plot points to use for the profile curve.
 
-        *show* : boolean (optional)
-            Specify whether to show the figure before returning it. Defaults
-            to ``False``.
+        color : string, optional
+           A ``matplotlib`` color identifier specifying the line
+           color. Default is 'blue'.
 
-        *axes* : sub-plot axes to put plot
+        alpha : float, optional
+           Transparency of the contour fill color ranging from 0. (fully
+           transparent) to 1. (fully opaque). Default is 0.25
 
-        **returns** : ``matplotlib`` figure object if axes is None
+        show : boolean, optional
+           Specify whether to show the figure before returning it. Defaults
+           to ``False``.
+
+        axes : sub-plot axes to put plot
+
+        Returns
+        -------
+
+        ``matplotlib`` figure object if axes is None
             A figure object containing the profile plot.
         '''
-#
+
         from scipy import interpolate
 
         # lookup parameter ID
         id = self._find_parameter(parid)
         _pvals = self.final_parameter_values
         _perrs = self.final_parameter_errors
-        val= _pvals[id]
+        val = _pvals[id]
         err = _perrs[id]
 
         print >>self.out_stream,\
-             'Profile for parameter %d with %d points'\
-             %(id, n_points)
+            'Profile for parameter %d with %d points'\
+            % (id, n_points)
 
         plt.tight_layout()
-        if(axes is None):
-          tmp_fig = plt.figure(figsize=(5., 5.)) # new (square) figure for contour(s)
-          tmp_ax = tmp_fig.gca()   # get/create axes object for current figure
+        if axes is None:
+            # new (square) figure for contour(s)
+            tmp_fig = plt.figure(figsize=(5., 5.))
+            # get/create axes object for current figure
+            tmp_ax = tmp_fig.gca()
         else:
-          tmp_ax= axes
+            tmp_ax = axes
 
         # set axis labels
         tmp_ax.set_xlabel('$%s$' % (self.latex_parameter_names[id],),
-             fontsize='xx-large')
+                          fontsize='xx-large')
         tmp_ax.set_ylabel('$%s$' % ('\\Delta \\chi^2'),
-             fontsize='xx-large' )
+                          fontsize='xx-large')
         # set size and number of tick labels
-        tmp_ax.tick_params(axis='both',which='both',
+        tmp_ax.tick_params(axis='both', which='both',
                            labelsize='large')
-        tmp_ax.ticklabel_format(axis='both',style='scientific',
-                                scilimits=(-3,4),useOffset=False)
+        tmp_ax.ticklabel_format(axis='both', style='scientific',
+                                scilimits=(-3, 4), useOffset=False)
         tmp_ax.locator_params(nbins=5)
-        tmp_ax.set_ylim(0.,9.)
-        tmp_ax.axvline(x=val,linestyle='--',linewidth=1,color='black')
-        tmp_ax.axhline(y=1.,linestyle='--',linewidth=1,color='darkred')
-        tmp_ax.axhline(y=4.,linestyle='-.',linewidth=1,color='darkred')
+        tmp_ax.set_ylim(0., 9.)
+        tmp_ax.axvline(x=val, linestyle='--', linewidth=1, color='black')
+        tmp_ax.axhline(y=1., linestyle='--', linewidth=1, color='darkred')
+        tmp_ax.axhline(y=4., linestyle='-.', linewidth=1, color='darkred')
         # plot central value and errors
-        tmp_ax.errorbar(val, 1., xerr=err,linewidth=3,fmt='o',color='black')
-#        tmp_ax.scatter(xval, yval, marker='+', label='parameter values')
-# get profile
-        xp, yp= self.minimizer.get_profile(id, n_points)
-        self.profiles.append([id,xp,yp])  # store this result
-# plot (smoothed) profile
-        yp=yp-np.min(yp) # refer to minimum
+        tmp_ax.errorbar(val, 1., xerr=err, linewidth=3, fmt='o', color='black')
+        # tmp_ax.scatter(xval, yval, marker='+', label='parameter values')
+        # get profile
+        xp, yp = self.minimizer.get_profile(id, n_points)
+        self.profiles.append([id, xp, yp])  # store this result
+        # plot (smoothed) profile
+        yp = yp - np.min(yp)  # refer to minimum
         yspline = interpolate.UnivariateSpline(xp, yp, s=0)
-        xnew=np.linspace(xp[0],xp[n_points-1],200)
+        xnew = np.linspace(xp[0], xp[n_points - 1], 200)
         tmp_ax.plot(xnew, yspline(xnew), '-', linewidth=2, color=color,
-            label='profile $\\chi^2$')
-# plot parabolic expectation
-        parabolicChi2=(xnew-val)*(xnew-val)/(err*err)
+                    label='profile $\\chi^2$')
+        # plot parabolic expectation
+        parabolicChi2 = (xnew - val) * (xnew - val) / (err * err)
         tmp_ax.plot(xnew, parabolicChi2, '-.', linewidth=1, color='green',
-            label='parabolic $\\chi^2$')
+                    label='parabolic $\\chi^2$')
 
-        tmp_leg = tmp_ax.legend(loc='best',fontsize='small')
+        tmp_leg = tmp_ax.legend(loc='best', fontsize='small')
         # show the plot, if requested
         if axes is None:
-          if show:
-            tmp_fig.show()
-          return tmp_fig
+            if show:
+                tmp_fig.show()
+            return tmp_fig
 
     def plot_correlations(self):
-        ''' Plots two-dimensional contours for all pairs of parameters
-            and profile for all parameters, arranges as a matrix.
+        '''
+        Plots two-dimensional contours for all pairs of parameters
+        and profile for all parameters, arranges as a matrix.
 
-        **returns** : ``matplotlib`` figure object
+        Returns
+        -------
+
+        ``matplotlib`` figure object
             A figure object containing the matrix of plots.
         '''
-        npar=self.number_of_parameters - self.number_of_fixed_parameters
-        cor_fig, axarr=plt.subplots(npar, npar, figsize=(5.*npar,5.*npar))
+        npar = self.number_of_parameters - self.number_of_fixed_parameters
+        cor_fig, axarr = plt.subplots(
+            npar, npar, figsize=(5. * npar, 5. * npar))
 
-        ip=-1
-        for i in range (0, self.number_of_parameters):
-          if not(self._fixed_parameters[i]): ip+=1
-          jp=-1
-          for j in range(0, self.number_of_parameters):
-            if not(self._fixed_parameters[j]): jp+=1
-            # skip fixed parameters
-            if not(self._fixed_parameters[i] or self._fixed_parameters[j]):
-              if ip>jp:
-               # empty space
-                axarr[jp,ip].axis('off')
-              elif ip==jp:
-                # plot profile
-                self.plot_profile(i, axes=axarr[ip,ip])
-              else:
-                # plot contour
-                self.plot_contour(i, j, dchi2=[1.,2.3], axes=axarr[jp,ip])
+        ip = -1
+        for i in range(0, self.number_of_parameters):
+            if not self._fixed_parameters[i]:
+                ip += 1
+            jp = -1
+            for j in range(0, self.number_of_parameters):
+                if not self._fixed_parameters[j]:
+                    jp += 1
+                # skip fixed parameters
+                if not(self._fixed_parameters[i] or self._fixed_parameters[j]):
+                    if ip > jp:
+                     # empty space
+                        axarr[jp, ip].axis('off')
+                    elif ip == jp:
+                        # plot profile
+                        self.plot_profile(i, axes=axarr[ip, ip])
+                    else:
+                        # plot contour
+                        self.plot_contour(
+                            i, j, dchi2=[1., 2.3], axes=axarr[jp, ip])
 
         return cor_fig
 
-
-
-
-
 def build_fit(dataset, fitfunc,
               fitlabel='untitled', initial_fit_parameters=None,
-              constrained_parameters=None ) :
-  '''
-  This helper fuction creates a :py:obj:`Fit` from a series of keyword arguments.
+              constrained_parameters=None):
+    '''
+    This helper fuction creates a :py:class:`~kafe.fit.Fit` from a series of
+    keyword arguments.
 
-  Valid keywords are:
+    Parameters
+    ----------
 
-  **dataset** : a :py:mod:`kafe` :py:obj:`Dataset`
+    **dataset** : a :py:mod:`kafe` :py:class:`~kafe.dataset.Dataset`
 
-  **fitfunc** : a python function, optionally with
-      ``@FitFunction``, ``@LATEX`` and ``@FitFunction`` decorators
+    **fitfunc** : a python function, optionally with
+        ``@FitFunction``, ``@LATEX`` and ``@FitFunction`` decorators
 
-  *fitlabel* : name for this fit (optional)
-      Defaults to "untitled".
+    Keyword Arguments
+    -----------------
 
-  *initial_fit_parameters* : None or 2-tuple of list, tuple/`np.array` of floats
-      specifying initial parameter values and errors
+    fitlabel : name for this fit, optional
+       Defaults to "untitled".
 
-  *constrained_parameters*: None or 3-tuple of list, tuple/`np.array`
-     of one string and 2 floats specifiying the names, values and
-     uncertainties of constraints to apply to model parameters
+    initial_fit_parameters : ``None`` or 2-tuple of list, sequence of floats
+       specifying initial parameter values and errors
 
-  **returns** : :py:obj:`Fit` object
+    constrained_parameters : ``None`` or 3-tuple of list, tuple/`np.array`
+       of one string and 2 floats specifiying the names, values and
+       uncertainties of constraints to apply to model parameters
 
-  '''
+    Returns
+    -------
 
-# create a ``Fit`` object
-  theFit = Fit(dataset,fitfunc,fit_label=fitlabel)
-#  - set initial parameter values and range
-  if(initial_fit_parameters is not None):
-    theFit.set_parameters(initial_fit_parameters[0],      # values
-                          initial_fit_parameters[1])      # ranges
-#  - set parameter constraints
-  if(constrained_parameters is not None):
-    theFit.constrain_parameters( constrained_parameters[0], # names
-                                 constrained_parameters[1], # val's
-                                 constrained_parameters[2]) # uncert's
-#
-  return theFit
+    ::py:class:`~kafe.fit.Fit` object
+
+    '''
+
+    # create a ``Fit`` object
+    theFit = Fit(dataset, fitfunc, fit_label=fitlabel)
+    # set initial parameter values and range
+    if initial_fit_parameters is not None:
+        theFit.set_parameters(initial_fit_parameters[0],      # values
+                              initial_fit_parameters[1])      # ranges
+    # set parameter constraints
+    if constrained_parameters is not None:
+        theFit.constrain_parameters(constrained_parameters[0],  # names
+                                    constrained_parameters[1],  # val's
+                                    constrained_parameters[2])  # uncert's
+
+    return theFit

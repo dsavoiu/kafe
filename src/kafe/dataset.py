@@ -58,10 +58,16 @@ class ErrorSource(object):
         """
         Sets the covariance matrix manually.
 
+        Parameters
+        ----------
+
         **cov_mat** : numpy.matrix
             A *square*, *symmetric* (and usually *regular*) matrix.
 
-        **check_singular** : boolean (optional)
+        Keyword Arguments
+        -----------------
+
+        check_singular : boolean, optional
             Whether to force singularity check. Defaults to ``False``.
         """
 
@@ -92,10 +98,16 @@ class ErrorSource(object):
         """
         Sets information required to construct the covariance matrix.
 
+        Parameters
+        ----------
+
         **err_val** : float or sequence of floats
             If all data points have the same uncertainty
 
-        *fully_correlated* : boolean (optional)
+        Keyword Arguments
+        -----------------
+
+        fully_correlated : boolean, optional
             Whether the errors are fully correlated. Defaults to ``False``.
         """
         try:
@@ -125,7 +137,7 @@ class ErrorSource(object):
         Returns/Generates the covariance matrix for this ErrorSource.
 
         If the user specified the matrix using
-        :py:method:`kafe.dataset.ErrorSource.make_from_matrix~make_from_matrix`,
+        :py:meth:`~kafe.dataset.ErrorSource.make_from_matrix`,
         returns that matrix. If a simple error model is specified, a matrix is
         constructed as follows:
 
@@ -143,6 +155,14 @@ class ErrorSource(object):
         product of the error array :math:`\\sigma_i` with itself, i.e. the
         :math:`(i,j)`-th matrix entry will be equal to
         :math:`\\sigma_i\\sigma_j`.
+
+        Keyword Arguments
+        -----------------
+
+        size : int (sometimes required)
+            Size of the matrix to return. Only relevant if the error value
+            is a single float, since in that case there is no way to deduce
+            the matrix size.
         """
 
         if self.error_type == 'matrix':
@@ -197,45 +217,49 @@ class ErrorSource(object):
 class Dataset(object):
     '''
     The `Dataset` object is a data structure for storing measurement and error
-    data. In this implementation, the `Dataset` has the compulsory field
-    `data`, which is used for storing the measurement data, and another field
-    `cov_mats`, used for storing the covariance matrix for each axis.
+    data.
 
-    There are two ways a `Dataset` can be constructed.
+    It contains the measurement `data` as *NumPy* arrays and the error
+    information as a list of :py:class:`~kafe.dataset.ErrorSource` objects for
+    each axis, each of which represents a separate contribution to the
+    uncertainty of the measurement data, expressed as a *covariance matrix*.
 
-    Alternatively, field data can be set by passing iterables as arguments.
-    Available arguments for this purpose are:
+    The `Dataset` object calculates a *total covariance matrix* by adding
+    up all the individual `ErrorSource` covariance matrices. This
+    *total covariance matrix* is the one used for fitting.
 
+    A `Dataset` can be constructed directly from the measurement data, and can
+    optionally be given a *title*, *axis labels* and *axis units*, as well as
+    a *base name* for log or output files:
 
+    >>> my_d = kafe.Dataset(data=[[0., 1., 2.], [1.23, 3.45, 5.62]])
 
-    *cov_mats* : tuple/list of `numpy.matrix` (optional)
+    After constructing the `Dataset`, an error model may be added using
+    :py:meth:`~kafe.dataset.Dataset.add_error_source` (here, an absolute
+    *y*-uncertainty of 0.5):
 
-        a tuple/list of two-dimensional iterables containing the covariance
-        matrices for `x` and `y`, in that order. Covariance matrices can be any
-        sort of two-dimensional NxN iterables, assuming N is the number of data
-        points.
+    >>> my_d.add_error_source('y', 'simple', 0.5)  # y errors, all +/- 0.5
 
-        >>> my_dataset = Dataset(data=([0., 1., 2.], [1.23, 3.45, 5.62]), \
-cov_mats=(my_cov_mat_x, my_cov_mat_y))
+    The `Dataset` may then be used for fitting. For more information, see the
+    :py:class:`~kafe.fit.Fit` object documentation.
 
-        This keyword argument can be omitted, in which case covariance matrices
-        of zero are assumed. To specify a covariance matrix for a single axis,
-        replace the other with ``None``.
+    Keyword Arguments
+    -----------------
 
-        >>> my_dataset = Dataset(data=([0., 1., 2.], [1.23, 3.45, 5.62]), \
-cov_mats=(None, my_cov_mat_y))
+    data : iterable, optional
+        the measurement data. Either of the form (xdata, ydata) or
+        [(x1, y1), (x2, y2),... (xn, yn)]
 
-    *title* : string (optional)
-
+    title : string, optional
         the name of the `Dataset`. If omitted, the `Dataset` will be given the
         generic name 'Untitled Dataset'.
 
-    *axis_labels* : list of strings (optional)
+    axis_labels : list of strings, optional
 
         labels for the `x` and `y` axes. If omitted, these will be set to
         ``'x'`` and ``'y'``, respectively.
 
-    *axis_units* : list of strings (optional)
+    axis_units : list of strings, optional
 
         units for the `x` and `y` axes. If omitted, these will be assumed to be
         dimensionless, i.e. the unit will be an empty string.
@@ -243,7 +267,6 @@ cov_mats=(None, my_cov_mat_y))
 
     def __init__(self, data=None,
                        title="Untitled Dataset",
-                       basename=None,
                        axis_labels=['x', 'y'], axis_units=['', '']):
 
         '''Create a Dataset'''
@@ -298,10 +321,10 @@ cov_mats=(None, my_cov_mat_y))
         self.data_label = title
 
         # set the basename
-        self.basename = basename
-        
+        self.basename = None
+
         # set data, if any
-        if data is not None:        
+        if data is not None:
             self.set_data(data)
 
     # Data
@@ -311,16 +334,13 @@ cov_mats=(None, my_cov_mat_y))
         """
         Set the measurement data for both axes.
 
-        **data** : tuple/list of tuples/lists/arrays of floats
-
-        a tuple/list of measurement data. Each element of the tuple/list must
-        be iterable and be of the same length. The first element of the
-        **data** tuple/list is assumed to be the `x` data, and the second to be
-        the `y` data:
+        Each element of **data** must be iterable and be of the same length.
+        The first element of the **data** tuple/list is assumed to be the `x`
+        data, and the second to be the `y` data:
 
         >>> my_dataset.set_data(([0., 1., 2.], [1.23, 3.45, 5.62]))
 
-        Alternatively, x-y value pairs can also be passed as **data**. The
+        Alternatively, *x*-*y* value pairs can also be passed as **data**. The
         following is equivalent to the above:
 
         >>> my_dataset.set_data(([0.0, 1.23], [1.0, 3.45], [2.0, 5.62]))
@@ -328,6 +348,13 @@ cov_mats=(None, my_cov_mat_y))
         In case the `Dataset` contains two data points, the ordering is
         ambiguous. In this case, the first ordering (`x` data first, then `y`
         data) is assumed.
+
+        Parameters
+        ----------
+
+        *data* : iterable
+            the measurement data. Either of the form (xdata, ydata) or
+            [(x1, y1), (x2, y2),... (xn, yn)]
         """
 
         # Load data
@@ -353,6 +380,9 @@ cov_mats=(None, my_cov_mat_y))
     def set_axis_data(self, axis, data):
         '''
         Set the measurement data for a single axis.
+
+        Parameters
+        ----------
 
         **axis** : ``'x'`` or ``'y'``
             Axis for which to set the measurement data.
@@ -396,18 +426,62 @@ cov_mats=(None, my_cov_mat_y))
     # Uncertainties
     ################
 
-    def add_error_source(self, axis, err_type, err_val, relative=False, correlated=False, recompute_cov_mat=True):
+    def add_error_source(self, axis, err_type, err_val, relative=False,
+                         correlated=False, recompute_cov_mat=True):
         """
-        Add an error source for the data. A Dataset can have many
+        Add an error source for the data. A `Dataset` can have many
         error sources for each axis, each corresponding to a covariance matrix.
         The total error model for the axis is represented by the sum of
         these matrices.
 
         Note: whenever an ErrorSource is added, the total covariance matrix
-        is calculated
+        is (re-)calculated, unless *recompute_cov_mat* is ``False``.
 
-        ## TODO: DocString ##
+        Parameters
+        ----------
 
+        **axis** : ``'x'`` or ``'y'``
+            axis for which to add error source.
+
+        **err_type**: ``'simple'`` or ``'matrix'``
+            a ``'simple'`` error source is constructed from a single float or
+            a list of *N* floats (*N* being the size of the `Dataset`),
+            representing the uncertainty of the corresponding data points.
+
+            A ``'matrix'`` error source is a user-constructed covariance
+            matrix.
+
+        **err_val**: float/list of floats *or* numpy.matrix
+            for a ``'simple'`` error source, a float of a list of *N* floats
+            (*N* being the size of the `Dataset`). The float/each float in the
+            list represents the uncertainty of the corresponding data point.
+
+            For a ``'matrix'`` error source, the user-constructed covariance
+            matrix (type: `numpy.matrix`).
+
+        Keyword Arguments
+        -----------------
+
+        relative: boolean, optional, default ``False``
+            errors relative to the data (``True``) or absolute (``False``).
+
+        correlated: boolean, optional, default ``False``
+            errors fully correlated (``True``) or totally uncorrelated
+            (``False``).
+
+        recompute_cov_mat: boolean, optional, default ``True``
+            recalculate the total covariance matrix after adding the error
+            source
+
+        Returns
+        -------
+
+        int
+            this integer may later be used to remove or disable/enable the
+            error source using
+            :py:meth:`~kafe.dataset.Dataset.remove_error_source`,
+            :py:meth:`~kafe.dataset.Dataset.disable_error_source` or
+            :py:meth:`~kafe.dataset.Dataset.enable_error_source`.
         """
 
         # get axis id from an alias
@@ -440,7 +514,24 @@ cov_mats=(None, my_cov_mat_y))
 
     def remove_error_source(self, axis, err_src_id, recompute_cov_mat=True):
         """
-        TODO: DocString
+        Remove the error source from the `Dataset`.
+
+        Parameters
+        ----------
+
+        **axis** : ``'x'`` or ``'y'``
+            axis for which to add error source.
+
+        **err_src_id** : int
+            error source ID, as returned by
+            :py:meth:`~kafe.dataset.Dataset.add_error_source`.
+
+        Keyword Arguments
+        -----------------
+
+        recompute_cov_mat: boolean, optional, default ``True``
+            recalculate the total covariance matrix after removing the error
+            source
         """
 
         # get axis id from an alias
@@ -459,11 +550,19 @@ cov_mats=(None, my_cov_mat_y))
         Disables an ErrorSource by excluding it from the calculation of the
         total covariance matrix.
 
-        TODO: ##DocString##
+        Parameters
+        ----------
+
+        **axis** : ``'x'`` or ``'y'``
+            axis for which to add error source.
+
+        **err_src_id** : int
+            error source ID, as returned by
+            :py:meth:`~kafe.dataset.Dataset.add_error_source`.
         """
         # get axis id from an alias
         axis = self.get_axis(axis)
-        
+
         self.__query_err_src_enabled[axis][err_src_id] = False
 
     def enable_error_source(self, axis, err_src_id):
@@ -471,19 +570,31 @@ cov_mats=(None, my_cov_mat_y))
         Enables an ErrorSource by excluding it from the calculation of the
         total covariance matrix.
 
-        TODO: ##DocString##
+        Parameters
+        ----------
+
+        **axis** : ``'x'`` or ``'y'``
+            axis for which to add error source.
+
+        **err_src_id** : int
+            error source ID, as returned by
+            :py:meth:`~kafe.dataset.Dataset.add_error_source`.
+
         """
         # get axis id from an alias
         axis = self.get_axis(axis)
-        
+
         self.__query_err_src_enabled[axis][err_src_id] = True
 
     def calc_cov_mats(self, axis='all'):
         """
         (Re-)Calculate the covariance matrix from the enabled error sources.
 
-        TODO: DocString
+        Keyword Arguments
+        -----------------
 
+        axis : ``'x'`` or ``'y'`` or ``'all'``
+            axis/axes for which to (re-)calcuate covariance matrix.
         """
         _size = self.n_datapoints
         _mats = [np.matrix(np.zeros((_size, _size))),
@@ -537,9 +648,12 @@ cov_mats=(None, my_cov_mat_y))
 
     def set_cov_mat(self, axis, mat):
         '''
-        Forcibly set the error matrix for an axis, ignoring `ErrorSource`
+        Forcibly set the error matrix for an axis, ignoring :py:class:`~kafe.dataset.ErrorSource`
         objects. This is useful for adjusting the covariance matrix during the
         fit process.
+
+        Parameters
+        ----------
 
         **axis** : ``'x'`` or ``'y'``
             Axis for which to load the error matrix.
@@ -603,9 +717,18 @@ cov_mats=(None, my_cov_mat_y))
         '''
         Get axis id from an alias.
 
+        Parameters
+        ----------
+
         **axis_alias** : string or int
             Alias of the axis whose id should be returned. This is for example
             either ``'0'`` or ``'x'`` for the `x`-axis (id 0).
+
+        Returns
+        -------
+
+        int
+            the axis ID
         '''
 
         try:
@@ -619,6 +742,12 @@ cov_mats=(None, my_cov_mat_y))
         '''
         Get the size of the `Dataset`. This is equivalent to the length of the
         `x`-axis data.
+
+        Returns
+        -------
+
+        int
+            the number of datapoints in the `Dataset`.
         '''
 
         if self.data[0] is None:
@@ -631,13 +760,25 @@ cov_mats=(None, my_cov_mat_y))
         Get the data span for an axis. The data span is a tuple (`min`, `max`)
         containing the smallest and highest coordinates for an axis.
 
+        Parameters
+        ----------
+
         **axis** : ``'x'`` or ``'y'``
             Axis for which to get the data span.
 
-        *include_error_bars* : boolean (optional)
+        Keyword Arguments
+        -----------------
+
+        include_error_bars : boolean, optional
             ``True`` if the returned span should be enlarged to
             contain the error bars of the smallest and largest datapoints
             (default: ``False``)
+
+        Returns
+        -------
+
+        a tuple (`min`, `max`)
+            the data span for the axis
         '''
 
         # get axis id from an alias
@@ -668,9 +809,18 @@ cov_mats=(None, my_cov_mat_y))
         '''
         Get the measurement data for an axis.
 
+        Parameters
+        ----------
+
         **axis** : string
             Axis for which to get the measurement data. Can be ``'x'`` or
             ``'y'``.
+
+        Returns
+        -------
+
+        *numpy.array*
+            the measurement data for the axis
         '''
 
         # get axis id from an alias
@@ -682,16 +832,28 @@ cov_mats=(None, my_cov_mat_y))
         '''
         Get the error matrix for an axis.
 
+        Parameters
+        ----------
+
         **axis** :  ``'x'`` or ``'y'``
             Axis for which to load the error matrix.
 
-        *fallback_on_singular* : `numpy.matrix` or string (optional)
+        Keyword Arguments
+        -----------------
+
+        fallback_on_singular : `numpy.matrix` or string, optional
             What to return if the matrix is singular. If this is ``None``
             (default), the matrix is returned anyway. If this is a
             `numpy.matrix` object or similar, that is returned istead.
             Alternatively, the shortcuts ``'identity'`` or ``1`` and ``'zero'``
             or ``0`` can be used to return the identity and zero matrix
             respectively.
+
+        Returns
+        -------
+
+        *numpy.matrix*
+            the current covariance matrix
         '''
 
         # get axis id from an alias
@@ -743,8 +905,17 @@ cov_mats=(None, my_cov_mat_y))
         Returns `True` if the covariance matrix for an axis is regular and
         ``False`` if it is singular.
 
+        Parameters
+        ----------
+
         **axis** : ``'x'`` or ``'y'``
             Axis for which to check for regularity of the covariance matrix.
+
+        Returns
+        -------
+
+        boolean
+            ``True`` if covariance matrix is regular
 
         '''
 
@@ -753,14 +924,23 @@ cov_mats=(None, my_cov_mat_y))
 
         return self.__query_cov_mats_regular[axis]
 
-    def has_correlations(self, axis):
+    def has_correlations(self, axis=None):
         '''
         Returns `True` if the specified axis has correlation data, ``False`` if
         not.
 
-        *axis* :  ``'x'`` or ``'y'`` or ``None`` (optional)
+        Parameters
+        ----------
+
+        *axis* :  ``'x'`` or ``'y'`` or ``None``, optional
             Axis for which to check for correlations. If ``None``,
             returns true if there are correlations for at least one axis.
+
+        Returns
+        -------
+
+        bool
+            `True` if the specified axis has correlation data
         '''
         if axis is not None:
             # get axis id from alias
@@ -771,12 +951,20 @@ cov_mats=(None, my_cov_mat_y))
 
     def has_errors(self, axis=None):
         '''
-        Returns `True` if the specified axis has statistical error data.
+        Returns `True` if the specified axis has any kind of error data.
 
-        *axis* :  ``'x'`` or ``'y'`` or ``None`` (optional)
+        Parameters
+        ----------
+
+        *axis* :  ``'x'`` or ``'y'`` or ``None``, optional
             Axis for which to check for error data. If ``None``,
             returns true if there are errors for at least one axis.
 
+        Returns
+        -------
+
+        bool
+            `True` if the specified axis has any kind of error data.
         '''
         if axis is not None:
             # get axis id from alias
@@ -791,6 +979,22 @@ cov_mats=(None, my_cov_mat_y))
         Returns ``True`` if an ErrorSource is enabled, that is if it is included
         in the total covariance matrix.
 
+        Parameters
+        ----------
+
+        **axis** :  ``'x'`` or ``'y'``
+            Axis for which to load the error matrix.
+
+        **err_src_id** : int
+            error source ID, as returned by
+            :py:meth:`~kafe.dataset.Dataset.add_error_source`.
+
+        Returns
+        -------
+
+        bool
+            `True` if the specified error source is enables
+
         TODO: ##DocString##
         """
         return self.__query_err_src_enabled[axis][err_src_id]
@@ -799,8 +1003,6 @@ cov_mats=(None, my_cov_mat_y))
         '''
         Returns the dataset in a plain-text format which is human-readable and
         can later be used as an input file for the creation of a new `Dataset`.
-
-        .. _get_formatted:
 
         The format is as follows::
 
@@ -826,13 +1028,22 @@ cov_mats=(None, my_cov_mat_y))
         statistical uncertainties for an axis, the second column can also be
         omitted. A blank line is required at the end of each data block!
 
-        *format_string* : string (optional)
+        Keyword Arguments
+        -----------------
+
+        format_string : string, optional
             A format string with which each entry will be rendered. Default is
             ``'.06e'``, which means the numbers are represented in scientific
             notation with six significant digits.
 
-        *delimiter* : string (optional)
+        delimiter : string, optional
             A delimiter used to separate columns in the output.
+
+        Returns
+        -------
+
+        str
+            a plain-text representation of the `Dataset`
 
         '''
 
@@ -908,18 +1119,24 @@ cov_mats=(None, my_cov_mat_y))
     def write_formatted(self, file_path, format_string=".06e", delimiter='\t'):
         '''
         Writes the dataset to a plain-text file. For details on the format, see
-        `get_formatted`_.
+        :py:meth:`~kafe.dataset.Dataset.read_from_file`.
+
+        Parameters
+        ----------
 
         **file_path** : string
             Path of the file object to write. **WARNING**: *overwrites existing
             files*!
 
-        *format_string* : string (optional)
+        Keyword Arguments
+        -----------------
+
+        format_string : string, optional
             A format string with which each entry will be rendered. Default is
             ``'.06e'``, which means the numbers are represented in scientific
             notation with six significant digits.
 
-        *delimiter* : string (optional)
+        delimiter : string, optional
             A delimiter used to separate columns in the output.
 
         '''
@@ -942,28 +1159,21 @@ cov_mats=(None, my_cov_mat_y))
 
         >>> my_dataset.read_from_file(my_file_object)
 
-        The `Dataset` plain-text representation format is as follows::
+        For details on the format, see
+        :py:meth:`~kafe.dataset.Dataset.get_formatted`
 
-            # x data
-            x_1  sigma_x_1
-            x_2  sigma_x_2  cor_x_12
-            ...  ...        ...       ...
-            x_N  sigma_x_N  cor_x_1N  ...  cor_x_NN
+        Parameters
+        ----------
 
-            # y data
-            y_1  sigma_y_1
-            y_2  sigma_y_2  cor_y_12
-            ...  ...        ...       ...
-            y_N  sigma_y_N  cor_y_1N  ...  cor_y_NN
+        **input_file** : str
+            path to the file
 
-        Here, the `sigma_...` represents the fully uncorrelated error of the data
-        point and `cor_..._ij` is the correlation coefficient between the *i*-th
-        and *j*-th data point.
+        Returns
+        -------
 
-        returns : boolean
+        boolean
             ``True`` if the read succeeded, ``False`` if not.
         '''
-
         try:
             # try to read the lines of the file
             tmp_lines = input_file.readlines()
@@ -1129,7 +1339,7 @@ cov_mats=(None, my_cov_mat_y))
             if _mat is not None:
                 # Replace error model with the computed matrix
                 _es = ErrorSource()
-                _es.make_from_matrix(_mat)                
+                _es.make_from_matrix(_mat)
                 if self.err_src[axis]:
                     logger.warn("Overwriting existing error model for axis %d "
                                 "of Dataset" % (axis,))

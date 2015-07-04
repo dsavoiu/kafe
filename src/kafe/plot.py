@@ -46,6 +46,9 @@ def label_to_latex(label):
     Generates a simple LaTeX-formatted label from a plain-text label.
     This treats isolated characters and words beginning with a backslash
     as mathematical expressions and surround them with $ signs accordingly.
+        
+    Parameters
+    ----------
 
     **label** : string
         Plain-text string to convert to LaTeX.
@@ -334,6 +337,9 @@ class Plot(object):
     def set_axis_scale(self, axis, scale_type, **kwargs):
         '''
         Set the scale for an axis.
+        
+        Parameters
+        ----------
 
         **axis** : ''x'' or ''y''
             Axis for which to set the scale.
@@ -352,6 +358,7 @@ class Plot(object):
             Base of the ''y'' axis scale logarithm. Only relevant for log
             scales.
         '''
+
         if scale_type not in ('linear', 'log'):
             raise ValueError("Unknown scale `%s'. Use 'linear' or 'log'." % (scale_type,))
         if axis == 'x':
@@ -493,6 +500,9 @@ class Plot(object):
     def draw_fit_parameters_box(self, plot_spec=0,
                                 force_show_uncertainties=False):
         '''Draw the parameter box to the canvas
+        
+        Parameters
+        ----------
 
         *plot_spec* : int, list of ints, string or None (optional, default: 0)
             Specify the plot id of the plot for which to draw the parameters.
