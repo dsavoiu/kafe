@@ -275,7 +275,7 @@ class Fit(object):
 
         # store a dictionary to lookup whether a parameter is fixed
         self._fixed_parameters = np.zeros(self.number_of_parameters,
-                                         dtype=bool)
+                                          dtype=bool)
         self.number_of_fixed_parameters = 0
 
         # list to store values and errors of constrained parameters

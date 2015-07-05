@@ -28,7 +28,7 @@ def build_dataset(xdata, ydata, cov_mats=None,
                   xabserr=0.0, xrelerr=0.0, xabscor=0.0, xrelcor=0.0,
                   yabserr=0.0, yrelerr=0.0, yabscor=0.0, yrelcor=0.0,
                   title=None,
-                  axis_labels=None, axis_units=None):
+                  axis_labels=None, axis_units=None, **kwargs):
     '''
     This helper function creates a `Dataset` from a series of keyword
     arguments.
@@ -103,6 +103,8 @@ correlated error for the axis is then set to that.
     # cast data to array
     data = (np.asarray(xdata), np.asarray(ydata))
     size = len(xdata)
+
+    basename = kwargs.pop('basename', None)
 
     # check that x and y data have the same length
     if size != len(ydata):
@@ -218,7 +220,8 @@ correlated error for the axis is then set to that.
 
     _dataset = Dataset(data=data,
                        title=title,
-                       axis_labels=axis_labels, axis_units=axis_units)
+                       axis_labels=axis_labels, axis_units=axis_units,
+                       basename=basename)
 
     _dataset.add_error_source('x', 'matrix', cov_mats[0])
     _dataset.add_error_source('y', 'matrix', cov_mats[1])

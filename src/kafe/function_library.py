@@ -136,7 +136,7 @@ def poly5(x, coeff5=1.0, coeff4=0.0, coeff3=0.0,
 @LaTeX(name='f', parameter_names=('\\lambda{}', 'a_0'),
        expression='a_0\\,\\exp(\\lambda x)')
 @FitFunction
-def exp_2par(x, growth=1.0, constant_factor=0.0):
+def exp_2par(x, growth=1.0, constant_factor=1.0):
     return exp(growth * x) * constant_factor
 
 
@@ -144,7 +144,7 @@ def exp_2par(x, growth=1.0, constant_factor=0.0):
 @LaTeX(name='f', parameter_names=('\\lambda{}', 'a_0', 'y_0'),
        expression='a_0\\,\\exp(\\lambda x)+y_0')
 @FitFunction
-def exp_3par(x, growth=1.0, constant_factor=0.0, y_offset=0.0):
+def exp_3par(x, growth=1.0, constant_factor=1.0, y_offset=0.0):
     return exp(growth * x) * constant_factor + y_offset
 
 
@@ -152,7 +152,7 @@ def exp_3par(x, growth=1.0, constant_factor=0.0, y_offset=0.0):
 @LaTeX(name='f', parameter_names=('\\lambda{}', 'a_0', 'x_0'),
        expression='a_0\\,\\exp(\\lambda(x-x_0))')
 @FitFunction
-def exp_3par2(x, growth=1.0, constant_factor=0.0, x_offset=0.0):
+def exp_3par2(x, growth=1.0, constant_factor=1.0, x_offset=0.0):
     return exp(growth * (x - x_offset)) * constant_factor
 
 
@@ -160,7 +160,7 @@ def exp_3par2(x, growth=1.0, constant_factor=0.0, x_offset=0.0):
 @LaTeX(name='f', parameter_names=('\\lambda{}', 'a_0', 'x_0', 'y_0'),
        expression='a_0\\,\\exp(\\lambda(x-x_0))+y_0')
 @FitFunction
-def exp_4par(x, growth=1.0, constant_factor=0.0, x_offset=0.0, y_offset=0.0):
+def exp_4par(x, growth=1.0, constant_factor=1.0, x_offset=0.0, y_offset=0.0):
     return exp(growth * (x - x_offset)) * constant_factor + y_offset
 
 

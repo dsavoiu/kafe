@@ -155,7 +155,7 @@ class IMinuit:
             self.set_print_level(1)      # frugal output
 
 
-    def update_parameter_data(self, show_warnings=False):   # VIEWED OK
+    def update_parameter_data(self, show_warnings=False):
         """
         (Re-)Sets the parameter names, values and step size in iminuit.
         """
@@ -181,7 +181,7 @@ class IMinuit:
     # Set methods
     ##############
 
-    def set_print_level(self, print_level=P_DETAIL_LEVEL):   # VIEWED OK
+    def set_print_level(self, print_level=P_DETAIL_LEVEL):
         '''Sets the print level for Minuit.
 
         *print_level* : int (optional, default: 1 (frugal output))
@@ -191,7 +191,7 @@ class IMinuit:
         self.__iminuit.set_print_level(print_level)  # set Minuit print level
         self.print_level = print_level
 
-    def set_strategy(self, strategy_id=1):   # VIEWED OK
+    def set_strategy(self, strategy_id=1):
         '''Sets the strategy Minuit.
 
         *strategy_id* : int (optional, default: 1 (optimized))
@@ -201,7 +201,7 @@ class IMinuit:
 
         self.__iminuit.set_strategy(strategy_id)
 
-    def set_err(self, up_value=1.0):   # VIEWED OK
+    def set_err(self, up_value=1.0):
         '''Sets the ``UP`` value for Minuit.
 
         *up_value* : float (optional, default: 1.0)
@@ -286,40 +286,62 @@ class IMinuit:
 
         return _mat
 
-    def get_parameter_values(self):  # VIEWED OK
+    def get_parameter_values(self):
         '''Retrieves the parameter values from iminuit.
 
         return : tuple
             Current `Minuit` parameter values
         '''
+        if not self.__iminuit.is_clean_state():
+            # if the fit has been performed at least once
+            _param_struct = self.__iminuit.get_param_states()
 
-        _param_struct = self.__iminuit.get_param_states()
+            return tuple([p.value for p in _param_struct])
+        else:
+            # need to hack to get initial parameter values
+            _v = self.__iminuit.values
+            _pvals = [_v[pname] for pname in _v]
+            return tuple(_pvals)
 
-        return tuple([p.value for p in _param_struct])
-
-    def get_parameter_errors(self):     # VIEWED OK
+    def get_parameter_errors(self):
         '''Retrieves the parameter errors from iminuit.
 
         return : tuple
             Current `Minuit` parameter errors
         '''
+        if not self.__iminuit.is_clean_state():
+            # if the fit has been performed at least once
+            _param_struct = self.__iminuit.get_param_states()
 
-        _param_struct = self.__iminuit.get_param_states()
+            return tuple([p.error for p in _param_struct])
+        else:
+            # need to hack to get initial parameter values
+            _e = self.__iminuit.errors
+            _perrs = [_e[pname] for pname in _e]
+            return tuple(_perrs)
 
-        return tuple([p.error for p in _param_struct])
 
-    def get_parameter_info(self):       # VIEWED OK
+    def get_parameter_info(self):
         '''Retrieves parameter information from iminuit.
 
         return : list of tuples
             ``(parameter_name, parameter_val, parameter_error)``
         '''
 
-        _param_struct = self.__iminuit.get_param_states()
+        if not self.__iminuit.is_clean_state():
+            # if the fit has been performed at least once
+            _param_struct = self.__iminuit.get_param_states()
+            return tuple([(p.name, p.value, p.error * (not p.is_fixed)) for p in _param_struct])
+        else:
+            # need to hack to get initial parameter info
+            _v, _e = self.__iminuit.values, self.__iminuit.errors
+            _pnames = [pname for pname in _v]
+            _pvals = [_v[pname] for pname in _v]
+            _perrs = [_e[pname] * (not self.__iminuit.is_fixed(pname)) for pname in _e]
+            return tuple(zip(_pnames, _pvals, _perrs))
 
-        return tuple([(p.name, p.value, p.error * (not p.is_fixed)) for p in _param_struct])
 
-    def get_parameter_name(self, parameter_nr):     # VIEWED OK
+    def get_parameter_name(self, parameter_nr):
         '''Gets the name of parameter number ``parameter_nr``
 
         **parameter_nr** : int
@@ -328,7 +350,7 @@ class IMinuit:
 
         return self.parameter_names[parameter_nr]
 
-    def get_fit_info(self, info):     # VIEWED OK
+    def get_fit_info(self, info):
         '''Retrieves other info from `Minuit`.
 
         **info** : string
@@ -363,7 +385,7 @@ class IMinuit:
             else:
                 return D_MATRIX_ERROR[0]
 
-    def get_chi2_probability(self, n_deg_of_freedom):   # VIEWED OK
+    def get_chi2_probability(self, n_deg_of_freedom):
         '''
         Returns the probability that an observed :math:`\chi^2` exceeds
         the calculated value of :math:`\chi^2` for this fit by chance,
@@ -382,7 +404,7 @@ class IMinuit:
         # return value corresponds to ROOT.TMath.Prob(chi2, ndf)
         return 1. - stats.chi2.cdf(_fval, _ndf)
 
-    def get_contour(self, parameter1, parameter2, n_points=21): # VIEWED OK
+    def get_contour(self, parameter1, parameter2, n_points=21):
         '''
         Returns a list of points (2-tuples) representing a sampling of
         the :math:`1\\sigma` contour of the iminuit fit. The ``FCN`` has
@@ -433,7 +455,7 @@ class IMinuit:
         #
         return (x, y)
 
-    def get_profile(self, parameter, n_points=21):  # VIEWED OK
+    def get_profile(self, parameter, n_points=21):
         '''
         Returns a list of points (2-tuples) the profile
         the :math:`\\chi^2`  of the iminuit fit.
@@ -533,7 +555,7 @@ class IMinuit:
     # Other methods
     ################
 
-    def fix_parameter(self, parameter): # VIEWED OK
+    def fix_parameter(self, parameter):
         '''
         Fix parameter <`parameter`>.
 
@@ -567,7 +589,7 @@ class IMinuit:
             **fitparam)
 
 
-    def release_parameter(self, parameter): # VIEWED OK
+    def release_parameter(self, parameter):
         '''
         Release parameter <`parameter`>.
 
@@ -599,7 +621,7 @@ class IMinuit:
 
 
 
-    def reset(self):    # VIEWED OK
+    def reset(self):
         '''Resets iminuit by re-creating the minimizer.'''
         fitparam = self.__iminuit.fitarg.copy()   # copy minimizer arguments
         # replace minimizer
@@ -630,7 +652,7 @@ class IMinuit:
         # call the positional FCN.
         return self.function_to_minimize(*parameter_list)
 
-    def minimize(self, final_fit=True, log_print_level=2):  # VIEWED OK
+    def minimize(self, final_fit=True, log_print_level=2):
         '''Do the minimization. This calls `Minuit`'s algorithms ``MIGRAD``
         for minimization and, if `final_fit` is `True`, also ``HESSE``
         for computing/checking the parameter error matrix.'''
@@ -669,7 +691,7 @@ class IMinuit:
         os.dup2(old_out_stream, sys.stdout.fileno())
 
 
-    def minos_errors(self): # VIEWED OK
+    def minos_errors(self):
         '''
            Get (asymmetric) parameter uncertainties from MINOS
            algorithm. This calls `Minuit`'s algorithms ``MINOS``,

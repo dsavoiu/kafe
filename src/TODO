@@ -1,4 +1,4 @@
-TODO for v1.0.x
+TODO for v1.0.1
 ---------------
 
 % [NEW]  model function parameters can now have a description
@@ -7,4 +7,9 @@ TODO for v1.0.x
          cutting down on font size if necessary [ ]
 % [LOOK] include more info in the fit info box, such as FCN/ndf [ ]
 % [CODE] make Plot object less stiff, allowing for better
-         customization of plot routines [ ]
+         customization of plot routines (hooks?) [ ]
+% [FUNC] extend the plain-text representation of
+         `Datasets` to include meta-data, such as title, timestamp, 
+         description, errors?
+	 (like format parsed by `buildDataset_fromFile` (?))
+         
