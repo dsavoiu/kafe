@@ -23,7 +23,7 @@ Fitting a Breit-Wigner Resonance
 #---------------------------------------------------------------------
 
 # import everything we need from kafe
-from kafe import *
+import kafe
 # import helper function to parse the input file
 from kafe.file_tools import buildFit_fromFile
 #
@@ -36,7 +36,7 @@ fname = 'LEP-Data.dat'
 BWfit = buildFit_fromFile(fname)
 BWfit.do_fit()
 #
-BWplot = Plot(BWfit)
+BWplot = kafe.Plot(BWfit)
 BWplot.plot_all()
 BWplot.save("kafe_BreitWignerFit.pdf")
 

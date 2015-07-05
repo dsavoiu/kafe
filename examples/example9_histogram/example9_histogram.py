@@ -12,7 +12,7 @@ Histogram Fit
 ###########
 
 # import everything we need from kafe
-from kafe import *
+import kafe
 from kafe.function_library import gauss
 import numpy as np
 
@@ -43,7 +43,9 @@ def generate_histogram(output_path, bins=50, N=500):
     bincenters = (hedges[:-1] + hedges[1:])/2.  # centres of bins
 
 #  generate dataset with statistical errors of bin entries
-    hdataset = build_dataset(bincenters, hconts, yabserr=np.sqrt(hconts))
+    #hdataset = build_dataset(bincenters, hconts, yabserr=np.sqrt(hconts))
+    hdataset = kafe.Dataset([bincenters, hconts])
+    hdataset.add_error_source('y', 'simple', np.sqrt(hconts))
     hdataset.write_formatted(output_path)
 
 ############
@@ -54,8 +56,8 @@ def generate_histogram(output_path, bins=50, N=500):
 #generate_histogram('hdataset.dat',N=250)
 
 # Initialize the Dataset
-hdataset = Dataset(title="Data for example 9",
-                   axis_labels=['x', 'entries'])
+hdataset = kafe.Dataset(title="Data for example 9",
+                        axis_labels=['x', 'entries'])
 
 # Load the Datasets from file
 hdataset.read_from_file('hdataset.dat')
@@ -69,7 +71,7 @@ for i in range(0, len(covmat)):
 hdataset.set_cov_mat('y', covmat)  # write it back
 
 # Create the Fit instance
-hfit = Fit(hdataset, gauss, fit_label="Fit of a Gaussian to histogram data")
+hfit = kafe.Fit(hdataset, gauss, fit_label="Fit of a Gaussian to histogram data")
 #
 # perform an initial fit with temporary errors (minimial output)
 hfit.call_minimizer(final_fit=False, verbose=False)
@@ -83,7 +85,7 @@ hfit.current_cov_mat = covmat  # write it back new covariance matrix
 hfit.do_fit()
 
 # Create, draw, save and show plot
-hplot = Plot(hfit)
+hplot = kafe.Plot(hfit)
 hplot.plot_all()
 hplot.save('kafe_example9.pdf')
 hplot.show()

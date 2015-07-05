@@ -14,7 +14,7 @@
 #                GQ 27-JUL-14 <initial version>
 #---------------------------------------------------------------------
 # import everything we need from kafe
-from kafe import *
+import kafe
 from kafe.function_library import constant_1par
 from kafe.file_tools import buildDataset_fromFile
 #
@@ -26,13 +26,13 @@ fname = 'WData.dat'
 curDataset = buildDataset_fromFile(fname)
 
 # perform fit
-curFit = Fit(curDataset, constant_1par)
+curFit = kafe.Fit(curDataset, constant_1par)
 curFit.do_fit()
 
 print "average:", curFit.get_parameter_values()
 print "error :", curFit.get_parameter_errors()
 
-myPlot = Plot(curFit)
+myPlot = kafe.Plot(curFit)
 myPlot.plot_all()
 myPlot.save("kafe_example4.pdf")
 myPlot.show()

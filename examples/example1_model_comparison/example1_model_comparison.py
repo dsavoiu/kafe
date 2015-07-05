@@ -11,7 +11,7 @@ to data from a single Dataset.
 ###########
 
 # import everything we need from kafe
-from kafe import *
+import kafe
 
 # additionally, import the two model functions we
 # want to fit:
@@ -36,8 +36,10 @@ def generate_dataset(output_file_path):
     ydata = map(lambda x: exp_2par(x, growth, constant), xdata)
     ydata += np.random.normal(0.0, sigma_y, n_p)
 
-    my_dataset = build_dataset(xdata, ydata,
-                               xabserr=sigma_x, yabserr=sigma_y)
+    my_dataset = kafe.Dataset(data=(xdata, ydata))
+    my_dataset.add_error_source('x', 'simple', sigma_x)
+    my_dataset.add_error_source('y', 'simple', sigma_y)
+    
     my_dataset.write_formatted(output_file_path)
 
 
@@ -49,21 +51,24 @@ def generate_dataset(output_file_path):
 #generate_dataset('dataset.dat')
 
 # Initialize Dataset
-my_dataset = Dataset(title="Example Dataset")
+my_dataset = kafe.Dataset(title="Example Dataset")
 
 # Load the Dataset from the file
 my_dataset.read_from_file('dataset.dat')
 
+#print my_dataset.get_cov_mat(0)
+#print my_dataset.get_cov_mat(1)
+
 # Create the Fits
-my_fits = [Fit(my_dataset, exp_2par),
-           Fit(my_dataset, linear_2par)]
+my_fits = [kafe.Fit(my_dataset, exp_2par),
+           kafe.Fit(my_dataset, linear_2par)]
 
 # Do the Fits
 for fit in my_fits:
     fit.do_fit()
 
 # Create the plots
-my_plot = Plot(my_fits[0], my_fits[1])
+my_plot = kafe.Plot(my_fits[0], my_fits[1])
 
 # Draw the plots
 my_plot.plot_all(show_data_for=0)  # only show data once (it's the same data)

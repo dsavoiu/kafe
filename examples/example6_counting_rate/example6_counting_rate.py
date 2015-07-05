@@ -16,7 +16,8 @@ Fit of a counting rate
 ###########
 
 # import everything we need from kafe
-from kafe import *
+import kafe
+from kafe.file_tools import parse_column_data
 from kafe.function_library import poly4
 import numpy as np
 
@@ -49,8 +50,8 @@ for i in range(0, len(covmat)):
 my_dataset.set_cov_mat('y', covmat)  # write it back
 
 # Create the Fit
-my_fit = Fit(my_dataset, poly4)
-#            fit_label="Linear Regression " + dataset.data_label[-1])
+my_fit = kafe.Fit(my_dataset, poly4)
+#                 fit_label="Linear Regression " + dataset.data_label[-1])
 
 # perform an initial fit with temporary errors (minimal output)
 my_fit.call_minimizer(final_fit=False, verbose=False)
@@ -68,7 +69,7 @@ my_fit.current_cov_mat = covmat  # use modified covariance matrix
 my_fit.do_fit()
 
 # Create the plots
-my_plot = Plot(my_fit)
+my_plot = kafe.Plot(my_fit)
 # -- set the axis labels
 my_plot.axis_labels = ['$\\cos(\\theta)$', 'counting rate']
 # -- set scale linear / log

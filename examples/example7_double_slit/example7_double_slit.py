@@ -11,7 +11,9 @@ Double slit experiment
 ###########
 
 # import everything we need from kafe
-from kafe import *
+import kafe
+from kafe import ASCII, LaTeX, FitFunction
+from kafe.file_tools import parse_column_data
 
 # import some functions from numpy
 from numpy import cos, sin
@@ -47,9 +49,9 @@ my_dataset = parse_column_data('double_slit.dat',
                 axis_labels=['$\\alpha$', 'Intensity'] )
 
 # Create the Fit
-my_fit = Fit(my_dataset,
-             double_slit)
-#            fit_label="Linear Regression " + dataset.data_label[-1])
+my_fit = kafe.Fit(my_dataset,
+                  double_slit)
+#                 fit_label="Linear Regression " + dataset.data_label[-1])
 
 # Set the initial values for the fit
 #                      I   b      g      k
@@ -61,7 +63,7 @@ my_fit.fix_parameters('k')
 my_fit.do_fit()
 
 # Create the plots
-my_plot = Plot(my_fit)
+my_plot = kafe.Plot(my_fit)
 
 # Draw the plots
 my_plot.plot_all()

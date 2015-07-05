@@ -11,7 +11,8 @@ to data from a single Dataset.
 ###########
 
 # import everything we need from kafe
-from kafe import *
+import kafe
+from kafe import ASCII, LaTeX, FitFunction
 from numpy import exp
 import matplotlib.pyplot as plt
 
@@ -49,8 +50,10 @@ def generate_dataset(output_file_path):
     ydata = map(lambda x: exponential(x, A0, tau), xdata)
     ydata *= np.random.normal(1.0, sigma_y, n_p)
 
-    my_dataset = build_dataset(xdata, ydata,
-                               xabserr=sigma_x, yrelerr=sigma_y)
+    my_datasets.append(kafe.Dataset(data=(xdata, ydata)))
+    my_datasets[-1].add_error_source('x', 'simple', sigma_x)
+    my_datasets[-1].add_error_source('y', 'simple', sigma_y, relative=True)
+
     my_dataset.write_formatted(output_file_path)
 
 
@@ -62,21 +65,21 @@ def generate_dataset(output_file_path):
 #generate_dataset('dataset.dat')
 
 # Initialize the Dataset
-my_dataset = Dataset(title="Example Dataset",
-                     axis_labels=['t', 'A'] )
+my_dataset = kafe.Dataset(title="Example dataset",
+                          axis_labels=['t', 'A'] )
 
-# Load the Dataset from the file                     
+# Load the Dataset from the file
 my_dataset.read_from_file(input_file='dataset.dat')
 
 
 # Create the Fit
-my_fit = Fit(my_dataset, exponential)
+my_fit = kafe.Fit(my_dataset, exponential)
 
 # Do the Fit
 my_fit.do_fit()
 
 # Create the plots
-my_plot = Plot(my_fit)
+my_plot = kafe.Plot(my_fit)
 
 # Draw the plots
 my_plot.plot_all()
@@ -88,8 +91,8 @@ my_plot.plot_all()
 # Save the plots
 my_plot.save('kafe_example3.pdf')
 
-cor_fig=my_fit.plot_correlations()
-#cor_fig.savefig('kafe_example3_correlations.pdf')
+cor_fig = my_fit.plot_correlations()
+cor_fig.savefig('kafe_example3_correlations.pdf')
 
 # Show the plots
 my_plot.show()

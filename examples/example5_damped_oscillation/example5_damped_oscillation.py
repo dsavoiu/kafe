@@ -14,7 +14,9 @@ Damped Oscillation
 ###########
 
 # import everything we need from kafe
-from kafe import *
+import kafe
+from kafe import ASCII, LaTeX, FitFunction
+from kafe.file_tools import parse_column_data
 
 # import some functions from numpy
 from numpy import exp, cos
@@ -72,9 +74,9 @@ my_dataset = parse_column_data(
     axis_labels=['Time $t$','Amplitude'])
 
 # Create the Fit
-my_fit = Fit(my_dataset,
-             damped_oscillator)
-#            fit_label="Linear Regression " + dataset.data_label[-1])
+my_fit = kafe.Fit(my_dataset,
+                  damped_oscillator)
+#                 fit_label="Linear Regression " + dataset.data_label[-1])
 
 # Set the initial values for the fit:
 #                      a_0 tau omega phi
@@ -84,7 +86,7 @@ my_fit.set_parameters((1., 2., 6., 0.8))
 my_fit.do_fit()
 
 # Create the plots
-my_plot = Plot(my_fit)
+my_plot = kafe.Plot(my_fit)
 
 # Draw the plots
 my_plot.plot_all()

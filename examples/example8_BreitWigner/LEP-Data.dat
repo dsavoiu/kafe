@@ -40,7 +40,7 @@
 # cross-sections have a common relative error
 *yRelCor 0.0007 
 
-*FITLABEL Breit-Wigner-Fit \, {\large{( with\,s-dependent\,width )}} 
+*FITLABEL Breit-Wigner-Fit \, {\large{(with~s-dependent~width)}} 
 *FitFunction
 # Breit-Wigner with s-dependent width
 @ASCII(name='sigma', expression='s0*x^2*G^2/[(E^2-M^2)^2+(E^4*G^2/M^2)]')
