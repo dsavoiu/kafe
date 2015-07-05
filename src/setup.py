@@ -1,8 +1,9 @@
 from distutils.core import setup
+import kafe  # from this directory
 
 setup(
     name='kafe',
-    version='0.5.4',
+    version=kafe.__version__,
     author='Daniel Savoiu, Guenter Quast',
     author_email='danielsavoiu@gmail.com',
     packages=['kafe'],
