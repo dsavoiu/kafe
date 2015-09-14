@@ -107,6 +107,7 @@
 <li><a class="reference internal" href="#module-kafe.function_library"><code class="docutils literal"><span class="pre">function_library</span></code> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.function_tools"><code class="docutils literal"><span class="pre">function_tools</span></code> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.minuit"><code class="docutils literal"><span class="pre">minuit</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-kafe.iminuit_wrapper"><code class="docutils literal"><span class="pre">iminuit_wrapper</span></code> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.config"><code class="docutils literal"><span class="pre">config</span></code> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.plot"><code class="docutils literal"><span class="pre">plot</span></code> Module</a></li>
 <li><a class="reference internal" href="#module-kafe.latex_tools"><code class="docutils literal"><span class="pre">latex_tools</span></code> Module</a></li>
@@ -2310,7 +2311,7 @@ def fitf(x,av=1.): # fit an average
 <span id="fit-module"></span><h3><a class="reference internal" href="#module-fit" title="fit: This submodule defines a `Fit` object which performs the actual fitting given a `Dataset` and a fit function. (Unix)"><code class="xref py py-mod docutils literal"><span class="pre">fit</span></code></a> Module<a class="headerlink" href="#module-kafe.fit" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-fit"></span><dl class="class">
 <dt id="kafe.fit.Fit">
-<em class="property">class </em><code class="descclassname">kafe.fit.</code><code class="descname">Fit</code><span class="sig-paren">(</span><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2&gt;</em>, <em>fit_label=None</em>, <em>minimizer_to_use='iminuit'</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">kafe.fit.</code><code class="descname">Fit</code><span class="sig-paren">(</span><em>dataset</em>, <em>fit_function</em>, <em>external_fcn=&lt;function chi2&gt;</em>, <em>fit_label=None</em>, <em>minimizer_to_use='root'</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.fit.Fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Object representing a fit. This object references the fitted <cite>Dataset</cite>,
 the fit function and the resulting fit parameters.</p>
@@ -3466,6 +3467,313 @@ C++ side of Minuit.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-kafe.iminuit_wrapper">
+<span id="iminuit-wrapper-module"></span><h3><code class="xref py py-mod docutils literal"><span class="pre">iminuit_wrapper</span></code> Module<a class="headerlink" href="#module-kafe.iminuit_wrapper" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-iminuit"></span><dl class="data">
+<dt id="kafe.iminuit_wrapper.D_MATRIX_ERROR">
+<code class="descclassname">kafe.iminuit_wrapper.</code><code class="descname">D_MATRIX_ERROR</code><em class="property"> = {0: 'Error matrix not calculated', 1: 'Error matrix approximate!', 2: 'Error matrix forced positive definite!', 3: 'Error matrix accurate'}</em><a class="headerlink" href="#kafe.iminuit_wrapper.D_MATRIX_ERROR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Error matrix status codes</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="kafe.iminuit_wrapper.IMinuit">
+<em class="property">class </em><code class="descclassname">kafe.iminuit_wrapper.</code><code class="descname">IMinuit</code><span class="sig-paren">(</span><em>number_of_parameters</em>, <em>function_to_minimize</em>, <em>parameter_names</em>, <em>start_parameters</em>, <em>parameter_errors</em>, <em>quiet=True</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper class for iminuit.</p>
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.FCN_wrapper">
+<code class="descname">FCN_wrapper</code><span class="sig-paren">(</span><em>**kw_parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.FCN_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>This wrapper converts from the &#8220;keyword argument&#8221; way of calling the
+function to a &#8220;positional argument&#8221; way, taking into account the order
+of the parameters as they appear in <cite>self.parameter_names</cite>.</p>
+<p>This mapping is done for each call, so it&#8217;s quite resource intensive,
+but this is unavoidable, since external FCNs to minimize expect
+positional arguments.</p>
+<dl class="docutils">
+<dt><strong>kw_parameters</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
+<dd>Map of parameter name to parameter value.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.iminuit_wrapper.IMinuit.errordef">
+<code class="descname">errordef</code><em class="property"> = None</em><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.errordef" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">iminuit</span></code> errordef</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.fix_parameter">
+<code class="descname">fix_parameter</code><span class="sig-paren">(</span><em>parameter</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.fix_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fix parameter &lt;<cite>parameter</cite>&gt;.</p>
+<dl class="docutils">
+<dt><strong>parameter</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Name of the parameter to fix.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.iminuit_wrapper.IMinuit.function_to_minimize">
+<code class="descname">function_to_minimize</code><em class="property"> = None</em><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.function_to_minimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>the actual <cite>FCN</cite> called in <code class="docutils literal"><span class="pre">FCN_wrapper</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.get_chi2_probability">
+<code class="descname">get_chi2_probability</code><span class="sig-paren">(</span><em>n_deg_of_freedom</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.get_chi2_probability" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the probability that an observed <img class="math" src="_images/math/8bd0685e3bf9101859d24cf0e851651f182364c9.png" alt="\chi^2"/> exceeds
+the calculated value of <img class="math" src="_images/math/8bd0685e3bf9101859d24cf0e851651f182364c9.png" alt="\chi^2"/> for this fit by chance,
+even for a correct model. In other words, returns the probability that
+a worse fit of the model to the data exists. If this is a small value
+(typically &lt;5%), this means the fit is pretty bad. For values below
+this threshold, the model very probably does not fit the data.</p>
+<dl class="docutils">
+<dt>n_def_of_freedom <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>The number of degrees of freedom. This is typically
+<img class="math" src="_images/math/9d72e49b1b8bff111c54a0286c8c92a92434e94e.png" alt="n_   ext{datapoints} - n_    ext{parameters}"/>.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.get_contour">
+<code class="descname">get_contour</code><span class="sig-paren">(</span><em>parameter1</em>, <em>parameter2</em>, <em>n_points=21</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.get_contour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of points (2-tuples) representing a sampling of
+the <img class="math" src="_images/math/49d4d420882348d6c5361c0cbd5bc58e816ead44.png" alt="1\sigma"/> contour of the iminuit fit. The <code class="docutils literal"><span class="pre">FCN</span></code> has
+to be minimized before calling this.</p>
+<dl class="docutils">
+<dt><strong>parameter1</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>ID of the parameter to be displayed on the <cite>x</cite>-axis.</dd>
+<dt><strong>parameter2</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>ID of the parameter to be displayed on the <cite>y</cite>-axis.</dd>
+<dt><em>n_points</em> <span class="classifier-delimiter">:</span> <span class="classifier">int (optional)</span></dt>
+<dd>number of points used to draw the contour. Default is 21.</dd>
+<dt><em>returns</em> <span class="classifier-delimiter">:</span> <span class="classifier">2-tuple of tuples</span></dt>
+<dd>a 2-tuple (x, y) containing <code class="docutils literal"><span class="pre">n_points+1</span></code> points sampled
+along the contour. The first point is repeated at the end
+of the list to generate a closed contour.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.get_error_matrix">
+<code class="descname">get_error_matrix</code><span class="sig-paren">(</span><em>correlation=False</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.get_error_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the parameter error matrix from iminuit.</p>
+<dl class="docutils">
+<dt>correlation <span class="classifier-delimiter">:</span> <span class="classifier">boolean (optional, default <code class="docutils literal"><span class="pre">False</span></code>)</span></dt>
+<dd>If <code class="docutils literal"><span class="pre">True</span></code>, return correlation matrix, else return
+covariance matrix.</dd>
+</dl>
+<p>return : <cite>numpy.matrix</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.get_fit_info">
+<code class="descname">get_fit_info</code><span class="sig-paren">(</span><em>info</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.get_fit_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves other info from <cite>Minuit</cite>.</p>
+<dl class="docutils">
+<dt><strong>info</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first">Information about the fit to retrieve.
+This can be any of the following:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">'fcn'</span></code>: <cite>FCN</cite> value at minimum,</li>
+<li><code class="docutils literal"><span class="pre">'edm'</span></code>: estimated distance to minimum</li>
+<li><code class="docutils literal"><span class="pre">'err_def'</span></code>: <cite>Minuit</cite> error matrix status code</li>
+<li><code class="docutils literal"><span class="pre">'status_code'</span></code>: <cite>Minuit</cite> general status code</li>
+</ul>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.get_parameter_errors">
+<code class="descname">get_parameter_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.get_parameter_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the parameter errors from iminuit.</p>
+<dl class="docutils">
+<dt>return <span class="classifier-delimiter">:</span> <span class="classifier">tuple</span></dt>
+<dd>Current <cite>Minuit</cite> parameter errors</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.get_parameter_info">
+<code class="descname">get_parameter_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.get_parameter_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves parameter information from iminuit.</p>
+<dl class="docutils">
+<dt>return <span class="classifier-delimiter">:</span> <span class="classifier">list of tuples</span></dt>
+<dd><code class="docutils literal"><span class="pre">(parameter_name,</span> <span class="pre">parameter_val,</span> <span class="pre">parameter_error)</span></code></dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.get_parameter_name">
+<code class="descname">get_parameter_name</code><span class="sig-paren">(</span><em>parameter_nr</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.get_parameter_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the name of parameter number <code class="docutils literal"><span class="pre">parameter_nr</span></code></p>
+<dl class="docutils">
+<dt><strong>parameter_nr</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Number of the parameter whose name to get.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.get_parameter_values">
+<code class="descname">get_parameter_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.get_parameter_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the parameter values from iminuit.</p>
+<dl class="docutils">
+<dt>return <span class="classifier-delimiter">:</span> <span class="classifier">tuple</span></dt>
+<dd>Current <cite>Minuit</cite> parameter values</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.get_profile">
+<code class="descname">get_profile</code><span class="sig-paren">(</span><em>parameter</em>, <em>n_points=21</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.get_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of points (2-tuples) the profile
+the <img class="math" src="_images/math/8bd0685e3bf9101859d24cf0e851651f182364c9.png" alt="\chi^2"/>  of the iminuit fit.</p>
+<dl class="docutils">
+<dt><strong>parid</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>ID of the parameter to be displayed on the <cite>x</cite>-axis.</dd>
+<dt><em>n_points</em> <span class="classifier-delimiter">:</span> <span class="classifier">int (optional)</span></dt>
+<dd>number of points used for profile. Default is 21.</dd>
+<dt><em>returns</em> <span class="classifier-delimiter">:</span> <span class="classifier">two arrays, par. values and corresp. <img class="math" src="_images/math/8bd0685e3bf9101859d24cf0e851651f182364c9.png" alt="\chi^2"/></span></dt>
+<dd>containing <code class="docutils literal"><span class="pre">n_points</span></code> sampled profile points.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.iminuit_wrapper.IMinuit.max_iterations">
+<code class="descname">max_iterations</code><em class="property"> = None</em><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.max_iterations" title="Permalink to this definition">¶</a></dt>
+<dd><p>maximum number of iterations until <code class="docutils literal"><span class="pre">iminuit</span></code> gives up</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.minimize">
+<code class="descname">minimize</code><span class="sig-paren">(</span><em>final_fit=True</em>, <em>log_print_level=2</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.minimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do the minimization. This calls <cite>Minuit</cite>&#8216;s algorithms <code class="docutils literal"><span class="pre">MIGRAD</span></code>
+for minimization and, if <cite>final_fit</cite> is <cite>True</cite>, also <code class="docutils literal"><span class="pre">HESSE</span></code>
+for computing/checking the parameter error matrix.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.minos_errors">
+<code class="descname">minos_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.minos_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get (asymmetric) parameter uncertainties from MINOS
+algorithm. This calls <cite>Minuit</cite>&#8216;s algorithms <code class="docutils literal"><span class="pre">MINOS</span></code>,
+which determines parameter uncertainties using profiling
+of the chi2 function.</p>
+<dl class="docutils">
+<dt>returns <span class="classifier-delimiter">:</span> <span class="classifier">tuple</span></dt>
+<dd>A tuple of (err+, err-, parabolic error, global correlation)</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.iminuit_wrapper.IMinuit.name">
+<code class="descname">name</code><em class="property"> = None</em><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>the name of this minimizer type</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.iminuit_wrapper.IMinuit.number_of_parameters">
+<code class="descname">number_of_parameters</code><em class="property"> = None</em><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.number_of_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of parameters to minimize for</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.release_parameter">
+<code class="descname">release_parameter</code><span class="sig-paren">(</span><em>parameter</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.release_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release parameter &lt;<cite>parameter</cite>&gt;.</p>
+<dl class="docutils">
+<dt><strong>parameter</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Name of the parameter to release.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets iminuit by re-creating the minimizer.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.set_err">
+<code class="descname">set_err</code><span class="sig-paren">(</span><em>up_value=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.set_err" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the <code class="docutils literal"><span class="pre">UP</span></code> value for Minuit.</p>
+<dl class="docutils">
+<dt><em>up_value</em> <span class="classifier-delimiter">:</span> <span class="classifier">float (optional, default: 1.0)</span></dt>
+<dd>This is the value by which <cite>FCN</cite> is expected to change.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.set_parameter_errors">
+<code class="descname">set_parameter_errors</code><span class="sig-paren">(</span><em>parameter_errors=None</em>, <em>update_iminuit=True</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.set_parameter_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the fit parameter errors. If parameter_values=`None`, sets the
+error to 10% of the parameter value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.set_parameter_names">
+<code class="descname">set_parameter_names</code><span class="sig-paren">(</span><em>parameter_names</em>, <em>update_iminuit=True</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.set_parameter_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the fit parameter names.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.set_parameter_values">
+<code class="descname">set_parameter_values</code><span class="sig-paren">(</span><em>parameter_values</em>, <em>update_iminuit=True</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.set_parameter_values" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Sets the fit parameters. If parameter_values=`None`, tries to infer</dt>
+<dd>defaults from the function_to_minimize.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.set_print_level">
+<code class="descname">set_print_level</code><span class="sig-paren">(</span><em>print_level=1</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.set_print_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the print level for Minuit.</p>
+<dl class="docutils">
+<dt><em>print_level</em> <span class="classifier-delimiter">:</span> <span class="classifier">int (optional, default: 1 (frugal output))</span></dt>
+<dd>Tells <code class="docutils literal"><span class="pre">iminuit</span></code> how much output to generate. The higher this
+value, the more output it generates.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.set_strategy">
+<code class="descname">set_strategy</code><span class="sig-paren">(</span><em>strategy_id=1</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.set_strategy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the strategy Minuit.</p>
+<dl class="docutils">
+<dt><em>strategy_id</em> <span class="classifier-delimiter">:</span> <span class="classifier">int (optional, default: 1 (optimized))</span></dt>
+<dd>Tells <code class="docutils literal"><span class="pre">iminuit</span></code> to use a certain strategy. Refer to <code class="docutils literal"><span class="pre">iminuit</span></code>&#8216;s
+documentation for available strategies.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.set_tolerance">
+<code class="descname">set_tolerance</code><span class="sig-paren">(</span><em>tol</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.set_tolerance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the tolerance value for Minuit.</p>
+<dl class="docutils">
+<dt><strong>tol</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>The tolerance</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.iminuit_wrapper.IMinuit.update_parameter_data">
+<code class="descname">update_parameter_data</code><span class="sig-paren">(</span><em>show_warnings=False</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.update_parameter_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Re-)Sets the parameter names, values and step size in iminuit.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="data">
+<dt id="kafe.iminuit_wrapper.P_DETAIL_LEVEL">
+<code class="descclassname">kafe.iminuit_wrapper.</code><code class="descname">P_DETAIL_LEVEL</code><em class="property"> = 1</em><a class="headerlink" href="#kafe.iminuit_wrapper.P_DETAIL_LEVEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>default level of detail for iminuit&#8217;s output
+(typical range: -1 to 3, default: 1)</p>
+</dd></dl>
+
+</div>
 <div class="section" id="module-kafe.config">
 <span id="config-module"></span><h3><a class="reference internal" href="#module-config" title="config: A submodule for working with config files and the filesystem. (Unix)"><code class="xref py py-mod docutils literal"><span class="pre">config</span></code></a> Module<a class="headerlink" href="#module-kafe.config" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-config"></span><dl class="function">
@@ -3910,7 +4218,7 @@ check occurs.</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2015, D. Savoiu, G. Quast.
-      Last updated on Jul 05, 2015.
+      Last updated on Sep 14, 2015.
     </p>
   </div>
   Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.

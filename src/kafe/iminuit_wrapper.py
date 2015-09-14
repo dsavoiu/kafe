@@ -44,17 +44,6 @@ D_MATRIX_ERROR = {0: "Error matrix not calculated",
                   2: "Error matrix forced positive definite!",
                   3: "Error matrix accurate"}  #: Error matrix status codes
 
-'''
-Minuit(fcn,
-       throw_nan=False,
-       pedantic=True,
-       frontend=ConsoleFrontend,
-       forced_parameters=?,
-       print_level=0 if quiet, 1 if print,
-       errordef=1
-       )
-'''
-
 class IMinuit:
     '''
     A wrapper class for iminuit.

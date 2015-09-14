@@ -1259,6 +1259,14 @@ code.
     :undoc-members:
     :show-inheritance:
 
+:py:mod:`iminuit_wrapper` Module
+--------------------------------
+
+.. automodule:: kafe.iminuit_wrapper
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :py:mod:`config` Module
 -----------------------
 

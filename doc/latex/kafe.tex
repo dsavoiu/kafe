@@ -19,7 +19,7 @@
 \usepackage{enumitem}\setlistdepth{48}
 
 \title{kafe Documentation}
-\date{July 05, 2015}
+\date{September 14, 2015}
 \release{1.0.0}
 \author{D. Savoiu, G. Quast}
 \newcommand{\sphinxlogo}{}
@@ -2609,7 +2609,7 @@ def fitf(x,av=1.): \PYGZsh{} fit an average
 \label{index:fit-module}\label{index:module-kafe.fit}\index{kafe.fit (module)}\phantomsection\label{index:module-fit}\index{fit (module)}\index{Fit (class in kafe.fit)}
 
 \begin{fulllineitems}
-\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2\textgreater{}}, \emph{fit\_label=None}, \emph{minimizer\_to\_use='iminuit'}}{}
+\phantomsection\label{index:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2\textgreater{}}, \emph{fit\_label=None}, \emph{minimizer\_to\_use='root'}}{}
 Bases: \code{object}
 
 Object representing a fit. This object references the fitted \emph{Dataset},
@@ -4022,6 +4022,404 @@ default level of detail for TMinuit's output
 
 
 
+\section{\texttt{iminuit\_wrapper} Module}
+\label{index:iminuit-wrapper-module}\label{index:module-kafe.iminuit_wrapper}\index{kafe.iminuit\_wrapper (module)}\phantomsection\label{index:module-iminuit}\index{iminuit (module)}\index{D\_MATRIX\_ERROR (in module kafe.iminuit\_wrapper)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.D_MATRIX_ERROR}\pysigline{\code{kafe.iminuit\_wrapper.}\bfcode{D\_MATRIX\_ERROR}\strong{ = \{0: `Error matrix not calculated', 1: `Error matrix approximate!', 2: `Error matrix forced positive definite!', 3: `Error matrix accurate'\}}}
+Error matrix status codes
+
+\end{fulllineitems}
+
+\index{IMinuit (class in kafe.iminuit\_wrapper)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit}\pysiglinewithargsret{\strong{class }\code{kafe.iminuit\_wrapper.}\bfcode{IMinuit}}{\emph{number\_of\_parameters}, \emph{function\_to\_minimize}, \emph{parameter\_names}, \emph{start\_parameters}, \emph{parameter\_errors}, \emph{quiet=True}, \emph{verbose=False}}{}
+A wrapper class for iminuit.
+\index{FCN\_wrapper() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.FCN_wrapper}\pysiglinewithargsret{\bfcode{FCN\_wrapper}}{\emph{**kw\_parameters}}{}
+This wrapper converts from the ``keyword argument'' way of calling the
+function to a ``positional argument'' way, taking into account the order
+of the parameters as they appear in \emph{self.parameter\_names}.
+
+This mapping is done for each call, so it's quite resource intensive,
+but this is unavoidable, since external FCNs to minimize expect
+positional arguments.
+\begin{description}
+\item[{\textbf{kw\_parameters}}] \leavevmode{[}dict{]}
+Map of parameter name to parameter value.
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{errordef (kafe.iminuit\_wrapper.IMinuit attribute)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.errordef}\pysigline{\bfcode{errordef}\strong{ = None}}
+\code{iminuit} errordef
+
+\end{fulllineitems}
+
+\index{fix\_parameter() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.fix_parameter}\pysiglinewithargsret{\bfcode{fix\_parameter}}{\emph{parameter}}{}
+Fix parameter \textless{}\emph{parameter}\textgreater{}.
+\begin{description}
+\item[{\textbf{parameter}}] \leavevmode{[}string{]}
+Name of the parameter to fix.
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{function\_to\_minimize (kafe.iminuit\_wrapper.IMinuit attribute)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.function_to_minimize}\pysigline{\bfcode{function\_to\_minimize}\strong{ = None}}
+the actual \emph{FCN} called in \code{FCN\_wrapper}
+
+\end{fulllineitems}
+
+\index{get\_chi2\_probability() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.get_chi2_probability}\pysiglinewithargsret{\bfcode{get\_chi2\_probability}}{\emph{n\_deg\_of\_freedom}}{}
+Returns the probability that an observed \(\chi^2\) exceeds
+the calculated value of \(\chi^2\) for this fit by chance,
+even for a correct model. In other words, returns the probability that
+a worse fit of the model to the data exists. If this is a small value
+(typically \textless{}5\%), this means the fit is pretty bad. For values below
+this threshold, the model very probably does not fit the data.
+\begin{description}
+\item[{n\_def\_of\_freedom}] \leavevmode{[}int{]}
+The number of degrees of freedom. This is typically
+\(n_   ext{datapoints} - n_    ext{parameters}\).
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{get\_contour() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.get_contour}\pysiglinewithargsret{\bfcode{get\_contour}}{\emph{parameter1}, \emph{parameter2}, \emph{n\_points=21}}{}
+Returns a list of points (2-tuples) representing a sampling of
+the \(1\sigma\) contour of the iminuit fit. The \code{FCN} has
+to be minimized before calling this.
+\begin{description}
+\item[{\textbf{parameter1}}] \leavevmode{[}int{]}
+ID of the parameter to be displayed on the \emph{x}-axis.
+
+\item[{\textbf{parameter2}}] \leavevmode{[}int{]}
+ID of the parameter to be displayed on the \emph{y}-axis.
+
+\item[{\emph{n\_points}}] \leavevmode{[}int (optional){]}
+number of points used to draw the contour. Default is 21.
+
+\item[{\emph{returns}}] \leavevmode{[}2-tuple of tuples{]}
+a 2-tuple (x, y) containing \code{n\_points+1} points sampled
+along the contour. The first point is repeated at the end
+of the list to generate a closed contour.
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{get\_error\_matrix() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.get_error_matrix}\pysiglinewithargsret{\bfcode{get\_error\_matrix}}{\emph{correlation=False}}{}
+Retrieves the parameter error matrix from iminuit.
+\begin{description}
+\item[{correlation}] \leavevmode{[}boolean (optional, default \code{False}){]}
+If \code{True}, return correlation matrix, else return
+covariance matrix.
+
+\end{description}
+
+return : \emph{numpy.matrix}
+
+\end{fulllineitems}
+
+\index{get\_fit\_info() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.get_fit_info}\pysiglinewithargsret{\bfcode{get\_fit\_info}}{\emph{info}}{}
+Retrieves other info from \emph{Minuit}.
+\begin{description}
+\item[{\textbf{info}}] \leavevmode{[}string{]}
+Information about the fit to retrieve.
+This can be any of the following:
+\begin{itemize}
+\item {} 
+\code{'fcn'}: \emph{FCN} value at minimum,
+
+\item {} 
+\code{'edm'}: estimated distance to minimum
+
+\item {} 
+\code{'err\_def'}: \emph{Minuit} error matrix status code
+
+\item {} 
+\code{'status\_code'}: \emph{Minuit} general status code
+
+\end{itemize}
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{get\_parameter\_errors() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.get_parameter_errors}\pysiglinewithargsret{\bfcode{get\_parameter\_errors}}{}{}
+Retrieves the parameter errors from iminuit.
+\begin{description}
+\item[{return}] \leavevmode{[}tuple{]}
+Current \emph{Minuit} parameter errors
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{get\_parameter\_info() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.get_parameter_info}\pysiglinewithargsret{\bfcode{get\_parameter\_info}}{}{}
+Retrieves parameter information from iminuit.
+\begin{description}
+\item[{return}] \leavevmode{[}list of tuples{]}
+\code{(parameter\_name, parameter\_val, parameter\_error)}
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{get\_parameter\_name() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.get_parameter_name}\pysiglinewithargsret{\bfcode{get\_parameter\_name}}{\emph{parameter\_nr}}{}
+Gets the name of parameter number \code{parameter\_nr}
+\begin{description}
+\item[{\textbf{parameter\_nr}}] \leavevmode{[}int{]}
+Number of the parameter whose name to get.
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{get\_parameter\_values() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.get_parameter_values}\pysiglinewithargsret{\bfcode{get\_parameter\_values}}{}{}
+Retrieves the parameter values from iminuit.
+\begin{description}
+\item[{return}] \leavevmode{[}tuple{]}
+Current \emph{Minuit} parameter values
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{get\_profile() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.get_profile}\pysiglinewithargsret{\bfcode{get\_profile}}{\emph{parameter}, \emph{n\_points=21}}{}
+Returns a list of points (2-tuples) the profile
+the \(\chi^2\)  of the iminuit fit.
+\begin{description}
+\item[{\textbf{parid}}] \leavevmode{[}int{]}
+ID of the parameter to be displayed on the \emph{x}-axis.
+
+\item[{\emph{n\_points}}] \leavevmode{[}int (optional){]}
+number of points used for profile. Default is 21.
+
+\item[{\emph{returns}}] \leavevmode{[}two arrays, par. values and corresp. \(\chi^2\){]}
+containing \code{n\_points} sampled profile points.
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{max\_iterations (kafe.iminuit\_wrapper.IMinuit attribute)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.max_iterations}\pysigline{\bfcode{max\_iterations}\strong{ = None}}
+maximum number of iterations until \code{iminuit} gives up
+
+\end{fulllineitems}
+
+\index{minimize() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.minimize}\pysiglinewithargsret{\bfcode{minimize}}{\emph{final\_fit=True}, \emph{log\_print\_level=2}}{}
+Do the minimization. This calls \emph{Minuit}`s algorithms \code{MIGRAD}
+for minimization and, if \emph{final\_fit} is \emph{True}, also \code{HESSE}
+for computing/checking the parameter error matrix.
+
+\end{fulllineitems}
+
+\index{minos\_errors() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.minos_errors}\pysiglinewithargsret{\bfcode{minos\_errors}}{}{}
+Get (asymmetric) parameter uncertainties from MINOS
+algorithm. This calls \emph{Minuit}`s algorithms \code{MINOS},
+which determines parameter uncertainties using profiling
+of the chi2 function.
+\begin{description}
+\item[{returns}] \leavevmode{[}tuple{]}
+A tuple of (err+, err-, parabolic error, global correlation)
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{name (kafe.iminuit\_wrapper.IMinuit attribute)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.name}\pysigline{\bfcode{name}\strong{ = None}}
+the name of this minimizer type
+
+\end{fulllineitems}
+
+\index{number\_of\_parameters (kafe.iminuit\_wrapper.IMinuit attribute)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.number_of_parameters}\pysigline{\bfcode{number\_of\_parameters}\strong{ = None}}
+number of parameters to minimize for
+
+\end{fulllineitems}
+
+\index{release\_parameter() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.release_parameter}\pysiglinewithargsret{\bfcode{release\_parameter}}{\emph{parameter}}{}
+Release parameter \textless{}\emph{parameter}\textgreater{}.
+\begin{description}
+\item[{\textbf{parameter}}] \leavevmode{[}string{]}
+Name of the parameter to release.
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{reset() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.reset}\pysiglinewithargsret{\bfcode{reset}}{}{}
+Resets iminuit by re-creating the minimizer.
+
+\end{fulllineitems}
+
+\index{set\_err() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.set_err}\pysiglinewithargsret{\bfcode{set\_err}}{\emph{up\_value=1.0}}{}
+Sets the \code{UP} value for Minuit.
+\begin{description}
+\item[{\emph{up\_value}}] \leavevmode{[}float (optional, default: 1.0){]}
+This is the value by which \emph{FCN} is expected to change.
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{set\_parameter\_errors() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.set_parameter_errors}\pysiglinewithargsret{\bfcode{set\_parameter\_errors}}{\emph{parameter\_errors=None}, \emph{update\_iminuit=True}}{}
+Sets the fit parameter errors. If parameter\_values={}`None{}`, sets the
+error to 10\% of the parameter value.
+
+\end{fulllineitems}
+
+\index{set\_parameter\_names() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.set_parameter_names}\pysiglinewithargsret{\bfcode{set\_parameter\_names}}{\emph{parameter\_names}, \emph{update\_iminuit=True}}{}
+Sets the fit parameter names.
+
+\end{fulllineitems}
+
+\index{set\_parameter\_values() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.set_parameter_values}\pysiglinewithargsret{\bfcode{set\_parameter\_values}}{\emph{parameter\_values}, \emph{update\_iminuit=True}}{}~\begin{description}
+\item[{Sets the fit parameters. If parameter\_values={}`None{}`, tries to infer}] \leavevmode
+defaults from the function\_to\_minimize.
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{set\_print\_level() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.set_print_level}\pysiglinewithargsret{\bfcode{set\_print\_level}}{\emph{print\_level=1}}{}
+Sets the print level for Minuit.
+\begin{description}
+\item[{\emph{print\_level}}] \leavevmode{[}int (optional, default: 1 (frugal output)){]}
+Tells \code{iminuit} how much output to generate. The higher this
+value, the more output it generates.
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{set\_strategy() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.set_strategy}\pysiglinewithargsret{\bfcode{set\_strategy}}{\emph{strategy\_id=1}}{}
+Sets the strategy Minuit.
+\begin{description}
+\item[{\emph{strategy\_id}}] \leavevmode{[}int (optional, default: 1 (optimized)){]}
+Tells \code{iminuit} to use a certain strategy. Refer to \code{iminuit}`s
+documentation for available strategies.
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{set\_tolerance() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.set_tolerance}\pysiglinewithargsret{\bfcode{set\_tolerance}}{\emph{tol}}{}
+Sets the tolerance value for Minuit.
+\begin{description}
+\item[{\textbf{tol}}] \leavevmode{[}float{]}
+The tolerance
+
+\end{description}
+
+\end{fulllineitems}
+
+\index{update\_parameter\_data() (kafe.iminuit\_wrapper.IMinuit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.IMinuit.update_parameter_data}\pysiglinewithargsret{\bfcode{update\_parameter\_data}}{\emph{show\_warnings=False}}{}
+(Re-)Sets the parameter names, values and step size in iminuit.
+
+\end{fulllineitems}
+
+
+\end{fulllineitems}
+
+\index{P\_DETAIL\_LEVEL (in module kafe.iminuit\_wrapper)}
+
+\begin{fulllineitems}
+\phantomsection\label{index:kafe.iminuit_wrapper.P_DETAIL_LEVEL}\pysigline{\code{kafe.iminuit\_wrapper.}\bfcode{P\_DETAIL\_LEVEL}\strong{ = 1}}
+default level of detail for iminuit's output
+(typical range: -1 to 3, default: 1)
+
+\end{fulllineitems}
+
+
+
 \section{\texttt{config} Module}
 \label{index:module-kafe.config}\label{index:config-module}\index{kafe.config (module)}\phantomsection\label{index:module-config}\index{config (module)}\index{create\_config\_file() (in module kafe.config)}
 
@@ -4569,6 +4967,9 @@ check occurs.
 \item {\texttt{function\_library}} \emph{(Unix)}, \pageref{index:module-function_library}
 \item {\texttt{function\_tools}} \emph{(Unix)}, \pageref{index:module-function_tools}
 \indexspace
+\bigletter{i}
+\item {\texttt{iminuit}} \emph{(Unix)}, \pageref{index:module-iminuit}
+\indexspace
 \bigletter{k}
 \item {\texttt{kafe.\_\_init\_\_}}, \pageref{index:module-kafe.__init__}
 \item {\texttt{kafe.\_version\_info}}, \pageref{index:module-kafe._version_info}
@@ -4579,6 +4980,7 @@ check occurs.
 \item {\texttt{kafe.fit}}, \pageref{index:module-kafe.fit}
 \item {\texttt{kafe.function\_library}}, \pageref{index:module-kafe.function_library}
 \item {\texttt{kafe.function\_tools}}, \pageref{index:module-kafe.function_tools}
+\item {\texttt{kafe.iminuit\_wrapper}}, \pageref{index:module-kafe.iminuit_wrapper}
 \item {\texttt{kafe.latex\_tools}}, \pageref{index:module-kafe.latex_tools}
 \item {\texttt{kafe.minuit}}, \pageref{index:module-kafe.minuit}
 \item {\texttt{kafe.numeric\_tools}}, \pageref{index:module-kafe.numeric_tools}
