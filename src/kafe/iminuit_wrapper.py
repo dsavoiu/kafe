@@ -117,9 +117,6 @@ class IMinuit:
         #: maximum number of iterations until ``iminuit`` gives up
         self.max_iterations = M_MAX_ITERATIONS
 
-        #: ``iminuit`` tolerance
-        self.tolerance = M_TOLERANCE
-
         #: ``iminuit`` errordef
         self.errordef = 1.0
 
@@ -145,6 +142,7 @@ class IMinuit:
         # set minimizer properties
         self.set_err()
         self.set_strategy()
+        self.set_tolerance(M_TOLERANCE)
 
         # set print level according to flag
         if quiet:
@@ -211,6 +209,18 @@ class IMinuit:
         self.errordef = up_value
         # Tell iminuit to use an up-value of 1.0
         self.__iminuit.set_errordef(up_value)
+
+    def set_tolerance(self, tol):
+        '''Sets the tolerance value for Minuit.
+
+        **tol** : float
+            The tolerance
+        '''
+        # shadow
+        self.tolerance = tol
+        # Tell iminuit tolerance
+        self.__iminuit.tol = tol
+
 
     def set_parameter_values(self, parameter_values, update_iminuit=True):   # CAN_STAY
         '''
@@ -449,6 +459,7 @@ class IMinuit:
         #g = np.asarray(
         #        self.__iminuit.mncontour(parameter1, parameter2, n_points))
         _, _, g = self.__iminuit.mncontour(parameter1, parameter2, n_points)
+
         g = np.asarray(g)
 
         x, y = g.T  # transpose to get x and y arrays
