@@ -20,6 +20,8 @@
 #               - axis labels moved to end of axis
 #               - fit info box now adjusts in size to be the same
 #                 width as the legend box
+# GQ 160116    two fixes in self.fitinfotext (compatibility with matplotlib 1.5)
+#
 # -----------------------------------------------------------------
 
 import numpy as np
@@ -609,6 +611,7 @@ class Plot(object):
             )
         )
 
+		# TODO: find cause of MPL error when passing 'xy'/'width'
         self.fitinfotext = self.axes.text(
             legend_bbox.xmin+pad_amount/2, 0.00+pad_amount/2,
             text_content[:-1],
@@ -617,10 +620,10 @@ class Plot(object):
             verticalalignment='bottom',
             horizontalalignment='left',
             bbox={
-                'xy': (legend_bbox.xmin, 0.00),
+                #'xy': (legend_bbox.xmin, 0.00),  # GQ: remove for compatibility with matplotlib 1.5.1
                 'facecolor': (1., .9, .9, 0.),
                 'edgecolor': (1., .9, .9, 0.),
-                'width': textbox_size_px[0],
+                #'width': textbox_size_px[0],  # GQ: remove for compatibility with matplotlib 1.5.1
                 #'height': textbox_size_px[1],
                 'pad': pad_amount_px
             },

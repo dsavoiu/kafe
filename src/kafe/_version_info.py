@@ -10,17 +10,17 @@
 
 major = 1
 minor = 0
-revision = 0
+revision = 1
 
 def _get_version_tuple():
   '''
-  kafe version 1.0.0
+  kafe version 1.0.1
   '''
   return (major, minor, revision)
 
 def _get_version_string():
   '''
-  kafe version 1.0.0
+  kafe version 1.0.1
   '''
   return "%d.%d.%d" % _get_version_tuple()
 

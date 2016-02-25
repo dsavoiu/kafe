@@ -36,6 +36,7 @@
 # 18-Dec-14   G.Q. addes "plot_correlations" to provide a graphical
 #                  representation of the parameter covariance-matrix
 #                  by showing all contours and profiles as an array of plots
+# 15-Jan-16   G.Q. fixed color name "darmagenta" -> darkmagenta
 # -------------------------------------------------------------------------
 
 
@@ -1166,7 +1167,7 @@ class Fit(object):
         tmp_ax.errorbar(xval, yval, xerr=xer, yerr=yer, fmt='o')
         # tmp_ax.scatter(xval, yval, marker='+', label='parameter values')
         tmp_ax.set_color_cycle(['black', 'darkblue', 'darkgreen', 'chocolate',
-                                'darmagenta', 'darkred', 'darkorange',
+                                'darkmagenta', 'darkred', 'darkorange',
                                 'darkgoldenrod'])
         # plot contours(s)
         dc2list = []
