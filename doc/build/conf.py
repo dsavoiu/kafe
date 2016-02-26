@@ -15,16 +15,6 @@
 import sys
 import os
 
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('../..'))
-sys.path.insert(0, os.path.abspath('extensions'))
-
-import kafe
-
-print 'kafe version:', kafe.__version__
-
 # Mock modules: when building the documentation using autodoc, Sphinx
 # imports the entire Python code, which can in turn import other packages.
 # When building the documentation on systems which don't have these
@@ -38,6 +28,16 @@ import mock
 MOCK_MODULES = ['numpy', 'scipy', 'matplotlib', 'matplotlib.pyplot', 'scipy', 'scipy.stats', 'scipy.special', 'scipy.misc', 'scipy.linalg', 'ROOT']
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = mock.Mock()
+
+# If extensions (or modules to document with autodoc) are in another directory,
+# add these directories to sys.path here. If the directory is relative to the
+# documentation root, use os.path.abspath to make it absolute, like shown here.
+sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('extensions'))
+
+import kafe
+
+print 'kafe version:', kafe.__version__
 
 # -- General configuration ------------------------------------------------
 
