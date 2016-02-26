@@ -261,7 +261,7 @@ Installation
 ------------
 
 To install `kafe`, unpack the archive `kafe-<version>.tgz` , change to
-the sub-directory  `kafe-<version>/src/`  and follow the installation
+the directory  `kafe-<version>`  and follow the installation
 instructions below.
 
 1.) Install using `pip`:
