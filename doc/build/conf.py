@@ -25,6 +25,20 @@ import kafe
 
 print 'kafe version:', kafe.__version__
 
+# Mock modules: when building the documentation using autodoc, Sphinx
+# imports the entire Python code, which can in turn import other packages.
+# When building the documentation on systems which don't have these
+# external packages installed, autodoc will fail to import them, which
+# causes the entire build to fail. A workaround is to use 'mocks': packages
+# that pretend to be the external modules so they can be imported, but
+# don't actually do anything. This is needed for building the documentation
+# on e.g. ReadTheDocs.org
+import mock
+ 
+MOCK_MODULES = ['numpy', 'scipy', 'matplotlib', 'matplotlib.pyplot', 'scipy', 'scipy.stats', 'scipy.special', 'scipy.misc', 'scipy.linalg', 'ROOT']
+for mod_name in MOCK_MODULES:
+    sys.modules[mod_name] = mock.Mock()
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.

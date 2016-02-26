@@ -1,0 +1,27 @@
+sudo: required
+language: python
+python:
+  - 2.7
+
+before_install:
+  - |
+    # Travis tools
+    source ci/travis/travis_tools.sh
+    virtualenv --python=python myenv
+    source myenv/bin/activate
+
+install:
+  - |
+    pip install --upgrade pip
+    pip install --upgrade numpy
+    pip install --upgrade scipy
+    pip install --upgrade matplotlib
+    pip install --upgrade iminuit
+    sudo apt-get -y install root-system
+  - ./install.sh
+
+script:
+  - |
+    cd examples
+    cd example1_model_comparison
+    python example1_model_comparison.py
