@@ -416,8 +416,8 @@ def parse_general_inputfile(file_to_parse):
     * Additional keys allow to specify correlated absolute or relative
       uncertainties:
 
-      - ``*xAbsCOR <common abs. x uncert.>``
-      - ``*yAbsCOR <common abs. y uncert.>``
+      - ``*xAbsCor <common abs. x uncert.>``
+      - ``*yAbsCor <common abs. y uncert.>``
       - ``*xRelCor <common rel. x uncert.>``
       - ``*yRelCor <common rel. y uncert.>``
 
