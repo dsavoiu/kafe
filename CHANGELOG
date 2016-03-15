@@ -1,5 +1,9 @@
 trunk
 =====
+v1.0.1
+======
+    %  [BUG] in fit.py (color name "darmagenta" -> "darkmagenta")
+    %  [FIX] for matplotlib vers. 1.5.x : bbox parameters in plot.py
 
 v1.0.0
 ======
