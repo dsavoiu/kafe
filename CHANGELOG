@@ -1,8 +1,20 @@
 trunk
 =====
 
+%  [NEW] added keyword `plotstyle` to kafe.Plot(), which allows
+   to use user-defined instance of kafe.PlotStyls()
+%  [FIX] set_color_cycle in fit.py is deprecated in matplotlib 1.5,
+   but still works. prepared for using set_prop_cycle (enabling this
+   would breadk 1.3 compatibility)
+
+v1.0.1
+======
+    %  [BUG] in fit.py (color name "darmagenta" -> "darkmagenta")
+    %  [FIX] for matplotlib vers. 1.5.x : bbox parameters in plot.py
+
 v1.0.0
 ======
+
     % [NEW] `ErrorSource` object: Datasets no longer contain
       a single covariance matrix, but a list of ErrorSource
       objects.
