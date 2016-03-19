@@ -21,6 +21,8 @@
 #               - fit info box now adjusts in size to be the same
 #                 width as the legend box
 # GQ 160116    two fixes in self.fitinfotext (compatibility with matplotlib 1.5)
+# GQ 160319    new kw argument "plotstyle" in Plot() allows using
+#               user-defined instance of PlotStyle()
 #
 # -----------------------------------------------------------------
 
@@ -253,7 +255,7 @@ class Plot(object):
 
         # set the default style as the current plot style
         #: plot style
-        self.plot_style = PlotStyle()
+        self.plot_style = kwargs.get('plotstyle', PlotStyle())
 
         # Update matplotlib's rcParams with those from plot_style
         self._update_rcParams()
@@ -299,7 +301,7 @@ class Plot(object):
         Initialize the plots for each fit.
         '''
 
-        self.figure = plt.figure()
+        self.figure = plt.figure("kafe-fit")
         """A matplotlib figure object."""
         self.axes = self.figure.add_subplot(121)
         """A matplotlib axes object. Use this to modify the `axes` object

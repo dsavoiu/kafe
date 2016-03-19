@@ -1,18 +1,14 @@
 trunk
 =====
-v1.0.1
-======
-    %  [BUG] in fit.py (color name "darmagenta" -> "darkmagenta")
-    %  [FIX] for matplotlib vers. 1.5.x : bbox parameters in plot.py
 
 v1.0.0
 ======
-
     % [NEW] `ErrorSource` object: Datasets no longer contain
       a single covariance matrix, but a list of ErrorSource
       objects.
     % [NEW] `Dataset` objects can now be created empty, allowing
       data and error model to be added later. [ ]
+    % 'prepared' fit.py to replace 'set_color_cyle' by 'set_prop_cycle'
 
 v0.5.2
 ======
