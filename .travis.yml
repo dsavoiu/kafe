@@ -4,9 +4,6 @@ language: python
 python:
   - 2.7
 
-before_install:
-  - source ci/travis/travis_tools.sh
-
 install:
   - pip install --upgrade pip
   - sudo apt-get -qq install python-numpy
