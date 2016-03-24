@@ -4,6 +4,9 @@ language: python
 python:
   - 2.7
 
+virtualenv:
+    system_site_packages: true
+
 addons:
   apt:
     packages:
@@ -14,8 +17,14 @@ addons:
     #- root-system  #don't install ROOT yet
     
 install:
+  - python -c "import sys; print sys.path"
+  - pip show matplotlib
   - pip install --upgrade pip
   - pip install --upgrade iminuit
+  - python -c "import sys; print sys.path"
+  - python -c "import numpy"
+  - python -c "import scipy"
+  - python -c "import matplotlib"
   - pip install -e .
 
 script:
