@@ -1,5 +1,4 @@
-sudo: required
-dist: trusty
+sudo: false
 
 language: python
 python:
@@ -11,14 +10,17 @@ virtualenv:
 addons:
   apt:
     packages:
-    - python-numpy
-    - python-scipy
+    #- python-numpy
+    #- python-scipy
     - python-qt4
-    - python-matplotlib
+    #- python-matplotlib
     #- root-system  #don't install ROOT yet
     
 install:
   - python -c "import sys; print sys.path"
+  - pip install scipy
+  - pip install numpy
+  - pip install matplotlib
   - pip show matplotlib
   - pip install --upgrade pip
   - pip install --upgrade iminuit
