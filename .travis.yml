@@ -19,7 +19,7 @@ install:
   - sudo apt-get -y install python-matplotlib
   - sudo apt-get -y install root-system
   - pip install --upgrade iminuit
-  - ./install.sh
+  - sudo python setup.py install
 
 script:
   - |
