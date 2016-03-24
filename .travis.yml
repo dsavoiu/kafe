@@ -1,19 +1,20 @@
-sudo: required
-dist: trusty
+sudo: false
+
 language: python
 python:
   - 2.7
 
-virtualenv:
-  system_site_packages: true
-
+addons:
+  apt:
+    packages:
+    - python-numpy
+    - python-scipy
+    - python-qt4
+    - python-matplotlib
+    - root-system
+    
 install:
   - pip install --upgrade pip
-  - sudo apt-get -qq install python-numpy
-  - sudo apt-get -qq install python-scipy
-  - sudo apt-get -qq install python-qt4
-  - sudo apt-get -qq install python-matplotlib
-  - sudo apt-get -qq install root-system
   - pip install --upgrade iminuit
   - pip install -e .
 
