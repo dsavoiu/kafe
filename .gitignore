@@ -6,6 +6,7 @@
 *.pyo
 *.log
 #.kafe
+*.egg-info
 
 ##########
 # Images #
@@ -25,8 +26,9 @@ doc/build/_build
 # Other #
 #########
 
-src/MANIFEST
-src/build
+MANIFEST
+build
+dist
 doc/build/_build/
 
 # LaTeX auxiliary files

@@ -613,7 +613,7 @@ class Plot(object):
             )
         )
 
-		# TODO: find cause of MPL error when passing 'xy'/'width'
+        # TODO: find cause of MPL error when passing 'xy'/'width'
         self.fitinfotext = self.axes.text(
             legend_bbox.xmin+pad_amount/2, 0.00+pad_amount/2,
             text_content[:-1],
