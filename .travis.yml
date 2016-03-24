@@ -10,10 +10,10 @@ virtualenv:
 addons:
   apt:
     packages:
-    - liblapack3
-    - libblas3
+    - libblas-dev
+    - liblapack-dev
     - dvipng
-    - libfreetype6
+    #- libfreetype6
     #- texlive-extra-utils
     #- texlive-latex-extra
     #- python-numpy
