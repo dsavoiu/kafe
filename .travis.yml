@@ -12,6 +12,7 @@ addons:
     packages:
     - libblas-dev
     - liblapack-dev
+    - gfortran
     - dvipng
     #- libfreetype6
     #- texlive-extra-utils
