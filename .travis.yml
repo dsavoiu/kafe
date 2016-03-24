@@ -11,7 +11,7 @@ addons:
     - python-scipy
     - python-qt4
     - python-matplotlib
-    - root-system
+    #- root-system  #don't install ROOT yet
     
 install:
   - pip install --upgrade pip
