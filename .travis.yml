@@ -4,6 +4,11 @@ language: python
 python:
   - 2.7
 
+# use cache for pip (especially for scipy)
+cache:
+    pip: true
+    custom_install: true
+
 virtualenv:
     system_site_packages: true
 
@@ -13,31 +18,36 @@ addons:
     - libblas-dev
     - liblapack-dev
     - gfortran
-    - dvipng
-    #- libfreetype6
+    #don't install LaTeX (yet)
     #- texlive-extra-utils
     #- texlive-latex-extra
-    #- python-numpy
-    #- python-scipy
+    - dvipng
+    #- libfreetype6
     - python-qt4
-    #- python-matplotlib
-    #- root-system  #don't install ROOT yet
-    
-install:
-  - python -c "import sys; print sys.path"
-  - pip install scipy
+    #don't install ROOT yet
+    #- root-system
+
+before_install:
+  # create cache directory if none exists
+  - mkdir -p $HOME/.cache/pip/wheels
+  # upgrade pip to latest version
+  - pip install --upgrade pip
+  # get and build scipy, if not already cached
+  - travis_wait pip wheel --find-links=$HOME/.cache/pip/wheels --use-wheel --wheel-dir=$HOME/.cache/pip/wheels scipy
+  # install from cache
+  - pip install --no-index --find-links=$HOME/.cache/pip/wheels scipy
+  # install other dependencies
+  - pip install pytest
   - pip install numpy
   - pip install matplotlib
-  - pip show matplotlib
-  - pip install --upgrade pip
   - pip install --upgrade iminuit
-  - python -c "import sys; print sys.path"
+  # check success
   - python -c "import numpy"
   - python -c "import scipy"
   - python -c "import matplotlib"
+
+install:
   - pip install -e .
 
 script:
-  - |
-    cd examples/example1_model_comparison
-    python example1_model_comparison.py
+  - python setup.py test
