@@ -37,6 +37,7 @@
 #                  representation of the parameter covariance-matrix
 #                  by showing all contours and profiles as an array of plots
 # 15-Jan-16   G.Q. fixed color name "darmagenta" -> darkmagenta
+# 16-May-16   G.Q. set default fit_label='kafe'
 # -------------------------------------------------------------------------
 
 
@@ -221,7 +222,7 @@ class Fit(object):
     '''
 
     def __init__(self, dataset, fit_function, external_fcn=chi2,
-                 fit_label=None, minimizer_to_use=M_MINIMIZER_TO_USE):
+                 fit_label='kafe', minimizer_to_use=M_MINIMIZER_TO_USE):
         '''
         Construct an instance of a ``Fit``
         '''

@@ -23,7 +23,7 @@
 # GQ 160116    two fixes in self.fitinfotext (compatibility with matplotlib 1.5)
 # GQ 160319    new kw argument "plotstyle" in Plot() allows using
 #               user-defined instance of PlotStyle()
-#
+# GQ 160516   derive figure name from fit_label of fits[0]
 # -----------------------------------------------------------------
 
 import numpy as np
@@ -301,7 +301,7 @@ class Plot(object):
         Initialize the plots for each fit.
         '''
 
-        self.figure = plt.figure("kafe-fit")
+        self.figure = plt.figure(self.fits[0].fit_label)
         """A matplotlib figure object."""
         self.axes = self.figure.add_subplot(121)
         """A matplotlib axes object. Use this to modify the `axes` object
