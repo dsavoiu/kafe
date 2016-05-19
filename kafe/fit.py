@@ -218,10 +218,15 @@ class Fit(object):
         Which minimizer to use. This defaults to whatever is set in the config
         file, but can be specifically overridden for some fits using this
         keyword argument.
+
+    fitname : string
+
+        name of fit, used to label the figure window
     '''
 
     def __init__(self, dataset, fit_function, external_fcn=chi2,
-                 fit_label=None, minimizer_to_use=M_MINIMIZER_TO_USE):
+                 fit_label=None, fitname=None, 
+                 minimizer_to_use=M_MINIMIZER_TO_USE):
         '''
         Construct an instance of a ``Fit``
         '''
@@ -297,6 +302,8 @@ class Fit(object):
 
         self.fit_label = fit_label
 
+        self.fitname = fitname
+
         # check if the dataset has any y errors at all
         if self.dataset.has_errors('y'):
             # set the y cov_mat as starting cov_mat for the fit
@@ -348,8 +355,10 @@ class Fit(object):
             _basename = self.dataset.basename
         else:
             _basename = 'untitled'
-        _basenamelog = log_file(_basename+'.log')
+        if self.fitname is not None:
+            _basename += '_' + fitname
 
+        _basenamelog = log_file(_basename+'.log')
         # check for old logs
         if os.path.exists(_basenamelog):
             logger.info('Old log files found for fit `%s`. kafe will not '

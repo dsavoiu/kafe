@@ -301,7 +301,7 @@ class Plot(object):
         Initialize the plots for each fit.
         '''
 
-        self.figure = plt.figure(self.fits[0].fit_label)
+        self.figure = plt.figure(self.fits[0].fitname)
         """A matplotlib figure object."""
         self.axes = self.figure.add_subplot(121)
         """A matplotlib axes object. Use this to modify the `axes` object
