@@ -1175,15 +1175,10 @@ class Fit(object):
         # plot central value and errors
         tmp_ax.errorbar(xval, yval, xerr=xer, yerr=yer, fmt='o')
         # tmp_ax.scatter(xval, yval, marker='+', label='parameter values')
-        tmp_ax.set_color_cycle(['black', 'darkblue', 'darkgreen', 'chocolate',
+        tmp_ax.set_prop_cycle("color",  
+                              ['black', 'darkblue', 'darkgreen', 'chocolate',
                                 'darkmagenta', 'darkred', 'darkorange',
                                 'darkgoldenrod'])
-        # above is deprecated, new since matplotlib 1.5:
-        #tmp_ax.set_prop_cycle("color",  
-        #                      ['black', 'darkblue', 'darkgreen', 'chocolate',
-        #                        'darkmagenta', 'darkred', 'darkorange',
-        #                        'darkgoldenrod'])
-
         # plot contours(s)
         dc2list = []
         try:

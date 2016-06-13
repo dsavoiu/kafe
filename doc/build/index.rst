@@ -14,7 +14,7 @@ Welcome to KaFE (Karlsruhe Fit Environment)
    models to data as well as visualisation of the data and the model function.
    It relies on `Python` packages such as :py:mod:`numpy` and :py:mod:`matplotlib`,
    and uses the `Python` interface to the minimizer `Minuit` contained in the data
-   analysis framework `ROOT`.
+   analysis framework `ROOT` or in the `python` package `iminuit`.
 
 
 :py:mod:`kafe` Overview
@@ -115,8 +115,8 @@ of the :py:class:`Fit` class, which internally relies on the
 obtained from a scan of the χ²-function around a fixed value,
 where each point on the curve represents the minimum with
 respect to all other free parameters in the fit, thus taking
-into account the correlation of a pair of parameters with all
-other parameters of the model.
+into account the correlation of the considered pair of parameters
+with all other parameters of the model.
 
 In a similar way, the method :py:meth:`~kafe.fit.Fit.plot_profile`
 provides profiled χ² curves, i. e. the value of the minimal
@@ -289,7 +289,10 @@ instructions below.
      ``python setup.py install``
 
 :py:mod:`kafe` needs a working version of the CERN data analysis framework ``root``,
-freely available at  http://root.cern.ch
+freely available at  http://root.cern.ch, or the `python` package `iminuit`,
+installable via `pip`. The default package is `iminuit`, as defined in the
+configuration file `kafe.default.conf`. This and other settings are
+adjustable in a user-specific copy in the file `.config/kafe/kafe.conf`.
 
 
 Dependencies
@@ -300,8 +303,8 @@ the version numbers in parentheses refer to the minimum requirements::
 
   Python packages:
     * SciPy >= 0.12.0 (0.9.0), which includes
-        - NumPy >= 1.7.1 (1.6.1) and
-        - matplotlib >= 1.2.0 (1.1.1)
+        - NumPy >= 1.7.1
+        - matplotlib >= 1.5.0
 
   Other dependencies:
     * ROOT >= 5.34 (http://root.cern.ch)
@@ -309,7 +312,7 @@ the version numbers in parentheses refer to the minimum requirements::
     * PyQt >= 3.18.1 `(could work with other versions)`
     * A LaTeX distribution `(tested with texlive)`
 
-Be sure that the version of `ROOT` you use is compiled with `PyROOT` support.
+If using `ROOT`, be sure it is compiled with `PyROOT` support.
 For `Python` to see the `PyROOT` bindings, the following environment variables
 must be set correctly::
 
@@ -320,7 +323,7 @@ must be set correctly::
 For more info, refer to [http://root.cern.ch/drupal/content/pyroot].
 
 `Qt` is needed because it is the supported interactive front-end for
-:py:mod:`matplotlib`. Other front-ends are not supported and can cause weird behaviour.
+:py:mod:`matplotlib`. Other front-ends can cause weird behaviour.
 
 `LaTeX` is used by :py:mod:`matplotlib` for displaying labels and mathematical
 expressions on graphs.
@@ -330,7 +333,7 @@ Fit examples, utilities, tips and tricks
 =========================================
 
 A wide range of applications of the :py:mod:`kafe` core and the usage of
-the helper functions is exemplified here. All of them
+the helper functions is examplified below. All of them
 are contained in the sub-directory ``examples/`` of the
 :py:mod:`kafe` distribution and are intended to serve as a basis for
 user projects.
