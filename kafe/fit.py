@@ -1195,13 +1195,11 @@ class Fit(object):
             # store result
             self.contours.append([par1, par2, dc2, xs, ys])
             # plot contour lines
-            cl = round(100. * (1. - np.exp(-dc2 / 2.)))
-                       # corresponding confidence level
+            cl=100*Chi22CL(dc2) # get corresponding confidence level
             print >>self.out_stream,\
-                'Contour %4.1f %%CL for parameters %d vs. %d with %d points'\
+                'Contour %.1f %%CL for parameters %d vs. %d with %d points'\
                 % (cl, par1, par2, len(xs))
-            # plot the contour
-            labelstr = str(cl) + r"\% CL"
+            labelstr = "%.1f"%(cl) + r"\% CL"
             tmp_ax.fill(xs, ys, alpha=alpha, color=color)   # as filled area
             tmp_ax.plot(xs, ys, '--', linewidth=2, label=labelstr)  # as line
         print >>self.out_stream, ''
@@ -1351,6 +1349,18 @@ class Fit(object):
                             i, j, dchi2=[1., 2.3], axes=axarr[jp, ip])
 
         return cor_fig
+
+def CL2Chi2(CL):
+    '''
+    Helper function to calculate DeltaChi2 from confidence level CL
+    '''
+    return -2.*np.log(1.-CL)
+
+def Chi22CL(dc2):
+    '''
+    Helper function to calculate confidence level CL from DeltaChi2 
+    '''  
+    return (1. - np.exp(-dc2 / 2.))
 
 def build_fit(dataset, fitfunc,
               fitlabel='untitled', initial_fit_parameters=None,

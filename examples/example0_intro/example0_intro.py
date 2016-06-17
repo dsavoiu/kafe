@@ -32,9 +32,10 @@ my_plot.plot_all()
 my_plot.save('kafe_example0.pdf') # to file
 
 ### Create (and save) contour and profile plots
-contour1 = my_fit.plot_contour(0, 1, dchi2=[1.,2.3])
-contour2 = my_fit.plot_contour(0, 2, dchi2=[1.,2.3])
-contour3 = my_fit.plot_contour(1, 2, dchi2=[1.,2.3])
+from kafe.fit import CL2Chi2
+contour1 = my_fit.plot_contour(0, 1, dchi2=[1., CL2Chi2(.6827)])
+contour2 = my_fit.plot_contour(0, 2, dchi2=[1., CL2Chi2(.6827)])
+contour3 = my_fit.plot_contour(1, 2, dchi2=[1., CL2Chi2(.6827)])
 #contour1.savefig('kafe_example0_contour1.pdf')
 #contour2.savefig('kafe_example0_contour2.pdf')
 #contour3.savefig('kafe_example0_contour3.pdf')
