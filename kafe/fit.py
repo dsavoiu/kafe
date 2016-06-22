@@ -209,6 +209,11 @@ class Fit(object):
         It should return a float. If not specified, the default :math:`\chi^2`
         `FCN` is used. This should be sufficient for most fits.
 
+    fit_name : string, optional
+        An ASCII name for this fit. This is used as a label for the the
+        matplotlib figure window and for naming the fit output file. If
+        omitted, the fit will take over the name of the parent dataset.
+
     fit_label : :math:`LaTeX`-formatted string, optional
         A name/label/short description of the fit function. This appears in the
         legend describing the fitter curve. If omitted, this defaults to the
@@ -218,14 +223,10 @@ class Fit(object):
         Which minimizer to use. This defaults to whatever is set in the config
         file, but can be specifically overridden for some fits using this
         keyword argument.
-
-    fitname : string
-
-        name of fit, used to label the figure window
     '''
 
     def __init__(self, dataset, fit_function, external_fcn=chi2,
-                 fit_label=None, fitname=None, 
+                 fit_name=None, fit_label=None,
                  minimizer_to_use=M_MINIMIZER_TO_USE):
         '''
         Construct an instance of a ``Fit``
@@ -302,7 +303,7 @@ class Fit(object):
 
         self.fit_label = fit_label
 
-        self.fitname = fitname
+        self.fit_name = fit_name
 
         # check if the dataset has any y errors at all
         if self.dataset.has_errors('y'):
@@ -323,6 +324,12 @@ class Fit(object):
         if type(minimizer_to_use) is str:
             # if specifying the minimizer type using a string
             if minimizer_to_use.lower() == "root":
+                # raise error if ROOT is not found on the system
+                try:
+                    import ROOT
+                except ImportError as e:
+                    raise ImportError("Minimizer 'root' requested, but could "
+                                      "not find Python module 'ROOT'.")
                 from minuit import Minuit
                 _minimizer_handle = Minuit
             elif minimizer_to_use.lower() == "iminuit":
@@ -355,8 +362,8 @@ class Fit(object):
             _basename = self.dataset.basename
         else:
             _basename = 'untitled'
-        if self.fitname is not None:
-            _basename += '_' + fitname
+        if self.fit_name is not None:
+            _basename += '_' + fit_name
 
         _basenamelog = log_file(_basename+'.log')
         # check for old logs
@@ -1362,8 +1369,8 @@ def Chi22CL(dc2):
     '''  
     return (1. - np.exp(-dc2 / 2.))
 
-def build_fit(dataset, fitfunc,
-              fitlabel='untitled', initial_fit_parameters=None,
+def build_fit(dataset, fit_function,
+              fit_label='untitled', fit_name=None, initial_fit_parameters=None,
               constrained_parameters=None):
     '''
     This helper fuction creates a :py:class:`~kafe.fit.Fit` from a series of
@@ -1372,16 +1379,19 @@ def build_fit(dataset, fitfunc,
     Parameters
     ----------
 
-    **dataset** : a :py:mod:`kafe` :py:class:`~kafe.dataset.Dataset`
+    **dataset** : a *kafe* :py:class:`~kafe.dataset.Dataset`
 
-    **fitfunc** : a python function, optionally with
+    **fit_function** : a Python function, optionally with
         ``@FitFunction``, ``@LATEX`` and ``@FitFunction`` decorators
 
     Keyword Arguments
     -----------------
 
-    fitlabel : name for this fit, optional
-       Defaults to "untitled".
+    fit_label : LaTeX label for this fit, optional
+       Defaults to "untitled"
+
+    fit_name : name for this fit, optional
+       Defaults to the dataset name
 
     initial_fit_parameters : ``None`` or 2-tuple of list, sequence of floats
        specifying initial parameter values and errors
@@ -1398,7 +1408,7 @@ def build_fit(dataset, fitfunc,
     '''
 
     # create a ``Fit`` object
-    theFit = Fit(dataset, fitfunc, fit_label=fitlabel)
+    theFit = Fit(dataset, fit_function, fit_label=fit_label, fit_name=fit_name)
     # set initial parameter values and range
     if initial_fit_parameters is not None:
         theFit.set_parameters(initial_fit_parameters[0],      # values
