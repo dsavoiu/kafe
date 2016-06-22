@@ -16,8 +16,6 @@ from .dataset import Dataset
 from .dataset_tools import build_dataset
 from .fit import build_fit
 
-#from importlib import import_module
-
 # import main logger for kafe
 import logging
 logger = logging.getLogger('kafe')
@@ -52,21 +50,21 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
     Additionally, a delimiter can be specified. If this is a whitespace
     character or omitted, any sequence of whitespace characters is assumed to
     separate the data.
-    
+
     Parameters
     ----------
 
     **file_to_parse** : file-like object or string containing a file path
         The file to parse.
 
-    *field_order* : string (optional)
+    *field_order* : string, optional
         A string of comma-separated field names giving the order of the columns
         in the file. Defaults to ``'x,y'``.
 
-    *delimiter* : string (optional)
+    *delimiter* : string, optional
         The field delimiter used in the file. Defaults to any whitespace.
 
-    *cov_mat_files* : *several* (see below, optional)
+    *cov_mat_files* : *several* (see below), optional
         This argument defaults to ``None``, which means no covariance matrices
         are used. If covariance matrices are needed, a tuple with two entries
         (the first for `x` covariance matrices, the second for `y`) must be
@@ -78,28 +76,28 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
 
         When creating the :py:obj:`Dataset`, all given matrices are summed over.
 
-    *title* : string (optional)
+    *title* : string, optional
         The title of the :py:obj:`Dataset`.
 
-    *basename* : string or ``None`` (optional)
+    *basename* : string or ``None``, optional
         A basename for the :py:obj:`Dataset`. All output files related to this dataset
         will use this as a basename. If this is ``None`` (default), the
         basename will be inferred from the filename.
 
-    *axis_labels* : 2-tuple of strings (optional)
+    *axis_labels* : 2-tuple of strings, optional
         a 2-tuple containing the axis labels for the :py:obj:`Dataset`. This is
         relevant when plotting :py:obj:`Fits` of the :py:obj:`Dataset`, but is ignored when
         plotting more than one :py:obj:`Fit` in the same :py:obj:`Plot`.
 
-    *axis_units* : 2-tuple of strings (optional)
+    *axis_units* : 2-tuple of strings, optional
         a 2-tuple containing the axis units for the :py:obj:`Dataset`. This is
         relevant when plotting :py:obj:`Fits` of the :py:obj:`Dataset`, but is ignored when
         plotting more than one :py:obj:`Fit` in the same :py:obj:`Plot`.
-        
+
     Returns
     -------
 
-    :py:class:`~kafe.dataset.Dataset`
+    ::py:class:`~kafe.dataset.Dataset`
         A `Dataset` built from the parsed file.
 
     '''
@@ -113,20 +111,20 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
             a_21  a_22  ...  a_2M
             ...   ...   ...  ...
             a_N1  a_N2  ...  a_NM
-    
+
         Parameters
         ----------
 
         **file_like** : string or file-like object
             File path or file object to read matrix from.
 
-        *delimiter* : ``None`` or string (optional)
+        *delimiter* : ``None`` or string, optional
             Column delimiter use in the matrix file. Defaults to ``None``,
             meaning any whitespace.
-    
+
         Returns
         -------
-        
+
         *numpy.matrix*
             matrix read from file
         '''
@@ -328,137 +326,237 @@ def parse_general_inputfile(file_to_parse):
     specified in a dictionary ``tokens`` specify all objects and parameters
     needed by the functions :py:func:`~kafe.dataset_tools.build_dataset` in
     module :py:mod:`~kafe.dataset` and :py:func:`~kafe.fit.build_fit` in
-    module :py:mod:`~kake.fit`.
-        
+    module :py:mod:`~kafe.fit`.
+
     Parameters
     ----------
 
-    **file_to_parse**:  file-like object or string containing a file path
+    **file_to_parse** : file-like object or string containing a file path
        The file to parse.
 
-    **return** : dataset_kwargs, fit_kwargs
+    Returns
+    -------
+
+    (dataset_kwargs, fit_kwargs)
           keyword lists to build a kafe :py:class:`~kafe.dataset.Dataset` or
           :py:class:`~kafe.fit.Fit` object with the helper functions
           `build_dataset` or `build_fit`
 
 
-    **Description of the format of the input file**
+    **Input file format**
 
-    The interpretation of the input data is driven by keywords.
-    All data following a key must be of the same kind, a block of
-    data ends when a new key is specified.
+    The interpretation of the input data is driven by *keywords*. All data
+    following a key must be of the same kind. A block of data ends when a
+    new key is specified. Comments can be introduced by ``#``.
 
-    Some keys only expect a single float or string-tpye value, given
+    Some keys only expect a single float or string-type value, given
     on the same line, separated by a space (``' '``)::
 
         <key> <value>
 
-    For multiple input, i.e. data, uncertainties and covariance or
-    correlation matrices, the format is::
+    Other keys require multiple lines of input. For instance, the keys
+    ``*xData`` and ``*yData`` expect the following lines to be a table where
+    the first column corresponds to the data values and the second column
+    corresponds to the uncertainties::
 
         <key>
-        <xval>  <xerr>  [<xsyst>  <elements of cov/cor matrix>]
-
+        <value1>  <uncertainty1>
+        <value2>  <uncertainty2>
         ...
+        <valueN>  <uncertaintyN>
 
-        <xval>  <xerr>  [<xsyst>  <elements of cov/cor matrix>]
+    The column separator is space (``' '``). For more details about input
+    data specification, see :ref:`below <specifying_input_data>`.
 
-    The field separator is space (``' '``). Note that the number of input
-    values in each line must correspond to the specified format of the
-    (correlated) uncertainties.
+    **Specifying metadata**
 
-    The currently implemented keys are:
+        .. tabularcolumns:: |l|l|
 
-    * for metadata:
+        +---------------+------------------------+
+        | **Key**       | **Description**        |
+        +===============+========================+
+        | ``*TITLE``    | name of the dataset    |
+        +---------------+------------------------+
+        | ``*BASENAME`` | name from which output |
+        |               | file names is derived  |
+        +---------------+------------------------+
+        | ``*FITLABEL`` | fit label              |
+        |               |                        |
+        +---------------+------------------------+
+        | ``*xLabel``   | x axis label           |
+        +---------------+------------------------+
+        | ``*xUnit``    | x axis unit            |
+        +---------------+------------------------+
+        | ``*yLabel``   | y axis label           |
+        +---------------+------------------------+
+        | ``*yUnit``    | y axis unit            |
+        +---------------+------------------------+
 
-      - ``*TITLE``     <name of the data set>
-      - ``*BASENAME``  <name from which output file names are derived>
-      - ``*xLabel``    <x axis label>
-      - ``*yLabel``    <y axis label>
-      - ``xUnit``      <x axis unit>
-      - ``yUnit``      <y axis unit>
+    The fit label may be set using the key ``*FITLABEL``, followed by the
+    desired name for the fit.
 
-    * for input data:
+    .. _specifying_input_data:
 
-      - ``*xData``     `x data and, optionally, uncertainties`
-          <xval>  [<x-uncert.>]
-           ...
-      - ``*yData``     `y data and uncertainties`
-          <yval>  <y uncert.>
-           ...
-    * `x` or `y` data, independent and correlated uncertainties and elements of
-      correlation matrix, given as as a lower triangular matrix with no
-      diagonal:
+    **Specifying input data**
 
-      - ``*xData_COR``
-      - ``*yData_COR``
-         <x/y val>  <indep. x/y uncert.>  <x/y syst>  <elements of cor matrix>
-          ...
+    Input data are given as a list of values (one datapoint per row). For a
+    simple uncertainty model (no correlations), the keys ``*xData`` and
+    ``*yData`` are used. The second column indicates the uncertainty of the
+    measurement::
 
-    * `x` or `y` data, independent and correlated uncertainties and sqrt of
-      elements of covariance matrix, given as as a lower triangular matrix
-      with no diagonal:
+        *xData
+        1.2
+        3.4
+        6.9
 
-      - ``*xData_SCOV``
-      - ``*yData_SCOV``
-          <x/y val>  <idep. x/y uncert.>  <x/y syst>  <sqrt of elements of cov matrix>
-           ...
+        *yData
+        2.1       0.2
+        3.9       0.3
+        8.2       0.5
 
-    * `x` or `y` data, independent uncertainties and full covariance matrix (note
-      that the correlated uncertainties are contained in the diagonal of the
-      matrix in this case, i.e. the field <xsyst> is to be omitted):
+    .. NOTE::
+       Uncertainties always have to be specified for ``*yData``. For
+       ``*xData``, they are optional.
 
-      - ``*xData_COV``
-      - ``*yData_COV``
-          <x/y val>  <indep. x/y ucert.>  <elements of cov matrix>
-           ...
+    For input data with correlated uncertainties, the alternative keys
+    ``*xData_COR`` and ``*yData_COR`` are provided. For these, additional
+    columns must be given. The second and third column indicate the
+    uncorrelated and correlated uncertainties, respectively. The subequent
+    columns contain the correlation matrix (a lower triangular matrix
+    containing the correlation coefficients)::
 
-    * Additional keys allow to specify correlated absolute or relative
-      uncertainties:
+        *yData_COR
+        # value  indep.uncert.  syst.uncert.  elements of corr. matrix.
+        2.1      0.2            0.1
+        3.9      0.3            0.2           1.0
+        8.2      0.5            0.3           1.0        1.0
 
-      - ``*xAbsCor <common abs. x uncert.>``
-      - ``*yAbsCor <common abs. y uncert.>``
-      - ``*xRelCor <common rel. x uncert.>``
-      - ``*yRelCor <common rel. y uncert.>``
+    .. NOTE::
+       Only elements below the main diagonal of the correlation matrix have
+       to be specified. Since the matrix is symmetric by construction, the
+       elements above the main diagonal can be inferred from those below.
+       Additionally, since the diagonal elements of a correlation matrix are
+       always equal to 1 by definition, they are also omitted.
 
+    As an alternative to specifying the correlation matrix, the covariance
+    matrix may be specified directly. There are two ways to do this:
 
-    * To specify the fit function, the defined keywords are:
+    The keys ``*xData_SCOV`` and ``*yData_SCOV`` allow specifying the
+    covariance matrix by providing a correlated uncertainty (third column)
+    and the square root of the elements below the main diagonal. This is
+    useful if the pairwise covariance of two measurements cannot be
+    expressed using the correlation coefficient and needs to be provided
+    explicitly.
 
-      - ``*FitFunction``  followed by python code (note: blanks for line
-        indent must be replaced by '~')::
+    In the example below, there is a correlation between the first two and
+    the last two measurements, which is estimated under the assumption that
+    the smaller of the two uncertainties represents a common error::
+
+        *yData_SCOV
+        # mH      err    syst   sqrt(cov)
+        124.51   0.52    0.06
+        125.60   0.40    0.20   0.06
+        125.98   0.42    0.28   0.   0.
+        124.70   0.31    0.15   0.   0.  0.15
+
+    A second possibility is specifying the full covariance matrix directly.
+    This is achieved using the ``*xData_COV`` and ``*yData_COV`` keywords.
+    In this case, only the data values and the uncorrelated uncertainties
+    (first and second columns, respectively) must be specified in addition
+    to the covariance matrix (all other columns). All entries starting with
+    the third column are assumed to be covariance matrix elements. The
+    matrix is symmetric, so elements above the diagonal are omitted. Note
+    that the diagonal must be specified and corresponds to the squares of
+    the correlated errors::
+
+        *yData_COV
+        # mH      err    cov_ij
+        124.51   0.52    0.0036
+        125.60   0.40    0.0036  0.04
+        125.98   0.42    0.      0.    0.0784
+        124.70   0.31    0.      0.    0.0225  0.0225
+
+    **Specifying additional uncertainties**
+
+    In addition to the uncertainties already specified in the
+    :ref:`input data table <specifying_input_data>`, other systematic
+    uncertainties may be provided. These are assumed be fully correlated and
+    common to all data points. This can be achieved by using the following
+    keys:
+
+        +---------------+---------------------------------------------------+
+        | **Key**       | **Description**                                   |
+        +===============+===================================================+
+        | ``*xAbsCor``  | common fully correlated x-uncertainty (absolute)  |
+        +---------------+---------------------------------------------------+
+        | ``*yAbsCor``  | common fully correlated y-uncertainty (absolute)  |
+        +---------------+---------------------------------------------------+
+        | ``*xRelCor``  | common fully correlated x-uncertainty (relative)  |
+        +---------------+---------------------------------------------------+
+        | ``*yRelCor``  | common fully correlated y-uncertainty (relative)  |
+        +---------------+---------------------------------------------------+
+
+    **Specifying a fit function**
+
+    To specify the fit function, the key ``*FitFunction`` is provided. This
+    key should be followed by *Python* code::
 
           def fitf(x, ...):
-          ~~~~...
-          ~~~~return ...
+              ...
+              return ...
 
-        The name `fitf` is mandatory. The kafe decorator functions
-        ``@ASCII``, ``@LATEX`` and ``@FitFunction``
-        are suppoted.
+    .. NOTE::
+       Only one Python function may be defined after the ``*FitFunction``
+       keyword. Also, any function name can be used instead of ``fitf``.
 
-      - ``*FITLABEL`` <the name for the fit>
-      - ``*InitialParameters`` -  followed by two columns of float values
-        for the initial values of the parameters and their range, one line
-        per fit parameter is mandatory
+       Additionally, the decorators ``@ASCII``, ``@LaTeX`` and
+       ``@FitFunction`` are supported (see
+       :py:class:`~kafe.function_tools.ASCII`,
+       :py:class:`~kafe.function_tools.LaTeX` and
+       :py:class:`~kafe.function_tools.FitFunction`)
 
-          <initial value>  <range>
 
+    **Specifying initial values for parameters**
 
-    * Model parameters can be constrained within their uncertainties, if prior
-      knowledge on the value(s) and uncertainty(ies) of parameters are
-      to be accounted for in the fit. This option is specified via the
-      keyword:
+    Initial values for fit parameters may be set using the keyword
+    ``*InitialParameters``. This keyword expects to be followed by a table
+    with two columns containing floating-point values.
 
-      - ``*ConstrainedParameters`` followed by one or more lines with
-        the fields::
+    Each line in the table corresponds to one fit parameter, in the order
+    they are given in the fit function signature. The first column should
+    contain the initial value of the parameters and the second column the
+    "initial uncertainty", which controls the initial variation range of
+    the parameter at the beginning of the fit::
+
+        *InitialParameters
+        <initial value par 1>  <initial uncert par 1>
+        <initial value par 2>  <initial uncert par 2>
+        ...
+        <initial value par N>  <initial uncert par N>
+
+    **Constraining parameters**
+
+    If there is any prior knowledge about model parameters' values on
+    uncertainties, these may be constrained during the fit.
+
+    During the fit, model parameters can be constrained within their
+    uncertainties if there is any prior knowledge about their values and
+    uncertainties.
+
+    This may be specified using the keyword ``*ConstrainedParameters``, followed
+    by a table containing the parameter name, value and uncertainty for each parameter
+    to be constrained::
 
           <parameter name>  <parameter value>  <parameter uncert.>,
 
-        where `parameter name` is the name of the parameter in the fit
-        function specification.
+    .. NOTE::
+       The parameter name must be the one specified in the fit function definition.
 
+    **Example**
 
-    Here is an example of an input file to calculate the average
-    of correlated measurements::
+    Here is an example of an input file to calculate the average of four
+    partly correlated measurements (see :ref:`Example 8 <example_8>`)::
+    
 
          #  Meta data for plotting
          *TITLE Higgs-mass measurements
@@ -475,18 +573,17 @@ def parse_general_inputfile(file_to_parse):
          125.98   0.42    0.28  0.   0.
          124.70   0.31    0.15  0.   0.  0.15
 
-         # set Python code of fit function
-         ### there are some restrictions:
-         ##     function name must be 'fitf'
-         ##     blanks must be replaced by '~'
+         *FitFunction  # Python code of fit function
+
          #  kafe fit function decorators are supported
-         *FitFunction
          @ASCII(expression='av')
          @LaTeX(name='f', parameter_names=('av'), expression='av')
          @FitFunction
-         def fitf(x,av=1.): # fit an average
-         ~~~~return av
+         def fitf(x, av=1.0): # fit an average
+             return av
+             
          *FITLABEL Average
+         
          *InitialParameters
          120. 1.
 
@@ -509,21 +606,22 @@ def parse_general_inputfile(file_to_parse):
               "*yLabel": '',     # y-axis label
               "*xUnit": '',      # x-axis unit
               "*yUnit": '',      # y-axis unit
-              "*BASENAME": '',      # name for the data set
-              "*xData": 'arr',      # x values, errors (arr=array)
-              "*yData": 'arr',      # y values, errors
-              "*xData_COR": 'arr',  # x values, errors, syst. & COR
-              "*yData_COR": 'arr',  # y values, errors, syst. & COR
-              "*xData_COV": 'arr',  # x values, errors, syst. & COV
-              "*yData_COV": 'arr',  # y values, errors, syst. & COV
+              "*BASENAME": '',       # name for the data set
+              "*xData": 'arr',       # x values, errors (arr=array)
+              "*yData": 'arr',       # y values, errors
+              "*xData_COR": 'arr',   # x values, errors, syst. & COR
+              "*yData_COR": 'arr',   # y values, errors, syst. & COR
+              "*xData_COV": 'arr',   # x values, errors, syst. & COV
+              "*yData_COV": 'arr',   # y values, errors, syst. & COV
               "*xData_SCOV": 'arr',  # x values, errors, syst. & sqrt(COV)
               "*yData_SCOV": 'arr',  # y values, errors, syst. & sqrt(COV)
-              "*xAbsCor": 'f',      # common x-error  (f=float32)
-              "*yAbsCor": 'f',      # common y-error
-              "*xRelCor": 'f',      # common, relative x-error
-              "*yRelCor": 'f',      # common, relative y-error
+              "*xAbsCor": 'f',       # common x-error  (f=float32)
+              "*yAbsCor": 'f',       # common y-error
+              "*xRelCor": 'f',       # common, relative x-error
+              "*yRelCor": 'f',       # common, relative y-error
               #
               "*FITLABEL": '',        # name for Fit
+              "*FITNAME": '',         # name for the data set
               "*FitFunction": 'arr',  # read python code with function to fit
               "*InitialParameters": 'arr',  # initial values and range of pars
               "*ConstrainedParameters": 'arr'  # parameter constraints
@@ -533,27 +631,33 @@ def parse_general_inputfile(file_to_parse):
 
     # define character for comments
     ccomment = "#"
-# --- helpers for parse_general_inputfile
+    # --- helpers for parse_general_inputfile -------------------------------
 
-    def get_inputlines(f, cc='#'):
-        # remove comments, emty lines and extra spaces from input file
+    def get_inputlines(f, comment_character='#'):
+        # remove comments, empty lines and extra spaces from input file
         inputlines = []
-        # try to read from open file
+
         try:
             tmp_lines = f.readlines()
-            logger.info("Reading data from file: %r" % (f))
         except AttributeError:
-            # take argument as file name and try to open it
-            tmpfile = open(f, 'r')
+            tmp_f = open(f, 'r')
             logger.info("Reading data from file: %s" % (f))
-            tmp_lines = tmpfile.readlines()
-        # remove comment character and everything following it
+            tmp_lines = tmp_f.readlines()
+            tmp_f.close()
+        finally:
+            logger.info("Reading data from file: %r" % (f))
+
+        # pre-process each line
         for line in tmp_lines:
-            if cc in line:
-                line = split(line, cc)[0]
-            line = line.strip()
-            if(not(line == '' or line == '\n')):
+            # remove comments
+            if comment_character in line:
+                line = line.split(comment_character)[0]
+            # skip empty lines
+            if not line or line.isspace():
+                continue
+            else:
                 inputlines.append(line)
+
         return inputlines
 
     def data_from_SCOV(flist):
@@ -597,45 +701,163 @@ def parse_general_inputfile(file_to_parse):
         np.fill_diagonal(cov, sys * sys)
         return dat, err, cov
 
-    def text_from_input(lines):
-        # join lines to for a textstring, replace '~' by blanks
-        return replace('\n'.join(lines), '~', ' ')
+    def parse_sanitize_fitf_code(code_string):
+        '''Parse and sanitize Python code'''
+        import tokenize
+        import string
+        from cStringIO import StringIO
+
+        # backwards compatibility: replace tildes by spaces
+        code_string = string.replace(code_string, '~', ' ')
+
+        FORBIDDEN_TOKENS = ['import', 'exec', 'global', 'execfile']
+
+        # parser flags
+        _reading_decorator = False
+        _reading_function_def = False
+        _expect_function_name = True
+        _reading_function_body = False
+        _done_reading_function = False
+
+        function_name = ""
+        sanitized = []
+        _tokens = tokenize.generate_tokens(StringIO(code_string).readline)   # tokenize the input
+        for toknum, tokval, spos, epos, line_string  in _tokens:
+            ##print "\tLine: '%s'" % (line_string[:-1],)
+            # disallow forbidden tokens
+            for _ftoken in FORBIDDEN_TOKENS:
+                if tokval == _ftoken:
+                    # encountered forbidden token -> throw error
+                    _e = "Encountered forbidden token '%s' in user-entered code on line '%s'." % (tokval, line_string)
+                    logger.error(_e)
+                    raise ValueError(_e)
+
+            # begin reading decorator
+            if toknum == tokenize.OP and tokval == '@':
+                _reading_decorator = True
+
+            # read all tokens between decorator token and newline
+            if _reading_decorator:
+                #print 'TOKEN\t', tokenize.tok_name[toknum], tokval
+                sanitized.append((toknum, tokval))
+                if toknum == tokenize.NEWLINE:
+                    _reading_decorator = False
+
+            # check for function definition
+            if tokval == 'def':
+                if _done_reading_function:
+                    # warn on additional function definitions
+                    _e = "Already read fit function '%s'. No additional function definitions supported. Line: '%s'" % (function_name, line_string[:-1])
+                    logger.warn(_e)
+                    continue
+                else:
+                    _reading_function_def = True
+                    _expect_function_name = True
+                    _indent_level = 0  # set reference indent level to that of function def
+                    sanitized.append((toknum, tokval))
+                    # encountered 'def'. now expecting to read function name
+                    continue
+            elif not _reading_function_def and not _reading_function_body:
+                # not encountered first 'def' statement yet
+                continue
+
+            # read function name
+            if _expect_function_name:
+                function_name = tokval
+                # function nake should be <tokval>
+                _expect_function_name = False
+
+            # begin reading function body
+            if _reading_function_def and toknum == tokenize.INDENT:
+                # encountered INDENT while reading function def
+                # now expecting to read function body...
+                _reading_function_def = False
+                _reading_function_body = True
+
+            if not _done_reading_function:
+                sanitized.append((toknum, tokval))
+
+            # keep track of the indent level
+            if toknum == tokenize.DEDENT:
+                _indent_level -= 1
+            elif toknum == tokenize.INDENT:
+                _indent_level += 1
+
+            # encountered end of function
+            if _indent_level == 0 and _reading_function_body:
+                _done_reading_function = True
+
+        return function_name, tokenize.untokenize(sanitized)
 
     # --- end helpers for parse_general_inputfile ---------------------------
 
+    # ---- parse input file
+
     # read file, skipping everything including and following comment character
-    inputlines = get_inputlines(file_to_parse, ccomment)
-    xdat, xerr, xcov = [], [], []
+    inputlines = get_inputlines(file_to_parse, comment_character=ccomment)
+
     # split input into words, separator is ' '
-    words = map(split, inputlines)
-    for i in range(len(inputlines)):
-        if words[i][0] in tokens:
-            curkey = words[i][0]
-            setkeys.append(curkey)
-            if tokens[curkey] == '':                  # expected input is string
-                tokens[curkey] = ' '.join(words[i][1:])  # get rest of line
-            elif(tokens[curkey]) == 'f':   # expected input is float
-                tokens[curkey] = np.float32(words[i][1])
-            elif(tokens[curkey]) == 'arr':  # expected input is array of data
-                tokens[curkey] = []
-            elif(tokens[curkey]) == None:  # expected input is txt (python code)
-                pass
+    current_key = '!'
+    for i, line in enumerate(inputlines):
+        # separate first token from the rest
+        try:
+            leading_token, coda = line.split(None, 1)
+        except ValueError:
+            # in case there is no coda
+            leading_token, coda = line.split(None, 1)[0], ""
+
+        # check if line provides new key or is continuation
+        if leading_token in tokens:
+            # new key -> new section
+            current_key = leading_token
+            setkeys.append(current_key)
+
+            # handle keys based on expected continuation
+            if tokens[current_key] == '':
+                # expected input is string
+                tokens[current_key] = ' '.join(coda.split())  # get rest of line
+            elif tokens[current_key] == 'f':
+                # expected input is float
+                _vals = coda.split()
+                _val = 0
+                if not _vals:
+                    _e = "Key '%s' expected a floating point value, but none found!" % (current_key,)
+                    logger.error(_e)
+                    raise ValueError(_e)
+                elif len(_vals) > 1:
+                    _w = "Key '%s' expected a single floating point value, but got: %r" % (current_key, _vals)
+                    logger.warn(_w)
+                    _val = _vals[0]
+                else:
+                    _val = _vals[0]
+                tokens[current_key] = np.float32(_val)
+            elif tokens[current_key] == 'arr':
+                # expected input is array of data -> empty list
+                tokens[current_key] = []
+            #~ elif tokens[current_key] == None:
+                #~ # expected input is txt (Python code) ->
+                #~ pass
+        elif leading_token[0] == '*':
+            # leading token is unknown
+            logger.warn("Unknown input token '%s' ignored" % (leading_token,))
         else:
-            if(words[i][0][0] == '*'):
-                logger.warn("unknown input token %s ignored" % (words[i][0]))
-                continue
-           # line without key is data, belonging to last key given
-            if curkey == '*FitFunction':   # expect continuous text
-                tokens[curkey].append(
-                    ' '.join(words[i][:]))  # join words to from line
-            elif curkey == '*ConstrainedParameters':   # expect string + 2 floats
-                tokens[curkey].append(
-                    [words[i][0], float(words[i][1]), float(words[i][2])])
-            else:  # expect only floats
-                tokens[curkey].append(map(float, words[i]))  # expect floats
+            # line without key is data, belonging to last key given
+            if current_key == '*FitFunction':   # expect continuous text
+                # preserve space
+                tokens[current_key].append(line) # join words to from line
+            elif current_key == '*ConstrainedParameters':
+                # expect string + 2 floats
+                tokens[current_key].append(
+                    [leading_token, float(line[1]), float(line[2])])
+            else:
+                # expect only floats
+                tokens[current_key].append(map(float, line.split()))  # expect floats
+
+    # ---- end parse input file
 
     # ---- now see what we got and decode into
     #            xdata, ydata, xerr, yerr, xcov, ycov
+    xdat, xerr, xcov = [], [], []
     for key in setkeys:
         logger.info("valid key %s" % (key))
         if type(tokens[key]) == type([]):
@@ -674,7 +896,9 @@ def parse_general_inputfile(file_to_parse):
             elif (key == '*yData_COV'):
                 ydat, yerr, ycov = data_from_COV(tokens[key])
             elif (key == '*FitFunction'):
-                fitcode = text_from_input(tokens[key])
+                #fitcode = text_from_input(tokens[key])
+                fitf_name, fitcode = parse_sanitize_fitf_code('\n'.join(tokens[key]))
+                logger.info("FitFunction name is '%s'" % (fitf_name,))
             elif (key == '*InitialParameters'):
                 flist = tokens[key]
                 rows = len(flist)
@@ -717,6 +941,10 @@ def parse_general_inputfile(file_to_parse):
         else:
             tokens['*BASENAME'] = 'untitled'
 
+    # if not fit name is given, set to 'None' -> automatic naming
+    if tokens['*FITNAME'] == '':
+        tokens['*FITNAME'] = None
+
     # check for additional, common errors and add in quadrature to cov matrices
 
     for key in setkeys:
@@ -728,7 +956,7 @@ def parse_general_inputfile(file_to_parse):
             xcov += np.float64(tokens[key]) ** 2 * np.outer(xdat, xdat)
         elif key == '*yRelCor':
             ycov += np.float64(tokens[key]) ** 2 * np.outer(ydat, ydat)
-        
+
     # build dictionary for dataset
     dataset_kwargs = {}
     dataset_kwargs.update({
@@ -763,12 +991,12 @@ def parse_general_inputfile(file_to_parse):
         # build dictionary for build_fit
         fit_kwargs = {}
         fit_kwargs.update({
-                          'fitfunc': fitf,
-                          'fitlabel': tokens['*FITLABEL'],
+                          'fit_function': globals()[fitf_name],
+                          'fit_label': tokens['*FITLABEL'],
+                          'fit_name': tokens['*FITNAME'],
                           'initial_fit_parameters': fitpars,
                           'constrained_parameters': cpars
                           })
-
 
     return dataset_kwargs, fit_kwargs
 
@@ -780,14 +1008,18 @@ def buildDataset_fromFile(file_to_parse):
     Build a kafe :py:class:`~kafe.dataset.Dataset` object from input file
     with key words and file format defined in
     :py:func:`~kafe.file_tools.parse_general_inputfile`
-        
+
     Parameters
     ----------
 
     **file_to_parse** :  file-like object or string containing a file path
        The file to parse.
 
-    **returns** : an instance of the :py:class:`~kafe.dataset.Dataset` class,
+    Returns
+    -------
+
+    :py:class:`~kafe.dataset.Dataset`
+       a :py:class:`~kafe.dataset.Dataset` object
        constructed with the help of the method
        :py:func:`kafe.dataset.Dataset.build_dataset`
     '''
@@ -800,14 +1032,18 @@ def buildFit_fromFile(file_to_parse):
     Build a kafe :py:class:`~kafe.fit.Fit` object from input file with
     keywords and file format defined in
     :py:func:`~kafe.file_tools.parse_general_inputfile`
-        
+
     Parameters
     ----------
 
     **file_to_parse**:  file-like object or string containing a file path
        The file to parse.
 
-    **returns** :  an instance of the :py:class:`~kafe.fit.Fit` class,
+    Returns
+    -------
+
+    :py:class:`~kafe.fit.Fit`
+       a :py:class:`~kafe.fit.Fit` object
        constructed with the help of the methods
        :py:func:`~kafe.dataset.Dataset.build_dataset` and
        :py:func:`~kafe.fit.Fit.build_fit`

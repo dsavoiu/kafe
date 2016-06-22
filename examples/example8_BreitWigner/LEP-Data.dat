@@ -1,4 +1,4 @@
-# Measruements of hadronic Z cross sections a LEP
+# Measurements of hadronic Z cross sections at LEP
 # ------------------------------------------------
 # this file is to be parsed with 
 #          kafe.file_tools.buildFit_fromFile()
@@ -25,6 +25,7 @@
    92.059  0.005  
    93.004  0.0015 
    93.916  0.005
+
 # Centre-of-mass energy has a common uncertainty  
 *xAbsCor 0.0017 
 
@@ -37,10 +38,12 @@
    27.535  0.088      #  3.9164   23.6187
    13.362  0.015      # -0.6933   14.0552
     7.302  0.045      # -1.8181    9.1196
+
 # cross-sections have a common relative error
 *yRelCor 0.0007 
 
 *FITLABEL Breit-Wigner-Fit \, {\large{(with~s-dependent~width)}} 
+
 *FitFunction
 # Breit-Wigner with s-dependent width
 @ASCII(name='sigma', expression='s0*x^2*G^2/[(E^2-M^2)^2+(E^4*G^2/M^2)]')
@@ -48,8 +51,8 @@
 expression='\\frac{\\sigma^0\\, M_Z^2\\Gamma^2}'
                  '{((E^2-M_Z^2)^2+(E^4\\Gamma^2 / M_Z^2))}') 
 @FitFunction
-def fitf(E, s0=41.0, M=91.2, G=2.5):
-~~return s0*E*E*G*G/((E*E-M*M)**2+(E**4*G*G/(M*M)))
+def BreitWigner(E, s0=41.0, M=91.2, G=2.5):
+    return s0*E*E*G*G/((E*E-M*M)**2+(E**4*G*G/(M*M)))
 
 # standard Breit-Wigner
 #@ASCII(expression='s*M^2*G^2/[(E^2-M^2)^2+(G^2*M^2)]')
@@ -57,10 +60,10 @@ def fitf(E, s0=41.0, M=91.2, G=2.5):
 #expression='\\frac{\\sigma_0\\, M_Z^2\\Gamma^2}'
 #           '{ ((E^2-M_Z^2)^2+(\\Gamma^2 \\cdot M_Z^2))}' ) 
 #@FitFunction
-#def breit_wigner(E, s0=40.0, M=91.0, G=2.0):
-#~~return s0*M*M*G*G/((E*E-M*M)**2+(G*G*M*M)) 
+#def StandardBreitWigner(E, s0=40.0, M=91.0, G=2.0):
+#    return s0*M*M*G*G/((E*E-M*M)**2+(G*G*M*M)) 
 
-*InitialParameters # initial values and range
+*InitialParameters  # initial values and range
 41.  0.5
 91.2 0.1 
 2.5  0.1
