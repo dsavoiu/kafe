@@ -20,7 +20,7 @@
 
 \title{kafe Documentation}
 \date{June 22, 2016}
-\release{1.0.1}
+\release{1.1.0}
 \author{D. Savoiu, G. Quast}
 \newcommand{\sphinxlogo}{}
 \renewcommand{\releasename}{Release}
@@ -2352,7 +2352,23 @@ Whether the errors are fully correlated. Defaults to \code{False}.
 
 
 \subsection{\texttt{Fit}: Fit of model functions to a \texttt{Dataset} (\texttt{kafe.fit})}
-\label{module_doc:fit-fit-of-model-functions-to-a-dataset-kafe-fit}\label{module_doc:module-kafe.fit}\index{kafe.fit (module)}\phantomsection\label{module_doc:module-fit}\index{fit (module)}\index{Fit (class in kafe.fit)}
+\label{module_doc:fit-fit-of-model-functions-to-a-dataset-kafe-fit}\label{module_doc:module-kafe.fit}\index{kafe.fit (module)}\phantomsection\label{module_doc:module-fit}\index{fit (module)}\index{CL2Chi2() (in module kafe.fit)}
+
+\begin{fulllineitems}
+\phantomsection\label{module_doc:kafe.fit.CL2Chi2}\pysiglinewithargsret{\code{kafe.fit.}\bfcode{CL2Chi2}}{\emph{CL}}{}
+Helper function to calculate DeltaChi2 from confidence level CL
+
+\end{fulllineitems}
+
+\index{Chi22CL() (in module kafe.fit)}
+
+\begin{fulllineitems}
+\phantomsection\label{module_doc:kafe.fit.Chi22CL}\pysiglinewithargsret{\code{kafe.fit.}\bfcode{Chi22CL}}{\emph{dc2}}{}
+Helper function to calculate confidence level CL from DeltaChi2
+
+\end{fulllineitems}
+
+\index{Fit (class in kafe.fit)}
 
 \begin{fulllineitems}
 \phantomsection\label{module_doc:kafe.fit.Fit}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{Fit}}{\emph{dataset}, \emph{fit\_function}, \emph{external\_fcn=\textless{}function chi2\textgreater{}}, \emph{fit\_name=None}, \emph{fit\_label=None}, \emph{minimizer\_to\_use='iminuit'}}{}
