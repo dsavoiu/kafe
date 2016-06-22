@@ -1,0 +1,440 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta content="kafe - a general, Python-based approach to fit a model function to two-dimensional data points with correlated uncertainties in both dimensions" lang="en" name="description" />
+<meta content="index, follow" name="robots" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installing kafe &mdash; kafe 1.0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="kafe 1.0.1 documentation" href="index.html"/>
+        <link rel="next" title="Fit examples, utilities, tips and tricks" href="examples.html"/>
+        <link rel="prev" title="Welcome to kafe, the Karlsruhe Fit Environment" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="index.html" class="icon icon-home"> kafe
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Welcome to kafe, the Karlsruhe Fit Environment</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Installing <em>kafe</em></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-notes-linux">Installation notes (Linux)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#install-numpy-scipy-and-matplotlib">Install <em>NumPy</em>, <em>SciPy</em> and <em>matplotlib</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-root">Install <em>ROOT</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-iminuit">Install <cite>iminuit</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-kafe">Install <em>kafe</em></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-notes-windows">Installation notes (Windows)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Install <cite>iminuit</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Install <cite>kafe</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-kafe-with-root-under-windows">Using <em>kafe</em> with ROOT under Windows</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Fit examples, utilities, tips and tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_doc.html"><em>kafe</em> reference</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">kafe</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Installing <em>kafe</em></li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/installation.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installing-kafe">
+<h1>Installing <em>kafe</em><a class="headerlink" href="#installing-kafe" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p><em>kafe</em> needs some additional Python packages. The recommended versions of these are
+as follows:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://www.scipy.org">SciPy</a> &gt;= 0.12.0</li>
+<li><a class="reference external" href="http://www.numpy.org">NumPy</a> &gt;= 1.10.4</li>
+<li><a class="reference external" href="http://matplotlib.org">matplotlib</a> &gt;= 1.5.0</li>
+</ul>
+<p>Additionally, a function minimizer is needed. <em>kafe</em> implements interfaces to two
+function minimizers and requires at least one of them to be installed:</p>
+<ul class="simple">
+<li><em>MINUIT</em>, which is included in <em>CERN</em>&#8216;s data analysis package <a class="reference external" href="http://root.cern.ch">ROOT</a> (&gt;= 5.34), or</li>
+<li><a class="reference external" href="https://github.com/iminuit/iminuit">iminuit</a> (&gt;= 1.1.1), which is independent of ROOT (this is the default)</li>
+</ul>
+<p>Finally, <em>kafe</em> requires a number of external programs:</p>
+<ul class="simple">
+<li>Qt4 (&gt;= 4.8.5) and the Python bindings PyQt4 (&gt;= 3.18.1) are needed because <em>Qt</em> is the supported
+interactive frontend for matplotlib. Other frontends are not supported and may cause unexpected behavior.</li>
+<li>A <em>LaTeX</em> distribution (tested with <a class="reference external" href="https://www.tug.org/texlive/">TeX Live</a>), since <em>LaTeX</em> is
+used by matplotlib for typesetting labels and mathematical expressions.</li>
+<li><a class="reference external" href="http://www.nongnu.org/dvipng/">dvipng</a> for converting DVI files to PNG graphics</li>
+</ul>
+</div>
+<div class="section" id="installation-notes-linux">
+<h2>Installation notes (Linux)<a class="headerlink" href="#installation-notes-linux" title="Permalink to this headline">¶</a></h2>
+<p>Most of the above packages and programs can be installed through the package manager on most Linux
+distributions.</p>
+<p><em>kafe</em> was developed for use on Linux desktop systems. Please note that all
+commands below should be run as root.</p>
+<div class="section" id="install-numpy-scipy-and-matplotlib">
+<h3>Install <em>NumPy</em>, <em>SciPy</em> and <em>matplotlib</em><a class="headerlink" href="#install-numpy-scipy-and-matplotlib" title="Permalink to this headline">¶</a></h3>
+<p>These packages should be available in the package manager.</p>
+<p>In Ubuntu/Mint/Debian:</p>
+<blockquote>
+<div><div class="code bash highlight-python"><div class="highlight"><pre>apt-get install python-numpy python-scipy python-matplotlib
+</pre></div>
+</div>
+</div></blockquote>
+<p>In Fedora/RHEL/CentOS:</p>
+<blockquote>
+<div><div class="code bash highlight-python"><div class="highlight"><pre>yum install numpy scipy python-matplotlib
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="install-root">
+<h3>Install <em>ROOT</em><a class="headerlink" href="#install-root" title="Permalink to this headline">¶</a></h3>
+<p>ROOT and its Python bindings can be obtained via the package manager in
+Ubuntu/Mint/Debian:</p>
+<blockquote>
+<div><div class="code bash highlight-python"><div class="highlight"><pre>apt-get install root-system libroot-bindings-python5.34 libroot-bindings-python-dev
+</pre></div>
+</div>
+</div></blockquote>
+<p>Or, in Fedora/RHEL/CentOS:</p>
+<blockquote>
+<div><div class="code bash highlight-python"><div class="highlight"><pre>yum install root root-python
+</pre></div>
+</div>
+</div></blockquote>
+<p>This setup is usually sufficient. However, you may decide to build ROOT yourself. In this case,
+be sure to compile with <em>PyROOT</em> support. Additionally, for Python to see the <em>PyROOT</em> bindings,
+the following environment variables have to be set correctly (:</p>
+<blockquote>
+<div><div class="code bash highlight-python"><div class="highlight"><pre>export ROOTSYS=&lt;directory where ROOT is installed&gt;
+export LD_LIBRARY_PATH=$ROOTSYS/lib:$PYTHONDIR/lib:$LD_LIBRARY_PATH
+export PYTHONPATH=$ROOTSYS/lib:$PYTHONPATH
+</pre></div>
+</div>
+</div></blockquote>
+<p>For more info, refer to <a class="reference external" href="http://root.cern.ch/drupal/content/pyroot">http://root.cern.ch/drupal/content/pyroot</a>.</p>
+</div>
+<div class="section" id="install-iminuit">
+<h3>Install <cite>iminuit</cite><a class="headerlink" href="#install-iminuit" title="Permalink to this headline">¶</a></h3>
+<p><em>iminuit</em> is a Python wrapper for the Minuit minimizer which is
+independent of ROOT. If compiling/installing ROOT is not possible,
+this minimizer can be used instead.</p>
+<p>To install the <em>iminuit</em> package for Python, the <a class="reference external" href="http://www.pip-installer.org/">Pip installer</a> is recommended:</p>
+<blockquote>
+<div><div class="code bash highlight-python"><div class="highlight"><pre>pip install iminuit
+</pre></div>
+</div>
+</div></blockquote>
+<p>If you don&#8217;t have <em>Pip</em> installed, get it from the package manager.</p>
+<p>In Ubuntu/Mint/Debian, do:</p>
+<blockquote>
+<div><div class="code bash highlight-python"><div class="highlight"><pre>apt-get install python-pip
+</pre></div>
+</div>
+</div></blockquote>
+<p>In Fedora/RHEL/CentOS, do:</p>
+<blockquote>
+<div><div class="code bash highlight-python"><div class="highlight"><pre>yum install python-pip
+</pre></div>
+</div>
+</div></blockquote>
+<p>or use <code class="docutils literal"><span class="pre">easy_install</span></code> (included with <a class="reference external" href="https://pypi.python.org/pypi/setuptools">setuptools</a>):</p>
+<blockquote>
+<div><div class="code bash highlight-python"><div class="highlight"><pre>easy_install pip
+</pre></div>
+</div>
+</div></blockquote>
+<p>You might also need to install the Python headers for <em>iminuit</em> to
+compile properly.</p>
+<p>In Ubuntu/Mint/Debian, do:</p>
+<blockquote>
+<div><div class="code bash highlight-python"><div class="highlight"><pre>apt-get install libpython2.7-dev
+</pre></div>
+</div>
+</div></blockquote>
+<p>In Fedora/RHEL/CentOS, do:</p>
+<blockquote>
+<div><div class="code bash highlight-python"><div class="highlight"><pre>yum install python-devel
+</pre></div>
+</div>
+</div></blockquote>
+<p>Read the README file for more information on other dependencies
+(there should be adequate packages for your Linux distribution
+to satisfy these).</p>
+</div>
+<div class="section" id="install-kafe">
+<h3>Install <em>kafe</em><a class="headerlink" href="#install-kafe" title="Permalink to this headline">¶</a></h3>
+<p>To install <em>kafe</em> using <em>Pip</em>, simply run the helper script as root:</p>
+<blockquote>
+<div><div class="code bash highlight-python"><div class="highlight"><pre>./install.sh
+</pre></div>
+</div>
+</div></blockquote>
+<p>To remove kafe using <em>Pip</em>, just run the helper script:</p>
+<blockquote>
+<div><div class="code bash highlight-python"><div class="highlight"><pre>./uninstall.sh
+</pre></div>
+</div>
+</div></blockquote>
+<p>Alternatively, installing using Python&#8217;s <em>setuptools</em> also works, but may not
+provide a clean uninstall. Use this method if installing with <em>Pip</em> is not possible:</p>
+<blockquote>
+<div><div class="code bash highlight-python"><div class="highlight"><pre>python setup.py install
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="installation-notes-windows">
+<h2>Installation notes (Windows)<a class="headerlink" href="#installation-notes-windows" title="Permalink to this headline">¶</a></h2>
+<p><em>kafe</em> can be installed under Windows, but requires some additional configuration.</p>
+<p>The recommended Python distribution for working with <em>kafe</em> under Windows is
+<a class="reference external" href="https://winpython.github.io/">WinPython</a>, which has the advantage that it is
+portable and comes with a number of useful pre-installed packages. Particularly,
+<em>NumPy</em>, <em>SciPy</em> and <em>matplotlib</em> are all pre-installed in <em>WinPython</em>, as are
+all <em>Qt</em>-related dependencies.</p>
+<p>Be sure to install <em>WinPython</em> version <strong>2.7</strong>, since <em>kafe</em> does not currently
+run under Python 3.</p>
+<div class="section" id="id1">
+<h3>Install <cite>iminuit</cite><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>After installing <em>WinPython</em>, start &#8216;WinPython Command Prompt.exe&#8217; in the
+<em>WinPython</em> installation directory and run</p>
+<blockquote>
+<div><div class="code bash highlight-python"><div class="highlight"><pre>pip install iminuit
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="id2">
+<h3>Install <cite>kafe</cite><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>Now <em>kafe</em> can be installed from PyPI by running:</p>
+<blockquote>
+<div><div class="code bash highlight-python"><div class="highlight"><pre>pip install kafe
+</pre></div>
+</div>
+</div></blockquote>
+<p>Alternatively, it may be installed directly using <em>setuptools</em>. Just run
+the following in &#8216;WinPython Command Prompt.exe&#8217; after switching to the
+directory into which you have downloaded <em>kafe</em>:</p>
+<blockquote>
+<div><div class="code bash highlight-python"><div class="highlight"><pre>python setup.py install
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="using-kafe-with-root-under-windows">
+<h3>Using <em>kafe</em> with ROOT under Windows<a class="headerlink" href="#using-kafe-with-root-under-windows" title="Permalink to this headline">¶</a></h3>
+<p>If you want <em>kafe</em> to work with ROOT&#8217;s <code class="docutils literal"><span class="pre">TMinuit</span></code> instead of using
+<em>iminuit</em>, then ROOT has to be installed. Please note that ROOT releases
+for Windows are 32-bit and using the PyROOT bindings on a 64-bit <em>WinPython</em>
+distribution will not work.</p>
+<p>A pre-built verson of ROOT for Windows is available on the ROOT homepage as a Windows
+Installer package. The recommended version is
+<a class="reference external" href="https://root.cern.ch/content/release-53434">ROOT 5.34</a>.
+During the installation process, select &#8220;Add ROOT to the system PATH for all users&#8221;
+when prompted. This will set the <code class="docutils literal"><span class="pre">PATH</span></code> environment variable to include
+the relevant ROOT directories. The installer also sets the <code class="docutils literal"><span class="pre">ROOTSYS</span></code> environment
+variable, which points to the directory where ROOT in installed. By default,
+this is <code class="docutils literal"><span class="pre">C:\root_v5.34.34</span></code>.</p>
+<p>Additionally, for Python to find the <em>PyROOT</em> bindings, the <code class="docutils literal"><span class="pre">PYTHONPATH</span></code>
+environment variable must be modified to include the <code class="docutils literal"><span class="pre">bin</span></code> subdirectory
+of path where ROOT is installed. On Windows 10, assuming ROOT has been installed
+in the default directory (<code class="docutils literal"><span class="pre">C:\root_v5.34.34</span></code>), this is achieved as follows:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>open the Start Menu and start typing &#8220;environment variables&#8221;</li>
+<li>select &#8220;Edit the system environment variables&#8221;</li>
+<li>click the &#8220;Environment Variables...&#8221; button</li>
+<li>in the lower part, under &#8220;System variables&#8221;, look for the &#8220;PYTHONPATH&#8221; entry</li>
+<li>modify/add the &#8220;PYTHONPATH&#8221; entry:<ul>
+<li>if it doesn&#8217;t exist, create it by choosing &#8220;New...&#8221;,
+enter PYTHONPATH as the variable name
+and <code class="docutils literal"><span class="pre">C:\root_v5.34.34\bin</span></code> as the variable value</li>
+<li>if it already exists and contains only one path, edit it via &#8220;Edit...&#8221; and
+insert <code class="docutils literal"><span class="pre">C:\root_v5.34.34\bin;</span></code> at the beginning of the variable value.
+(Note the semicolon!)</li>
+<li>if the variable already contains several paths, choosing &#8220;Edit...&#8221; will
+show a dialog box to manage them. Choose &#8220;New&#8221; and write
+<code class="docutils literal"><span class="pre">C:\root_v5.34.34\bin</span></code></li>
+</ul>
+</li>
+<li>close all opened dialogs with &#8220;OK&#8221;</li>
+</ol>
+</div></blockquote>
+<p>Now you may try to <code class="docutils literal"><span class="pre">import</span> <span class="pre">ROOT</span></code> in the <em>WinPython</em> interpreter to check
+if everything has been set up correctly.</p>
+<p>For more information please refer to ROOT&#8217;s official
+<a class="reference external" href="https://root.cern.ch/pyroot">PyROOT Guide</a>.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="examples.html" class="btn btn-neutral float-right" title="Fit examples, utilities, tips and tricks" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Welcome to kafe, the Karlsruhe Fit Environment" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, D. Savoiu, G. Quast.
+      Last updated on Jun 22, 2016.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+     
+    <!-- <div class="footer">
+        © Copyright 2013, Daniel Savoiu.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>-->
+
+
+</body>
+</html>

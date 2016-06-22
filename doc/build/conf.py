@@ -229,10 +229,10 @@ latex_elements = {
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
-#  author, documentclass [howto, manual, or own class]).
+#  author, documentclass [howto, manual, or own class], toctree_only).
 latex_documents = [
-  ('index', 'kafe.tex', u'kafe Documentation',
-   u'D. Savoiu, G. Quast', 'manual'),
+  ('index_latex', 'kafe.tex', u'kafe Documentation',
+   u'D. Savoiu, G. Quast', 'manual', False),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
