@@ -27,9 +27,8 @@ doc/build/_build
 #########
 
 MANIFEST
-build
 dist
-doc/build/_build/
+/build
 
 # LaTeX auxiliary files
 doc/latex/*.idx
