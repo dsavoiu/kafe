@@ -37,11 +37,12 @@ Requirements
 ============
 
 *kafe* needs some additional Python packages. The recommended versions of these are
-as follows. The version numbers between parentheses refer to the minimum requirements:
+as follows. Please note that more recent versions of these packages should work
+as well:
 
-* `SciPy <http://www.scipy.org>`_ >= 0.12.0 (0.9.0)
-* `NumPy <http://www.numpy.org>`_ >= 1.7.1 (1.6.1)
-* `matplotlib <http://matplotlib.org>`_ >= 1.5.0 (1.3.0)
+* `SciPy <http://www.scipy.org>`_ >= 0.12.0
+* `NumPy <http://www.numpy.org>`_ >= 1.6.1
+* `matplotlib <http://matplotlib.org>`_ >= 1.5.0
 
 
 Additionally, a function minimizer is needed. *kafe* implements interfaces to two
