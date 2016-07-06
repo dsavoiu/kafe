@@ -1360,19 +1360,23 @@ class Dataset(object):
         # Turn covariance matrices into ErrorSource objects
         for axis in xrange(self.__n_axes):
             _mat = self.get_cov_mat(axis)
+
+            # remove existing error model (all error sources)
+            for err_src_id in xrange(len(self.err_src[axis])):
+                self.remove_error_source(axis, err_src_id, recompute_cov_mat=False)
+
             if _mat is not None:
                 # Replace error model with the computed matrix
-                _es = ErrorSource()
-                _es.make_from_matrix(_mat)
                 if self.err_src[axis]:
+                    # Warn if error model is overwritten after call to read_from_file()
                     logger.warn("Overwriting existing error model for axis %d "
                                 "of Dataset" % (axis,))
-                self.err_src[axis] = [_es]
+                # add error for axis as a single matrix error
+                self.add_error_source(axis, 'matrix', _mat)
             else:
                 if self.err_src[axis]:
+                    # Warn if error model is removed after call to read_from_file()
                     logger.warn("Removing existing error model for axis %d "
                                 "of Dataset" % (axis,))
-                # remove error model
-                self.err_src[axis] = []
 
         return True
