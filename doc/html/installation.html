@@ -76,7 +76,7 @@
               <p class="caption"><span class="caption-text">Table of Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">Welcome to kafe, the Karlsruhe Fit Environment</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Installing <em>kafe</em></a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installing <em>kafe</em></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation-notes-linux">Installation notes (Linux)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#install-numpy-scipy-and-matplotlib">Install <em>NumPy</em>, <em>SciPy</em> and <em>matplotlib</em></a></li>
@@ -170,13 +170,13 @@ commands below should be run as root.</p>
 <p>These packages should be available in the package manager.</p>
 <p>In Ubuntu/Mint/Debian:</p>
 <blockquote>
-<div><div class="code bash highlight-python"><div class="highlight"><pre>apt-get install python-numpy python-scipy python-matplotlib
+<div><div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">numpy</span> <span class="n">python</span><span class="o">-</span><span class="n">scipy</span> <span class="n">python</span><span class="o">-</span><span class="n">matplotlib</span>
 </pre></div>
 </div>
 </div></blockquote>
 <p>In Fedora/RHEL/CentOS:</p>
 <blockquote>
-<div><div class="code bash highlight-python"><div class="highlight"><pre>yum install numpy scipy python-matplotlib
+<div><div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="n">numpy</span> <span class="n">scipy</span> <span class="n">python</span><span class="o">-</span><span class="n">matplotlib</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -186,13 +186,13 @@ commands below should be run as root.</p>
 <p>ROOT and its Python bindings can be obtained via the package manager in
 Ubuntu/Mint/Debian:</p>
 <blockquote>
-<div><div class="code bash highlight-python"><div class="highlight"><pre>apt-get install root-system libroot-bindings-python5.34 libroot-bindings-python-dev
+<div><div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">root</span><span class="o">-</span><span class="n">system</span> <span class="n">libroot</span><span class="o">-</span><span class="n">bindings</span><span class="o">-</span><span class="n">python5</span><span class="o">.</span><span class="mi">34</span> <span class="n">libroot</span><span class="o">-</span><span class="n">bindings</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="n">dev</span>
 </pre></div>
 </div>
 </div></blockquote>
 <p>Or, in Fedora/RHEL/CentOS:</p>
 <blockquote>
-<div><div class="code bash highlight-python"><div class="highlight"><pre>yum install root root-python
+<div><div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="n">root</span> <span class="n">root</span><span class="o">-</span><span class="n">python</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -200,7 +200,7 @@ Ubuntu/Mint/Debian:</p>
 be sure to compile with <em>PyROOT</em> support. Additionally, for Python to see the <em>PyROOT</em> bindings,
 the following environment variables have to be set correctly (:</p>
 <blockquote>
-<div><div class="code bash highlight-python"><div class="highlight"><pre>export ROOTSYS=&lt;directory where ROOT is installed&gt;
+<div><div class="code bash highlight-default"><div class="highlight"><pre><span></span>export ROOTSYS=&lt;directory where ROOT is installed&gt;
 export LD_LIBRARY_PATH=$ROOTSYS/lib:$PYTHONDIR/lib:$LD_LIBRARY_PATH
 export PYTHONPATH=$ROOTSYS/lib:$PYTHONPATH
 </pre></div>
@@ -215,26 +215,26 @@ independent of ROOT. If compiling/installing ROOT is not possible,
 this minimizer can be used instead.</p>
 <p>To install the <em>iminuit</em> package for Python, the <a class="reference external" href="http://www.pip-installer.org/">Pip installer</a> is recommended:</p>
 <blockquote>
-<div><div class="code bash highlight-python"><div class="highlight"><pre>pip install iminuit
+<div><div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">iminuit</span>
 </pre></div>
 </div>
 </div></blockquote>
 <p>If you don&#8217;t have <em>Pip</em> installed, get it from the package manager.</p>
 <p>In Ubuntu/Mint/Debian, do:</p>
 <blockquote>
-<div><div class="code bash highlight-python"><div class="highlight"><pre>apt-get install python-pip
+<div><div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">pip</span>
 </pre></div>
 </div>
 </div></blockquote>
 <p>In Fedora/RHEL/CentOS, do:</p>
 <blockquote>
-<div><div class="code bash highlight-python"><div class="highlight"><pre>yum install python-pip
+<div><div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">pip</span>
 </pre></div>
 </div>
 </div></blockquote>
 <p>or use <code class="docutils literal"><span class="pre">easy_install</span></code> (included with <a class="reference external" href="https://pypi.python.org/pypi/setuptools">setuptools</a>):</p>
 <blockquote>
-<div><div class="code bash highlight-python"><div class="highlight"><pre>easy_install pip
+<div><div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="n">easy_install</span> <span class="n">pip</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -242,13 +242,13 @@ this minimizer can be used instead.</p>
 compile properly.</p>
 <p>In Ubuntu/Mint/Debian, do:</p>
 <blockquote>
-<div><div class="code bash highlight-python"><div class="highlight"><pre>apt-get install libpython2.7-dev
+<div><div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libpython2</span><span class="o">.</span><span class="mi">7</span><span class="o">-</span><span class="n">dev</span>
 </pre></div>
 </div>
 </div></blockquote>
 <p>In Fedora/RHEL/CentOS, do:</p>
 <blockquote>
-<div><div class="code bash highlight-python"><div class="highlight"><pre>yum install python-devel
+<div><div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">devel</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -260,20 +260,20 @@ to satisfy these).</p>
 <h3>Install <em>kafe</em><a class="headerlink" href="#install-kafe" title="Permalink to this headline">¶</a></h3>
 <p>To install <em>kafe</em> using <em>Pip</em>, simply run the helper script as root:</p>
 <blockquote>
-<div><div class="code bash highlight-python"><div class="highlight"><pre>./install.sh
+<div><div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">install</span><span class="o">.</span><span class="n">sh</span>
 </pre></div>
 </div>
 </div></blockquote>
 <p>To remove kafe using <em>Pip</em>, just run the helper script:</p>
 <blockquote>
-<div><div class="code bash highlight-python"><div class="highlight"><pre>./uninstall.sh
+<div><div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">uninstall</span><span class="o">.</span><span class="n">sh</span>
 </pre></div>
 </div>
 </div></blockquote>
 <p>Alternatively, installing using Python&#8217;s <em>setuptools</em> also works, but may not
 provide a clean uninstall. Use this method if installing with <em>Pip</em> is not possible:</p>
 <blockquote>
-<div><div class="code bash highlight-python"><div class="highlight"><pre>python setup.py install
+<div><div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -294,7 +294,7 @@ run under Python 3.</p>
 <p>After installing <em>WinPython</em>, start &#8216;WinPython Command Prompt.exe&#8217; in the
 <em>WinPython</em> installation directory and run</p>
 <blockquote>
-<div><div class="code bash highlight-python"><div class="highlight"><pre>pip install iminuit
+<div><div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">iminuit</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -303,7 +303,7 @@ run under Python 3.</p>
 <h3>Install <cite>kafe</cite><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>Now <em>kafe</em> can be installed from PyPI by running:</p>
 <blockquote>
-<div><div class="code bash highlight-python"><div class="highlight"><pre>pip install kafe
+<div><div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">kafe</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -311,7 +311,7 @@ run under Python 3.</p>
 the following in &#8216;WinPython Command Prompt.exe&#8217; after switching to the
 directory into which you have downloaded <em>kafe</em>:</p>
 <blockquote>
-<div><div class="code bash highlight-python"><div class="highlight"><pre>python setup.py install
+<div><div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -383,7 +383,7 @@ if everything has been set up correctly.</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2015, D. Savoiu, G. Quast.
-      Last updated on Jun 22, 2016.
+      Last updated on Sep 30, 2016.
     </p>
   </div>
   Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.

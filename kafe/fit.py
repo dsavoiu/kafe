@@ -509,17 +509,11 @@ class Fit(object):
             A tuple of the parameter uncertainties
         '''
         output = []
-        names = []
         for name, value, error in self.minimizer.get_parameter_info():
-            names.append(name)
+
             if rounding:
                 value, error = round_to_significance(value, error)
             output.append(error)
-
-        # make sure parameters are in the defined order
-        _ordering = map(self.parameter_names.index, names)
-        _order = dict(zip(output, _ordering))
-        output.sort(key=_order.get)
 
         return tuple(output)
 
@@ -541,17 +535,11 @@ class Fit(object):
         '''
 
         output = []
-        names = []
         for name, value, error in self.minimizer.get_parameter_info():
-            names.append(name)
+
             if rounding:
                 value, error = round_to_significance(value, error)
             output.append(value)
-
-        # make sure parameters are in the defined order
-        _ordering = map(self.parameter_names.index, names)
-        _order = dict(zip(output, _ordering))
-        output.sort(key=_order.get)
 
         return tuple(output)
 
@@ -1228,7 +1216,6 @@ class Fit(object):
         else:
             tmp_ax = axes
         # set axis labels
-        self.latex_parameter_names[par1]
         tmp_ax.set_xlabel('$%s$' % (self.latex_parameter_names[par1],),
                           fontsize='xx-large')
         tmp_ax.set_ylabel('$%s$' % (self.latex_parameter_names[par2],),

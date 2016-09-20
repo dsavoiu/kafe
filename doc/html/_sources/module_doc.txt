@@ -53,6 +53,27 @@ Main modules: :py:mod:`~kafe.dataset`, :py:mod:`~kafe.fit` and :py:mod:`~kafe.pl
     :undoc-members:
     :show-inheritance:
 
+Modules for multiparameter fits: :py:mod:`~kafe.multifit` and :py:mod:`~kafe.multiplot`
+===================================================================================
+
+``Multifit``: Fit of model functions to a ``Dataset`` (:py:mod:`kafe.multifit`)
+---------------------------------------------------------------------
+
+.. automodule:: kafe.multifit
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+``Multiplot``: Graphical representation of a ``Fit`` (:py:mod:`kafe.multiplot`)
+---------------------------------------------------------------------
+
+.. automodule:: kafe.multiplot
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 
 Interfaces to external packages
 ===============================
