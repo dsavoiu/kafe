@@ -238,6 +238,8 @@ class Fit(object):
         self.dataset = dataset  #: this Fit instance's child `Dataset`
 
         # variables to store final results of this fit
+        self.final_fcn = None
+        """Final minimum of fcn (chi2)"""
         self.final_parameter_values = None
         """Final parameter values"""
         self.final_parameter_errors = None
@@ -899,6 +901,7 @@ class Fit(object):
                   self.parabolic_errors=False
 
         # store results ...
+        self.final_fcn = self.minimizer.get_fit_info('fcn')
         self.final_parameter_values = self.current_parameter_values
         self.final_parameter_errors = self.current_parameter_errors
         self.par_cov_mat = self.get_error_matrix()
