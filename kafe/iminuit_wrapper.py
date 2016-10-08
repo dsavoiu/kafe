@@ -12,6 +12,8 @@
 # ----------------------------------------------------------------
 # Changes:
 #  05-May-15    create module
+#  08-Oct-16 GQ  printout level -1 if "quiet" specified
+#                suppressed du2() if no printout requested 
 # ----------------------------------------------------------------
 
 # import iminuit as python package
@@ -135,7 +137,7 @@ class IMinuit:
 
         # set print level according to flag
         if quiet:
-            self.set_print_level(0)      # suppress output
+            self.set_print_level(-1)      # suppress output
         elif verbose:
             self.set_print_level(3)      # detailed output
         else:
@@ -490,8 +492,8 @@ class IMinuit:
         self.out_file.write('\n\n')
         self.out_file.flush()
         # save the old stdout stream
-        old_out_stream = os.dup(sys.stdout.fileno())
-        os.dup2(self.out_file.fileno(), sys.stdout.fileno())
+#        old_out_stream = os.dup(sys.stdout.fileno())
+#        os.dup2(self.out_file.fileno(), sys.stdout.fileno())
 
         pv=[]
         chi2=[]
@@ -513,42 +515,9 @@ class IMinuit:
         # Get profile using iminuit.Minuit.mnprofile
         binc, vals, _ = self.__iminuit.mnprofile(parameter, n_points, 3.)
 
-        ## <Guenter Quast's implementation>
-
-        #~ # retrieve information about parameter with id=parid
-        #~ pmin = self.get_parameter_values()[par_id]
-        #~ perr = self.get_parameter_errors()[par_id]
-#~
-        #~ # fix parameter parid ...
-        #~ self.__gMinuit.mnexcm("FIX",
-                                #~ arr('d', [minuit_id]),
-                                #~ 1, error_code)
-        #~ self.__iminuit.mne
-        #~ # ... and scan parameter values, minimizing at each point
-        #~ for v in np.linspace(pmin-3.*perr, pmin+3.*perr, n_points):
-            #~ pv.append(v)
-            #~ self.__gMinuit.mnexcm("SET PAR",
-                 #~ arr('d', [minuit_id, Double(v)]),
-                               #~ 2, error_code)
-            #~ self.__gMinuit.mnexcm("MIGRAD",
-                 #~ arr('d', [self.max_iterations, self.tolerance]),
-                               #~ 2, error_code)
-            #~ chi2.append(self.get_fit_info('fcn'))
-#~
-        #~ # release parameter to back to initial value and release
-        #~ self.__gMinuit.mnexcm("SET PAR",
-                              #~ arr('d', [minuit_id, Double(pmin)]),
-                               #~ 2, error_code)
-        #~ self.__gMinuit.mnexcm("RELEASE",
-                                #~ arr('d', [minuit_id]),
-                                #~ 1, error_code)
-
-        ## </Guenter Quast's implementation>
-
         # restore the previous output stream
-        os.dup2(old_out_stream, sys.stdout.fileno())
+ #!       os.dup2(old_out_stream, sys.stdout.fileno())
 
-        #return pv, chi2
         return binc, vals
 
 
@@ -673,8 +642,9 @@ class IMinuit:
         self.out_file.flush()
 
         # save the old stdout stream
-        old_out_stream = os.dup(sys.stdout.fileno())
-        os.dup2(self.out_file.fileno(), sys.stdout.fileno())
+        if(log_print_level >=0):
+          old_out_stream = os.dup(sys.stdout.fileno())
+          os.dup2(self.out_file.fileno(), sys.stdout.fileno())
 
         self.__iminuit.set_print_level(log_print_level)  # set iminuit print level
         logger.debug("Running MIGRAD")
@@ -688,10 +658,11 @@ class IMinuit:
         self.__iminuit.set_print_level(self.print_level)
 
         # restore the previous output stream
-        os.dup2(old_out_stream, sys.stdout.fileno())
+        if(log_print_level >=0):
+          os.dup2(old_out_stream, sys.stdout.fileno())
 
 
-    def minos_errors(self):
+    def minos_errors(self, log_print_level=1):
         '''
            Get (asymmetric) parameter uncertainties from MINOS
            algorithm. This calls `Minuit`'s algorithms ``MINOS``,
@@ -703,10 +674,11 @@ class IMinuit:
         '''
 
         # save the old stdout stream
-        old_out_stream = os.dup(sys.stdout.fileno())
-        os.dup2(self.out_file.fileno(), sys.stdout.fileno())
+        if(log_print_level >=0):
+          old_out_stream = os.dup(sys.stdout.fileno())
+          os.dup2(self.out_file.fileno(), sys.stdout.fileno())
 
-        self.__iminuit.set_print_level(1)  # verboseness level 1 is sufficient
+        self.__iminuit.set_print_level(log_print_level)  
         logger.debug("Running MINOS")
         _results = self.__iminuit.minos(maxcall=self.max_iterations)
 
@@ -714,7 +686,8 @@ class IMinuit:
         self.__iminuit.set_print_level(self.print_level)
 
         # restore the previous output stream
-        os.dup2(old_out_stream, sys.stdout.fileno())
+        if(log_print_level >=0):
+          os.dup2(old_out_stream, sys.stdout.fileno())
 
         output = []
 
