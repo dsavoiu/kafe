@@ -1,12 +1,12 @@
+# coding=utf-8
 '''
 .. module:: fit
     :platform: Unix
     :synopsis: This submodule defines a `Fit` object which performs the actual
         fitting given a `Dataset` and a fit function.
-
 .. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
 .. moduleauthor:: Guenter Quast <G.Quast@kit.edu>
-
+.. moduleauthor:: Joerg Schindler <joerg.schindler@student.kit.edu>
 '''
 
 # ----------------------------------------------------------------
@@ -37,6 +37,14 @@
 #                  representation of the parameter covariance-matrix
 #                  by showing all contours and profiles as an array of plots
 # 15-Jan-16   G.Q. fixed color name "darmagenta" -> darkmagenta
+# 29-Sep-16   J.S. changed/extended constrain_parameters():
+#                  now takes a correlation matrix as a keyword to take
+#                  correlations into account. New class GaussianConstraint added
+#                  to store all constriants
+# 07-Oct-16   G.Q. improved logic to suppress print-out if quiet is specified
+#                  in do_fit()
+#                  added variable final_fcn to Fit class to store chi2
+# 08-Oct-16   G.Q. added function get_results()
 # -------------------------------------------------------------------------
 
 
@@ -45,7 +53,7 @@ from copy import copy
 
 import matplotlib.pyplot as plt
 import numpy as np
-from numeric_tools import cov_to_cor, extract_statistical_errors, MinuitCov_to_cor
+from numeric_tools import cov_to_cor, extract_statistical_errors, MinuitCov_to_cor, cor_to_cov
 
 from .config import (FORMAT_ERROR_SIGNIFICANT_PLACES, F_SIGNIFICANCE_LEVEL,
                      M_MINIMIZER_TO_USE, log_file)
@@ -62,7 +70,7 @@ logger = logging.getLogger('kafe')
 # The default FCN
 def chi2(xdata, ydata, cov_mat,
          fit_function, parameter_values,
-         constrained_parameters=None):
+         constrain=None):
     r'''
     The :math:`\chi^2` implementation. Calculates :math:`\chi^2` according
     to the formula:
@@ -103,11 +111,10 @@ def chi2(xdata, ydata, cov_mat,
     Keyword Arguments
     -----------------
 
-    constrained_parameters : ``None`` or list of two iterables, optional
-        The first iterable (:math:`{c_i}`) contains the constrained parameters'
-        expected values and the second iterable (:math:`{\sigma_i}`) contains
-        the constraint uncertainties. A parameter with constraint uncertainty
-        set to 0 remains unconstrained.
+    constrain : ``None`` or dictionary , optional
+        The key of the dictionary holds the parameter ids,
+        while the values are GaussianConstraint objects
+        with values, errors and correlation of the parameters.
 
     '''
 
@@ -127,13 +134,11 @@ def chi2(xdata, ydata, cov_mat,
     chi2val = (residual.T.dot(cov_mat.I).dot(residual))[0, 0]  # return the chi^2
 
     # apply constraints, if any
-    if(constrained_parameters is not None):
-        for i, err in enumerate(constrained_parameters[1]):
-            if err:  # there is a constraint, add to chi2
-                dchi2 = (parameter_values[i] - constrained_parameters[0][i])/err
-                dchi2 *= dchi2
-                chi2val += dchi2
-
+    if constrain is not None:
+        dchi2 = 0
+        for val in constrain.itervalues():
+            dchi2 += val.calculate_chi2_penalty(parameter_values)
+        chi2val += dchi2
     return chi2val
 
 
@@ -222,7 +227,7 @@ class Fit(object):
     minimizer_to_use : 'ROOT' or 'minuit', optional
         Which minimizer to use. This defaults to whatever is set in the config
         file, but can be specifically overridden for some fits using this
-        keyword argument.
+        keyword argument
     '''
 
     def __init__(self, dataset, fit_function, external_fcn=chi2,
@@ -287,12 +292,8 @@ class Fit(object):
                                           dtype=bool)
         self.number_of_fixed_parameters = 0
 
-        # list to store values and errors of constrained parameters
-        self._constrained_parameters = np.zeros(self.number_of_parameters,
-                                         dtype=bool)
-        self.constrained_parameters=[
-            np.zeros(self.number_of_parameters,dtype=np.float32),
-            np.zeros(self.number_of_parameters,dtype=np.float32)]
+        # Dictionary to store Gaussian_constrain object with the ids of constrained parameters as key
+        self.constrain = {}
         self.number_of_constrained_parameters = 0
 
         # store the full function definition
@@ -351,7 +352,7 @@ class Fit(object):
         # set Minuit's initial parameters and parameter errors
         #            may be overwritten via ``set_parameters``
         self.minimizer.set_parameter_values(self.current_parameter_values)
-        self.minimizer.set_parameter_errors()  # default 10%, 0.1 if value==0.
+        self.minimizer.set_parameter_errors(self.current_parameter_errors)  # default 10%, 0.1 if value==0.
 
         # store measurement data locally in Fit object
         #: the `x` coordinates of the data points used for this `Fit`
@@ -403,7 +404,7 @@ class Fit(object):
 
         return self.external_fcn(self.xdata, self.ydata, self.current_cov_mat,
                                  self.fit_function, parameter_values,
-                                 self.constrained_parameters)
+                                 self.constrain)
 
     def get_function_error(self, x):
         r'''
@@ -508,11 +509,17 @@ class Fit(object):
             A tuple of the parameter uncertainties
         '''
         output = []
+        names = []
         for name, value, error in self.minimizer.get_parameter_info():
-
+            names.append(name)
             if rounding:
                 value, error = round_to_significance(value, error)
             output.append(error)
+
+        # make sure parameters are in the defined order
+        _ordering = map(self.parameter_names.index, names)
+        _order = dict(zip(output, _ordering))
+        output.sort(key=_order.get)
 
         return tuple(output)
 
@@ -534,11 +541,17 @@ class Fit(object):
         '''
 
         output = []
+        names = []
         for name, value, error in self.minimizer.get_parameter_info():
-
+            names.append(name)
             if rounding:
                 value, error = round_to_significance(value, error)
             output.append(value)
+
+        # make sure parameters are in the defined order
+        _ordering = map(self.parameter_names.index, names)
+        _order = dict(zip(output, _ordering))
+        output.sort(key=_order.get)
 
         return tuple(output)
 
@@ -714,43 +727,70 @@ class Fit(object):
             # Inform about release
             logger.info("Released all parameters")
 
-    def constrain_parameters(self, parameters, parvals, parerrs):
-      r'''
-      Constrain the parameter with the given name to :math:`c\pm\sigma`.
+    def constrain_parameters(self, parameters, parvals, parerrs, cor_mat=None):
+        r'''
+        Constrain the parameter with the given name to :math:`c\pm\sigma`.
+        This is achieved by adding an appropriate `penalty term` to the
+        :math:`\chi^2` function, see function :py:func:`~kafe.fit.chi2`.
 
-      This is achieved by adding an appropriate `penalty term` to the
-      :math:`\chi^2` function, see function :py:func:`~kafe.fit.chi2`.
+        Parameters
+        ----------
 
-      Parameters
-      ----------
+        **parameters**: list of int
+            list of paramter id's or names to constrain
 
-      **parameters**: list of int
-          list of paramter id's or names to constrain
+        **parvals**: list of float
+            list of parameter values
 
-      **parvals**: list of float
-          list of parameter values
+        **parerrs**: list of float
+            list of errors on parameters
 
-      **parerrs**: list of float
-          list of errors on parameters
-      '''
+        Keyword Arguments
+        -----------------
 
-      # turn name(s) into Id(s), if needed
-      for i, parameter in enumerate(parameters):
-        par_id = self._find_parameter(parameter)
-        if par_id is None:
-          raise ValueError("Cannot constrain parameter. `%s` not "
-                           "a valid ID or parameter name."
-                          % parameter )
-        else:
-        # constrain the parameter
-          self.constrained_parameters[0][par_id]=list(parvals)[i]
-          self.constrained_parameters[1][par_id]=list(parerrs)[i]
-          self.number_of_constrained_parameters+=1
-          self._constrained_parameters[par_id]=True
+        **cor_mat** : `numpy.matrix` optional
+            correlation matrix of the parameters
 
-        logger.info("Constrained parameter %d (%s)"
-                            % (par_id, self.parameter_names[par_id]))
+        '''
+        # Create temporary lists to hold our constrain data
+        dummy = []
+        parameter_constrain = [
+            np.zeros(self.number_of_parameters, dtype=np.float32),
+            np.zeros(self.number_of_parameters, dtype=np.float32)]
 
+        # turn name(s) into Id(s), if needed
+        for i, parameter in enumerate(parameters):
+            par_id = self._find_parameter(parameter)
+            if par_id is None:
+                raise ValueError("Cannot constrain parameter. `%s` not "
+                                 "a valid ID or parameter name."
+                                 % parameter)
+            elif [id for id in self.constrain.keys() if par_id in id]:
+                raise ValueError("Cannot constrain parameter. '%s' is already "
+                                 "a constrained parameter."
+                                 % parameter)
+            else:
+                # Create dummy list with all ids
+                dummy.append(par_id)
+                # Create parameter_constrain, which holds the value and error
+                # of the constrained parameters. The list is sorted, so that the
+                # place of the parameter is the id
+                parameter_constrain[0][par_id] = list(parvals)[i]
+                parameter_constrain[1][par_id] = list(parerrs)[i]
+                self.number_of_constrained_parameters += 1
+
+            logger.info("Constrained parameter %d (%s)"
+                        % (par_id, self.parameter_names[par_id]))
+        cov_mat = None
+        # Check if correlations are given
+        if cor_mat is not None:
+            # Convert correlation matrix to covariance matrix for easier computing later on
+            cov_mat = cor_to_cov(cor_mat, parerrs)
+
+        # Sort the tupel for better readability
+        dummy.sort()
+        # Create dictionary entry
+        self.constrain.update({tuple(dummy): GaussianConstraint(parameter_constrain, cov_mat)})
 
     def parameter_is_fixed(self, parameter):
         '''
@@ -788,6 +828,15 @@ class Fit(object):
             found_id = lookup_string
 
         return found_id
+
+    def get_results(self):
+        '''
+        Return results from Fit
+        '''
+        return (self.final_parameter_values,
+                self.final_parameter_errors,
+                self.par_cov_mat, 
+                self.final_fcn)
 
     # Fit Workflow
     ###############
@@ -840,30 +889,31 @@ class Fit(object):
                 'full' )
             print >>self.out_stream, ''
 
-            if(self.number_of_constrained_parameters):
-                print >>self.out_stream, "###############"
+            if self.constrain:
+                print >> self.out_stream, "###############"
                 print >>self.out_stream, "# Constraints #"
                 print >>self.out_stream, "###############"
                 print >>self.out_stream, ''
-                for i, err in enumerate(self.constrained_parameters[1]):
-                    if(err):
-                        print >>self.out_stream, "%s: %g +\- %g" % (
-                            self.parameter_names[i],
-                            self.constrained_parameters[0][i],
-                            err)
+                for i in self.constrain.itervalues():
+                    for j, err in enumerate(i.parameter_constrain[1]):
+                        if(err):
+                            print >>self.out_stream, "%s: %g +\- %g" % (
+                                self.parameter_names[j],
+                                i.parameter_constrain[0][j],
+                                err)
+
+                    if i.cov_mat_inv is not None:
+                        print >> self.out_stream, "Correlation Matrix: "
+                        print >> self.out_stream, format(cov_to_cor(i.cov_mat_inv.I))
                 print >>self.out_stream, ''
-
-
-        if not self.number_of_constrained_parameters:
-            self.constrained_parameters = None  # avoid loop in function chi2
 
         max_x_iterations = 10
 
         logger.debug("Calling Minuit")
         if self.dataset.has_errors('x'):
-            self.call_minimizer(final_fit=False, verbose=verbose)
+            self.call_minimizer(final_fit=False, verbose=verbose, quiet=quiet)
         else:
-            self.call_minimizer(final_fit=True, verbose=verbose)
+            self.call_minimizer(final_fit=True, verbose=verbose, quiet=quiet)
 
         # if the dataset has x errors, project onto the current error matrix
         if self.dataset.has_errors('x'):
@@ -875,9 +925,9 @@ class Fit(object):
 
                 logger.debug("`x` fit iteration %d" % (iter_nr,))
                 if iter_nr==0:
-                    self.call_minimizer(final_fit=False, verbose=verbose)
+                    self.call_minimizer(final_fit=False, verbose=verbose, quiet=quiet)
                 else:
-                    self.call_minimizer(final_fit=True, verbose=verbose)
+                    self.call_minimizer(final_fit=True, verbose=verbose, quiet=quiet)
                 new_matrix = self.current_cov_mat
 
                 # stop if the matrix has not changed within tolerance)
@@ -890,7 +940,11 @@ class Fit(object):
 
         # determine, retrieve and analyze errors from MINOS algorithm
         tol = 0.05
-        self.minos_errors = self.minimizer.minos_errors()
+        if(quiet):
+          log_level=-1
+        else:
+          log_level=1
+        self.minos_errors = self.minimizer.minos_errors(log_level)
         # error analysis:
         for par_nr, par_val in enumerate(self.current_parameter_values):
             ep = self.minos_errors[par_nr][0]
@@ -927,7 +981,7 @@ class Fit(object):
         print self.profiles
 
 
-    def call_minimizer(self, final_fit=True, verbose=False):
+    def call_minimizer(self, final_fit=True, verbose=False, quiet=False):
         '''
         Instructs the minimizer to do a minimization.
         '''
@@ -937,6 +991,7 @@ class Fit(object):
             verbosity = 2
         if (verbose):
             verbosity = 3
+        if(quiet): verbosity = -1
 
         logger.debug("Calling minimizer")
         self.minimizer.minimize(
@@ -1006,6 +1061,7 @@ class Fit(object):
 
     def print_fit_details(self):
         '''prints some fit goodness details'''
+
 
         _ndf = (self.dataset.get_size() - self.number_of_parameters
                + self.number_of_fixed_parameters
@@ -1172,6 +1228,7 @@ class Fit(object):
         else:
             tmp_ax = axes
         # set axis labels
+        self.latex_parameter_names[par1]
         tmp_ax.set_xlabel('$%s$' % (self.latex_parameter_names[par1],),
                           fontsize='xx-large')
         tmp_ax.set_ylabel('$%s$' % (self.latex_parameter_names[par2],),
@@ -1185,7 +1242,7 @@ class Fit(object):
         # plot central value and errors
         tmp_ax.errorbar(xval, yval, xerr=xer, yerr=yer, fmt='o')
         # tmp_ax.scatter(xval, yval, marker='+', label='parameter values')
-        tmp_ax.set_prop_cycle("color",  
+        tmp_ax.set_prop_cycle("color",
                               ['black', 'darkblue', 'darkgreen', 'chocolate',
                                 'darkmagenta', 'darkred', 'darkorange',
                                 'darkgoldenrod'])
@@ -1360,6 +1417,78 @@ class Fit(object):
 
         return cor_fig
 
+
+class GaussianConstraint(object):
+    '''
+    Object used to constrain parameters. The object stores for each constrain
+    the constrained parameters, the errors, the id of the parameter (the place
+    at which each parameter is located in parameter_constrain) and the inverse
+    covariance matrix of the constrained parameters.
+    The class gives a tool to calculate the chi2 penalty term for the given
+    constrained parameters, where the fitted parameter_values must be given.
+
+    Parameters
+    -----------
+
+    constraint: list of two iterables
+        The first iterable (:math:`{c_i}`) contains the constrained parameters'
+        expected values and the second iterable (:math:`{\sigma_i}`) contains
+        the constraint uncertainties. A parameter with constraint uncertainty
+        set to 0 remains unconstrained.
+
+    Keyword Arguments
+    -----------------
+
+    cov_mat: 'numpy matrix'
+        Contains the covariance matrix of the constrains. The inverse covariance
+        matrix will be saved to safe computing time.
+
+    '''
+    def __init__(self, constraint, cov_mat=None):
+
+        # List of constrain values and errors (param_constrain[1]=errors, param_constrain[0]=values)
+        self.parameter_constrain = constraint
+        # Inverse covariance matrix
+        if cov_mat is not None:
+            self.cov_mat_inv = cov_mat.I
+        else:
+            self.cov_mat_inv = None
+
+    def calculate_chi2_penalty(self, parameter_values):
+        '''
+        Calculates the :math:`\chi^2` penalty for the given constraint
+        parameter. This function gets called in the :math:`\chi^2` function
+        and returns a penalty term.
+
+        Parameters
+        -----------
+
+        parameter_values: list/tuple
+            The values of the parameters at which :math:`f(x)` should be evaluated.
+
+        '''
+        _vector = []
+        dchi2 = 0
+        if self.parameter_constrain is not None:
+            if self.cov_mat_inv is not None:
+                for i, err in enumerate(self.parameter_constrain[1]):
+                    if err:  # there is a constraint, add to chi2
+                        _vector.append(parameter_values[i] - self.parameter_constrain[0][i])
+                _vector = np.asarray(_vector)
+                dchi2 = (_vector.T.dot(self.cov_mat_inv).dot(_vector))[0, 0]
+
+            else:
+                for i, err in enumerate(self.parameter_constrain[1]):
+                    if err:  # there is a constraint, add to chi2
+                        dchi2 += ((parameter_values[i] - self.parameter_constrain[0][i]) / err) ** 2
+
+        return dchi2
+
+
+
+
+
+
 def CL2Chi2(CL):
     '''
     Helper function to calculate DeltaChi2 from confidence level CL
@@ -1368,8 +1497,8 @@ def CL2Chi2(CL):
 
 def Chi22CL(dc2):
     '''
-    Helper function to calculate confidence level CL from DeltaChi2 
-    '''  
+    Helper function to calculate confidence level CL from DeltaChi2
+    '''
     return (1. - np.exp(-dc2 / 2.))
 
 def build_fit(dataset, fit_function,
