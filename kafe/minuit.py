@@ -14,6 +14,8 @@
 #  10-Aug-14  G.Q.  minimize(): allowed for initial fits w.o. HESSE
 #  08-Dec-14  G.Q.  added execution of MINOS for final fit
 #  09-Dec-14  G.Q.  added chi2 profiling (function get_profile)
+#  08-Oct-16  GQ  printout level -1 if "quiet" specified
+#                 suppressed du2() if no printout requested 
 # ----------------------------------------------------------------
 
 # ROOT's data types needed to use TMinuit:
@@ -408,7 +410,7 @@ class Minuit:
         self.out_file.flush()
 #
 # first, make sure we are at minimum
-        self.minimize(final_fit=True,log_print_level=0)
+        self.minimize(final_fit=True, log_print_level=0)
 
         # get the TGraph object from ROOT
         g = self.__gMinuit.Contour(n_points, parameter1, parameter2)
@@ -449,9 +451,9 @@ class Minuit:
         self.out_file.write('#'*(2+26))
         self.out_file.write('\n\n')
         self.out_file.flush()
-        # save the old stdout stream
-        old_out_stream = os.dup(sys.stdout.fileno())
-        os.dup2(self.out_file.fileno(), sys.stdout.fileno())
+#        # save the old stdout stream
+#        old_out_stream = os.dup(sys.stdout.fileno())
+#        os.dup2(self.out_file.fileno(), sys.stdout.fileno())
 
         pv=[]
         chi2=[]
@@ -460,7 +462,7 @@ class Minuit:
                  arr('d', [0.0]), 1, error_code)  # no printout
 
 # first, make sure we are at minimum, i.e. re-minimize
-        self.minimize(final_fit=True,log_print_level=0)
+        self.minimize(final_fit=True, log_print_level=0)
         minuit_id=Double(parid+1) # Minuit parameter numbers start with 1
 
         # retrieve information about parameter with id=parid
@@ -491,10 +493,10 @@ class Minuit:
                                 arr('d', [minuit_id]),
                                 1, error_code)
 
-        # restore the previous output stream
-        os.dup2(old_out_stream, sys.stdout.fileno())
+#        # restore the previous output stream
+#        os.dup2(old_out_stream, sys.stdout.fileno())
 
-        return pv,chi2
+        return pv, chi2
 
 
     # Other methods
@@ -599,8 +601,9 @@ class Minuit:
         self.out_file.flush()
 
         # save the old stdout stream
-        old_out_stream = os.dup(sys.stdout.fileno())
-        os.dup2(self.out_file.fileno(), sys.stdout.fileno())
+        if(log_print_level>=0):
+          old_out_stream = os.dup(sys.stdout.fileno())
+          os.dup2(self.out_file.fileno(), sys.stdout.fileno())
 
         self.__gMinuit.SetPrintLevel(log_print_level)  # set Minuit print level
         logger.debug("Running MIGRAD")
@@ -614,10 +617,11 @@ class Minuit:
         self.__gMinuit.SetPrintLevel(self.print_level)
 
         # restore the previous output stream
-        os.dup2(old_out_stream, sys.stdout.fileno())
+        if(log_print_level>=0):
+          os.dup2(old_out_stream, sys.stdout.fileno())
 
 
-    def minos_errors(self):
+    def minos_errors(self, log_print_level=1):
         '''
            Get (asymmetric) parameter uncertainties from MINOS
            algorithm. This calls `Minuit`'s algorithms ``MINOS``,
@@ -636,10 +640,11 @@ class Minuit:
         self.__gMinuit.SetFCN(self.FCN_wrapper)
 
         # save the old stdout stream
-        old_out_stream = os.dup(sys.stdout.fileno())
-        os.dup2(self.out_file.fileno(), sys.stdout.fileno())
+        if(log_print_level>=0):
+          old_out_stream = os.dup(sys.stdout.fileno())
+          os.dup2(self.out_file.fileno(), sys.stdout.fileno())
 
-        self.__gMinuit.SetPrintLevel(1)  # verboseness level 1 is sufficient
+        self.__gMinuit.SetPrintLevel(log_print_level)  
         logger.debug("Running MINOS")
         error_code = Long(0)
         self.__gMinuit.mnexcm("MINOS", arr('d', [self.max_iterations]), 1, error_code)
@@ -648,7 +653,8 @@ class Minuit:
         self.__gMinuit.SetPrintLevel(self.print_level)
 
         # restore the previous output stream
-        os.dup2(old_out_stream, sys.stdout.fileno())
+        if(log_print_level>=0):
+          os.dup2(old_out_stream, sys.stdout.fileno())
 
         output = []
         errpos=Double(0) # positive parameter error
