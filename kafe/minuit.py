@@ -23,7 +23,7 @@ from ROOT import TMinuit, Double, Long
 from ROOT import TMath  # for uning ROOT's chi2prob function
 from array import array as arr  # array needed for TMinuit arguments
 
-from .config import M_MAX_ITERATIONS, M_TOLERANCE, log_file
+from .config import M_MAX_ITERATIONS, M_TOLERANCE, log_file, null_file
 from time import gmtime, strftime
 
 import numpy as np
@@ -105,7 +105,10 @@ class Minuit:
         #: number of parameters to minimize for
         self.number_of_parameters = number_of_parameters
 
-        self.out_file = open(log_file("minuit.log"), 'a')
+        if not quiet:
+            self.out_file = open(log_file("minuit.log"), 'a')
+        else:
+            self.out_file = null_file()
 
         # create a TMinuit instance for that number of parameters
         self.__gMinuit = TMinuit(self.number_of_parameters)
@@ -619,6 +622,7 @@ class Minuit:
         # restore the previous output stream
         if(log_print_level>=0):
           os.dup2(old_out_stream, sys.stdout.fileno())
+          os.close(old_out_stream)
 
 
     def minos_errors(self, log_print_level=1):
