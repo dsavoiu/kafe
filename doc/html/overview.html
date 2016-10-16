@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>kafe Overview &mdash; kafe 1.1.0 documentation</title>
+  <title>kafe Overview &mdash; kafe 1.2.0 documentation</title>
   
 
   
@@ -30,7 +30,7 @@
   
 
   
-    <link rel="top" title="kafe 1.1.0 documentation" href="index.html"/> 
+    <link rel="top" title="kafe 1.2.0 documentation" href="index.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -201,35 +201,35 @@ are allowed to vary.</p>
 <ol class="arabic">
 <li><p class="first">create a <a class="reference internal" href="module_doc.html#kafe.dataset.Dataset" title="kafe.dataset.Dataset"><code class="xref py py-class docutils literal"><span class="pre">Dataset</span></code></a> object from your measurement
 data:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_d</span> <span class="o">=</span> <span class="n">kafe</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.23</span><span class="p">,</span> <span class="mf">3.45</span><span class="p">,</span> <span class="mf">5.62</span><span class="p">]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_d</span> <span class="o">=</span> <span class="n">kafe</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.23</span><span class="p">,</span> <span class="mf">3.45</span><span class="p">,</span> <span class="mf">5.62</span><span class="p">]])</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">add errors (uncertainties) to your <a class="reference internal" href="module_doc.html#kafe.dataset.Dataset" title="kafe.dataset.Dataset"><code class="xref py py-class docutils literal"><span class="pre">Dataset</span></code></a>:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_d</span><span class="o">.</span><span class="n">add_error_source</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;simple&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>  <span class="c1"># y errors, all +/- 0.5</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_d</span><span class="o">.</span><span class="n">add_error_source</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="s">&#39;simple&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>  <span class="c"># y errors, all +/- 0.5</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">import a model function from <a class="reference internal" href="module_doc.html#module-kafe.function_library" title="kafe.function_library"><code class="xref py py-class docutils literal"><span class="pre">kafe.function_library</span></code></a> (or
 define one yourself):</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">kafe.function_library</span> <span class="k">import</span> <span class="n">linear_2par</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">kafe.function_library</span> <span class="kn">import</span> <span class="n">linear_2par</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">create a <a class="reference internal" href="module_doc.html#kafe.fit.Fit" title="kafe.fit.Fit"><code class="xref py py-class docutils literal"><span class="pre">Fit</span></code></a> object from your
 <a class="reference internal" href="module_doc.html#kafe.dataset.Dataset" title="kafe.dataset.Dataset"><code class="xref py py-class docutils literal"><span class="pre">Dataset</span></code></a> and your model function:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_f</span> <span class="o">=</span> <span class="n">kafe</span><span class="o">.</span><span class="n">Fit</span><span class="p">(</span><span class="n">my_d</span><span class="p">,</span> <span class="n">linear_2par</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_f</span> <span class="o">=</span> <span class="n">kafe</span><span class="o">.</span><span class="n">Fit</span><span class="p">(</span><span class="n">my_d</span><span class="p">,</span> <span class="n">linear_2par</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">do the fit:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_f</span><span class="o">.</span><span class="n">do_fit</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_f</span><span class="o">.</span><span class="n">do_fit</span><span class="p">()</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first"><em>(optional)</em> if you want to see a plot of the result, use the
 <a class="reference internal" href="module_doc.html#kafe.plot.Plot" title="kafe.plot.Plot"><code class="xref py py-class docutils literal"><span class="pre">Plot</span></code></a> object:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_p</span> <span class="o">=</span> <span class="n">kafe</span><span class="o">.</span><span class="n">Plot</span><span class="p">(</span><span class="n">my_f</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_p</span> <span class="o">=</span> <span class="n">kafe</span><span class="o">.</span><span class="n">Plot</span><span class="p">(</span><span class="n">my_f</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_p</span><span class="o">.</span><span class="n">plot_all</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -242,30 +242,30 @@ define one yourself):</p>
 <p>Only very few lines of Python code are needed to perform fits with
 kafe. The snippet of code shown below performs a fit of a quadratic
 function to some data points with uncertainties:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">kafe</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">kafe</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">kafe.function_library</span> <span class="kn">import</span> <span class="n">quadratic_3par</span>
 
-<span class="c1">#### build a Dataset instance:</span>
+<span class="c">#### build a Dataset instance:</span>
 <span class="n">myDataset</span> <span class="o">=</span> <span class="n">build_dataset</span><span class="p">(</span>
     <span class="p">[</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.36</span><span class="p">,</span><span class="mf">0.68</span><span class="p">,</span><span class="mf">0.80</span><span class="p">,</span><span class="mf">1.09</span><span class="p">,</span><span class="mf">1.46</span><span class="p">,</span><span class="mf">1.71</span><span class="p">,</span><span class="mf">1.83</span><span class="p">,</span><span class="mf">2.44</span><span class="p">,</span><span class="mf">2.09</span><span class="p">,</span><span class="mf">3.72</span><span class="p">,</span><span class="mf">4.36</span><span class="p">,</span><span class="mf">4.60</span><span class="p">],</span>
     <span class="p">[</span><span class="mf">0.35</span><span class="p">,</span><span class="mf">0.26</span><span class="p">,</span><span class="mf">0.52</span><span class="p">,</span><span class="mf">0.44</span><span class="p">,</span><span class="mf">0.48</span><span class="p">,</span><span class="mf">0.55</span><span class="p">,</span><span class="mf">0.66</span><span class="p">,</span><span class="mf">0.48</span><span class="p">,</span><span class="mf">0.75</span><span class="p">,</span><span class="mf">0.70</span><span class="p">,</span><span class="mf">0.75</span><span class="p">,</span><span class="mf">0.80</span><span class="p">,</span><span class="mf">0.90</span><span class="p">],</span>
     <span class="n">yabserr</span><span class="o">=</span><span class="p">[</span><span class="mf">0.06</span><span class="p">,</span><span class="mf">0.07</span><span class="p">,</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.07</span><span class="p">,</span><span class="mf">0.07</span><span class="p">,</span><span class="mf">0.09</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.11</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.11</span><span class="p">,</span><span class="mf">0.12</span><span class="p">,</span><span class="mf">0.1</span><span class="p">],</span>
-    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;some data&#39;</span><span class="p">,</span>
-    <span class="n">axis_labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;$x$&#39;</span><span class="p">,</span> <span class="s1">&#39;$y=f(x)$&#39;</span><span class="p">])</span>
+    <span class="n">title</span><span class="o">=</span><span class="s">&#39;some data&#39;</span><span class="p">,</span>
+    <span class="n">axis_labels</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;$x$&#39;</span><span class="p">,</span> <span class="s">&#39;$y=f(x)$&#39;</span><span class="p">])</span>
 
-<span class="c1">#### Create the Fit object</span>
+<span class="c">#### Create the Fit object</span>
 <span class="n">myFit</span> <span class="o">=</span> <span class="n">Fit</span><span class="p">(</span><span class="n">myDataset</span><span class="p">,</span> <span class="n">quadratic_3par</span><span class="p">)</span>
-<span class="c1"># Set initial values and error estimates</span>
+<span class="c"># Set initial values and error estimates</span>
 <span class="n">myFit</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">((</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
-<span class="c1"># Do the Fit</span>
+<span class="c"># Do the Fit</span>
 <span class="n">myFit</span><span class="o">.</span><span class="n">do_fit</span><span class="p">()</span>
 
-<span class="c1">#### Create result plots and output them</span>
+<span class="c">#### Create result plots and output them</span>
 <span class="n">myPlot</span> <span class="o">=</span> <span class="n">Plot</span><span class="p">(</span><span class="n">myFit</span><span class="p">)</span>
 <span class="n">myPlot</span><span class="o">.</span><span class="n">plot_all</span><span class="p">()</span>
-<span class="n">myPlot</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;kafe_example0.pdf&#39;</span><span class="p">)</span> <span class="c1"># to file</span>
+<span class="n">myPlot</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s">&#39;kafe_example0.pdf&#39;</span><span class="p">)</span> <span class="c"># to file</span>
 
-<span class="n">myPlot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>                    <span class="c1"># to screen</span>
+<span class="n">myPlot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>                    <span class="c"># to screen</span>
 </pre></div>
 </div>
 <p>The output in text form (also available via various <code class="xref py py-meth docutils literal"><span class="pre">get_...()</span></code> methods
@@ -281,13 +281,13 @@ to a quadratic model function with</cite> <strong>kafe</strong>.</span></p>
 strong correlation of the fit parameters. This can
 be graphically visualised by adding the following
 lines at the end of the example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1">### Create and save contour plots</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">### Create and save contour plots</span>
 <span class="n">contour1</span> <span class="o">=</span> <span class="n">myFit</span><span class="o">.</span><span class="n">plot_contour</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dchi2</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">])</span>
 <span class="n">contour2</span> <span class="o">=</span> <span class="n">myFit</span><span class="o">.</span><span class="n">plot_contour</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dchi2</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">])</span>
 <span class="n">contour3</span> <span class="o">=</span> <span class="n">myFit</span><span class="o">.</span><span class="n">plot_contour</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dchi2</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">])</span>
-<span class="n">contour1</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;kafe_example0_contour1.pdf&#39;</span><span class="p">)</span>
-<span class="n">contour2</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;kafe_example0_contour2.pdf&#39;</span><span class="p">)</span>
-<span class="n">contour3</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;kafe_example0_contour3.pdf&#39;</span><span class="p">)</span>
+<span class="n">contour1</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;kafe_example0_contour1.pdf&#39;</span><span class="p">)</span>
+<span class="n">contour2</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;kafe_example0_contour2.pdf&#39;</span><span class="p">)</span>
+<span class="n">contour3</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;kafe_example0_contour3.pdf&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The example code produces two confidence-level contours
@@ -328,7 +328,7 @@ a starting point for own applications.</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2015, D. Savoiu, G. Quast.
-      Last updated on Sep 30, 2016.
+      Last updated on Oct 16, 2016.
     </p>
   </div>
   Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
@@ -349,7 +349,7 @@ a starting point for own applications.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.1.0',
+            VERSION:'1.2.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

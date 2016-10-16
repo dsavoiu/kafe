@@ -19,8 +19,8 @@
 \usepackage{enumitem}\setlistdepth{48}
 
 \title{kafe Documentation}
-\date{June 22, 2016}
-\release{1.1.0}
+\date{October 16, 2016}
+\release{1.2.0}
 \author{D. Savoiu, G. Quast}
 \newcommand{\sphinxlogo}{}
 \renewcommand{\releasename}{Release}
@@ -2435,7 +2435,7 @@ fit function's \(LaTeX\) expression.
 \textbf{minimizer\_to\_use} (\emph{`ROOT' or `minuit', optional}) --
 Which minimizer to use. This defaults to whatever is set in the config
 file, but can be specifically overridden for some fits using this
-keyword argument.
+keyword argument
 
 \end{itemize}
 
@@ -2459,7 +2459,7 @@ external \emph{FCN}, varying only the parameter values.
 \index{call\_minimizer() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{module_doc:kafe.fit.Fit.call_minimizer}\pysiglinewithargsret{\bfcode{call\_minimizer}}{\emph{final\_fit=True}, \emph{verbose=False}}{}
+\phantomsection\label{module_doc:kafe.fit.Fit.call_minimizer}\pysiglinewithargsret{\bfcode{call\_minimizer}}{\emph{final\_fit=True}, \emph{verbose=False}, \emph{quiet=False}}{}
 Instructs the minimizer to do a minimization.
 
 \end{fulllineitems}
@@ -2467,9 +2467,8 @@ Instructs the minimizer to do a minimization.
 \index{constrain\_parameters() (kafe.fit.Fit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{module_doc:kafe.fit.Fit.constrain_parameters}\pysiglinewithargsret{\bfcode{constrain\_parameters}}{\emph{parameters}, \emph{parvals}, \emph{parerrs}}{}
+\phantomsection\label{module_doc:kafe.fit.Fit.constrain_parameters}\pysiglinewithargsret{\bfcode{constrain\_parameters}}{\emph{parameters}, \emph{parvals}, \emph{parerrs}, \emph{cor\_mat=None}}{}
 Constrain the parameter with the given name to \(c\pm\sigma\).
-
 This is achieved by adding an appropriate \emph{penalty term} to the
 \(\chi^2\) function, see function {\hyperref[module_doc:kafe.fit.chi2]{\emph{\code{chi2()}}}} (\autopageref*{module_doc:kafe.fit.chi2}).
 \begin{quote}\begin{description}
@@ -2484,6 +2483,10 @@ This is achieved by adding an appropriate \emph{penalty term} to the
 \textbf{\texttt{parerrs}} (\emph{list of float}) -- list of errors on parameters
 
 \end{itemize}
+
+\item[{Keyword Arguments}] \leavevmode
+\textbf{**cor\_mat**} (\emph{numpy.matrix} optional) --
+correlation matrix of the parameters
 
 \end{description}\end{quote}
 
@@ -2554,6 +2557,14 @@ Set to \code{True} if more output should be printed.
 \begin{fulllineitems}
 \phantomsection\label{module_doc:kafe.fit.Fit.external_fcn}\pysigline{\bfcode{external\_fcn}\strong{ = None}}
 the (external) function to be minimized for this \emph{Fit}
+
+\end{fulllineitems}
+
+\index{final\_fcn (kafe.fit.Fit attribute)}
+
+\begin{fulllineitems}
+\phantomsection\label{module_doc:kafe.fit.Fit.final_fcn}\pysigline{\bfcode{final\_fcn}\strong{ = None}}
+Final minimum of fcn (chi2)
 
 \end{fulllineitems}
 
@@ -2689,6 +2700,14 @@ A tuple of the parameter values
 tuple
 
 \end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{get\_results() (kafe.fit.Fit method)}
+
+\begin{fulllineitems}
+\phantomsection\label{module_doc:kafe.fit.Fit.get_results}\pysiglinewithargsret{\bfcode{get\_results}}{}{}
+Return results from Fit
 
 \end{fulllineitems}
 
@@ -3010,6 +3029,49 @@ the \emph{y} coordinates of the data points used for this \emph{Fit}
 
 \end{fulllineitems}
 
+\index{GaussianConstraint (class in kafe.fit)}
+
+\begin{fulllineitems}
+\phantomsection\label{module_doc:kafe.fit.GaussianConstraint}\pysiglinewithargsret{\strong{class }\code{kafe.fit.}\bfcode{GaussianConstraint}}{\emph{constraint}, \emph{cov\_mat=None}}{}
+Bases: \code{object}
+
+Object used to constrain parameters. The object stores for each constrain
+the constrained parameters, the errors, the id of the parameter (the place
+at which each parameter is located in parameter\_constrain) and the inverse
+covariance matrix of the constrained parameters.
+The class gives a tool to calculate the chi2 penalty term for the given
+constrained parameters, where the fitted parameter\_values must be given.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{\texttt{constraint}} (\emph{list of two iterables}) -- The first iterable (\({c_i}\)) contains the constrained parameters'
+expected values and the second iterable (\({\sigma_i}\)) contains
+the constraint uncertainties. A parameter with constraint uncertainty
+set to 0 remains unconstrained.
+
+\item[{Keyword Arguments}] \leavevmode
+\textbf{cov\_mat} (\emph{`numpy matrix'}) --
+Contains the covariance matrix of the constrains. The inverse covariance
+matrix will be saved to safe computing time.
+
+\end{description}\end{quote}
+\index{calculate\_chi2\_penalty() (kafe.fit.GaussianConstraint method)}
+
+\begin{fulllineitems}
+\phantomsection\label{module_doc:kafe.fit.GaussianConstraint.calculate_chi2_penalty}\pysiglinewithargsret{\bfcode{calculate\_chi2\_penalty}}{\emph{parameter\_values}}{}
+Calculates the \(\chi^2\) penalty for the given constraint
+parameter. This function gets called in the \(\chi^2\) function
+and returns a penalty term.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{\texttt{parameter\_values}} (\emph{list/tuple}) -- The values of the parameters at which \(f(x)\) should be evaluated.
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
+\end{fulllineitems}
+
 \index{build\_fit() (in module kafe.fit)}
 
 \begin{fulllineitems}
@@ -3059,7 +3121,7 @@ uncertainties of constraints to apply to model parameters
 \index{chi2() (in module kafe.fit)}
 
 \begin{fulllineitems}
-\phantomsection\label{module_doc:kafe.fit.chi2}\pysiglinewithargsret{\code{kafe.fit.}\bfcode{chi2}}{\emph{xdata}, \emph{ydata}, \emph{cov\_mat}, \emph{fit\_function}, \emph{parameter\_values}, \emph{constrained\_parameters=None}}{}
+\phantomsection\label{module_doc:kafe.fit.chi2}\pysiglinewithargsret{\code{kafe.fit.}\bfcode{chi2}}{\emph{xdata}, \emph{ydata}, \emph{cov\_mat}, \emph{fit\_function}, \emph{parameter\_values}, \emph{constrain=None}}{}
 The \(\chi^2\) implementation. Calculates \(\chi^2\) according
 to the formula:
 \begin{gather}
@@ -3092,11 +3154,10 @@ a \emph{penalty term} is added for each constrained parameter:
 \end{itemize}
 
 \item[{Keyword Arguments}] \leavevmode
-\textbf{constrained\_parameters} (\code{None} or list of two iterables, optional) --
-The first iterable (\({c_i}\)) contains the constrained parameters'
-expected values and the second iterable (\({\sigma_i}\)) contains
-the constraint uncertainties. A parameter with constraint uncertainty
-set to 0 remains unconstrained.
+\textbf{constrain} (\code{None} or dictionary , optional) --
+The key of the dictionary holds the parameter ids,
+while the values are GaussianConstraint objects
+with values, errors and correlation of the parameters.
 
 \end{description}\end{quote}
 
@@ -3668,7 +3729,7 @@ for computing/checking the parameter error matrix.
 \index{minos\_errors() (kafe.minuit.Minuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{module_doc:kafe.minuit.Minuit.minos_errors}\pysiglinewithargsret{\bfcode{minos\_errors}}{}{}
+\phantomsection\label{module_doc:kafe.minuit.Minuit.minos_errors}\pysiglinewithargsret{\bfcode{minos\_errors}}{\emph{log\_print\_level=1}}{}
 Get (asymmetric) parameter uncertainties from MINOS
 algorithm. This calls \emph{Minuit}`s algorithms \code{MINOS},
 which determines parameter uncertainties using profiling
@@ -4063,7 +4124,7 @@ for computing/checking the parameter error matrix.
 \index{minos\_errors() (kafe.iminuit\_wrapper.IMinuit method)}
 
 \begin{fulllineitems}
-\phantomsection\label{module_doc:kafe.iminuit_wrapper.IMinuit.minos_errors}\pysiglinewithargsret{\bfcode{minos\_errors}}{}{}
+\phantomsection\label{module_doc:kafe.iminuit_wrapper.IMinuit.minos_errors}\pysiglinewithargsret{\bfcode{minos\_errors}}{\emph{log\_print\_level=1}}{}
 Get (asymmetric) parameter uncertainties from MINOS
 algorithm. This calls \emph{Minuit}`s algorithms \code{MINOS},
 which determines parameter uncertainties using profiling
