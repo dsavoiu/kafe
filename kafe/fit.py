@@ -1427,7 +1427,7 @@ class GaussianConstraint(object):
     constrained parameters, where the fitted parameter_values must be given.
 
     Parameters
-    -----------
+    ----------
 
     constraint: list of two iterables
         The first iterable (:math:`{c_i}`) contains the constrained parameters'
@@ -1460,7 +1460,7 @@ class GaussianConstraint(object):
         and returns a penalty term.
 
         Parameters
-        -----------
+        ----------
 
         parameter_values: list/tuple
             The values of the parameters at which :math:`f(x)` should be evaluated.
