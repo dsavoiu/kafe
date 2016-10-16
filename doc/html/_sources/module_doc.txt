@@ -53,7 +53,6 @@ Main modules: :py:mod:`~kafe.dataset`, :py:mod:`~kafe.fit` and :py:mod:`~kafe.pl
     :undoc-members:
     :show-inheritance:
 
-
 Interfaces to external packages
 ===============================
 

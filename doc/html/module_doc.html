@@ -10,7 +10,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>kafe reference &mdash; kafe 1.1.0 documentation</title>
+  <title>kafe reference &mdash; kafe 1.2.0 documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="kafe 1.1.0 documentation" href="index.html"/>
+    <link rel="top" title="kafe 1.2.0 documentation" href="index.html"/>
         <link rel="prev" title="Fit examples, utilities, tips and tricks" href="examples.html"/> 
 
   
@@ -958,7 +958,7 @@ fit function&#8217;s <img class="math" src="_images/math/a7232b593ed37730342f85e
 <li><p class="first"><strong>minimizer_to_use</strong> (<em>&#8216;ROOT&#8217; or &#8216;minuit&#8217;, optional</em>) &#8211;
 Which minimizer to use. This defaults to whatever is set in the config
 file, but can be specifically overridden for some fits using this
-keyword argument.</p>
+keyword argument</p>
 </li>
 </ul>
 </td>
@@ -984,25 +984,30 @@ external <cite>FCN</cite>, varying only the parameter values.</p>
 
 <dl class="method">
 <dt id="kafe.fit.Fit.call_minimizer">
-<code class="descname">call_minimizer</code><span class="sig-paren">(</span><em>final_fit=True</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.fit.Fit.call_minimizer" title="Permalink to this definition">¶</a></dt>
+<code class="descname">call_minimizer</code><span class="sig-paren">(</span><em>final_fit=True</em>, <em>verbose=False</em>, <em>quiet=False</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.fit.Fit.call_minimizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Instructs the minimizer to do a minimization.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="kafe.fit.Fit.constrain_parameters">
-<code class="descname">constrain_parameters</code><span class="sig-paren">(</span><em>parameters</em>, <em>parvals</em>, <em>parerrs</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.fit.Fit.constrain_parameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constrain the parameter with the given name to <img class="math" src="_images/math/22969ccbf4a4187d2e589315c963ec661be8d93e.png" alt="c\pm\sigma"/>.</p>
-<p>This is achieved by adding an appropriate <cite>penalty term</cite> to the
+<code class="descname">constrain_parameters</code><span class="sig-paren">(</span><em>parameters</em>, <em>parvals</em>, <em>parerrs</em>, <em>cor_mat=None</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.fit.Fit.constrain_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constrain the parameter with the given name to <img class="math" src="_images/math/22969ccbf4a4187d2e589315c963ec661be8d93e.png" alt="c\pm\sigma"/>.
+This is achieved by adding an appropriate <cite>penalty term</cite> to the
 <img class="math" src="_images/math/8bd0685e3bf9101859d24cf0e851651f182364c9.png" alt="\chi^2"/> function, see function <a class="reference internal" href="#kafe.fit.chi2" title="kafe.fit.chi2"><code class="xref py py-func docutils literal"><span class="pre">chi2()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>parameters</strong> (<em>list of int</em>) &#8211; list of paramter id&#8217;s or names to constrain</li>
 <li><strong>parvals</strong> (<em>list of float</em>) &#8211; list of parameter values</li>
 <li><strong>parerrs</strong> (<em>list of float</em>) &#8211; list of errors on parameters</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last"><strong>**cor_mat**</strong> (<cite>numpy.matrix</cite> optional) &#8211;
+correlation matrix of the parameters</p>
 </td>
 </tr>
 </tbody>
@@ -1064,6 +1069,12 @@ Set to <code class="docutils literal"><span class="pre">True</span></code> if mo
 <dt id="kafe.fit.Fit.external_fcn">
 <code class="descname">external_fcn</code><em class="property"> = None</em><a class="headerlink" href="#kafe.fit.Fit.external_fcn" title="Permalink to this definition">¶</a></dt>
 <dd><p>the (external) function to be minimized for this <cite>Fit</cite></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kafe.fit.Fit.final_fcn">
+<code class="descname">final_fcn</code><em class="property"> = None</em><a class="headerlink" href="#kafe.fit.Fit.final_fcn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Final minimum of fcn (chi2)</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1189,6 +1200,12 @@ Whether or not to round the returned values to significance.</td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="kafe.fit.Fit.get_results">
+<code class="descname">get_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kafe.fit.Fit.get_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return results from Fit</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1448,6 +1465,50 @@ to be the value and the second to be the parameter error.</li>
 
 </dd></dl>
 
+<dl class="class">
+<dt id="kafe.fit.GaussianConstraint">
+<em class="property">class </em><code class="descclassname">kafe.fit.</code><code class="descname">GaussianConstraint</code><span class="sig-paren">(</span><em>constraint</em>, <em>cov_mat=None</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.fit.GaussianConstraint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Object used to constrain parameters. The object stores for each constrain
+the constrained parameters, the errors, the id of the parameter (the place
+at which each parameter is located in parameter_constrain) and the inverse
+covariance matrix of the constrained parameters.
+The class gives a tool to calculate the chi2 penalty term for the given
+constrained parameters, where the fitted parameter_values must be given.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>constraint</strong> (<em>list of two iterables</em>) &#8211; The first iterable (<img class="math" src="_images/math/64c4f0a6c762f78fa753a951fc8aa597d789bad6.png" alt="{c_i}"/>) contains the constrained parameters&#8217;
+expected values and the second iterable (<img class="math" src="_images/math/7b4f3ec54d67fc071e930e51b6097e4d2e57c5c2.png" alt="{\sigma_i}"/>) contains
+the constraint uncertainties. A parameter with constraint uncertainty
+set to 0 remains unconstrained.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><strong>cov_mat</strong> (<em>&#8216;numpy matrix&#8217;</em>) &#8211;
+Contains the covariance matrix of the constrains. The inverse covariance
+matrix will be saved to safe computing time.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="kafe.fit.GaussianConstraint.calculate_chi2_penalty">
+<code class="descname">calculate_chi2_penalty</code><span class="sig-paren">(</span><em>parameter_values</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.fit.GaussianConstraint.calculate_chi2_penalty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the <img class="math" src="_images/math/8bd0685e3bf9101859d24cf0e851651f182364c9.png" alt="\chi^2"/> penalty for the given constraint
+parameter. This function gets called in the <img class="math" src="_images/math/8bd0685e3bf9101859d24cf0e851651f182364c9.png" alt="\chi^2"/> function
+and returns a penalty term.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>parameter_values</strong> (<em>list/tuple</em>) &#8211; The values of the parameters at which <img class="math" src="_images/math/14546c27a7b929642f7840acca5f851c503ea109.png" alt="f(x)"/> should be evaluated.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="function">
 <dt id="kafe.fit.build_fit">
 <code class="descclassname">kafe.fit.</code><code class="descname">build_fit</code><span class="sig-paren">(</span><em>dataset</em>, <em>fit_function</em>, <em>fit_label='untitled'</em>, <em>fit_name=None</em>, <em>initial_fit_parameters=None</em>, <em>constrained_parameters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.fit.build_fit" title="Permalink to this definition">¶</a></dt>
@@ -1489,7 +1550,7 @@ uncertainties of constraints to apply to model parameters</li>
 
 <dl class="function">
 <dt id="kafe.fit.chi2">
-<code class="descclassname">kafe.fit.</code><code class="descname">chi2</code><span class="sig-paren">(</span><em>xdata</em>, <em>ydata</em>, <em>cov_mat</em>, <em>fit_function</em>, <em>parameter_values</em>, <em>constrained_parameters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.fit.chi2" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">kafe.fit.</code><code class="descname">chi2</code><span class="sig-paren">(</span><em>xdata</em>, <em>ydata</em>, <em>cov_mat</em>, <em>fit_function</em>, <em>parameter_values</em>, <em>constrain=None</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.fit.chi2" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <img class="math" src="_images/math/8bd0685e3bf9101859d24cf0e851651f182364c9.png" alt="\chi^2"/> implementation. Calculates <img class="math" src="_images/math/8bd0685e3bf9101859d24cf0e851651f182364c9.png" alt="\chi^2"/> according
 to the formula:</p>
 <div class="math">
@@ -1514,11 +1575,10 @@ a <cite>penalty term</cite> is added for each constrained parameter:</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last"><strong>constrained_parameters</strong> (<code class="docutils literal"><span class="pre">None</span></code> or list of two iterables, optional) &#8211;
-The first iterable (<img class="math" src="_images/math/64c4f0a6c762f78fa753a951fc8aa597d789bad6.png" alt="{c_i}"/>) contains the constrained parameters&#8217;
-expected values and the second iterable (<img class="math" src="_images/math/7b4f3ec54d67fc071e930e51b6097e4d2e57c5c2.png" alt="{\sigma_i}"/>) contains
-the constraint uncertainties. A parameter with constraint uncertainty
-set to 0 remains unconstrained.</p>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last"><strong>constrain</strong> (<code class="docutils literal"><span class="pre">None</span></code> or dictionary , optional) &#8211;
+The key of the dictionary holds the parameter ids,
+while the values are GaussianConstraint objects
+with values, errors and correlation of the parameters.</p>
 </td>
 </tr>
 </tbody>
@@ -1982,7 +2042,7 @@ for computing/checking the parameter error matrix.</p>
 
 <dl class="method">
 <dt id="kafe.minuit.Minuit.minos_errors">
-<code class="descname">minos_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kafe.minuit.Minuit.minos_errors" title="Permalink to this definition">¶</a></dt>
+<code class="descname">minos_errors</code><span class="sig-paren">(</span><em>log_print_level=1</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.minuit.Minuit.minos_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get (asymmetric) parameter uncertainties from MINOS
 algorithm. This calls <cite>Minuit</cite>&#8216;s algorithms <code class="docutils literal"><span class="pre">MINOS</span></code>,
 which determines parameter uncertainties using profiling
@@ -2287,7 +2347,7 @@ for computing/checking the parameter error matrix.</p>
 
 <dl class="method">
 <dt id="kafe.iminuit_wrapper.IMinuit.minos_errors">
-<code class="descname">minos_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.minos_errors" title="Permalink to this definition">¶</a></dt>
+<code class="descname">minos_errors</code><span class="sig-paren">(</span><em>log_print_level=1</em><span class="sig-paren">)</span><a class="headerlink" href="#kafe.iminuit_wrapper.IMinuit.minos_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get (asymmetric) parameter uncertainties from MINOS
 algorithm. This calls <cite>Minuit</cite>&#8216;s algorithms <code class="docutils literal"><span class="pre">MINOS</span></code>,
 which determines parameter uncertainties using profiling
@@ -3318,7 +3378,7 @@ check occurs.</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2015, D. Savoiu, G. Quast.
-      Last updated on Jun 22, 2016.
+      Last updated on Oct 16, 2016.
     </p>
   </div>
   Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
@@ -3339,7 +3399,7 @@ check occurs.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.1.0',
+            VERSION:'1.2.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
