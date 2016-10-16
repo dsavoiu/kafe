@@ -45,6 +45,8 @@
 #                  in do_fit()
 #                  added variable final_fcn to Fit class to store chi2
 # 08-Oct-16   G.Q. added function get_results()
+# 16-Oct-16   D.S. supplying quiet=True to Fit() is now passed on to minimizer;
+#                  no file is created for quiet=True.
 # -------------------------------------------------------------------------
 
 
@@ -56,7 +58,7 @@ import numpy as np
 from numeric_tools import cov_to_cor, extract_statistical_errors, MinuitCov_to_cor, cor_to_cov
 
 from .config import (FORMAT_ERROR_SIGNIFICANT_PLACES, F_SIGNIFICANCE_LEVEL,
-                     M_MINIMIZER_TO_USE, log_file)
+                     M_MINIMIZER_TO_USE, log_file, null_file)
 from math import floor, log
 
 import os
@@ -232,7 +234,8 @@ class Fit(object):
 
     def __init__(self, dataset, fit_function, external_fcn=chi2,
                  fit_name=None, fit_label=None,
-                 minimizer_to_use=M_MINIMIZER_TO_USE):
+                 minimizer_to_use=M_MINIMIZER_TO_USE,
+                 quiet=False):
         '''
         Construct an instance of a ``Fit``
         '''
@@ -346,8 +349,13 @@ class Fit(object):
             _minimizer_handle = minimizer_to_use
 
         self.minimizer = _minimizer_handle(self.number_of_parameters,
-                                        self.call_external_fcn, self.parameter_names,
-                                        self.current_parameter_values, None)
+                                           self.call_external_fcn,
+                                           self.parameter_names,
+                                           self.current_parameter_values,
+                                           None,
+                                           # pass quiet flag to minimizer
+                                           quiet=quiet)
+
 
         # set Minuit's initial parameters and parameter errors
         #            may be overwritten via ``set_parameters``
@@ -368,24 +376,28 @@ class Fit(object):
         if self.fit_name is not None:
             _basename += '_' + fit_name
 
-        _basenamelog = log_file(_basename+'.log')
-        # check for old logs
-        if os.path.exists(_basenamelog):
-            logger.info('Old log files found for fit `%s`. kafe will not '
-                        'delete these files, but it is recommended to do '
-                        'so, in order to reduce clutter.'
-                        % (_basename,))
+        if not quiet:
+            _basenamelog = log_file(_basename+'.log')
+            # check for old logs
+            if os.path.exists(_basenamelog):
+                logger.info('Old log files found for fit `%s`. kafe will not '
+                            'delete these files, but it is recommended to do '
+                            'so, in order to reduce clutter.'
+                            % (_basename,))
 
-            # find first incremental name for which no file exists
-            _id = 1
-            while os.path.exists(log_file(_basename+'.'+str(_id)+'.log')):
-                _id += 1
+                # find first incremental name for which no file exists
+                _id = 1
+                while os.path.exists(log_file(_basename+'.'+str(_id)+'.log')):
+                    _id += 1
 
-            # move existing log to that location
-            os.rename(_basenamelog, log_file(_basename+'.'+str(_id)+'.log'))
+                # move existing log to that location
+                os.rename(_basenamelog, log_file(_basename+'.'+str(_id)+'.log'))
 
-        self.out_stream = StreamDup([log_file('fit.log'), _basenamelog])
-
+            self.out_stream = StreamDup([log_file('fit.log'), _basenamelog])
+        else:
+            # write to NULL file
+            # need to wrap in StreamDup due to timestamp function...
+            self.out_stream = StreamDup([null_file()])
 
     def call_external_fcn(self, *parameter_values):
         '''
