@@ -114,8 +114,8 @@ class ParameterSpace_Test(unittest2.TestCase):
         kTUdata = kafe.Dataset(data=(U, T))
         # Set second dataset
         kIUdata = kafe.Dataset(data=(U, I))
-        Fit1 = kafe.Fit(kTUdata,quadric)
-        Fit2 = kafe.Fit(kIUdata, IUmodel)
+        Fit1 = kafe.Fit(kTUdata,quadric, quiet=True)
+        Fit2 = kafe.Fit(kIUdata, IUmodel, quiet=True)
         self.parameter_space = kafe.multifit._ParameterSpace([Fit1,Fit2])
 
     def test_number_of_parameters_init(self):

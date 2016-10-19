@@ -135,7 +135,7 @@ class Multifit(object):
         self._minuit_lists_outdated = True
         self.fit_list = []
         for dataset, fit_function in dataset_function:
-            self.fit_list.append(kafe.Fit(dataset, fit_function))
+            self.fit_list.append(kafe.Fit(dataset, fit_function, quiet=True))
 
         # Create the Parameterspace for this multifit
         self.parameter_space = _ParameterSpace(self.fit_list)
