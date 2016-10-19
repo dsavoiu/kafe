@@ -44,13 +44,13 @@ class Multfit_Test_fit_functionality(unittest2.TestCase):
         self.Test_Multifit.autolink_parameters()
         self.Test_Multifit.do_fit(quiet=True)
         values = np.array([0.6652477959838384, 0.9816573999783497, 19.385533966182802, 1.0178678541401343, 0.003898574372118895])
-        assert np.allclose(self.Test_Multifit.current_parameter_values_minuit, values)
+        assert np.allclose(self.Test_Multifit.current_parameter_values_minuit, values, atol=1e-4)
 
     def test_fit_functionality_with_links_errors(self):
         self.Test_Multifit.autolink_parameters()
         self.Test_Multifit.do_fit(quiet=True)
         errors = np.array([0.01961884566547464, 0.16289007985365606, 0.21597896334699487, 0.023866059935156978, 0.0004299490173879757])
-        assert np.allclose(self.Test_Multifit.current_parameter_errors_minuit, errors)
+        assert np.allclose(self.Test_Multifit.current_parameter_errors_minuit, errors, atol=1e-4)
 
     def test_fit_functionality_with_links_and_fix_values(self):
         self.Test_Multifit.autolink_parameters()

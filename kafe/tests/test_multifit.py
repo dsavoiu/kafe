@@ -34,7 +34,7 @@ class Multfit_Test_no_Minimizer(unittest2.TestCase):
     def test_current_parameter_errors_minuit(self):
         parameter_values = [0.5,0.9,19.38,1.,0.004,0.5,0.9,19.38]
         parameter_errors = [x * 0.1 for x in parameter_values]
-        assert np.allclose(parameter_errors,self.Test_Multifit.current_parameter_errors_minuit)
+        assert np.allclose(parameter_errors,self.Test_Multifit.current_parameter_errors_minuit, atol=1e-4)
 
     def test_link_alias(self):
         self.Test_Multifit.link_parameters("p5", "p2")
@@ -87,7 +87,7 @@ class Multfit_Test_no_Minimizer(unittest2.TestCase):
         parameter_values = [0.7, 1, 18, 2, 0.005, 0.6, 1, 10]
         parameter_errors = [x * 0.1 for x in parameter_values]
         self.Test_Multifit.set_parameter(parameter_values, parameter_errors)
-        self.assertEqual(parameter_errors, self.Test_Multifit.current_parameter_errors_minuit)
+        assert np.allclose(parameter_errors, self.Test_Multifit.current_parameter_errors_minuit, atol=1e-4)
 
 class ParameterSpace_Test(unittest2.TestCase):
 
