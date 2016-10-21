@@ -22,7 +22,7 @@ from numeric_tools import extract_statistical_errors, MinuitCov_to_cor, cor_to_c
 from fit import round_to_significance, Chi22CL
 import kafe
 from .config import (FORMAT_ERROR_SIGNIFICANT_PLACES, F_SIGNIFICANCE_LEVEL,
-                     M_MINIMIZER_TO_USE, log_file)
+                     M_MINIMIZER_TO_USE, log_file, null_file)
 import os
 from .stream import StreamDup
 import logging
@@ -235,6 +235,8 @@ class Multifit(object):
                 # move existing log to that location
                 os.rename(_basenamelog, log_file(_basename + '.' + str(_id) + '.log'))
             self.out_stream = StreamDup([log_file('fit.log'), _basenamelog])
+        else:
+            self.out_stream= StreamDup([null_file()])
 
     def has_errors(self, axis):
         '''
@@ -626,8 +628,7 @@ class Multifit(object):
                 if __querry_dummy2[i][j]:
                     dummy2[i][j] = self.fit_list[i].current_cov_mat
                 else:
-                    dummy2[i][j] = np.zeros((self.fit_list[i].dataset.get_size(), self.fit_list[i].dataset.get_size()))
-
+                    dummy2[i][j] = np.zeros((self.fit_list[i].dataset.get_size(), self.fit_list[j].dataset.get_size()))
         return np.bmat(dummy2)
 
     def _call_external_fcn(self, *parameter_values):
@@ -790,7 +791,7 @@ class Multifit(object):
         if self._minimizer_handle:
             self.minimizer = self._minimizer_handle(self.total_number_of_parameters,
                                                     self._call_external_fcn, self.parameter_names_minuit,
-                                                    self.current_parameter_values_minuit, self.current_parameter_errors_minuit)
+                                                    self.current_parameter_values_minuit, self.current_parameter_errors_minuit, quiet=False)
 
             # set Minuit's initial parameters and parameter errors
             #            may be overwritten via ``set_parameters``
