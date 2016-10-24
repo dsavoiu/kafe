@@ -161,7 +161,7 @@ class Multifit(object):
         self.latex_parameter_names_minuit = None
 
         self.minimizer_to_use = minimizer_to_use
-
+        self.quiet_minuit = quiet
         # Init a object to hold the minimizer which will be initilized ind dofit()
         self.minimizer = None
 
@@ -791,7 +791,8 @@ class Multifit(object):
         if self._minimizer_handle:
             self.minimizer = self._minimizer_handle(self.total_number_of_parameters,
                                                     self._call_external_fcn, self.parameter_names_minuit,
-                                                    self.current_parameter_values_minuit, self.current_parameter_errors_minuit, quiet=False)
+                                                    self.current_parameter_values_minuit,
+                                                    self.current_parameter_errors_minuit, quiet=self.quiet_minuit)
 
             # set Minuit's initial parameters and parameter errors
             #            may be overwritten via ``set_parameters``
