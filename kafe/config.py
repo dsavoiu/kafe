@@ -15,6 +15,17 @@ import kafe
 import logging
 logger = logging.getLogger('kafe')
 
+# initialize a file object pointing to /dev/null (for scrapping output)
+DEV_NULL_FILE_OBJECT = open(os.devnull, 'w')
+
+def null_file():
+    global DEV_NULL_FILE_OBJECT
+    if DEV_NULL_FILE_OBJECT.closed:
+        logger.warn("Output dump file '%s' has been closed before program "
+                    "exit. Reopening..." % (os.devnull,))
+        DEV_NULL_FILE_OBJECT = open(os.devnull, 'w')
+    return DEV_NULL_FILE_OBJECT
+
 def log_file(file_relative_path):
     '''Returns correct location for placing log files.'''
     _hdir = '.kafe'

@@ -35,11 +35,18 @@ class StreamDup(object):
         self.out_file = []
         for file_like in out_file:
             try:
-                file_like.write()
-            except:
+                file_like.write("")
+            except AttributeError:
                 self.out_file.append(open(file_like, 'a'))
             else:
                 self.out_file.append(file_like)
+        self.closed = False
+
+    def close(self):
+        for _file in self.out_file:
+            if not _file.closed:
+                _file.close()
+        self.closed = True
 
     def write(self, message):
         # write to log file(s) AND to stdout
