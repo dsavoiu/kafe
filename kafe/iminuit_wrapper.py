@@ -19,7 +19,7 @@
 # import iminuit as python package
 from iminuit import Minuit
 
-from .config import M_MAX_ITERATIONS, M_TOLERANCE, log_file
+from .config import M_MAX_ITERATIONS, M_TOLERANCE, log_file, null_file
 from time import gmtime, strftime
 
 import numpy as np
@@ -103,7 +103,10 @@ class IMinuit:
         #: number of parameters to minimize for
         self.number_of_parameters = number_of_parameters
 
-        self.out_file = open(log_file("iminuit.log"), 'a')
+        if not quiet:
+            self.out_file = open(log_file("iminuit.log"), 'a')
+        else:
+            self.out_file = null_file()
 
         #: maximum number of iterations until ``iminuit`` gives up
         self.max_iterations = M_MAX_ITERATIONS
@@ -446,10 +449,18 @@ class IMinuit:
         if isinstance(parameter2, int):
             parameter2 = self.parameter_names[parameter2]
 
+        # save the old stdout stream
+        old_out_stream = os.dup(sys.stdout.fileno())
+        os.dup2(self.out_file.fileno(), sys.stdout.fileno())
+
         # get the contour (sigma=1) -> [[x1, y1], [x2, y2], ...]
         #g = np.asarray(
         #        self.__iminuit.mncontour(parameter1, parameter2, n_points))
         _, _, g = self.__iminuit.mncontour(parameter1, parameter2, n_points)
+
+        # restore the previous output stream
+        os.dup2(old_out_stream, sys.stdout.fileno())
+        os.close(old_out_stream)
 
         g = np.asarray(g)
 
@@ -491,9 +502,6 @@ class IMinuit:
         self.out_file.write('#'*(2+26))
         self.out_file.write('\n\n')
         self.out_file.flush()
-        # save the old stdout stream
-#        old_out_stream = os.dup(sys.stdout.fileno())
-#        os.dup2(self.out_file.fileno(), sys.stdout.fileno())
 
         pv=[]
         chi2=[]
@@ -512,11 +520,16 @@ class IMinuit:
             except ValueError:
                 raise ValueError, "No parameter named '%s'" % (parameter,)
 
+        # save the old stdout stream
+        old_out_stream = os.dup(sys.stdout.fileno())
+        os.dup2(self.out_file.fileno(), sys.stdout.fileno())
+
         # Get profile using iminuit.Minuit.mnprofile
         binc, vals, _ = self.__iminuit.mnprofile(parameter, n_points, 3.)
 
         # restore the previous output stream
- #!       os.dup2(old_out_stream, sys.stdout.fileno())
+        os.dup2(old_out_stream, sys.stdout.fileno())
+        os.close(old_out_stream)
 
         return binc, vals
 
@@ -555,6 +568,7 @@ class IMinuit:
             self.function_to_minimize,
             print_level=self.print_level,
             forced_parameters=self.parameter_names,
+            errordef = self.errordef,
             **fitparam)
 
 
@@ -642,9 +656,8 @@ class IMinuit:
         self.out_file.flush()
 
         # save the old stdout stream
-        if(log_print_level >=0):
-          old_out_stream = os.dup(sys.stdout.fileno())
-          os.dup2(self.out_file.fileno(), sys.stdout.fileno())
+        old_out_stream = os.dup(sys.stdout.fileno())
+        os.dup2(self.out_file.fileno(), sys.stdout.fileno())
 
         self.__iminuit.set_print_level(log_print_level)  # set iminuit print level
         logger.debug("Running MIGRAD")
@@ -658,8 +671,8 @@ class IMinuit:
         self.__iminuit.set_print_level(self.print_level)
 
         # restore the previous output stream
-        if(log_print_level >=0):
-          os.dup2(old_out_stream, sys.stdout.fileno())
+        os.dup2(old_out_stream, sys.stdout.fileno())
+        os.close(old_out_stream)
 
 
     def minos_errors(self, log_print_level=1):
@@ -674,9 +687,8 @@ class IMinuit:
         '''
 
         # save the old stdout stream
-        if(log_print_level >=0):
-          old_out_stream = os.dup(sys.stdout.fileno())
-          os.dup2(self.out_file.fileno(), sys.stdout.fileno())
+        old_out_stream = os.dup(sys.stdout.fileno())
+        os.dup2(self.out_file.fileno(), sys.stdout.fileno())
 
         self.__iminuit.set_print_level(log_print_level)  
         logger.debug("Running MINOS")
@@ -686,8 +698,8 @@ class IMinuit:
         self.__iminuit.set_print_level(self.print_level)
 
         # restore the previous output stream
-        if(log_print_level >=0):
-          os.dup2(old_out_stream, sys.stdout.fileno())
+        os.dup2(old_out_stream, sys.stdout.fileno())
+        os.close(old_out_stream)
 
         output = []
 

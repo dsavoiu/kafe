@@ -41,10 +41,13 @@ before_install:
   - pip install numpy
   - pip install matplotlib
   - pip install --upgrade iminuit
+  - pip install unittest2
   # check success
   - python -c "import numpy"
   - python -c "import scipy"
   - python -c "import matplotlib"
+  - python -c "import unittest2"
+
 
 install:
   - pip install -e .
