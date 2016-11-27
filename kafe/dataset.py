@@ -399,8 +399,9 @@ class Dataset(object):
         Parameters
         ----------
 
-        **axis** : ``'x'`` or ``'y'``
-            Axis for which to set the measurement data.
+        **axis** : string or int
+            Axis for which to set the measurement data. This is for example
+            either ``0`` or ``'x'`` for the `x`-axis (id 0).
 
         **data** : iterable
             Measurement data for axis.
@@ -455,8 +456,9 @@ class Dataset(object):
         Parameters
         ----------
 
-        **axis** : ``'x'`` or ``'y'``
-            axis for which to add error source.
+        **axis** : string or int
+            axis for which to add error source. This is for example
+            either ``0`` or ``'x'`` for the `x`-axis (id 0).
 
         **err_type**: ``'simple'`` or ``'matrix'``
             a ``'simple'`` error source is constructed from a single float or
@@ -534,8 +536,9 @@ class Dataset(object):
         Parameters
         ----------
 
-        **axis** : ``'x'`` or ``'y'``
-            axis for which to add error source.
+        **axis** : string or int
+            axis for which to add error source. This is for example
+            either ``0`` or ``'x'`` for the `x`-axis (id 0).
 
         **err_src_id** : int
             error source ID, as returned by
@@ -568,8 +571,9 @@ class Dataset(object):
         Parameters
         ----------
 
-        **axis** : ``'x'`` or ``'y'``
-            axis for which to add error source.
+        **axis** : string or int
+            axis for which to add error source. This is for example
+            either ``0`` or ``'x'`` for the `x`-axis (id 0).
 
         **err_src_id** : int
             error source ID, as returned by
@@ -588,8 +592,9 @@ class Dataset(object):
         Parameters
         ----------
 
-        **axis** : ``'x'`` or ``'y'``
-            axis for which to add error source.
+        **axis** : string or int
+            axis for which to add error source. This is for example
+            either ``0`` or ``'x'`` for the `x`-axis (id 0).
 
         **err_src_id** : int
             error source ID, as returned by
@@ -608,8 +613,10 @@ class Dataset(object):
         Keyword Arguments
         -----------------
 
-        axis : ``'x'`` or ``'y'`` or ``'all'``
-            axis/axes for which to (re-)calcuate covariance matrix.
+        axis : string or int or ``'all'``
+            axis/axes for which to (re-)calcuate covariance matrix. This is for example
+            either ``0`` or ``'x'`` for the `x`-axis (id 0). If ``'all'`` is given,
+            (re-)calculates the covariance matrix for all axes.
         """
         _size = self.n_datapoints
         _mats = [np.matrix(np.zeros((_size, _size))),
@@ -670,8 +677,9 @@ class Dataset(object):
         Parameters
         ----------
 
-        **axis** : ``'x'`` or ``'y'``
-            Axis for which to load the error matrix.
+        **axis** : String or int
+            Axis for which to load the error matrix. This is for example
+            either ``0`` or ``'x'`` for the `x`-axis (id 0).
 
         **mat** : `numpy.matrix` or ``None``
             Error matrix for the axis. Passing ``None`` unsets the error
@@ -737,7 +745,7 @@ class Dataset(object):
 
         **axis_alias** : string or int
             Alias of the axis whose id should be returned. This is for example
-            either ``'0'`` or ``'x'`` for the `x`-axis (id 0).
+            either ``0`` or ``'x'`` for the `x`-axis (id 0).
 
         Returns
         -------
@@ -778,8 +786,9 @@ class Dataset(object):
         Parameters
         ----------
 
-        **axis** : ``'x'`` or ``'y'``
-            Axis for which to get the data span.
+        **axis** : string or int
+            Axis for which to get the data span. This is for example
+            either ``0`` or ``'x'`` for the `x`-axis (id 0).
 
         Keyword Arguments
         -----------------
@@ -827,9 +836,9 @@ class Dataset(object):
         Parameters
         ----------
 
-        **axis** : string
-            Axis for which to get the measurement data. Can be ``'x'`` or
-            ``'y'``.
+        **axis** : string or int
+            Axis for which to get the measurement data. This is for example
+            either ``0`` or ``'x'`` for the `x`-axis (id 0).
 
         Returns
         -------
@@ -850,8 +859,9 @@ class Dataset(object):
         Parameters
         ----------
 
-        **axis** :  ``'x'`` or ``'y'``
-            Axis for which to load the error matrix.
+        **axis** :  string or int
+            Axis for which to load the error matrix. This is for example
+            either ``0`` or ``'x'`` for the `x`-axis (id 0).
 
         Keyword Arguments
         -----------------
@@ -930,8 +940,9 @@ class Dataset(object):
         Parameters
         ----------
 
-        **axis** : ``'x'`` or ``'y'``
-            Axis for which to check for regularity of the covariance matrix.
+        **axis** : string or int
+            Axis for which to check for regularity of the covariance matrix. This is for example
+            either ``0`` or ``'x'`` for the `x`-axis (id 0).
 
         Returns
         -------
@@ -954,8 +965,9 @@ class Dataset(object):
         Parameters
         ----------
 
-        *axis* :  ``'x'`` or ``'y'`` or ``None``, optional
-            Axis for which to check for correlations. If ``None``,
+        *axis* :  string or int, optional
+            Axis for which to check for correlations. This is for example
+            either ``0`` or ``'x'`` for the `x`-axis (id 0). If ``None``,
             returns true if there are correlations for at least one axis.
 
         Returns
@@ -978,8 +990,9 @@ class Dataset(object):
         Parameters
         ----------
 
-        *axis* :  ``'x'`` or ``'y'`` or ``None``, optional
-            Axis for which to check for error data. If ``None``,
+        *axis* :  string or int , optional
+            Axis for which to check for error data. This is for example
+            either ``0`` or ``'x'`` for the `x`-axis (id 0). If ``None``,
             returns true if there are errors for at least one axis.
 
         Returns
@@ -1004,8 +1017,9 @@ class Dataset(object):
         Parameters
         ----------
 
-        **axis** :  ``'x'`` or ``'y'``
-            Axis for which to load the error matrix.
+        **axis** :  string or int
+            Axis for which to load the error matrix. This is for example
+            either ``0`` or ``'x'`` for the `x`-axis (id 0).
 
         **err_src_id** : int
             error source ID, as returned by
@@ -1017,7 +1031,6 @@ class Dataset(object):
         bool
             `True` if the specified error source is enables
 
-        TODO: ##DocString##
         """
         return self.__query_err_src_enabled[axis][err_src_id]
 
