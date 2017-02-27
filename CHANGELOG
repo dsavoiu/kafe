@@ -2,7 +2,7 @@ master
 ======
     %  [TODO] add unit test for input file parser
 
-v1.2.0
+v1.3.0
 ======
 
     %  [FIX] make code Python 3 compatible. 
