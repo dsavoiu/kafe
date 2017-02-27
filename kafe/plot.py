@@ -38,7 +38,7 @@ from .numeric_tools import extract_statistical_errors
 from .config import (G_PADDING_FACTOR_X, G_PADDING_FACTOR_Y,
                      G_PLOT_POINTS, G_FIT_INFOBOX_TITLE)
 import re  # regular expressions
-from string import split, join, lower, replace
+from string import ascii_lowercase
 
 # import main logger for kafe
 import logging
@@ -50,7 +50,7 @@ def label_to_latex(label):
     Generates a simple LaTeX-formatted label from a plain-text label.
     This treats isolated characters and words beginning with a backslash
     as mathematical expressions and surround them with $ signs accordingly.
-        
+
     Parameters
     ----------
 
@@ -58,16 +58,16 @@ def label_to_latex(label):
         Plain-text string to convert to LaTeX.
     '''
 
-    tokens = split(label)
+    tokens = label.split()
     for token_id, token in enumerate(tokens):
         if len(token) == 1 or token[0] == '\\':
-            if lower(token[-1]) not in "abcdefghijklmnopqrstuvwxyz":
+            if token[-1].lower() not in ascii_lowercase:
                 # surround isolated chars with $ (omit last)
                 tokens[token_id] = '$%s$%s' % (token[:-1], token[-1])
             else:
                 # surround isolated chars with $
                 tokens[token_id] = '$%s$' % (token,)
-    return join(tokens)
+    return " ".join(tokens)
 
 
 def pad_span_log(span, pad_coeff=1, additional_pad=None, base=10):
@@ -268,8 +268,8 @@ class Plot(object):
         if len(fits) == 1:
             # inherit axis labels from Fit's Dataset
             #: axis labels
-            self.axis_labels = map(label_to_latex,
-                                   self.fits[0].dataset.axis_labels)
+            self.axis_labels = list(map(label_to_latex,
+                                        self.fits[0].dataset.axis_labels))
 
             # set unit in brackets (if available)
             for label_id, _ in enumerate(self.axis_labels):
@@ -284,8 +284,8 @@ class Plot(object):
             self.axis_labels = ('$x$', '$y$')  # set default axis names
         else:
             # Plot with no Fits -> just set axis names
-            self.axis_labels = ('$x$', '$y$')  # set default axis names        
-            
+            self.axis_labels = ('$x$', '$y$')  # set default axis names
+
         self.init_plots(**kwargs)              # initialize the plots
 
     def _update_rcParams(self):
@@ -341,7 +341,7 @@ class Plot(object):
     def set_axis_scale(self, axis, scale_type, **kwargs):
         '''
         Set the scale for an axis.
-        
+
         Parameters
         ----------
 
@@ -504,7 +504,7 @@ class Plot(object):
     def draw_fit_parameters_box(self, plot_spec=0,
                                 force_show_uncertainties=False):
         '''Draw the parameter box to the canvas
-        
+
         Parameters
         ----------
 
@@ -604,7 +604,7 @@ class Plot(object):
         # WORKAROUND: replace '\n~\n' with '\n|\n'
         # (the pipe '|' renders as a dash)
 
-        text_content = replace(text_content, '\n~\n', '\n|\n')
+        text_content = text_content.replace('\n~\n', '\n|\n')
 
         self.fitinfobox = self.axes.add_patch(
             mpl.patches.Rectangle((legend_bbox.xmin, 0.00),
@@ -740,8 +740,8 @@ class Plot(object):
                              G_PLOT_POINTS)
 
         # apply the current fit function to every point in fxdata => fydata
-        fydata = np.asarray(map(current_fit.get_current_fit_function(),
-                                fxdata))
+        fydata = np.asarray(list(map(current_fit.get_current_fit_function(),
+                                     fxdata)))
 
         # compute the confidence band around the function
         ##################################################
