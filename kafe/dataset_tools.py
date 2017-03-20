@@ -137,7 +137,7 @@ correlated error for the axis is then set to that.
                       'yabscor': yabscor, 'yrelcor': yrelcor}
 
     # go through the keyword arguments
-    for key, val in error_keywords.iteritems():
+    for key, val in error_keywords.items():
 
         err_spec = key
         err_val = val

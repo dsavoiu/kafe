@@ -15,7 +15,7 @@
 #  08-Dec-14  G.Q.  added execution of MINOS for final fit
 #  09-Dec-14  G.Q.  added chi2 profiling (function get_profile)
 #  08-Oct-16  GQ  printout level -1 if "quiet" specified
-#                 suppressed du2() if no printout requested 
+#                 suppressed du2() if no printout requested
 # ----------------------------------------------------------------
 
 # ROOT's data types needed to use TMinuit:
@@ -145,13 +145,13 @@ class Minuit:
         error_code = Long(0)
         try:
             # Set up the starting fit parameters in TMinuit
-            for i in xrange(0, self.number_of_parameters):
+            for i in range(0, self.number_of_parameters):
                 self.__gMinuit.mnparm(i, self.parameter_names[i],
                                       self.current_parameters[i],
                                       0.1 * self.parameter_errors[i],
                                       0, 0, error_code)
                 # use 10% of the par. 1-sigma errors as the initial step size
-        except AttributeError, e:
+        except AttributeError as e:
             if show_warnings:
                 logger.warn("Cannot update Minuit data on the C++ side. "
                             "AttributeError: %s" % (e, ))
@@ -267,7 +267,7 @@ class Minuit:
         # retrieve fit parameters
         p, pe = Double(0), Double(0)
 
-        for i in xrange(0, self.number_of_parameters):
+        for i in range(0, self.number_of_parameters):
             self.__gMinuit.GetParameter(i, p, pe)  # retrieve fitresult
 
             result.append(float(p))
@@ -285,7 +285,7 @@ class Minuit:
         # retrieve fit parameters
         p, pe = Double(0), Double(0)
 
-        for i in xrange(0, self.number_of_parameters):
+        for i in range(0, self.number_of_parameters):
             self.__gMinuit.GetParameter(i, p, pe)  # retrieve fitresult
 
             result.append(float(pe))
@@ -303,7 +303,7 @@ class Minuit:
         # retrieve fit parameters
         p, pe = Double(0), Double(0)
 
-        for i in xrange(0, self.number_of_parameters):
+        for i in range(0, self.number_of_parameters):
             self.__gMinuit.GetParameter(i, p, pe)  # retrieve fitresult
             result.append((self.get_parameter_name(i), float(p), float(pe)))
 
@@ -648,7 +648,7 @@ class Minuit:
           old_out_stream = os.dup(sys.stdout.fileno())
           os.dup2(self.out_file.fileno(), sys.stdout.fileno())
 
-        self.__gMinuit.SetPrintLevel(log_print_level)  
+        self.__gMinuit.SetPrintLevel(log_print_level)
         logger.debug("Running MINOS")
         error_code = Long(0)
         self.__gMinuit.mnexcm("MINOS", arr('d', [self.max_iterations]), 1, error_code)
@@ -666,7 +666,7 @@ class Minuit:
         err=Double(0)    # parabolic error
         gcor=Double(0)   # global correlation coefficient
 
-        for i in xrange(0, self.number_of_parameters):
+        for i in range(0, self.number_of_parameters):
             self.__gMinuit.mnerrs(i, errpos, errneg, err, gcor)
             output.append([float(errpos),float(errneg),float(err),float(gcor)])
 

@@ -49,13 +49,13 @@
 #                  no file is created for quiet=True.
 # -------------------------------------------------------------------------
 
-
+from __future__ import print_function
 from .function_tools import FitFunction, outer_product
 from copy import copy
 
 import matplotlib.pyplot as plt
 import numpy as np
-from numeric_tools import cov_to_cor, extract_statistical_errors, MinuitCov_to_cor, cor_to_cov
+from .numeric_tools import cov_to_cor, extract_statistical_errors, MinuitCov_to_cor, cor_to_cov
 
 from .config import (FORMAT_ERROR_SIGNIFICANT_PLACES, F_SIGNIFICANCE_LEVEL,
                      M_MINIMIZER_TO_USE, log_file, null_file)
@@ -129,7 +129,7 @@ def chi2(xdata, ydata, cov_mat,
         return fit_function(x, *parameter_values)
 
     # calculate f(x) for all x in xdata
-    fdata = np.asarray(map(tmp_fit_function, xdata))
+    fdata = np.asarray(list(map(tmp_fit_function, xdata)))
     # calculate residual vector
     residual = ydata - fdata
 
@@ -138,7 +138,7 @@ def chi2(xdata, ydata, cov_mat,
     # apply constraints, if any
     if constrain is not None:
         dchi2 = 0
-        for val in constrain.itervalues():
+        for val in constrain.values():
             dchi2 += val.calculate_chi2_penalty(parameter_values)
         chi2val += dchi2
     return chi2val
@@ -336,14 +336,14 @@ class Fit(object):
                 except ImportError as e:
                     raise ImportError("Minimizer 'root' requested, but could "
                                       "not find Python module 'ROOT'.")
-                from minuit import Minuit
+                from .minuit import Minuit
                 _minimizer_handle = Minuit
             elif minimizer_to_use.lower() == "iminuit":
-                from iminuit_wrapper import IMinuit
+                from .iminuit_wrapper import IMinuit
                 _minimizer_handle = IMinuit
                 #raise NotImplementedError, "'iminuit' minimizer not yet implemented"
             else:
-                raise ValueError, "Unknown minimizer '%s'" % (minimizer_to_use,)
+                raise ValueError("Unknown minimizer '%s'" % (minimizer_to_use,))
         else:
             # assume class reference is given
             _minimizer_handle = minimizer_to_use
@@ -391,7 +391,8 @@ class Fit(object):
                     _id += 1
 
                 # move existing log to that location
-                os.rename(_basenamelog, log_file(_basename+'.'+str(_id)+'.log'))
+                os.rename(_basenamelog, log_file('{bn}.{id}.log'.format(
+                    bn=_basename, id=_id)))
 
             self.out_stream = StreamDup([log_file('fit.log'), _basenamelog])
         else:
@@ -529,7 +530,7 @@ class Fit(object):
             output.append(error)
 
         # make sure parameters are in the defined order
-        _ordering = map(self.parameter_names.index, names)
+        _ordering = list(map(self.parameter_names.index, names))
         _order = dict(zip(output, _ordering))
         output.sort(key=_order.get)
 
@@ -561,7 +562,7 @@ class Fit(object):
             output.append(value)
 
         # make sure parameters are in the defined order
-        _ordering = map(self.parameter_names.index, names)
+        _ordering = list(map(self.parameter_names.index, names))
         _order = dict(zip(output, _ordering))
         output.sort(key=_order.get)
 
@@ -652,7 +653,7 @@ class Fit(object):
                 ]
         else:  # if no positional arguments, rely on keywords
 
-            for param_name, param_spec in kwargs.iteritems():
+            for param_name, param_spec in kwargs.items():
                 par_id = self._find_parameter(param_name)
                 if par_id is None:
                     raise ValueError("Cannot set parameter. `%s` not "
@@ -732,7 +733,7 @@ class Fit(object):
                             % (par_id, self.parameter_names[par_id]))
         else:
             # go through all parameter IDs
-            for par_id in xrange(self.number_of_parameters):
+            for par_id in range(self.number_of_parameters):
                 # Release parameter
                 self.minimizer.release_parameter(par_id)
 
@@ -847,7 +848,7 @@ class Fit(object):
         '''
         return (self.final_parameter_values,
                 self.final_parameter_errors,
-                self.par_cov_mat, 
+                self.par_cov_mat,
                 self.final_fcn)
 
     # Fit Workflow
@@ -886,38 +887,36 @@ class Fit(object):
         self.out_stream.write_timestamp('Fit performed on')
 
         if not quiet:
-            print >>self.out_stream, "###########"
-            print >>self.out_stream, "# Dataset #"
-            print >>self.out_stream, "###########"
-            print >>self.out_stream, ''
-            print >>self.out_stream, self.dataset.get_formatted()
+            print("###########", file=self.out_stream,)
+            print("# Dataset #", file=self.out_stream,)
+            print("###########", file=self.out_stream,)
+            print('', file=self.out_stream,)
+            print(self.dataset.get_formatted(), file=self.out_stream,)
 
-            print >>self.out_stream, "################"
-            print >>self.out_stream, "# Fit function #"
-            print >>self.out_stream, "################"
-            print >>self.out_stream, ''
-            print >>self.out_stream, self.fit_function.get_function_equation(
-                'ascii',
-                'full' )
-            print >>self.out_stream, ''
+            print("################", file=self.out_stream,)
+            print("# Fit function #", file=self.out_stream,)
+            print("################", file=self.out_stream,)
+            print("", file=self.out_stream,)
+            print(self.fit_function.get_function_equation('ascii', 'full',),
+                  file=self.out_stream,)
+            print("", file=self.out_stream)
 
             if self.constrain:
-                print >> self.out_stream, "###############"
-                print >>self.out_stream, "# Constraints #"
-                print >>self.out_stream, "###############"
-                print >>self.out_stream, ''
-                for i in self.constrain.itervalues():
+                print("###############", file=self.out_stream,)
+                print("# Constraints #", file=self.out_stream,)
+                print("###############", file=self.out_stream,)
+                print(''               , file=self.out_stream,)
+                for i in self.constrain.values():
                     for j, err in enumerate(i.parameter_constrain[1]):
                         if(err):
-                            print >>self.out_stream, "%s: %g +\- %g" % (
+                            print("%s: %g +\- %g" % (
                                 self.parameter_names[j],
                                 i.parameter_constrain[0][j],
-                                err)
-
+                                err), file=self.out_stream,)
                     if i.cov_mat_inv is not None:
-                        print >> self.out_stream, "Correlation Matrix: "
-                        print >> self.out_stream, format(cov_to_cor(i.cov_mat_inv.I))
-                print >>self.out_stream, ''
+                        print("Correlation Matrix: ",              file=self.out_stream,)
+                        print(format(cov_to_cor(i.cov_mat_inv.I)), file=self.out_stream,)
+                print("", file=self.out_stream)
 
         max_x_iterations = 10
 
@@ -981,16 +980,16 @@ class Fit(object):
         '''
         unformatted print-out of all fit results in
         '''
-        print '\n'
-        print 'par values', self.final_parameter_values
-        print 'par errors', self.final_parameter_errors
-        print 'par. covariance matrix:'
-        print self.par_cov_mat
-        print 'MINOS errors', self.minos_errors
-        print 'contours:'
-        print self.contours
-        print 'profiles:'
-        print self.profiles
+        print('\n')
+        print('par values' + str(self.final_parameter_values))
+        print('par errors' + str(self.final_parameter_errors))
+        print('par. covariance matrix:')
+        print(self.par_cov_mat)
+        print('MINOS errors' + str( self.minos_errors))
+        print('contours:')
+        print(self.contours)
+        print('profiles:')
+        print(self.profiles)
 
 
     def call_minimizer(self, final_fit=True, verbose=False, quiet=False):
@@ -1054,22 +1053,22 @@ class Fit(object):
     def print_rounded_fit_parameters(self):
         '''prints the fit parameters'''
 
-        print >>self.out_stream, "########################"
-        print >>self.out_stream, "# Final fit parameters #"
-        print >>self.out_stream, "########################"
-        print >>self.out_stream, ''
+        print("########################", file=self.out_stream,)
+        print("# Final fit parameters #", file=self.out_stream,)
+        print("########################", file=self.out_stream,)
+        print(''                        , file=self.out_stream,)
 
         for name, value, error in self.minimizer.get_parameter_info():
 
             tmp_rounded = round_to_significance(value, error, FORMAT_ERROR_SIGNIFICANT_PLACES)
             if error:
-                print >>self.out_stream, "%s = %g +- %g" % (
-                    name, tmp_rounded[0], tmp_rounded[1])
+                print("%s = %g +- %g" % (
+                    name, tmp_rounded[0], tmp_rounded[1]), file=self.out_stream, )
             else:
-                print >>self.out_stream, "%s = %g    -fixed-" % (
-                    name, tmp_rounded[0])
+                print("%s = %g    -fixed-" % (
+                    name, tmp_rounded[0]), file=self.out_stream, )
 
-        print >>self.out_stream, ''
+        print("", file=self.out_stream,)
 
     def print_fit_details(self):
         '''prints some fit goodness details'''
@@ -1088,86 +1087,78 @@ class Fit(object):
             hypothesis_status = 'accepted (sig. %d%s)' \
                 % (int(F_SIGNIFICANCE_LEVEL*100), '%')
 
-        print >>self.out_stream, '###############'
-        print >>self.out_stream, "# Fit details #"
-        print >>self.out_stream, "###############"
-        print >>self.out_stream, ''
+        print('###############', file=self.out_stream, )
+        print("# Fit details #", file=self.out_stream, )
+        print("###############", file=self.out_stream, )
+        print(''               , file=self.out_stream, )
 
         # Print a warning if NDF is zero
         if not _ndf:
-            print >>self.out_stream, \
-                  "# WARNING: Number of degrees of freedom is zero!"
-            print >>self.out_stream, \
-                  "# Please review parameterization..."
-            print >>self.out_stream,''
+            print( "# WARNING: Number of degrees of freedom is zero!", file=self.out_stream, )
+            print("# Please review parameterization...", file=self.out_stream)
+            print("", file=self.out_stream)
         elif _ndf < 0:
-            print >>self.out_stream, \
-                  "# WARNING: Number of degrees of freedom is negative!"
-            print >>self.out_stream, \
-                  "# Please review parameterization..."
-            print >>self.out_stream,''
+            print("# WARNING: Number of degrees of freedom is negative!", file=self.out_stream)
+            print("# Please review parameterization...", file=self.out_stream)
+            print("", file=self.out_stream)
         if(not self.parabolic_errors):
-            print >>self.out_stream, 'Attention: use uncertainties from MINOS'
-            print >>self.out_stream,''
+            print('Attention: use uncertainties from MINOS', file=self.out_stream)
+            print('', file=self.out_stream)
 
-        print >>self.out_stream, 'USING    %s'\
-            %(self.minimizer.name)
-        print >>self.out_stream, 'FCN/ndf  %.3g/%d = %.3g'\
-            %(self.minimizer.get_fit_info('fcn'), _ndf,
-              self.minimizer.get_fit_info('fcn')/(_ndf))
-        print >>self.out_stream, 'EdM      %g' \
-            %(self.minimizer.get_fit_info('edm'))
-        print >>self.out_stream, 'UP       %g' \
-            %(self.minimizer.get_fit_info('err_def'))
-        print >>self.out_stream, 'STA     ', \
-            self.minimizer.get_fit_info('status_code')
-        print >>self.out_stream, ''
-        print >>self.out_stream, 'chi2prob', round(chi2prob, 3)
-        print >>self.out_stream, 'HYPTEST ', hypothesis_status
-        print >>self.out_stream, ''
+        print('USING    %s' %(self.minimizer.name), file=self.out_stream)
+        print('FCN/ndf  %.3g/%d = %.3g'
+              % (self.minimizer.get_fit_info('fcn'), _ndf,
+              self.minimizer.get_fit_info('fcn')/(_ndf)), file=self.out_stream)
+        print('EdM      %g'
+            %(self.minimizer.get_fit_info('edm')), file=self.out_stream)
+        print('UP       %g'
+            %(self.minimizer.get_fit_info('err_def')), file=self.out_stream)
+        print('STA     ' + str(self.minimizer.get_fit_info('status_code')) , file=self.out_stream)
+        print('', file=self.out_stream)
+        print('chi2prob', round(chi2prob, 3), file=self.out_stream)
+        print('HYPTEST ' + str(hypothesis_status), file=self.out_stream)
+        print('', file=self.out_stream)
 
 
     def print_fit_results(self):
         '''prints fit results'''
 
-        print >>self.out_stream, '##############'
-        print >>self.out_stream, '# Fit result #'
-        print >>self.out_stream, '##############'
-        print >>self.out_stream, ''
+        print('##############', file=self.out_stream)
+        print('# Fit result #', file=self.out_stream)
+        print('##############', file=self.out_stream)
+        print('', file=self.out_stream)
 
         par_err = extract_statistical_errors(self.par_cov_mat)
         par_cor_mat = MinuitCov_to_cor(self.par_cov_mat)
 
-        print >>self.out_stream, '# value        error   ',
+        print('# value        error   ', file=self.out_stream, end="")
         if self.number_of_parameters > 1:
-            print >>self.out_stream, 'correlations'
+            print('correlations', file=self.out_stream)
         else:
-            print >>self.out_stream, ''
+            print('', file=self.out_stream)
         for par_nr, par_val in enumerate(self.final_parameter_values):
-            print >>self.out_stream, '# '+self.parameter_names[par_nr]
-            print >>self.out_stream, format(par_val, '.04e')+'  ',
+            print('# '+self.parameter_names[par_nr], file=self.out_stream)
+            print('{:.04e}  '.format(par_val), file=self.out_stream, end="")
             if par_err[par_nr]:
-              print >>self.out_stream, format(par_err[par_nr], '.02e')+'  ',
+              print(format(par_err[par_nr], '.02e')+'  ', end="", file=self.out_stream)
             else:
-              print >>self.out_stream, '-fixed- ',
+              print('-fixed- ', end="", file=self.out_stream)
             if par_nr > 0 and par_err[par_nr]:
-                for i in xrange(par_nr):
-                    print >>self.out_stream, format(par_cor_mat[par_nr, i],
-                                                    '.3f')+'  ',
-            print >>self.out_stream, ''
+                for i in range(par_nr):
+                    print('{:.3f}  '.format(par_cor_mat[par_nr, i]), end="", file=self.out_stream)
+            print('', file=self.out_stream)
       # print MINOS errors if needed
         if(not self.parabolic_errors):
-            print >>self.out_stream, '!!! uncertainties from MINOS:'
+            print( '!!! uncertainties from MINOS:', file=self.out_stream)
             for par_nr, par_val in enumerate(self.final_parameter_values):
-                print >>self.out_stream, '# '+self.parameter_names[par_nr]
+                print( '# '+self.parameter_names[par_nr], file=self.out_stream)
                 if par_err[par_nr]:
-                    print >>self.out_stream, '     '+\
-                    '+'+format(self.minos_errors[par_nr][0],'.02e')\
-                    +' '+format(self.minos_errors[par_nr][1],'.02e')
+                    print('      {:.02e} + {:.02e}'.format(
+                        self.minos_errors[par_nr][0], self.minos_errors[par_nr][1]), file=self.out_stream)
                 else:
-                    print >>self.out_stream, '-fixed- ',
-            print >>self.out_stream, ''
-        print >>self.out_stream, ''
+                    print('-fixed- ',end="", file=self.out_stream)
+            print('', file=self.out_stream)
+        print('', file=self.out_stream)
 
     def plot_contour(self, parameter1, parameter2, dchi2=2.3,
                      n_points=100, color='gray', alpha=.1, show=False,
@@ -1274,13 +1265,12 @@ class Fit(object):
             self.contours.append([par1, par2, dc2, xs, ys])
             # plot contour lines
             cl=100*Chi22CL(dc2) # get corresponding confidence level
-            print >>self.out_stream,\
-                'Contour %.1f %%CL for parameters %d vs. %d with %d points'\
-                % (cl, par1, par2, len(xs))
+            print('Contour %.1f %%CL for parameters %d vs. %d with %d points'
+                % (cl, par1, par2, len(xs)), file=self.out_stream)
             labelstr = "%.1f"%(cl) + r"\% CL"
             tmp_ax.fill(xs, ys, alpha=alpha, color=color)   # as filled area
             tmp_ax.plot(xs, ys, '--', linewidth=2, label=labelstr)  # as line
-        print >>self.out_stream, ''
+        print("", file=self.out_stream)
         self.minimizer.set_err(1.)  # set errdef back to default of 1.
         # plot a legend
         tmp_leg = tmp_ax.legend(loc='best', fontsize='small')
@@ -1338,9 +1328,8 @@ class Fit(object):
         val = _pvals[id]
         err = _perrs[id]
 
-        print >>self.out_stream,\
-            'Profile for parameter %d with %d points'\
-            % (id, n_points)
+        print('Profile for parameter %d with %d points'
+            % (id, n_points), file=self.out_stream)
 
         plt.tight_layout()
         if axes is None:

@@ -15,29 +15,29 @@ between the uncertainties of the datapoints.
 Fitting with **kafe** in a nutshell goes like this:
 
     1) create a `Dataset` object from your measurement data
-    
+
     >>> my_d = kafe.Dataset(data=[[0., 1., 2.], [1.23, 3.45, 5.62]])
-    
+
     2) add errors (uncertainties) to your `Dataset`
-    
+
     >>> my_d.add_error_source('y', 'simple', 0.5)  # y errors, all +/- 0.5
-    
+
     3) import a model function from `kafe.function_library` (or define one
        yourself)
-       
+
     >>> from kafe.function_library import linear_2par
-    
+
     4) create a `Fit` object from your `Dataset` and your model function
-    
+
     >>> my_f = kafe.Fit(my_d, linear_2par)
-    
+
     5) do the fit
-    
+
     >>> my_f.do_fit()
-    
+
     6) *(optional)* if you want to see a plot of the result, use the `Plot`
        object
-       
+
     >>> my_p = kafe.Plot(my_f)
     >>> my_p.plot_all()
     >>> my_p.show()
@@ -50,7 +50,7 @@ documentation.
 """
 
 # Import config variables
-import config
+from . import config
 
 # Import version info
 from . import _version_info
@@ -88,7 +88,7 @@ __version__ += _version_suffix
 import matplotlib
 try:
     matplotlib.use(config.G_MATPLOTLIB_BACKEND)
-except ValueError, e:
+except ValueError as e:
     # matplotlib does not provide requested backend
     _logger.error("matplotlib error: %s" % (e,))
     _logger.warning("Failed to load requested backend '%s' for matplotlib. "

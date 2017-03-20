@@ -23,7 +23,7 @@ import numpy as np
 
 # get a numerical derivative calculating function from SciPy
 from scipy.misc import derivative as scipy_der
-from latex_tools import ascii_to_latex_math
+from .latex_tools import ascii_to_latex_math
 #GQ from inspect import getsourcelines
 
 # import main logger for kafe
@@ -93,10 +93,16 @@ class FitFunction:
 
         # Numeric properties of the function
         #: The number of parameters
-        self.number_of_parameters = f.func_code.co_argcount-1
+        try:
+            self.number_of_parameters = f.func_code.co_argcount - 1
+        except AttributeError:
+            self.number_of_parameters = f.__code__.co_argcount - 1
 
         #: The default values of the parameters
-        self.parameter_defaults = f.func_defaults
+        try:
+            self.parameter_defaults = f.func_defaults
+        except AttributeError:
+            self.parameter_defaults = f.__defaults__
 
         #: string object holding the source code for the fit-function
         #GQ self.sourcelines = getsourcelines(f)  # (for REALLY explicit docs)
@@ -127,11 +133,19 @@ class FitFunction:
             self.parameter_defaults = tuple(defpar)  # cast back to tuple
 
         #: The names of the parameters
-        self.parameter_names = f.func_code.co_varnames[
-            1:f.func_code.co_argcount
-        ]
-        #: The name given to the independent variable
-        self.x_name = f.func_code.co_varnames[0]
+        try:
+            self.parameter_names = f.func_code.co_varnames[
+                1:f.func_code.co_argcount
+            ]
+            #: The name given to the independent variable
+            self.x_name = f.func_code.co_varnames[0]
+        except AttributeError:
+            self.parameter_names = f.__code__.co_varnames[
+                1:f.__code__.co_argcount
+            ]
+            #: The name given to the independent variable
+            self.x_name = f.__code__.co_varnames[0]
+
 
         #: a math expression (string) representing the function's result
         self.expression = None
@@ -172,7 +186,7 @@ class FitFunction:
             def tempf(x): # define helper function of x only to apply map()
               return self.f(x, *parameter_list)
             # use python map to calculate function values at each x
-            return np.asarray(map(tempf, x_0) )
+            return np.asarray(list(map(tempf, x_0) ))
 
 
     def derive_by_x(self, x_0, precision_list, parameter_list):
@@ -214,13 +228,20 @@ class FitFunction:
             iter(precision_spec)
         except TypeError:
             # precision_spec is not iterable, create array
-            precision_spec = np.ones(self.f.func_code.co_argcount - 1) * precision_spec
+            try:
+                precision_spec = np.ones(self.f.func_code.co_argcount - 1) * precision_spec
+            except AttributeError:
+                precision_spec = np.ones(self.f.__code__.co_argcount - 1) * precision_spec
 
         # compile all function arguments into a variables tuple
         variables_tuple = tuple([x_0] + list(parameter_list))
 
         # go through all arguments except the first one
-        for derive_by_index in xrange(1, self.f.func_code.co_argcount):
+        try:
+            no_of_args = self.f.func_code.co_argcount
+        except AttributeError:
+            no_of_args = self.f.__code__.co_argcount
+        for derive_by_index in range(1, no_of_args):
             precision = precision_spec[derive_by_index-1]
             if not precision:
                 precision = 1.e-7

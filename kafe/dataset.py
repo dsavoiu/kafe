@@ -15,13 +15,11 @@
 # DS 150610: add ErrorSource object
 # ---------------------------------------------
 
-from string import join, split
-
 import numpy as np
 from scipy.linalg import LinAlgError
 import os
 
-from numeric_tools import cov_to_cor, cor_to_cov, extract_statistical_errors, \
+from .numeric_tools import cov_to_cor, cor_to_cov, extract_statistical_errors, \
     zero_pad_lower_triangle, make_symmetric_lower
 
 NUMBER_OF_AXES = 2
@@ -190,8 +188,8 @@ class ErrorSource(object):
                 try:
                     iter(self.error_value)
                 except:
-                    raise ValueError, ("Given error `%r' is not iterable."
-                                       % (self.error_value,))
+                    raise ValueError("Given error `%r' is not iterable."
+                                     % (self.error_value,))
                 else:
                     # use value given
                     _val = np.asarray(self.error_value)  # size is implicit
@@ -211,7 +209,7 @@ class ErrorSource(object):
             return _mat
 
         else:
-            raise ValueError, "Unknown error type `%s'" % (self.error_type,)
+            raise ValueError("Unknown error type `%s'" % (self.error_type,))
 
 
 class Dataset(object):
@@ -389,7 +387,7 @@ class Dataset(object):
                 #data = data
                 pass
 
-        for axis in xrange(self.__n_axes):  # go through the axes
+        for axis in range(self.__n_axes):  # go through the axes
             self.set_axis_data(axis, data[axis])  # load data for axis
 
     def set_axis_data(self, axis, data):
@@ -616,7 +614,7 @@ class Dataset(object):
                  np.matrix(np.zeros((_size, _size)))]
 
         if axis is 'all':
-            _axes_list = range(self.__n_axes)
+            _axes_list = list(range(self.__n_axes))
         else:
             _axes_list = [self.get_axis(axis)]
 
@@ -1072,7 +1070,7 @@ class Dataset(object):
         output_list = []
 
         # go through the axes
-        for axis in xrange(self.__n_axes):
+        for axis in range(self.__n_axes):
             # define a helper list which we will fill out
             helper_list = []
 
@@ -1123,7 +1121,7 @@ class Dataset(object):
                     # if there are also correlations (syst errors)
                     if self.__query_has_correlations[axis]:
                         # go through the columns of the correlation matrix
-                        for col in xrange(idx):
+                        for col in range(idx):
                             # append corr. coefficients to the helper list
                             helper_list[-1].append(
                                 format(cor_mat[idx, col], format_string)
@@ -1136,7 +1134,7 @@ class Dataset(object):
         tmp_string = ''
         for row in output_list:
             for entry in row:
-                tmp_string += join(entry, delimiter) + '\n'
+                tmp_string += delimiter.join(entry) + '\n'
 
         return tmp_string
 
@@ -1237,7 +1235,7 @@ class Dataset(object):
             tmp_linenumber += 1                 # update the line number
 
             if '#' in line:
-                line = split(line, '#')[0]      # ignore anything after
+                line = line.split('#')[0]      # ignore anything after
                                                 # a comment sign (#)
 
             if (not line) or (line.isspace()):  # if empty line encountered
@@ -1293,7 +1291,7 @@ class Dataset(object):
                     tmp_reading_data_block = True
 
                 # get the entries on the line as a list (whitespace-delimited)
-                tmp_fields = split(line)
+                tmp_fields = line.split()
 
                 # if there is only one entry,
                 # we know it's just the measurement data
@@ -1314,7 +1312,7 @@ class Dataset(object):
                 if tmp_has_syst_errors:
                     # other fields are correlation coefficients
                     # (add 1.0 on main diagonal)
-                    tmp_cormat.append(map(float, tmp_fields[2:]) + [1.0])
+                    tmp_cormat.append(list(map(float, tmp_fields[2:]) + [1.0]))
 
                 # if there are not enough entries
                 # for a valid correlation matrix
@@ -1358,11 +1356,11 @@ class Dataset(object):
                 self.set_cov_mat(tmp_axis, None)  # unset cov mat
 
         # Turn covariance matrices into ErrorSource objects
-        for axis in xrange(self.__n_axes):
+        for axis in range(self.__n_axes):
             _mat = self.get_cov_mat(axis)
 
             # remove existing error model (all error sources)
-            for err_src_id in xrange(len(self.err_src[axis])):
+            for err_src_id in range(len(self.err_src[axis])):
                 self.remove_error_source(axis, err_src_id, recompute_cov_mat=False)
 
             if _mat is not None:
