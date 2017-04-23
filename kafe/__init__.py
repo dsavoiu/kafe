@@ -45,7 +45,7 @@ Fitting with **kafe** in a nutshell goes like this:
 For more in-depth information on **kafe**'s features, feel free to consult the
 documentation.
 
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
 
 """
 

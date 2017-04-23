@@ -6,7 +6,7 @@
         The `IMinuit` class has been adapted from the earlier `Minuit`
         wrapper for ROOT::TMinuit.
 
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
 '''
 
 # ----------------------------------------------------------------

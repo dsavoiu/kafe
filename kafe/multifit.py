@@ -4,7 +4,7 @@
     :platform: Unix
     :synopsis: This submodule defines a `Multiit` object which performs a multifit
          given a number of models each consisting of a `Dataset` and a fit function.
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
 .. moduleauthor:: Guenter Quast <G.Quast@kit.edu>
 .. moduleauthor:: Joerg Schindler <joerg.schindler@student.kit.edu>
 '''

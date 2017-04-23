@@ -6,7 +6,7 @@
         correlation matrices or extracting the statistical errors from a
         covariance matrix.
 
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
 .. moduleauthor:: Guenter Quast <G.Quast@kit.edu>
 
 '''

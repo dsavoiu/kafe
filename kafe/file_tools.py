@@ -4,7 +4,7 @@
     :synopsis: This submodule provides a set of helper functions for parsing
         files
 
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
 .. moduleauthor:: Guenter Quast <G.Quast@kit.edu>
 '''
 

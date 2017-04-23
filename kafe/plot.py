@@ -2,7 +2,7 @@
 .. module:: plot
    :platform: Unix
    :synopsis: A submodule for plotting `Dataset`s with ``matplotlib``.
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
 .. moduleauthor:: Guenter Quast <G.Quast@kit.edu>
 
 '''

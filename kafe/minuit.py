@@ -4,7 +4,7 @@
    :synopsis: A submodule providing the `Minuit` object, which communicates
         with CERN *ROOT*'s function minimizer *Minuit*.
 
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
 .. moduleauthor:: Guenter Quast <G.Quast@kit.edu>
 '''
 

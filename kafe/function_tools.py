@@ -6,7 +6,7 @@
      values of its parameters and its derivatives with respect to the
      independent variable or the parameters.
 
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
 .. moduleauthor:: Guenter Quast <G.Quast@kit.edu>
 '''
 # -----------------------------------------------------------------

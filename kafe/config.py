@@ -3,7 +3,7 @@
    :platform: Unix
    :synopsis: A submodule for working with config files and the filesystem.
 
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
 '''
 
 import sys

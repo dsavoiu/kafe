@@ -6,7 +6,7 @@
         to build a Dataset object from pyhton arrays or read from or export
         data to a file
 
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
 
 '''
 

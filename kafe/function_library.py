@@ -2,7 +2,7 @@
 .. module:: function_library
    :platform: Unix
    :synopsis: A submodule containing a collection of model functions.
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
 .. moduleauthor:: Guenter Quast <G.Quast@kit.edu>>
 
 Collection of model functions

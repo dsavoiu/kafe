@@ -2,7 +2,7 @@
 .. module:: _version_info
    :platform: Unix
 
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
                   Guenter Quast <g.quast@kit.edu>
 '''
 
