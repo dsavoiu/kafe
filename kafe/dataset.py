@@ -1325,7 +1325,7 @@ class Dataset(object):
                 if tmp_has_syst_errors:
                     # other fields are correlation coefficients
                     # (add 1.0 on main diagonal)
-                    tmp_cormat.append(list(map(float, tmp_fields[2:]) + [1.0]))
+                    tmp_cormat.append(list(map(float, tmp_fields[2:])) + [1.0])
 
                 # if there are not enough entries
                 # for a valid correlation matrix

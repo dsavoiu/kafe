@@ -14,12 +14,14 @@
 # 11-Oct-16   J.S.: Added class ParameterSpace.
 # ----------------------------------------------------------------
 
+from __future__ import print_function
+
 import matplotlib.pyplot as plt
 import numpy as np
 from .function_tools import outer_product
 from copy import copy
-from numeric_tools import extract_statistical_errors, MinuitCov_to_cor, cor_to_cov
-from fit import round_to_significance, Chi22CL
+from .numeric_tools import extract_statistical_errors, MinuitCov_to_cor, cor_to_cov
+from .fit import round_to_significance, Chi22CL
 import kafe
 from .config import (FORMAT_ERROR_SIGNIFICANT_PLACES, F_SIGNIFICANCE_LEVEL,
                      M_MINIMIZER_TO_USE, log_file, null_file)
@@ -197,7 +199,7 @@ class Multifit(object):
                 self._minimizer_handle = IMinuit
                 # raise NotImplementedError, "'iminuit' minimizer not yet implemented"
             else:
-                raise ValueError, "Unknown minimizer '%s'" % (self.minimizer_to_use,)
+                raise ValueError("Unknown minimizer '%s'" % (self.minimizer_to_use,))
         elif self.minimizer_to_use ==None:
             # No minimzer need. Testing some stuff
             self._minimizer_handle = None
@@ -319,13 +321,13 @@ class Multifit(object):
         '''
         Prints the parameters with their ids for the user
         '''
-        print self.parameter_space.parameter_to_id
+        print(self.parameter_space.parameter_to_id)
 
     def print_linked_parameters(self):
         '''
         Prints all linked parameters.
         '''
-        print self.parameter_space.alias
+        print(self.parameter_space.alias)
 
     def set_parameter(self, *args, **kwargs):
         '''
@@ -973,14 +975,14 @@ class Multifit(object):
     def print_rounded_fit_parameters(self):
         '''prints the fit parameters'''
 
-        print >>self.out_stream, "########################"
-        print >>self.out_stream, "# Final fit parameters #"
-        print >>self.out_stream, "########################"
+        print("########################", file=self.out_stream)
+        print("# Final fit parameters #", file=self.out_stream)
+        print("########################", file=self.out_stream)
         for fit in self.fit_list:
-            print >> self.out_stream, ''
+            print('', file= self.out_stream)
             if len(self.fit_list)>1:
-                print >>self.out_stream, "%s :" %(fit.fit_function.name)
-                print >> self.out_stream, ''
+                print("%s :" %(fit.fit_function.name), file=self.out_stream)
+                print('', file= self.out_stream)
             id_list = self.parameter_space.fit_to_parameter_id(fit)
             for i,id in enumerate(id_list):
                 name = fit.parameter_names[i]
@@ -988,65 +990,64 @@ class Multifit(object):
                 error = self.current_parameter_errors_minuit[id]
                 tmp_rounded = round_to_significance(value, error, FORMAT_ERROR_SIGNIFICANT_PLACES)
                 if error:
-                    print >>self.out_stream, "%s = %g +- %g" % (
-                        name, tmp_rounded[0], tmp_rounded[1])
+                    print("%s = %g +- %g" % (name, tmp_rounded[0], tmp_rounded[1]), file=self.out_stream)
                 else:
-                    print >>self.out_stream, "%s = %g    -fixed-" % (
-                        name, tmp_rounded[0])
+                    print("%s = %g    -fixed-" % (name, tmp_rounded[0]), file=self.out_stream)
         if self.parameter_space.alias:
-            print >> self.out_stream, ''
-            print >>self.out_stream, "#####################"
-            print >>self.out_stream, "# Linked parameters #"
-            print >>self.out_stream, "#####################"
-            print >> self.out_stream, ''
+            print('', file= self.out_stream)
+            print("#####################", file=self.out_stream)
+            print("# Linked parameters #", file=self.out_stream)
+            print("#####################", file=self.out_stream)
+            print('', file= self.out_stream)
             for fit in self.fit_list:
                 for name in fit.parameter_names:
                     name = fit.fit_function.name+ str('.')+name
                     if name in self.parameter_space.alias:
-                        print >> self.out_stream, "%s = %s " % (name.split(".", 1)[1],
-                                                                self.parameter_space.alias[name].split(".", 1)[1])
-        print >>self.out_stream, ''
+                        print("%s = %s "
+                              % (name.split(".", 1)[1], self.parameter_space.alias[name].split(".", 1)[1]),
+                              file=self.out_stream)
+        print('', file=self.out_stream)
 
     def print_fit_results(self):
         '''prints fit results'''
 
-        print >>self.out_stream, '##############'
-        print >>self.out_stream, '# Fit result #'
-        print >>self.out_stream, '##############'
-        print >>self.out_stream, ''
+        print('##############', file=self.out_stream)
+        print('# Fit result #', file=self.out_stream)
+        print('##############', file=self.out_stream)
+        print('', file=self.out_stream)
         par_err = extract_statistical_errors(self.par_cov_mat)
         par_cor_mat = MinuitCov_to_cor(self.par_cov_mat)
 
-        print >>self.out_stream, '# value        error   ',
+        print('# value        error   ', file=self.out_stream)
         if self.total_number_of_parameters > 1:
-            print >>self.out_stream, 'correlations'
+            print('correlations', file=self.out_stream)
         else:
-            print >>self.out_stream, ''
+            print('', file=self.out_stream)
         for par_nr, par_val in enumerate(self.final_parameter_values):
-            print >>self.out_stream, '# '+self.parameter_names_minuit[par_nr].split(".", 1)[1]
-            print >>self.out_stream, format(par_val, '.04e')+'  ',
+            print('# '+self.parameter_names_minuit[par_nr].split(".", 1)[1], file=self.out_stream)
+            print(format(par_val, '.04e')+'  ', file=self.out_stream)
             if par_err[par_nr]:
-              print >>self.out_stream, format(par_err[par_nr], '.02e')+'  ',
+              print(format(par_err[par_nr], '.02e')+'  ', file=self.out_stream)
             else:
-              print >>self.out_stream, '-fixed- ',
+              print('-fixed- ', file=self.out_stream)
             if par_nr > 0 and par_err[par_nr]:
                 for i in xrange(par_nr):
-                    print >>self.out_stream, format(par_cor_mat[par_nr, i],
-                                                    '.3f')+'  ',
-            print >>self.out_stream, ''
+                    print(format(par_cor_mat[par_nr, i], '.3f')+'  ', file=self.out_stream)
+            print('', file=self.out_stream)
         #print MINOS errors if needed
         if(not self.parabolic_errors):
-            print >>self.out_stream, '!!! uncertainties from MINOS:'
+            print('!!! uncertainties from MINOS:', file=self.out_stream)
             for par_nr, par_val in enumerate(self.final_parameter_values):
-                print >>self.out_stream, '# '+self.parameter_names_minuit[par_nr]
+                print('# '+self.parameter_names_minuit[par_nr], file=self.out_stream)
                 if par_err[par_nr]:
-                    print >>self.out_stream, '     '+\
-                    '+'+format(self.minos_errors[par_nr][0],'.02e')\
-                    +' '+format(self.minos_errors[par_nr][1],'.02e')
+                    print('     '
+                          '+'+format(self.minos_errors[par_nr][0],'.02e')+
+                          ' '+format(self.minos_errors[par_nr][1],'.02e'),
+                          file=self.out_stream)
                 else:
-                    print >>self.out_stream, '-fixed- ',
-            print >>self.out_stream, ''
-        print >>self.out_stream, ''
+                    print('-fixed- ', file=self.out_stream)
+            print('', file=self.out_stream)
+        print('', file=self.out_stream)
 
     def print_fit_details(self):
         '''prints some fit goodness details'''
@@ -1064,43 +1065,35 @@ class Multifit(object):
             hypothesis_status = 'accepted (sig. %d%s)' \
                                 % (int(F_SIGNIFICANCE_LEVEL * 100), '%')
 
-        print >> self.out_stream, '###############'
-        print >> self.out_stream, "# Fit details #"
-        print >> self.out_stream, "###############"
-        print >> self.out_stream, ''
+        print('###############', file=self.out_stream)
+        print("# Fit details #", file=self.out_stream)
+        print("###############", file=self.out_stream)
+        print('', file=self.out_stream)
 
         # Print a warning if NDF is zero
         if not _ndf:
-            print >> self.out_stream, \
-                "# WARNING: Number of degrees of freedom is zero!"
-            print >> self.out_stream, \
-                "# Please review parameterization..."
-            print >> self.out_stream, ''
+            print("# WARNING: Number of degrees of freedom is zero!", file=self.out_stream)
+            print("# Please review parameterization...", file=self.out_stream)
+            print('', file=self.out_stream)
         elif _ndf < 0:
-            print >> self.out_stream, \
-                "# WARNING: Number of degrees of freedom is negative!"
-            print >> self.out_stream, \
-                "# Please review parameterization..."
-            print >> self.out_stream, ''
+            print("# WARNING: Number of degrees of freedom is negative!", file=self.out_stream)
+            print("# Please review parameterization...", file=self.out_stream)
+            print('', file=self.out_stream)
         if (not self.parabolic_errors):
-            print >> self.out_stream, 'Attention: use uncertainties from MINOS'
-            print >> self.out_stream, ''
+            print('Attention: use uncertainties from MINOS', file=self.out_stream)
+            print('', file=self.out_stream)
 
-        print >> self.out_stream, 'USING    %s' \
-                                  % (self.minimizer.name)
-        print >> self.out_stream, 'FCN/ndf  %.3g/%d = %.3g' \
-                                  % (self.minimizer.get_fit_info('fcn'), _ndf,
-                                     self.minimizer.get_fit_info('fcn') / (_ndf))
-        print >> self.out_stream, 'EdM      %g' \
-                                  % (self.minimizer.get_fit_info('edm'))
-        print >> self.out_stream, 'UP       %g' \
-                                  % (self.minimizer.get_fit_info('err_def'))
-        print >> self.out_stream, 'STA     ', \
-            self.minimizer.get_fit_info('status_code')
-        print >> self.out_stream, ''
-        print >> self.out_stream, 'chi2prob', round(chi2prob, 3)
-        print >> self.out_stream, 'HYPTEST ', hypothesis_status
-        print >> self.out_stream, ''
+        print('USING    %s' % (self.minimizer.name), file=self.out_stream)
+        print('FCN/ndf  %.3g/%d = %.3g' % (
+                self.minimizer.get_fit_info('fcn'), _ndf,
+                self.minimizer.get_fit_info('fcn') / (_ndf)), file=self.out_stream)
+        print('EdM      %g' % (self.minimizer.get_fit_info('edm')), file=self.out_stream)
+        print('UP       %g' % (self.minimizer.get_fit_info('err_def')), file=self.out_stream)
+        print('STA     ', self.minimizer.get_fit_info('status_code'), file=self.out_stream)
+        print('', file=self.out_stream)
+        print('chi2prob', round(chi2prob, 3), file=self.out_stream)
+        print('HYPTEST ', hypothesis_status, file=self.out_stream)
+        print('', file=self.out_stream)
 
     def plot_contour(self, parameter1, parameter2, dchi2=2.3,
                      n_points=100, color='gray', alpha=.1, show=False,
@@ -1207,13 +1200,12 @@ class Multifit(object):
             self.contours.append([parameter1, parameter2, dc2, xs, ys])
             # plot contour lines
             cl=100*Chi22CL(dc2) # get corresponding confidence level
-            print >>self.out_stream,\
-                'Contour %.1f %%CL for parameters %d vs. %d with %d points'\
-                % (cl, parameter1, parameter2, len(xs))
+            print('Contour %.1f %%CL for parameters %d vs. %d with %d points'
+                  % (cl, parameter1, parameter2, len(xs)), file=self.out_stream)
             labelstr = "%.1f"%(cl) + r"\% CL"
             tmp_ax.fill(xs, ys, alpha=alpha, color=color)   # as filled area
             tmp_ax.plot(xs, ys, '--', linewidth=2, label=labelstr)  # as line
-        print >>self.out_stream, ''
+        print('', file=self.out_stream)
         self.minimizer.set_err(1.)  # set errdef back to default of 1.
         # plot a legend
         tmp_leg = tmp_ax.legend(loc='best', fontsize='small')
@@ -1272,9 +1264,7 @@ class Multifit(object):
         val = _pvals[parid]
         err = _perrs[parid]
 
-        print >>self.out_stream,\
-            'Profile for parameter %d with %d points'\
-            % (parid, n_points)
+        print('Profile for parameter %d with %d points' % (parid, n_points), file=self.out_stream)
 
         plt.tight_layout()
         if axes is None:
