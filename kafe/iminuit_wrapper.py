@@ -13,7 +13,7 @@
 # Changes:
 #  05-May-15    create module
 #  08-Oct-16 GQ  printout level -1 if "quiet" specified
-#                suppressed du2() if no printout requested 
+#                suppressed du2() if no printout requested
 # ----------------------------------------------------------------
 
 # import iminuit as python package
@@ -491,7 +491,7 @@ class IMinuit:
             try:
                 par_id = self.parameter_names.index(parameter)
             except ValueError:
-                raise ValueError, "No parameter named '%s'" % (parameter,)
+                raise ValueError("No parameter named '%s'" % (parameter,))
 
         self.out_file.write('\n')
         # entry in log-file
@@ -518,7 +518,7 @@ class IMinuit:
             try:
                 par_id = self.parameter_names.index(parameter)
             except ValueError:
-                raise ValueError, "No parameter named '%s'" % (parameter,)
+                raise ValueError("No parameter named '%s'" % (parameter,))
 
         # save the old stdout stream
         old_out_stream = os.dup(sys.stdout.fileno())
@@ -555,7 +555,7 @@ class IMinuit:
             try:
                 par_id = self.parameter_names.index(parameter)
             except ValueError:
-                raise ValueError, "No parameter named '%s'" % (parameter,)
+                raise ValueError("No parameter named '%s'" % (parameter,))
 
         logger.info("Fixing parameter %d in Minuit" % (par_id,))
 
@@ -587,7 +587,7 @@ class IMinuit:
             try:
                 par_id = self.parameter_names.index(parameter)
             except ValueError:
-                raise ValueError, "No parameter named '%s'" % (parameter,)
+                raise ValueError("No parameter named '%s'" % (parameter,))
 
         logger.info("Releasing parameter %d in Minuit" % (par_id,))
 
@@ -690,7 +690,7 @@ class IMinuit:
         old_out_stream = os.dup(sys.stdout.fileno())
         os.dup2(self.out_file.fileno(), sys.stdout.fileno())
 
-        self.__iminuit.set_print_level(log_print_level)  
+        self.__iminuit.set_print_level(log_print_level)
         logger.debug("Running MINOS")
         _results = self.__iminuit.minos(maxcall=self.max_iterations)
 
@@ -727,7 +727,7 @@ class IMinuit:
         _mat = submatrix
 
         _fparams = self.__iminuit.list_of_fixed_param()
-        _fparam_ids = map(lambda k: self.parameter_names.index(k), _fparams)
+        _fparam_ids = [self.parameter_names.index(k) for k in _fparams]
         for _id in _fparam_ids:
             _mat = np.insert(np.insert(_mat, _id, 0., axis=0), _id, 0., axis=1)
 

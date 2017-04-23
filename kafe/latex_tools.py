@@ -36,7 +36,7 @@ def ascii_to_latex_math(str_ascii, monospace=True, ensuremath=True):
 
     result = result.replace("\\", "")  # remove slashes
 
-    for from_ascii, to_latex in L_ESCAPE_FOR_MATH_MODE.iteritems():
+    for from_ascii, to_latex in L_ESCAPE_FOR_MATH_MODE.items():
         result = result.replace(from_ascii, to_latex)
 
     if monospace:

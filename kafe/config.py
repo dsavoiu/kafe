@@ -8,7 +8,10 @@
 
 import sys
 import os
-import ConfigParser
+try:
+    import ConfigParser
+except ImportError:
+    import configparser as ConfigParser
 import kafe
 
 # import main logger for kafe
@@ -80,7 +83,7 @@ def create_config_file(config_type, force=False):
                      "from '%s' to '%s'." \
                      % (kafe_default_config_file, _file))
     else:
-        raise Exception("Cannot create config file at '%s': file exists" \
+        raise Exception("Cannot create config file at '%s': file exists"
                         % (_file,))
 
 
@@ -101,11 +104,11 @@ kafe_configs = {
 
 # Raise Error is no default config file found
 if not os.path.exists(os.path.join(*kafe_configs['system'])):
-    raise IOError, "No default config file for kafe was " \
-                   "found on the system but there should " \
-                   "be one at '%s'. Please check your " \
-                   "installation. " \
-                   % (os.path.join(*kafe_configs['system']),)
+    raise IOError("No default config file for kafe was "
+                  "found on the system but there should "
+                  "be one at '%s'. Please check your "
+                  "installation. "
+                   % (os.path.join(*kafe_configs['system']),))
 
 # Load all found config files into the ConfigParser
 kafe_config_file = None

@@ -11,7 +11,6 @@
 import numpy as np
 import os, sys
 
-from string import split, replace
 from .dataset import Dataset
 from .dataset_tools import build_dataset
 from .fit import build_fit
@@ -142,7 +141,7 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
         for line in tmp_lines:  # go through the lines of the file
             if '#' in line:
                 # ignore anything after a comment sign (#)
-                line = split(line, '#')[0]
+                line = line.split('#')[0]
 
             # ignore empty lines
             if (not line) or (line.isspace()):
@@ -150,12 +149,12 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
 
             # get field contents by splitting lines
             if delimiter is None:
-                tmp_fields = split(line)  # split line on whitespace
+                tmp_fields = line.split()
             else:
-                tmp_fields = split(line, delimiter)  # split line on delimiter
+                tmp_fields = line.split(delimiter)
 
             # turn them into floats
-            tmp_fields = map(float, tmp_fields)
+            tmp_fields = list(map(float, tmp_fields))
 
             # append those contents to the right fields
             result.append(tmp_fields)
@@ -228,16 +227,16 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
 
         if '#' in line:
             # ignore anything after a comment sign (#)
-            line = split(line, '#')[0]
+            line = line.split('#')[0]
 
         if (not line) or (line.isspace()):  # ignore empty lines
             continue
 
         # get field contents by splitting lines
         if delimiter is None:
-            tmp_fields = split(line)             # split line on whitespace
+            tmp_fields = line.split()
         else:
-            tmp_fields = split(line, delimiter)  # split line on delimiter
+            tmp_fields = line.split(delimiter)
 
         # append those contents to the right fields
         for idx, field_name in enumerate(field_order_list):
@@ -556,7 +555,7 @@ def parse_general_inputfile(file_to_parse):
 
     Here is an example of an input file to calculate the average of four
     partly correlated measurements (see :ref:`Example 8 <example_8>`)::
-    
+
 
          #  Meta data for plotting
          *TITLE Higgs-mass measurements
@@ -581,9 +580,9 @@ def parse_general_inputfile(file_to_parse):
          @FitFunction
          def fitf(x, av=1.0): # fit an average
              return av
-             
+
          *FITLABEL Average
-         
+
          *InitialParameters
          120. 1.
 
@@ -705,10 +704,13 @@ def parse_general_inputfile(file_to_parse):
         '''Parse and sanitize Python code'''
         import tokenize
         import string
-        from cStringIO import StringIO
+        try:
+            from cStringIO import StringIO
+        except ImportError:
+            from io import StringIO
 
         # backwards compatibility: replace tildes by spaces
-        code_string = string.replace(code_string, '~', ' ')
+        code_string = code_string.replace('~', ' ')
 
         FORBIDDEN_TOKENS = ['import', 'exec', 'global', 'execfile']
 
@@ -851,7 +853,7 @@ def parse_general_inputfile(file_to_parse):
                     [leading_token, float(line[1]), float(line[2])])
             else:
                 # expect only floats
-                tokens[current_key].append(map(float, line.split()))  # expect floats
+                tokens[current_key].append(list(map(float, line.split())))  # expect floats
 
     # ---- end parse input file
 
@@ -977,7 +979,7 @@ def parse_general_inputfile(file_to_parse):
         prefix = 'from kafe.function_tools import FitFunction, LaTeX, ASCII\n'
         fullcode = prefix + fitcode  # add imports for decorators
         # execute code and place in global scope
-        exec fullcode in globals()  # note: function name must be 'fitf'
+        exec(fullcode) in globals()  # note: function name must be 'fitf'
 
         if '*InitialParameters' in setkeys:
             fitpars = parval, parerr

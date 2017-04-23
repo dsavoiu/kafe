@@ -7,6 +7,8 @@
 *.log
 #.kafe
 *.egg-info
+*.cache
+*.eggs
 
 ##########
 # Images #
