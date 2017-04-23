@@ -17,7 +17,7 @@
 # ----------------------------------------------------------------
 
 # import iminuit as python package
-from iminuit import Minuit
+import iminuit
 
 from .config import M_MAX_ITERATIONS, M_TOLERANCE, log_file, null_file
 from time import gmtime, strftime
@@ -129,7 +129,7 @@ class IMinuit:
             _init_par_dict["error_"+_par]= _err
 
         # initialize the minimizer
-        self.__iminuit = Minuit(self.function_to_minimize,
+        self.__iminuit = iminuit.Minuit(self.function_to_minimize,
             forced_parameters=_par_names, errordef=self.errordef,
             **_init_par_dict)
 
@@ -161,7 +161,7 @@ class IMinuit:
             fitparam["error_"+parameter] = err
         # replace minimizer
         ##del self.__iminuit
-        self.__iminuit = Minuit(
+        self.__iminuit = iminuit.Minuit(
             self.function_to_minimize,
             print_level=self.print_level,
             forced_parameters=self.parameter_names,
@@ -564,7 +564,7 @@ class IMinuit:
         fitparam['fix_%s'%parameter] = True     # set fix-flag for parameter
         # replace minimizer
         ##del self.__iminuit
-        self.__iminuit = Minuit(
+        self.__iminuit = iminuit.Minuit(
             self.function_to_minimize,
             print_level=self.print_level,
             forced_parameters=self.parameter_names,
@@ -596,7 +596,7 @@ class IMinuit:
         fitparam['fix_%s'%parameter] = False     # set fix-flag for parameter
         # replace minimizer
         ##del self.__iminuit
-        self.__iminuit = Minuit(
+        self.__iminuit = iminuit.Minuit(
             self.function_to_minimize,
             print_level=self.print_level,
             forced_parameters=self.parameter_names,
@@ -609,7 +609,7 @@ class IMinuit:
         fitparam = self.__iminuit.fitarg.copy()   # copy minimizer arguments
         # replace minimizer
         ##del self.__iminuit
-        self.__iminuit = Minuit(
+        self.__iminuit = iminuit.Minuit(
             self.function_to_minimize,
             print_level=self.print_level,
             forced_parameters=self.parameter_names,

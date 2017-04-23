@@ -190,8 +190,12 @@ class Multifit(object):
                 try:
                     import ROOT
                 except ImportError as e:
-                    raise ImportError("Minimizer 'root' requested, but could "
-                                      "not find Python module 'ROOT'.")
+                    if hasattr(e, 'name') and e.name == "libPyROOT":
+                        _msg = "Found PyROOT, but it is not compatible with this version of Python! (%s)" % (e.path,)
+                        raise ImportError(_msg)
+                    else:
+                        raise ImportError("Minimizer 'root' requested, but could "
+                                          "not find Python module 'ROOT'.")
                 from minuit import Minuit
                 self._minimizer_handle = Minuit
             elif self.minimizer_to_use.lower() == "iminuit":
@@ -414,7 +418,7 @@ class Multifit(object):
                 ]
         else:  # if no positional arguments, rely on keywords
 
-            for param_name, param_spec in kwargs.iteritems():
+            for param_name, param_spec in kwargs.items():
                 if function:
                     param_name = function.name + str('.') + param_name
                 par_id = self.parameter_space.get_parameter_ids([param_name])[0]

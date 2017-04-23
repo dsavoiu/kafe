@@ -334,8 +334,12 @@ class Fit(object):
                 try:
                     import ROOT
                 except ImportError as e:
-                    raise ImportError("Minimizer 'root' requested, but could "
-                                      "not find Python module 'ROOT'.")
+                    if hasattr(e, 'name') and e.name == "libPyROOT":
+                        _msg = "Found PyROOT, but it is not compatible with this version of Python! (%s)" % (e.path,)
+                        raise ImportError(_msg)
+                    else:
+                        raise ImportError("Minimizer 'root' requested, but could "
+                                          "not find Python module 'ROOT'.")
                 from .minuit import Minuit
                 _minimizer_handle = Minuit
             elif minimizer_to_use.lower() == "iminuit":

@@ -14,6 +14,7 @@
 #                GQ 27-JUL-14 <initial version>
 #---------------------------------------------------------------------
 # import everything we need from kafe
+from __future__ import print_function
 import kafe
 from kafe.function_library import constant_1par
 from kafe.file_tools import buildDataset_fromFile
@@ -29,8 +30,8 @@ curDataset = buildDataset_fromFile(fname)
 curFit = kafe.Fit(curDataset, constant_1par)
 curFit.do_fit()
 
-print "average:", curFit.get_parameter_values()
-print "error :", curFit.get_parameter_errors()
+print("average:", curFit.get_parameter_values())
+print("error :", curFit.get_parameter_errors())
 
 myPlot = kafe.Plot(curFit)
 myPlot.plot_all()
