@@ -79,10 +79,7 @@ _formatter = logging.Formatter("%(name)s %(asctime)s :: "
 _ch.setFormatter(_formatter)  # add formatter to ch
 _logger.addHandler(_ch)  # add ch to logger
 
-_version_suffix = ""  # for suffixes such as 'rc' or 'beta' or 'alpha'
-
 __version__ = _version_info._get_version_string()
-__version__ += _version_suffix
 
 # Import matplotlib and set backend
 import matplotlib

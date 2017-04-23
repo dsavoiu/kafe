@@ -34,9 +34,10 @@ setup(
         Data Analysis in Physics Lab Courses',
     long_description=read_local('README.rst'),
     setup_requires=[
-        "NumPy >= 1.7.1",
-        "SciPy >= 0.12.0",
+        "NumPy >= 1.11.2",
+        "SciPy >= 0.17.0",
         "matplotlib >= 1.5.0",
+        "iminuit >= 1.2",
     ],
     test_suite='setup.discover_kafe_tests',
     keywords = "data analysis lab courses education students physics fitting minimization",
