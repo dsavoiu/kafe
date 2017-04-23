@@ -6,9 +6,9 @@ Most tests here are based on the standard kafe examples.
 
 import numpy as np
 import kafe
-import unittest2
+import unittest
 
-class Fit_Test_fit_functionality(unittest2.TestCase):
+class Fit_Test_fit_functionality(unittest.TestCase):
 
     def test_W_boson_mass_averaging_with_y_cov_mat(self):
         W_mass_values = np.array([

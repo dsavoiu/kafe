@@ -1,11 +1,11 @@
-import unittest2
+import unittest
 import kafe
 import numpy as np
 
 from kafe.function_tools import FitFunction, LaTeX
 
 
-class Multfit_Test_no_Minimizer(unittest2.TestCase):
+class Multfit_Test_no_Minimizer(unittest.TestCase):
 
     def setUp(self):
         @FitFunction
@@ -89,7 +89,7 @@ class Multfit_Test_no_Minimizer(unittest2.TestCase):
         self.Test_Multifit.set_parameter(parameter_values, parameter_errors)
         assert np.allclose(parameter_errors, self.Test_Multifit.current_parameter_errors_minuit, atol=1e-4)
 
-class ParameterSpace_Test(unittest2.TestCase):
+class ParameterSpace_Test(unittest.TestCase):
 
     def setUp(self):
         @LaTeX(name='I', parameter_names=(r'R_0', r'\alpha_T', 'p_2', 'p_1', 'p_0'),
@@ -207,4 +207,4 @@ class ParameterSpace_Test(unittest2.TestCase):
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

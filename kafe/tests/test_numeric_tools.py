@@ -5,9 +5,9 @@ Unit tests for submodule ``numeric_tools``
 import numpy as np
 from kafe import numeric_tools
 
-import unittest2
+import unittest
 
-class Fit_Test_numeric_tools_functionality(unittest2.TestCase):
+class Fit_Test_numeric_tools_functionality(unittest.TestCase):
 
     def setUp(self):
         #

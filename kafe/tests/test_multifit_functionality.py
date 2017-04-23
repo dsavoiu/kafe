@@ -1,11 +1,11 @@
-import unittest2
+import unittest
 import numpy as np
 import kafe
 
 
 from kafe.function_tools import FitFunction
 '''
-class Multfit_Test_fit_functionality(unittest2.TestCase):
+class Multfit_Test_fit_functionality(unittest.TestCase):
 
     def setUp(self):
         @FitFunction
@@ -51,7 +51,7 @@ class Multfit_Test_fit_functionality(unittest2.TestCase):
         errors = np.array([0.019618, 0.162890, 0.215978, 0.023866, 0.000429])
         assert np.allclose(self.Test_Multifit.current_parameter_errors_minuit, errors, atol=1e-4)
 
-class Multifit_test_fit_functionality_fix_parameters(unittest2.TestCase):
+class Multifit_test_fit_functionality_fix_parameters(unittest.TestCase):
 
     def setUp(self):
         @FitFunction
