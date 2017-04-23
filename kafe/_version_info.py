@@ -7,7 +7,7 @@
 '''
 
 _version_info = dict(major=1, minor=3, revision=0,
-                     is_development=True)
+                     is_development=False)
 
 def _get_version_tuple():
   '''
