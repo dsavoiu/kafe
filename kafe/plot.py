@@ -787,7 +787,7 @@ class Plot(object):
             # shade confidence band
             if show_band:
                 cband = self.axes.fill_between(fxdata, lower_cb, upper_cb,
-                                              alpha='0.1',
+                                              alpha=0.1,
                                               color=_fdata_kw['color'])
 
             # plot fit function
