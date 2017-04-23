@@ -45,3 +45,14 @@ class Multiplot(object):
 
         self.subplots[id].plot_all(show_info_for=show_info_for, show_data_for='all',
                                     show_function_for='all', show_band_for=show_band_for)
+
+    def save(self, id, output_file):
+        self.subplots[id].save(output_file)
+
+    def save_all(self, *output_files):
+        if len(output_files) != len(self.subplots):
+            raise ValueError("Multiplot has {} subplots: need {} output files but "
+                             "got {}!".format(len(self.subplots), len(self.subplots), len(output_files)))
+
+        for i, filename in enumerate(output_files):
+            self.save(i, filename)

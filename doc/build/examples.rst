@@ -880,3 +880,120 @@ used to "support" the curve can be omitted.
    `Output of example 10 - properties of a Gauss curve.`
 
 
+
+Examples 11 and 12 - approaches to fitting several models to multivariate data
+==============================================================================
+
+The premise of this example is deceptively simple: a series
+of voltages is applied to a resistor and the resulting current
+is measured. The aim is to fit a model to the collected data
+consisting of voltage-current pairs and determine the
+resistance :math:`R`.
+
+According to Ohm's Law, the relation between current and voltage
+is linear, so a linear model can be fitted. However, Ohm's Law
+only applies to an ideal resistor whose resistance does not
+change, and the resistance of a real resistor tends to increase
+as the resistor heats up. This means that, as the applied voltage
+gets higher, the resistance changes, giving rise to
+nonlinearities which are ignored by a linear model.
+
+To get a hold on this nonlinear behavior, the model must take
+the temperature of the resistor into account. Thus, the
+temperature is also recorded for every data point.
+The data thus consists of triples, instead of the usual "xy" pairs,
+and the relationship between temperature and voltage must be
+modeled in addition to the one between current and voltage.
+
+Here, the dependence :math:`T(U)` is taken to be quadratic, with
+some coefficients :math:`p_0`, :math:`p_1`, and :math:`p_2`:
+
+.. math::
+
+    T(U) = p_2 U^2 + p_1 U + p_0
+
+This model is based purely on empirical observations. The :math:`I(U)`
+dependence is more complicated, but takes the "running" of the
+resistane with the temperature into account:
+
+.. math::
+
+    I(U) = \frac{U}{R_0 (1 + t \cdot \alpha_T)}
+
+In the above, :math:`t` is the temperature in degrees Celsius,
+:math:`\alpha_T` is an empirical "heat coefficient", and :math:`R_0`
+is the resistance at 0 degrees Celsius, which we want to determine.
+
+In essence, there are two models here which must be fitted to the
+:math:`I(U)` and :math:`T(U)` data sets, and one model "incorporates"
+the other in some way.
+
+Example 11: constraining parameters
+-----------------------------------
+
+There are several ways to achieve this with *kafe*. The method chosen
+here is to fit the empirical :math:`T(U)` model to the :math:`T(U)`
+data and extract the parameter estimated :math:`p_i`, along with their
+uncertainties and correlations.
+
+.. figure:: _static/img/kafe_example11_TU.png
+   :height: 300px
+   :width: 600px
+   :scale: 100 %
+   :alt: image not found
+   :align: center
+
+   `Output of example 11: Temperature as a function of voltage`
+
+.. figure:: _static/img/kafe_example11_IU.png
+   :height: 300px
+   :width: 600px
+   :scale: 100 %
+   :alt: image not found
+   :align: center
+
+   `Output of example 11: Current as a function of voltage`
+
+Then, a fit of the :math:`I(U)` model is performed to the :math:`I(U)`
+data, while keeping the parameters constrained around the previously
+obtained values.
+
+This approach is very straightforward, but it has the disadvantage that
+not all data is used in a optimal way. Here, for example, the :math:`I(U)`
+data is not taken into account at all when fitting :math:`T(U)`.
+
+
+A more flexible approach, the "multi-model" fit, is demonstrated in example 12.
+
+
+Example 12: multi-model fit
+---------------------------
+
+There are several ways to achieve this with *kafe*. The method chosen
+here is to use the :py:class:`~kafe.multifit.Multifit` functionality
+to fit both models simultaneously to the :math:`T(U)` and :math:`I(U)`
+datasets.
+
+.. figure:: _static/img/kafe_example12_TU.png
+   :height: 300px
+   :width: 600px
+   :scale: 100 %
+   :alt: image not found
+   :align: center
+
+   `Output of example 12: Temperature as a function of voltage`
+
+.. figure:: _static/img/kafe_example12_IU.png
+   :height: 300px
+   :width: 600px
+   :scale: 100 %
+   :alt: image not found
+   :align: center
+
+   `Output of example 12: Current as a function of voltage`
+
+In general, this approach yields different results than the one using
+parameter constraints, which is demonstrated in example 11.
+
+
+
