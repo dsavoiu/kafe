@@ -16,18 +16,21 @@
 
 from __future__ import print_function
 
+import kafe
+import logging
 import matplotlib.pyplot as plt
 import numpy as np
-from .function_tools import outer_product
+import os
+
 from copy import copy
+
+from .function_tools import outer_product
 from .numeric_tools import extract_statistical_errors, MinuitCov_to_cor, cor_to_cov
 from .fit import round_to_significance, Chi22CL
-import kafe
 from .config import (FORMAT_ERROR_SIGNIFICANT_PLACES, F_SIGNIFICANCE_LEVEL,
                      M_MINIMIZER_TO_USE, log_file, null_file)
-import os
 from .stream import StreamDup
-import logging
+
 logger = logging.getLogger('kafe')
 
 def chi2( ydata, cov_mat,
@@ -196,10 +199,10 @@ class Multifit(object):
                     else:
                         raise ImportError("Minimizer 'root' requested, but could "
                                           "not find Python module 'ROOT'.")
-                from minuit import Minuit
+                from .minuit import Minuit
                 self._minimizer_handle = Minuit
             elif self.minimizer_to_use.lower() == "iminuit":
-                from iminuit_wrapper import IMinuit
+                from .iminuit_wrapper import IMinuit
                 self._minimizer_handle = IMinuit
                 # raise NotImplementedError, "'iminuit' minimizer not yet implemented"
             else:
@@ -527,7 +530,7 @@ class Multifit(object):
 
         else:
             # go through all parameter IDs
-            for par_id in xrange(self.total_number_of_parameters):
+            for par_id in range(self.total_number_of_parameters):
                 # Release parameter
                 self.minimizer.release_parameter(par_id)
             # Inform about release
@@ -661,7 +664,7 @@ class Multifit(object):
                 return fit.fit_function(x, *_parameter_values)
 
             _dummy_ydata = fit.ydata
-            _dummy_fdata = np.asarray(map(tmp_fit_function, fit.xdata))
+            _dummy_fdata = np.asarray(list(map(tmp_fit_function, fit.xdata)))
             for j, data in enumerate(_dummy_fdata):
                 _ydata[i] = _dummy_ydata[j]
                 _fdata[i] = _dummy_fdata[j]
@@ -1022,21 +1025,21 @@ class Multifit(object):
         par_err = extract_statistical_errors(self.par_cov_mat)
         par_cor_mat = MinuitCov_to_cor(self.par_cov_mat)
 
-        print('# value        error   ', file=self.out_stream)
         if self.total_number_of_parameters > 1:
-            print('correlations', file=self.out_stream)
+            print('# value        error   correlations', file=self.out_stream)
         else:
-            print('', file=self.out_stream)
+            print('# value        error   ', file=self.out_stream)
+
         for par_nr, par_val in enumerate(self.final_parameter_values):
             print('# '+self.parameter_names_minuit[par_nr].split(".", 1)[1], file=self.out_stream)
-            print(format(par_val, '.04e')+'  ', file=self.out_stream)
+            print(format(par_val, '.04e')+'  ', file=self.out_stream, end='')
             if par_err[par_nr]:
-              print(format(par_err[par_nr], '.02e')+'  ', file=self.out_stream)
+              print(format(par_err[par_nr], '.02e')+'  ', file=self.out_stream, end='')
             else:
-              print('-fixed- ', file=self.out_stream)
+              print('-fixed- ', file=self.out_stream, end='')
             if par_nr > 0 and par_err[par_nr]:
-                for i in xrange(par_nr):
-                    print(format(par_cor_mat[par_nr, i], '.3f')+'  ', file=self.out_stream)
+                for i in range(par_nr):
+                    print(format(par_cor_mat[par_nr, i], '+.3f')+'  ', file=self.out_stream, end='')
             print('', file=self.out_stream)
         #print MINOS errors if needed
         if(not self.parabolic_errors):
@@ -1049,7 +1052,7 @@ class Multifit(object):
                           ' '+format(self.minos_errors[par_nr][1],'.02e'),
                           file=self.out_stream)
                 else:
-                    print('-fixed- ', file=self.out_stream)
+                    print('-fixed- ', file=self.out_stream, end='')
             print('', file=self.out_stream)
         print('', file=self.out_stream)
 
