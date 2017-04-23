@@ -567,6 +567,7 @@ class Fit(object):
 
         return tuple(output)
 
+
     def set_parameters(self, *args, **kwargs):
         '''
         Sets the parameter values (and optionally errors) for this fit.

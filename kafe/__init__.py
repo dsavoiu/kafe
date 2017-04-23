@@ -106,3 +106,5 @@ from .file_tools import (parse_column_data,
                          buildDataset_fromFile, buildFit_fromFile)
 from .numeric_tools import cov_to_cor, cor_to_cov
 from .function_tools import FitFunction, LaTeX, ASCII
+from .multifit import Multifit
+from .multiplot import Multiplot

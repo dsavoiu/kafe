@@ -568,6 +568,7 @@ class IMinuit:
             self.function_to_minimize,
             print_level=self.print_level,
             forced_parameters=self.parameter_names,
+            errordef = self.errordef,
             **fitparam)
 
 
