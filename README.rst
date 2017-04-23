@@ -40,8 +40,8 @@ Requirements
 as follows. Please note that more recent versions of these packages should work
 as well:
 
-* `SciPy <http://www.scipy.org>`_ >= 0.12.0
-* `NumPy <http://www.numpy.org>`_ >= 1.6.1
+* `SciPy <http://www.scipy.org>`_ >= 0.17.0
+* `NumPy <http://www.numpy.org>`_ >= 1.11.2
 * `matplotlib <http://matplotlib.org>`_ >= 1.5.0
 
 
@@ -49,13 +49,11 @@ Additionally, a function minimizer is needed. *kafe* implements interfaces to tw
 function minimizers and requires at least one of them to be installed:
 
 * *MINUIT*, which is included in *CERN*'s data analysis package `ROOT <http://root.cern.ch>`_ (>= 5.34), or
-* `iminuit <https://github.com/iminuit/iminuit>`_ (>= 1.1.1), which is independent of ROOT
+* `iminuit <https://github.com/iminuit/iminuit>`_ (>= 1.2), which is independent of ROOT
 
 
 Finally, *kafe* requires a number of external programs:
 
-* Qt4 (>= 4.8.5) and the Python bindings PyQt4 (>= 3.18.1) are needed because *Qt* is the supported
-  interactive frontend for matplotlib. Other frontends are not supported and may cause unexpected behavior.
 * A *LaTeX* distribution (tested with `TeX Live <https://www.tug.org/texlive/>`_), since *LaTeX* is
   used by matplotlib for typesetting labels and mathematical expressions.
 * `dvipng <http://www.nongnu.org/dvipng/>`_ for converting DVI files to PNG graphics
@@ -94,6 +92,13 @@ In Fedora/RHEL/CentOS:
 Install *ROOT*
 --------------
 
+**Note**: This section is written with ROOT version 5.34 in mind.
+When using this version, take care that the Python bindings (PyROOT)
+are compiled for the version of Python you intend to use (either 2.x or 3.x),
+as it is not possible to use both. For newer versions of ROOT (i.e. 6 and
+above), this should no longer be an issue.
+
+
 ROOT and its Python bindings can be obtained via the package manager in
 Ubuntu/Mint/Debian:
 
@@ -110,7 +115,7 @@ Or, in Fedora/RHEL/CentOS:
 
 This setup is usually sufficient. However, you may decide to build ROOT yourself. In this case,
 be sure to compile with *PyROOT* support. Additionally, for Python to see the *PyROOT* bindings,
-the following environment variables have to be set correctly (:
+the following environment variables have to be set correctly:
 
     .. code:: bash
 
@@ -120,7 +125,6 @@ the following environment variables have to be set correctly (:
 
 
 For more info, refer to `<http://root.cern.ch/drupal/content/pyroot>`_.
-
 
 -----------------
 Install `iminuit`
@@ -210,11 +214,7 @@ Installation notes (Windows)
 The recommended Python distribution for working with *kafe* under Windows is
 `WinPython <https://winpython.github.io/>`_, which has the advantage that it is
 portable and comes with a number of useful pre-installed packages. Particularly,
-*NumPy*, *SciPy* and *matplotlib* are all pre-installed in *WinPython*, as are
-all *Qt*-related dependencies.
-
-Be sure to install *WinPython* version **2.7**, since *kafe* does not currently
-run under Python 3.
+*NumPy*, *SciPy* and *matplotlib* are all pre-installed in *WinPython*.
 
 -----------------
 Install `iminuit`
