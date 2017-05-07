@@ -7,7 +7,36 @@
 '''
 
 import sys
+import os
+
+from contextlib import contextmanager
 from time import gmtime, strftime
+
+
+@contextmanager
+def redirect_stdout_to(stream_with_fd):
+    if stream_with_fd is None:
+        # no redirect when stream is 'None'
+        yield
+    else:
+        # do not redirect, if streams do not have file descriptors!
+        try:
+            _sys_stdout_fileno = sys.stdout.fileno()
+            _out_stream_fileno = stream_with_fd.fileno()
+        except:
+            yield
+        else:
+            # save the old stdout stream
+            old_out_stream = os.dup(sys.stdout.fileno())
+            os.dup2(stream_with_fd.fileno(), sys.stdout.fileno())
+
+            # if all OK, yield back to the caller, catching exceptions
+            try:
+                yield
+            finally:
+                # restore the previous output stream
+                os.dup2(old_out_stream, sys.stdout.fileno())
+                os.close(old_out_stream)
 
 
 class StreamDup(object):

@@ -24,6 +24,7 @@ addons:
     - dvipng
     #- libfreetype6
     - python-qt4
+    - python-tk
     #don't install ROOT yet
     #- root-system
 

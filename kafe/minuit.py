@@ -24,6 +24,7 @@ from ROOT import TMath  # for uning ROOT's chi2prob function
 from array import array as arr  # array needed for TMinuit arguments
 
 from .config import M_MAX_ITERATIONS, M_TOLERANCE, log_file, null_file
+from .stream import redirect_stdout_to
 from time import gmtime, strftime
 
 import numpy as np
@@ -454,50 +455,51 @@ class Minuit:
         self.out_file.write('#'*(2+26))
         self.out_file.write('\n\n')
         self.out_file.flush()
-#        # save the old stdout stream
-#        old_out_stream = os.dup(sys.stdout.fileno())
-#        os.dup2(self.out_file.fileno(), sys.stdout.fileno())
 
-        pv=[]
-        chi2=[]
-        error_code = Long(0)
-        self.__gMinuit.mnexcm("SET PRINT",
-                 arr('d', [0.0]), 1, error_code)  # no printout
+        # redirect stdout stream
+        _redirection_target = None
+        ## -- disable redirection completely, for now
+        ##if log_print_level >= 0:
+        ##    _redirection_target = self.out_file
 
-# first, make sure we are at minimum, i.e. re-minimize
-        self.minimize(final_fit=True, log_print_level=0)
-        minuit_id=Double(parid+1) # Minuit parameter numbers start with 1
+        with redirect_stdout_to(_redirection_target):
+            pv = []
+            chi2 = []
+            error_code = Long(0)
+            self.__gMinuit.mnexcm("SET PRINT",
+                     arr('d', [0.0]), 1, error_code)  # no printout
 
-        # retrieve information about parameter with id=parid
-        pmin=Double(0)
-        perr=Double(0)
-        self.__gMinuit.GetParameter(parid, pmin, perr)  # retrieve fitresult
+            # first, make sure we are at minimum, i.e. re-minimize
+            self.minimize(final_fit=True, log_print_level=0)
+            minuit_id = Double(parid + 1) # Minuit parameter numbers start with 1
 
-        # fix parameter parid ...
-        self.__gMinuit.mnexcm("FIX",
-                                arr('d', [minuit_id]),
-                                1, error_code)
-        # ... and scan parameter values, minimizing at each point
-        for v in np.linspace(pmin-3.*perr, pmin+3.*perr, n_points):
-            pv.append(v)
+            # retrieve information about parameter with id=parid
+            pmin = Double(0)
+            perr = Double(0)
+            self.__gMinuit.GetParameter(parid, pmin, perr)  # retrieve fitresult
+
+            # fix parameter parid ...
+            self.__gMinuit.mnexcm("FIX",
+                                    arr('d', [minuit_id]),
+                                    1, error_code)
+            # ... and scan parameter values, minimizing at each point
+            for v in np.linspace(pmin - 3.*perr, pmin + 3.*perr, n_points):
+                pv.append(v)
+                self.__gMinuit.mnexcm("SET PAR",
+                     arr('d', [minuit_id, Double(v)]),
+                                   2, error_code)
+                self.__gMinuit.mnexcm("MIGRAD",
+                     arr('d', [self.max_iterations, self.tolerance]),
+                                   2, error_code)
+                chi2.append(self.get_fit_info('fcn'))
+
+            # release parameter to back to initial value and release
             self.__gMinuit.mnexcm("SET PAR",
-                 arr('d', [minuit_id, Double(v)]),
-                               2, error_code)
-            self.__gMinuit.mnexcm("MIGRAD",
-                 arr('d', [self.max_iterations, self.tolerance]),
-                               2, error_code)
-            chi2.append(self.get_fit_info('fcn'))
-
-        # release parameter to back to initial value and release
-        self.__gMinuit.mnexcm("SET PAR",
-                              arr('d', [minuit_id, Double(pmin)]),
-                               2, error_code)
-        self.__gMinuit.mnexcm("RELEASE",
-                                arr('d', [minuit_id]),
-                                1, error_code)
-
-#        # restore the previous output stream
-#        os.dup2(old_out_stream, sys.stdout.fileno())
+                                  arr('d', [minuit_id, Double(pmin)]),
+                                   2, error_code)
+            self.__gMinuit.mnexcm("RELEASE",
+                                    arr('d', [minuit_id]),
+                                    1, error_code)
 
         return pv, chi2
 
@@ -603,26 +605,22 @@ class Minuit:
         self.out_file.write('\n\n')
         self.out_file.flush()
 
-        # save the old stdout stream
-        if(log_print_level>=0):
-          old_out_stream = os.dup(sys.stdout.fileno())
-          os.dup2(self.out_file.fileno(), sys.stdout.fileno())
+        # redirect stdout stream
+        _redirection_target = None
+        if log_print_level >= 0:
+            _redirection_target = self.out_file
 
-        self.__gMinuit.SetPrintLevel(log_print_level)  # set Minuit print level
-        logger.debug("Running MIGRAD")
-        self.__gMinuit.mnexcm("MIGRAD",
-                              arr('d', [self.max_iterations, self.tolerance]),
-                              2, error_code)
-        if(final_fit):
-            logger.debug("Running HESSE")
-            self.__gMinuit.mnexcm("HESSE", arr('d', [self.max_iterations]), 1, error_code)
-        # return to normal print level
-        self.__gMinuit.SetPrintLevel(self.print_level)
-
-        # restore the previous output stream
-        if(log_print_level>=0):
-          os.dup2(old_out_stream, sys.stdout.fileno())
-          os.close(old_out_stream)
+        with redirect_stdout_to(_redirection_target):
+            self.__gMinuit.SetPrintLevel(log_print_level)  # set Minuit print level
+            logger.debug("Running MIGRAD")
+            self.__gMinuit.mnexcm("MIGRAD",
+                                  arr('d', [self.max_iterations, self.tolerance]),
+                                  2, error_code)
+            if(final_fit):
+                logger.debug("Running HESSE")
+                self.__gMinuit.mnexcm("HESSE", arr('d', [self.max_iterations]), 1, error_code)
+            # return to normal print level
+            self.__gMinuit.SetPrintLevel(self.print_level)
 
 
     def minos_errors(self, log_print_level=1):
@@ -643,22 +641,20 @@ class Minuit:
         logger.debug("Updating current FCN")
         self.__gMinuit.SetFCN(self.FCN_wrapper)
 
-        # save the old stdout stream
-        if(log_print_level>=0):
-          old_out_stream = os.dup(sys.stdout.fileno())
-          os.dup2(self.out_file.fileno(), sys.stdout.fileno())
+        # redirect stdout stream
+        _redirection_target = None
+        if log_print_level >= 0:
+            _redirection_target = self.out_file
 
-        self.__gMinuit.SetPrintLevel(log_print_level)
-        logger.debug("Running MINOS")
-        error_code = Long(0)
-        self.__gMinuit.mnexcm("MINOS", arr('d', [self.max_iterations]), 1, error_code)
+        with redirect_stdout_to(_redirection_target):
+            self.__gMinuit.SetPrintLevel(log_print_level)
+            logger.debug("Running MINOS")
+            error_code = Long(0)
+            self.__gMinuit.mnexcm("MINOS", arr('d', [self.max_iterations]), 1, error_code)
 
-        # return to normal print level
-        self.__gMinuit.SetPrintLevel(self.print_level)
+            # return to normal print level
+            self.__gMinuit.SetPrintLevel(self.print_level)
 
-        # restore the previous output stream
-        if(log_print_level>=0):
-          os.dup2(old_out_stream, sys.stdout.fileno())
 
         output = []
         errpos=Double(0) # positive parameter error
