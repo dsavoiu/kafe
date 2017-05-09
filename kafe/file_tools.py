@@ -980,7 +980,10 @@ def parse_general_inputfile(file_to_parse):
         fullcode = prefix + fitcode  # add imports for decorators
         # execute code and place in global scope
         scope = dict()
-        exec(fullcode, scope)        # note: function name must be 'fitf'
+
+        # need scope both as globals() and locals()
+        # for this to work properly in Python <= 2.7.8
+        exec(fullcode, scope, scope)        # note: function name must be 'fitf'
 
         if '*InitialParameters' in setkeys:
             fitpars = parval, parerr
