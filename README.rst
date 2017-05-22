@@ -36,7 +36,7 @@ or on `ReadTheDocs <http://kafe.readthedocs.org/en/latest/>`_.
 Requirements
 ============
 
-*kafe* runs under both Python 2 (`>=2.7`) and Python 3 (tested with `3.5.2`).
+*kafe* runs under both Python 2 (`>=2.7.9`) and Python 3 (tested with `3.5.2`).
 
 Some additional Python packages are required. The recommended versions of these are
 as follows. Please note that more recent versions of these packages should work
