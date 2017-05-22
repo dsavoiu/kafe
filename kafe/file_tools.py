@@ -978,12 +978,9 @@ def parse_general_inputfile(file_to_parse):
     if '*FitFunction' in setkeys:
         prefix = 'from kafe.function_tools import FitFunction, LaTeX, ASCII\n'
         fullcode = prefix + fitcode  # add imports for decorators
-        # execute code and place in global scope
+        # execute code and place in a special scope
         scope = dict()
-
-        # need scope both as globals() and locals()
-        # for this to work properly in Python <= 2.7.8
-        exec(fullcode, scope, scope)        # note: function name must be 'fitf'
+        exec(fullcode, scope)        # note: function name must be 'fitf'
 
         if '*InitialParameters' in setkeys:
             fitpars = parval, parerr
