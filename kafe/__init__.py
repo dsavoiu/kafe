@@ -45,7 +45,7 @@ Fitting with **kafe** in a nutshell goes like this:
 For more in-depth information on **kafe**'s features, feel free to consult the
 documentation.
 
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
 
 """
 
@@ -79,10 +79,7 @@ _formatter = logging.Formatter("%(name)s %(asctime)s :: "
 _ch.setFormatter(_formatter)  # add formatter to ch
 _logger.addHandler(_ch)  # add ch to logger
 
-_version_suffix = ""  # for suffixes such as 'rc' or 'beta' or 'alpha'
-
 __version__ = _version_info._get_version_string()
-__version__ += _version_suffix
 
 # Import matplotlib and set backend
 import matplotlib
@@ -106,3 +103,5 @@ from .file_tools import (parse_column_data,
                          buildDataset_fromFile, buildFit_fromFile)
 from .numeric_tools import cov_to_cor, cor_to_cov
 from .function_tools import FitFunction, LaTeX, ASCII
+from .multifit import Multifit
+from .multiplot import Multiplot

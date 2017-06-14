@@ -4,7 +4,7 @@
     :synopsis: This submodule contains several useful tools for handling
         :math:`LaTeX` expressions.
 
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
 
 '''
 

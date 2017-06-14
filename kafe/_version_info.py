@@ -1,25 +1,27 @@
 '''
 .. module:: _version_info
    :platform: Unix
-   :synopsis: Version 1.3.0 of kafe, release Feb. 2017
 
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
                   Guenter Quast <g.quast@kit.edu>
 '''
 
-major = 1
-minor = 3
-revision = 0
+_version_info = dict(major=1, minor=3, revision=0,
+                     is_development=False)
 
 def _get_version_tuple():
   '''
   kafe version as a tuple
   '''
-  return (major, minor, revision)
+  return (_version_info['major'],
+          _version_info['minor'],
+          _version_info['revision'])
 
 def _get_version_string():
   '''
   kafe version as a string
   '''
-  return "%d.%d.%d" % _get_version_tuple()
+  if _version_info['is_development']:
+      return "{major}.{minor}-devel".format(**_version_info)
+  return "{major}.{minor}.{revision}".format(**_version_info)
 

@@ -4,7 +4,7 @@
    :synopsis: This sub-module defines some helper functions for creating a
        `Dataset` object.
 
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
 
 '''
 

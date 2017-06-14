@@ -2,7 +2,7 @@
 .. module:: plot
    :platform: Unix
    :synopsis: A submodule for plotting `Dataset`s with ``matplotlib``.
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
 .. moduleauthor:: Guenter Quast <G.Quast@kit.edu>
 
 '''
@@ -787,7 +787,7 @@ class Plot(object):
             # shade confidence band
             if show_band:
                 cband = self.axes.fill_between(fxdata, lower_cb, upper_cb,
-                                              alpha='0.1',
+                                              alpha=0.1,
                                               color=_fdata_kw['color'])
 
             # plot fit function

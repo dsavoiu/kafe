@@ -49,7 +49,7 @@ my_x_data = linspace(-3, 3, 20)  # twenty evenly-spaced points on
                                  # the x axis, from -3 to 3
 
 # Generate y-axis data from model
-my_y_data = map(lambda x: gauss_2par(x, 0, 1), my_x_data)
+my_y_data = list(map(lambda x: gauss_2par(x, 0, 1), my_x_data))
 
 # Construct the Datasets
 my_dataset = kafe.Dataset(data=(my_x_data, my_y_data),
@@ -83,8 +83,8 @@ my_plot.plot_all(show_info_for='all',  # include every fit in the info box
 section = linspace(-1, 1, 200)  # choose an interval to highlight
 my_plot.axes.fill_between(
     section,
-    map(my_fit.get_current_fit_function(), section),  # upper bound of fill
-    alpha='0.2',  # fill with a transparency of 20%
+    list(map(my_fit.get_current_fit_function(), section)),  # upper bound of fill
+    alpha=0.2,  # fill with a transparency of 20%
     color=my_plot.plot_style.get_linecolor(0)  # same fill color as the line
 )
 

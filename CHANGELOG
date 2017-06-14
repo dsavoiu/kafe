@@ -1,12 +1,28 @@
-master
-======
-    %  [TODO] add unit test for input file parser
-
 v1.3.0
 ======
 
-    %  [FIX] make code Python 3 compatible. 
-       Imports solved with try: Python2 variant; except ImportError: Python3 variant
+    %  [NEW] make code compatible with both Python 2 and 3
+    %  [NEW] add support for fits with correlated constraints
+             (example 11 added)
+    %  [NEW] add support for multi-model fits with shared parameters
+             (example 13 added)
+    %  [NEW] matplotlib 2.0 is now supported
+
+    %  [REQ] require numpy version 1.11.2
+    %  [REQ] require scipy version 0.17.0
+    %  [REQ] require iminuit version 1.2
+    %  [REQ] drop requirement for Qt (difficulty with conda):
+             make Tk the default backend
+
+    %  [BUG] fixed bugs related to output stream redirection
+    %  [FIX] running kafe in Jupyter Notebooks should now work
+    %  [DOC] update documentation of examples
+
+v1.2.0
+======
+
+    %  [NEW] add support for fits with correlated constraints
+    %  several bugfixes
 
 v1.1.0
 ======

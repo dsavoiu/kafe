@@ -4,7 +4,7 @@
     :platform: Unix
     :synopsis: This submodule defines a `Fit` object which performs the actual
         fitting given a `Dataset` and a fit function.
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
 .. moduleauthor:: Guenter Quast <G.Quast@kit.edu>
 .. moduleauthor:: Joerg Schindler <joerg.schindler@student.kit.edu>
 '''
@@ -334,8 +334,12 @@ class Fit(object):
                 try:
                     import ROOT
                 except ImportError as e:
-                    raise ImportError("Minimizer 'root' requested, but could "
-                                      "not find Python module 'ROOT'.")
+                    if hasattr(e, 'name') and e.name == "libPyROOT":
+                        _msg = "Found PyROOT, but it is not compatible with this version of Python! (%s)" % (e.path,)
+                        raise ImportError(_msg)
+                    else:
+                        raise ImportError("Minimizer 'root' requested, but could "
+                                          "not find Python module 'ROOT'.")
                 from .minuit import Minuit
                 _minimizer_handle = Minuit
             elif minimizer_to_use.lower() == "iminuit":
@@ -567,6 +571,7 @@ class Fit(object):
         output.sort(key=_order.get)
 
         return tuple(output)
+
 
     def set_parameters(self, *args, **kwargs):
         '''
@@ -1113,10 +1118,10 @@ class Fit(object):
             %(self.minimizer.get_fit_info('edm')), file=self.out_stream)
         print('UP       %g'
             %(self.minimizer.get_fit_info('err_def')), file=self.out_stream)
-        print('STA     ' + str(self.minimizer.get_fit_info('status_code')) , file=self.out_stream)
+        print('STA      ' + str(self.minimizer.get_fit_info('status_code')) , file=self.out_stream)
         print('', file=self.out_stream)
         print('chi2prob', round(chi2prob, 3), file=self.out_stream)
-        print('HYPTEST ' + str(hypothesis_status), file=self.out_stream)
+        print('HYPTEST  ' + str(hypothesis_status), file=self.out_stream)
         print('', file=self.out_stream)
 
 
@@ -1145,7 +1150,7 @@ class Fit(object):
               print('-fixed- ', end="", file=self.out_stream)
             if par_nr > 0 and par_err[par_nr]:
                 for i in range(par_nr):
-                    print('{:.3f}  '.format(par_cor_mat[par_nr, i]), end="", file=self.out_stream)
+                    print('{:+.3f}  '.format(par_cor_mat[par_nr, i]), end="", file=self.out_stream)
             print('', file=self.out_stream)
       # print MINOS errors if needed
         if(not self.parabolic_errors):

@@ -4,7 +4,7 @@
     :synopsis: This submodule provides a set of helper functions for parsing
         files
 
-.. moduleauthor:: Daniel Savoiu <danielsavoiu@gmail.com>
+.. moduleauthor:: Daniel Savoiu <daniel.savoiu@cern.ch>
 .. moduleauthor:: Guenter Quast <G.Quast@kit.edu>
 '''
 
@@ -201,7 +201,7 @@ def parse_column_data(file_to_parse, field_order='x,y', delimiter=' ',
     # Error handling in case of invalid field order
     if ',' in field_order:
         field_order_list = []
-        for field in split(field_order, ','):  # go through the fields
+        for field in field_order.split(','):  # go through the fields
             if field not in fields.keys():     # raise error for invalid fields
                 raise SyntaxError("Supplied field order `%s' contains invalid \
                     field `%s'." % (field_order, field))
@@ -978,8 +978,9 @@ def parse_general_inputfile(file_to_parse):
     if '*FitFunction' in setkeys:
         prefix = 'from kafe.function_tools import FitFunction, LaTeX, ASCII\n'
         fullcode = prefix + fitcode  # add imports for decorators
-        # execute code and place in global scope
-        exec(fullcode) in globals()  # note: function name must be 'fitf'
+        # execute code and place in a special scope
+        scope = dict()
+        exec(fullcode, scope)        # note: function name must be 'fitf'
 
         if '*InitialParameters' in setkeys:
             fitpars = parval, parerr
@@ -993,7 +994,7 @@ def parse_general_inputfile(file_to_parse):
         # build dictionary for build_fit
         fit_kwargs = {}
         fit_kwargs.update({
-                          'fit_function': globals()[fitf_name],
+                          'fit_function': scope[fitf_name],
                           'fit_label': tokens['*FITLABEL'],
                           'fit_name': tokens['*FITNAME'],
                           'initial_fit_parameters': fitpars,
