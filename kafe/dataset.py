@@ -448,8 +448,10 @@ class Dataset(object):
         The total error model for the axis is represented by the sum of
         these matrices.
 
-        Note: whenever an ErrorSource is added, the total covariance matrix
-        is (re-)calculated, unless *recompute_cov_mat* is ``False``.
+        .. note::
+
+            Whenever an ErrorSource is added, the total covariance matrix
+            is (re-)calculated, unless *recompute_cov_mat* is ``False``.
 
         Parameters
         ----------
