@@ -175,7 +175,6 @@ class PlotStyle:
         self.labelsize = 12     # make labels large
         self.grid = True        # use a grid per default
         self.usetex = True      # tell matplotlib to use TeX
-
         # Some default styles and offsets
         self.axis_label_styles = ('italic', 'italic')
         self.axis_label_align = ('right', 'right')
@@ -207,7 +206,8 @@ class PlotStyle:
             'legend.fontsize': 18,
             'xtick.labelsize': 20,
             'ytick.labelsize': 20,
-            'text.usetex': True,
+            #'text.usetex': self.usetex,
+            'text.usetex': self.usetex,
             #'text.latex.preamble': [r"\usepackage{sansmath}"],
             'axes.unicode_minus': True,
             #'legend.loc': 'best',
