@@ -68,7 +68,7 @@ class StreamDup(object):
             except AttributeError:
               #  self.out_file.append(open(file_like, 'a'))
                 #one-line buffe enforces output
-                self.out_file.append(open(file_like, 'a', 1)) 
+                self.out_file.append(open(file_like, 'a')) 
             else:
                 self.out_file.append(file_like)
         self.closed = False

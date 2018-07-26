@@ -981,9 +981,12 @@ class Fit(object):
             self.print_rounded_fit_parameters()
             self.print_fit_details()
 
+        self.out_stream.flush()  # write to output files
+
+            
     def print_raw_results(self):
         '''
-        unformatted print-out of all fit results in
+        unformatted print-out of all fit results
         '''
         print('\n')
         print('par values' + str(self.final_parameter_values))
@@ -1276,6 +1279,7 @@ class Fit(object):
             tmp_ax.fill(xs, ys, alpha=alpha, color=color)   # as filled area
             tmp_ax.plot(xs, ys, '--', linewidth=2, label=labelstr)  # as line
         print("", file=self.out_stream)
+        self.out_stream.flush()  # write to output files
         self.minimizer.set_err(1.)  # set errdef back to default of 1.
         # plot a legend
         tmp_leg = tmp_ax.legend(loc='best', fontsize='small')
@@ -1376,13 +1380,14 @@ class Fit(object):
         parabolicChi2 = (xnew - val) * (xnew - val) / (err * err)
         tmp_ax.plot(xnew, parabolicChi2, '-.', linewidth=1, color='green',
                     label='parabolic $\\chi^2$')
-
         tmp_leg = tmp_ax.legend(loc='best', fontsize='small')
+        self.out_stream.flush()  # write to output files
         # show the plot, if requested
         if axes is None:
             if show:
                 tmp_fig.show()
             return tmp_fig
+
 
     def plot_correlations(self):
         '''
@@ -1422,6 +1427,15 @@ class Fit(object):
 
         return cor_fig
 
+    def close(self):
+    # close output file(s)
+        self.out_stream.close()
+        print('closing files')
+        
+    def __del__(self):
+    # close output file(s)
+        self.out_stream.close()
+        print('destructor class Fit: closing files')
 
 class GaussianConstraint(object):
     '''
