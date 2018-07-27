@@ -1275,7 +1275,8 @@ class Multifit(object):
         val = _pvals[parid]
         err = _perrs[parid]
 
-        print('Profile for parameter %d with %d points' % (parid, n_points), file=self.out_stream)
+        print('Profile for parameter %d with %d points' % (parid, n_points),
+              file=self.out_stream)
 
         plt.tight_layout()
         if axes is None:
@@ -1401,6 +1402,15 @@ class Multifit(object):
                                 i, j, dchi2=[1., 2.3], axes=axarr[jp, ip])
         return cor_fig
 
+    def close(self):
+    # close output file(s)
+        self.out_stream.close()
+        print('closing files')
+        
+    def __del__(self):
+    # close output file(s)
+        self.out_stream.close()
+        print('destructor class Fit: closing files')
 
 
 class _ParameterSpace(object):
