@@ -983,7 +983,7 @@ class Fit(object):
 
         self.out_stream.flush()  # write to output files
 
-            
+
     def print_raw_results(self):
         '''
         unformatted print-out of all fit results
@@ -1428,14 +1428,15 @@ class Fit(object):
         return cor_fig
 
     def close(self):
-    # close output file(s)
+        '''close output file(s)'''
         self.out_stream.close()
-        print('closing files')
-        
+
     def __del__(self):
-    # close output file(s)
-        self.out_stream.close()
-        print('destructor class Fit: closing files')
+        '''destructor: close output file(s)'''
+        # check needed in case the constructor throws
+        if hasattr(self, 'out_stream'):
+            self.out_stream.close()
+
 
 class GaussianConstraint(object):
     '''

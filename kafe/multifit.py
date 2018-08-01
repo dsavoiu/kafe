@@ -775,7 +775,7 @@ class Multifit(object):
 
         self.out_stream.flush()  # write to output files
 
-            
+
     # Private Methods
     ##################
 
@@ -1402,15 +1402,17 @@ class Multifit(object):
                                 i, j, dchi2=[1., 2.3], axes=axarr[jp, ip])
         return cor_fig
 
+
     def close(self):
-    # close output file(s)
+        '''close output file(s)'''
         self.out_stream.close()
-        print('closing files')
-        
+
     def __del__(self):
-    # close output file(s)
-        self.out_stream.close()
-        print('destructor class Fit: closing files')
+        '''destructor: close output file(s)'''
+        # check needed in case the constructor throws
+        if hasattr(self, 'out_stream'):
+            self.out_stream.close()
+
 
 
 class _ParameterSpace(object):
