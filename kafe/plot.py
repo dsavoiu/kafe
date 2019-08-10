@@ -294,7 +294,8 @@ class Plot(object):
         '''
         # Update matplotlib's rcParams with those from plot_style
         mpl.rcParams.update(self.plot_style.rcparams_kw)
-        mpl.rc('font', **self.plot_style.rcfont_kw)
+# does not work on most platforms
+        #       mpl.rc('font', **self.plot_style.rcfont_kw)
 
     def init_plots(self, **kwargs):
         '''
@@ -499,7 +500,10 @@ class Plot(object):
         '''Draw the plot legend to the canvas'''
         # show plot legend
         self.legend = self.axes.legend(**self.plot_style.legendparams_kw)
-        self.legend.draggable()
+        try:
+          self.legend.set_draggable(True)
+        except:
+          self.legend.draggable() # old-style 
 
     def draw_fit_parameters_box(self, plot_spec=0,
                                 force_show_uncertainties=False):
