@@ -477,7 +477,7 @@ class Plot(object):
                 legend_bbox = self.legend.legendPatch.get_bbox().inverse_transformed(
                     self.axes.transAxes
                 )
-
+                
                 viewport_limits = self.axes.transAxes.inverted().transform(
                         self.figure.transFigure.transform((1, 1))
                     )
@@ -818,7 +818,8 @@ class Plot(object):
             which show() is called.
         '''
         self._update_rcParams()
-        plt.show(self.axes)
+# GQ        plt.show(self.axes)
+        plt.show()
 
     def save(self, output_file):
         '''
