@@ -6,7 +6,7 @@
                   Guenter Quast <g.quast@kit.edu>
 '''
 
-_version_info = dict(major=1, minor=3, revision=1,
+_version_info = dict(major=1, minor=3, revision=2,
                      is_development=False)
 
 def _get_version_tuple():

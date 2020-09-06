@@ -24,6 +24,9 @@
 # GQ 160319    new kw argument "plotstyle" in Plot() allows using
 #               user-defined instance of PlotStyle()
 # GQ 160516   derive figure name from fit_label of fits[0]
+# GQ 200609   fix set_axis_scale for matplotlib vers. >=3.1
+#             (set_axis_scale kw basex/y and inverse_transformed deprecated)
+#             version raised to 1.3.2
 # -----------------------------------------------------------------
 
 import numpy as np
@@ -332,7 +335,10 @@ class Plot(object):
             _scale_base = kwargs.get(_scale_base_spec, 10)
 
             scale_kwargs = {'base'+_axis: _scale_base}
-            self.set_axis_scale(_axis, _scale, **scale_kwargs)
+            if mpl.__version__ < '3.1.0' :
+              self.set_axis_scale(_axis, _scale, **scale_kwargs) # deprecated matplotlib >=3.1
+            else:
+              self.set_axis_scale(_axis, _scale)
 
         self.compute_plot_range()
 
@@ -474,10 +480,14 @@ class Plot(object):
                 fig.canvas.callbacks.callbacks[event.name] = {}
 
                 # get the legend bounding box and extract some dimension info
-                legend_bbox = self.legend.legendPatch.get_bbox().inverse_transformed(
-                    self.axes.transAxes
-                )
-                
+# gq 200806
+                if mpl.__version__ < '3.3.0' :              
+                  legend_bbox = self.legend.legendPatch.get_bbox().inverse_transformed(
+                    self.axes.transAxes)
+                else:
+                  bboxbase = self.legend.legendPatch.get_bbox()
+                  legend_bbox = bboxbase.transformed(self.axes.transAxes.inverted())
+# gq ---                
                 viewport_limits = self.axes.transAxes.inverted().transform(
                         self.figure.transFigure.transform((1, 1))
                     )
@@ -533,9 +543,14 @@ class Plot(object):
         offset = self.axes.transAxes.transform((0, 0))
 
         # get the legend bounding box and extract some dimension info
-        legend_bbox = self.legend.legendPatch.get_bbox().inverse_transformed(
-            self.axes.transAxes
-        )
+# gq 200806
+        if mpl.__version__ < '3.3.0' :              
+          legend_bbox = self.legend.legendPatch.get_bbox().inverse_transformed(
+            self.axes.transAxes)
+        else: 
+          bboxbase = self.legend.legendPatch.get_bbox()
+          legend_bbox = bboxbase.transformed(self.axes.transAxes.inverted())
+# gq --- 
 
         legend_size = (legend_bbox.width, legend_bbox.height)
 
