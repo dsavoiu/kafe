@@ -30,7 +30,7 @@
 # -----------------------------------------------------------------
 
 import numpy as np
-
+import warnings
 
 import matplotlib as mpl
 
@@ -333,12 +333,14 @@ class Plot(object):
 
             _scale = kwargs.get(_scale_spec, 'linear')
             _scale_base = kwargs.get(_scale_base_spec, 10)
+            _scale_kwargs = {}
 
-            scale_kwargs = {'base'+_axis: _scale_base}
-            if mpl.__version__ < '3.1.0' :
-              self.set_axis_scale(_axis, _scale, **scale_kwargs) # deprecated matplotlib >=3.1
-            else:
-              self.set_axis_scale(_axis, _scale)
+            if _scale == 'log':
+                # axis suffix for 'base' kwarg has been deprecated in MPL 3.3.0
+                _base_kwarg = 'base' + (_axis if mpl.__version__ < '3.3.0' else '')
+                _scale_kwargs.update({_base_kwarg: _scale_base})
+
+            self.set_axis_scale(_axis, _scale, **_scale_kwargs)
 
         self.compute_plot_range()
 
@@ -361,21 +363,18 @@ class Plot(object):
         Keyword Arguments
         -----------------
 
-        **basex** : int
-            Base of the ''x'' axis scale logarithm. Only relevant for log
-            scales.
-
-        **basey** : int
-            Base of the ''y'' axis scale logarithm. Only relevant for log
+        **base** : int
+            Base of the axis scale logarithm. Only allowed for log
             scales.
         '''
 
         if scale_type not in ('linear', 'log'):
             raise ValueError("Unknown scale `%s'. Use 'linear' or 'log'." % (scale_type,))
+
         if axis == 'x':
             self.axes.set_xscale(scale_type, **kwargs)
             if scale_type == 'log':
-                _base = kwargs.get('basex', 10)
+                _base = kwargs.get('base', kwargs.get('basex', 10))
                 self.axis_scales[0] = 'log'
                 self.axis_scale_logbases[0] = _base
             elif scale_type == 'linear':
@@ -384,7 +383,7 @@ class Plot(object):
         elif axis == 'y':
             self.axes.set_yscale(scale_type, **kwargs)
             if scale_type == 'log':
-                _base = kwargs.get('basey', 10)
+                _base = kwargs.get('base', kwargs.get('basey', 10))
                 self.axis_scales[1] = 'log'
                 self.axis_scale_logbases[1] = _base
             elif scale_type == 'linear':
