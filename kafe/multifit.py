@@ -18,7 +18,6 @@ from __future__ import print_function
 
 import kafe
 import logging
-import matplotlib.pyplot as plt
 import numpy as np
 import os
 
@@ -1157,6 +1156,8 @@ class Multifit(object):
         ``matplotlib`` figure object if no axes given
             A figure object containing the contour plot.
         '''
+        # do here to avoid premature import
+        import matplotlib.pyplot as plt
 
         # lookup parameter IDs
         par1_val = self.current_parameter_values_minuit[parameter1]
@@ -1265,6 +1266,8 @@ class Multifit(object):
             A figure object containing the profile plot.
         '''
 
+        # do here to avoid premature import
+        import matplotlib.pyplot as plt
         from scipy import interpolate
 
         # lookup parameter ID
@@ -1341,6 +1344,9 @@ class Multifit(object):
         ``matplotlib`` figure object
             A figure object containing the matrix of plots.
         '''
+        # do here to avoid premature import
+        import matplotlib.pyplot as plt
+
         if function is not None:
             npar = len(self.parameter_space.function_to_parameter[function])
             cor_fig, axarr = plt.subplots(

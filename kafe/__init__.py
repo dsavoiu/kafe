@@ -92,8 +92,6 @@ except ValueError as e:
                     "Current backend is '%s'."
                     % (config.G_MATPLOTLIB_BACKEND, matplotlib.get_backend()))
 
-import matplotlib.pyplot
-
 # Import main kafe components
 from .dataset import Dataset
 from .dataset_tools import build_dataset

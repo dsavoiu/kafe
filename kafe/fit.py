@@ -53,7 +53,6 @@ from __future__ import print_function
 from .function_tools import FitFunction, outer_product
 from copy import copy
 
-import matplotlib.pyplot as plt
 import numpy as np
 from .numeric_tools import cov_to_cor, extract_statistical_errors, MinuitCov_to_cor, cor_to_cov
 
@@ -1221,6 +1220,9 @@ class Fit(object):
             A figure object containing the contour plot.
         '''
 
+        # do here to avoid premature import
+        import matplotlib.pyplot as plt
+
         # lookup parameter IDs
         par1 = self._find_parameter(parameter1)
         par2 = self._find_parameter(parameter2)
@@ -1328,6 +1330,8 @@ class Fit(object):
             A figure object containing the profile plot.
         '''
 
+        # do here to avoid premature import
+        import matplotlib.pyplot as plt
         from scipy import interpolate
 
         # lookup parameter ID
@@ -1400,6 +1404,9 @@ class Fit(object):
         ``matplotlib`` figure object
             A figure object containing the matrix of plots.
         '''
+        # do here to avoid premature import
+        import matplotlib.pyplot as plt
+
         npar = self.number_of_parameters - self.number_of_fixed_parameters
         cor_fig, axarr = plt.subplots(
             npar, npar, figsize=(5. * npar, 5. * npar))

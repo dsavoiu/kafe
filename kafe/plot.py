@@ -36,7 +36,6 @@ import warnings
 
 import matplotlib as mpl
 
-import matplotlib.pyplot as plt
 from .function_tools import outer_product
 from .numeric_tools import extract_statistical_errors
 
@@ -306,6 +305,9 @@ class Plot(object):
         '''
         Initialize the plots for each fit.
         '''
+
+        # do here to avoid premature import
+        import matplotlib.pyplot as plt
 
         self.figure = plt.figure(self.fits[0].fit_name)
         """A matplotlib figure object."""
@@ -823,8 +825,10 @@ class Plot(object):
             shown with the same plot style: that of the `Plot` object from
             which show() is called.
         '''
+        # do here to avoid premature import
+        import matplotlib.pyplot as plt
+
         self._update_rcParams()
-# GQ        plt.show(self.axes)
         plt.show()
 
     def save(self, output_file):
