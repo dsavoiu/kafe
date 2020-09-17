@@ -507,9 +507,9 @@ class Plot(object):
         # show plot legend
         self.legend = self.axes.legend(**self.plot_style.legendparams_kw)
         try:
-          self.legend.set_draggable(True)
-        except:
-          self.legend.draggable() # old-style 
+            self.legend.set_draggable(True)
+        except AttributeError:
+            self.legend.draggable()  # old-style
 
     def draw_fit_parameters_box(self, plot_spec=0,
                                 force_show_uncertainties=False):
