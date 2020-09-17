@@ -8,10 +8,11 @@ python:
 # matrix of several CONDA_PYTHON_VERSIONs
 env:
   matrix:
-    - CONDA_PYTHON_VERSION=2.7
-    - CONDA_PYTHON_VERSION=3.8
-    - CONDA_PYTHON_VERSION=3.7
-    - CONDA_PYTHON_VERSION=3.6
+    - CONDA_PYTHON_VERSION=2.7  MPL_VERSION=2.2
+
+    - CONDA_PYTHON_VERSION=3.6  MPL_VERSION=3.3
+    - CONDA_PYTHON_VERSION=3.7  MPL_VERSION=3.3
+    - CONDA_PYTHON_VERSION=3.8  MPL_VERSION=3.3
 
 addons:
   apt:
@@ -44,12 +45,13 @@ before_install:
   - conda info -a
 
   # install some dependencies with conda and activate environment
-  - conda create -q -n kafe_env python=$CONDA_PYTHON_VERSION numpy scipy tk matplotlib
+  - conda create -q -n kafe_env python=$CONDA_PYTHON_VERSION numpy scipy tk
   - source activate kafe_env
 
   # upgrade pip to latest version and install iminuit with pip
   - pip install --upgrade pip
-  - pip install --upgrade iminuit
+  - pip install --upgrade matplotlib==$MPL_VERSION
+  - if [[ $CONDA_PYTHON_VERSION == 2.7 ]]; then pip uninstall minuit && pip install iminuit==1.2; else pip install --upgrade iminuit; fi
 
   # output python version to log
   - python --version
