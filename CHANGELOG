@@ -1,3 +1,21 @@
+v1.3.2
+======
+
+    %  [FIX] handle deprecation of axis suffixes for keyword arguments
+             passed to constructors of axis scale objects starting with
+             matplotlib 3.3.0 (e.g. now specify `base` instead of
+             `basex`/`basey` for LogScale)
+    %  [FIX] replace matplotlib call to 'inverse_transformed' completely
+             by equivalent 'transformed(transform.inverted())'
+    %  [FIX] use 'Legend.set_draggable(True)' and fall back to deprecated
+             'Legend.draggable()' on failure for backwards compatibility.
+
+v1.3.1
+======
+
+    %  [BUG] use line-buffering and flush buffers on stream to make sure
+             all output is written out correctly on Python 3
+
 v1.3.0
 ======
 
