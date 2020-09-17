@@ -24,8 +24,8 @@ DEV_NULL_FILE_OBJECT = open(os.devnull, 'w')
 def null_file():
     global DEV_NULL_FILE_OBJECT
     if DEV_NULL_FILE_OBJECT.closed:
-        logger.warn("Output dump file '%s' has been closed before program "
-                    "exit. Reopening..." % (os.devnull,))
+        logger.warning("Output dump file '%s' has been closed before program "
+                       "exit. Reopening..." % (os.devnull,))
         DEV_NULL_FILE_OBJECT = open(os.devnull, 'w')
     return DEV_NULL_FILE_OBJECT
 

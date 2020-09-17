@@ -113,14 +113,14 @@ class FitFunction:
         # Check if all parameters have default values
         if self.parameter_defaults is None:
             # no parameters have a default value
-            logger.warn("Default values not provided for any parameters "
+            logger.warning("Default values not provided for any parameters "
                         "of function <%s>. Setting all default parameter "
                         "values to 1.0." % (self.name,))
             self.parameter_defaults = tuple(self.number_of_parameters * [1.0])
         elif len(self.parameter_defaults) != self.number_of_parameters:
             # only the last few parameters have a default value
             # -> pad the default parameter tuple with zeros
-            logger.warn("Number of default parameters given for "
+            logger.warning("Number of default parameters given for "
                         "function <%s> does not match total "
                         "parameter number " % (self.name,))
             logger.info("Setting default parameter values for function <%s> "
@@ -360,7 +360,7 @@ def LaTeX(**kwargs):
     expression = kwargs.pop("expression", None)
 
     if kwargs:
-        logger.warn("Unknown keyword arguments for decorator LaTeX ignored: %r"
+        logger.warning("Unknown keyword arguments for decorator LaTeX ignored: %r"
                     % (kwargs.keys(),))
 
     # override initial LaTeX-related parameters with the ones provided
@@ -411,7 +411,7 @@ def ASCII(**kwargs):
     expression = kwargs.pop("expression", None)
 
     if kwargs:
-        logger.warn("Unknown keyword arguments for decorator ASCII ignored: %r"
+        logger.warning("Unknown keyword arguments for decorator ASCII ignored: %r"
                     % (kwargs.keys(),))
 
     # override initial LaTeX-related parameters with the ones provided

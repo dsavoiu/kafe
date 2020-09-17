@@ -154,7 +154,7 @@ class Minuit:
                 # use 10% of the par. 1-sigma errors as the initial step size
         except AttributeError as e:
             if show_warnings:
-                logger.warn("Cannot update Minuit data on the C++ side. "
+                logger.warning("Cannot update Minuit data on the C++ side. "
                             "AttributeError: %s" % (e, ))
         return error_code
 

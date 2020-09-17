@@ -512,7 +512,7 @@ class Dataset(object):
             _es.make_from_val(err_val, fully_correlated=correlated)
         elif err_type == 'matrix':
             if correlated:
-                logger.warn("Ignoring 'correlated' when adding a 'matrix' "
+                logger.warning("Ignoring 'correlated' when adding a 'matrix' "
                             "error source. Correlation information is "
                             "contained within the matrix itself")
             _es.make_from_matrix(err_val)
@@ -1382,14 +1382,14 @@ class Dataset(object):
                 # Replace error model with the computed matrix
                 if self.err_src[axis]:
                     # Warn if error model is overwritten after call to read_from_file()
-                    logger.warn("Overwriting existing error model for axis %d "
+                    logger.warning("Overwriting existing error model for axis %d "
                                 "of Dataset" % (axis,))
                 # add error for axis as a single matrix error
                 self.add_error_source(axis, 'matrix', _mat)
             else:
                 if self.err_src[axis]:
                     # Warn if error model is removed after call to read_from_file()
-                    logger.warn("Removing existing error model for axis %d "
+                    logger.warning("Removing existing error model for axis %d "
                                 "of Dataset" % (axis,))
 
         return True

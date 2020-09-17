@@ -412,7 +412,7 @@ class Multifit(object):
                                        self.total_number_of_parameters))
             else:
                 if not no_warning:
-                    logger.warn("Parameter starting errors not given. Setting "
+                    logger.warning("Parameter starting errors not given. Setting "
                                 "to 1/10th of the parameter values.")
                 #: the current uncertainties of the parameters
                 self.current_parameter_errors_minuit = [
@@ -436,7 +436,7 @@ class Multifit(object):
                     # if param_spec is not iterable, then only value
                     # was given
                     if not no_warning:
-                        logger.warn("Parameter error not given for %s. "
+                        logger.warning("Parameter error not given for %s. "
                                     "Setting to 1/10th of the parameter "
                                     "value given." % (param_name,))
                     param_val, param_err = param_spec, param_spec * 0.1
@@ -454,7 +454,7 @@ class Multifit(object):
                     self.current_parameter_errors_minuit)
             except AttributeError:
                 if not no_warning:
-                    logger.warn("Failed to set the minimizer's parameters. "
+                    logger.warning("Failed to set the minimizer's parameters. "
                                 "Maybe minimizer not initialized for this Fit "
                                 "yet?")
 
@@ -853,7 +853,7 @@ class Multifit(object):
         precision_list = 0.01 * np.sqrt(np.diag(self.current_cov_mat))
 
         if min(precision_list) == 0:
-            logger.warn('At least one input error is zero - set to 1e-7')
+            logger.warning('At least one input error is zero - set to 1e-7')
             for i, p in enumerate(precision_list):
                 if not p:
                     precision_list[i] = 1.e-7
@@ -1512,7 +1512,7 @@ class _ParameterSpace(object):
 
                 if _param == param1:
                     # Give a warning for the user
-                    logger.warn("Deleted already linked parameters")
+                    logger.warning("Deleted already linked parameters")
                     del self.alias[param1]
                     self.total_number_of_parameters += 1
                     break
@@ -1525,7 +1525,7 @@ class _ParameterSpace(object):
                 _param = self.alias[_param]
                 if _param == param2:
                     # Give a warning for the user
-                    logger.warn("Deleted already linked parameters")
+                    logger.warning("Deleted already linked parameters")
                     del self.alias[param2]
                     self.total_number_of_parameters += 1
                     break

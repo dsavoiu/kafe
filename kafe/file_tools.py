@@ -750,7 +750,7 @@ def parse_general_inputfile(file_to_parse):
                 if _done_reading_function:
                     # warn on additional function definitions
                     _e = "Already read fit function '%s'. No additional function definitions supported. Line: '%s'" % (function_name, line_string[:-1])
-                    logger.warn(_e)
+                    logger.warning(_e)
                     continue
                 else:
                     _reading_function_def = True
@@ -828,7 +828,7 @@ def parse_general_inputfile(file_to_parse):
                     raise ValueError(_e)
                 elif len(_vals) > 1:
                     _w = "Key '%s' expected a single floating point value, but got: %r" % (current_key, _vals)
-                    logger.warn(_w)
+                    logger.warning(_w)
                     _val = _vals[0]
                 else:
                     _val = _vals[0]
@@ -841,7 +841,7 @@ def parse_general_inputfile(file_to_parse):
                 #~ pass
         elif leading_token[0] == '*':
             # leading token is unknown
-            logger.warn("Unknown input token '%s' ignored" % (leading_token,))
+            logger.warning("Unknown input token '%s' ignored" % (leading_token,))
         else:
             # line without key is data, belonging to last key given
             if current_key == '*FitFunction':   # expect continuous text
@@ -922,13 +922,13 @@ def parse_general_inputfile(file_to_parse):
                 cparerr = np.array([flist[i][2]
                                    for i in range(rows)], np.float32)
             else:
-                logger.warn("invalid key %s" % (key))
+                logger.warning("invalid key %s" % (key))
                 sys.exit("*==* parse_general_inputfile: unimplemented keyword")
 
     # some final additions to be made:
     #  x-data may not have been given (e.g. for calcualtion of average)
     if len(xdat) == 0:
-        logger.warn("no xdata given - generated as an arange")
+        logger.warning("no xdata given - generated as an arange")
         xdat = np.arange(0., len(ydat), 1., np.float32)
         xerr = np.zeros(len(ydat), np.float32)
         xcov = np.zeros((len(ydat), len(ydat)), np.float64)
