@@ -82,15 +82,32 @@ _logger.addHandler(_ch)  # add ch to logger
 __version__ = _version_info._get_version_string()
 
 # Import matplotlib and set backend
-import matplotlib
+import matplotlib as _mpl
+
+# get configured fallback behavior on backend setting failure
+_orig_backend_fallback_setting = _mpl.rcParams['backend_fallback']
 try:
-    matplotlib.use(config.G_MATPLOTLIB_BACKEND)
+    # try to use backend specified in config
+    # note: this may set 'backend_fallback' to False, triggering
+    # ImportErrors further down the line
+    _mpl.use(config.G_MATPLOTLIB_BACKEND)
 except ValueError as e:
     # matplotlib does not provide requested backend
     _logger.error("matplotlib error: %s" % (e,))
     _logger.warning("Failed to load requested backend '%s' for matplotlib. "
                     "Current backend is '%s'."
-                    % (config.G_MATPLOTLIB_BACKEND, matplotlib.get_backend()))
+                    % (config.G_MATPLOTLIB_BACKEND, _mpl.get_backend()))
+except ImportError as e:
+    # pyplot has probably been imported before kafe and backends
+    # could not be switched
+    _logger.error("matplotlib error: %s" % (e,))
+    _logger.warning("Could not switch from curently running matplotlib backend '%s' "
+                    "to requested '%s'. Plots may look or behave differently. This can "
+                    "usually be solved by ensuring that `kafe` is imported before `matplotlib.pyplot`."
+                    % (_mpl.get_backend(), config.G_MATPLOTLIB_BACKEND))
+finally:
+    # ensure the original fallback behavior is kept despite call to `use`
+    _mpl.rcParams['backend_fallback'] = _orig_backend_fallback_setting
 
 # Import main kafe components
 from .dataset import Dataset
