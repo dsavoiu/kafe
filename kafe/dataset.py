@@ -622,7 +622,7 @@ class Dataset(object):
         _mats = [np.matrix(np.zeros((_size, _size))),
                  np.matrix(np.zeros((_size, _size)))]
 
-        if axis is 'all':
+        if axis == 'all':
             _axes_list = list(range(self.__n_axes))
         else:
             _axes_list = [self.get_axis(axis)]
