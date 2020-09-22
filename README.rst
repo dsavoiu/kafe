@@ -3,6 +3,15 @@
 **********************************
 *kafe* - Karlsruhe Fit Environment
 **********************************
+.. image:: https://badge.fury.io/py/kafe.svg
+    :target: https://badge.fury.io/py/kafe
+
+.. image:: https://readthedocs.org/projects/kafe/badge/?version=latest
+    :target: https://kafe.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
+.. image:: https://travis-ci.org/dsavoiu/kafe.svg?branch=master
+    :target: https://travis-ci.org/dsavoiu/kafe
 
 =====
 About
