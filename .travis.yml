@@ -1,4 +1,5 @@
-sudo: false
+os: linux
+dist: xenial
 
 # only one TRAVIS_PYTHON_VERSION
 language: python
@@ -7,7 +8,7 @@ python:
 
 # matrix of several CONDA_PYTHON_VERSIONs
 env:
-  matrix:
+  jobs:
     - CONDA_PYTHON_VERSION=2.7  MPL_VERSION=2.2
 
     - CONDA_PYTHON_VERSION=3.6  MPL_VERSION=3.3
