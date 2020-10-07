@@ -1,6 +1,12 @@
 v1.3.2
 ======
 
+    %  [FIX] ensure matplotlib backend fallback mechanism remains active
+             despite explicit call to `matplotlib.use`, which otherwise leads
+             to failures if the backend is not available (or when running in
+             headless mode)
+    %  [FIX] move imports of `matplotlib.pyplot` to plot methods to avoid
+             importing them prematurely
     %  [FIX] handle deprecation of axis suffixes for keyword arguments
              passed to constructors of axis scale objects starting with
              matplotlib 3.3.0 (e.g. now specify `base` instead of
