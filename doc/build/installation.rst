@@ -24,7 +24,7 @@ Additionally, a function minimizer is needed. *kafe* implements interfaces to tw
 function minimizers and requires at least one of them to be installed:
 
 * *MINUIT*, which is included in *CERN*'s data analysis package `ROOT <http://root.cern.ch>`_ (>= 5.34), or
-* `iminuit <https://github.com/iminuit/iminuit>`_ (>= 1.1.1), which is independent of ROOT (this is the default)
+* `iminuit <https://github.com/iminuit/iminuit>`_ (>= 1.1.1, < 2.0.), which is independent of ROOT (this is the default)
 
 
 Finally, *kafe* requires a number of external programs:
@@ -110,7 +110,7 @@ To install the *iminuit* package for Python, the `Pip installer
 
     .. code:: bash
 
-        pip install iminuit
+        pip install 'iminuit<2'
 
 If you don't have *Pip* installed, get it from the package manager.
 
@@ -200,7 +200,7 @@ After installing *WinPython*, start 'WinPython Command Prompt.exe' in the
 
     .. code:: bash
 
-        pip install iminuit
+        pip install "iminuit<2"
 
 
 Install `kafe`
