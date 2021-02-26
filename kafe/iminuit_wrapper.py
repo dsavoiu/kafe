@@ -95,6 +95,13 @@ class IMinuit:
 
         '''
 
+        if iminuit.__version__ >='2':
+          print("iminuit version >=2 not supported \n",
+                "  -> install iminuit vers. 1.5.4")
+          exit(0)
+          
+
+        
         #: the name of this minimizer type
         self.name = "iminuit"
 
