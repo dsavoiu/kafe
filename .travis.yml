@@ -52,7 +52,7 @@ before_install:
   # upgrade pip to latest version and install iminuit with pip
   - pip install --upgrade pip
   - pip install --upgrade matplotlib==$MPL_VERSION
-  - if [[ $CONDA_PYTHON_VERSION == 2.7 ]]; then pip uninstall minuit && pip install iminuit==1.2; else pip install --upgrade iminuit; fi
+  - if [[ $CONDA_PYTHON_VERSION == 2.7 ]]; then pip uninstall minuit && pip install iminuit==1.2; else pip install --upgrade 'iminuit<2'; fi
 
   # output python version to log
   - python --version

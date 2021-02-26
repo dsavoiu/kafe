@@ -60,7 +60,7 @@ Additionally, a function minimizer is needed. *kafe* implements interfaces to tw
 function minimizers and requires at least one of them to be installed:
 
 * *MINUIT*, which is included in *CERN*'s data analysis package `ROOT <http://root.cern.ch>`_ (>= 5.34), or
-* `iminuit <https://github.com/iminuit/iminuit>`_ (>= 1.2), which is independent of ROOT
+* `iminuit <https://github.com/iminuit/iminuit>`_ (>= 1.2, < 2.0), which is independent of ROOT
 
 
 Finally, *kafe* requires a number of external programs:
