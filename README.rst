@@ -15,7 +15,7 @@
     :target: https://travis-ci.org/dsavoiu/kafe
 
 **Legacy Version** - development is discontinued.  
-see https://github.com/dsavoiu/kafe2 for actually maintained successor. 
+See https://github.com/dsavoiu/kafe2 for actually maintained successor. 
 
 =====
 About
