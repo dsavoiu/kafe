@@ -3,6 +3,7 @@
 **********************************
 *kafe* - Karlsruhe Fit Environment
 **********************************
+
 .. image:: https://badge.fury.io/py/kafe.svg
     :target: https://badge.fury.io/py/kafe
 
@@ -12,6 +13,9 @@
 
 .. image:: https://travis-ci.org/dsavoiu/kafe.svg?branch=master
     :target: https://travis-ci.org/dsavoiu/kafe
+
+**Legacy Version** - development is discontinued.  
+see https://github.com/dsavoiu/kafe2 for actually maintained successor. 
 
 =====
 About
